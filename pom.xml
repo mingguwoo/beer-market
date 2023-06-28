@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.nio.ngfs</groupId>
+        <artifactId>ngfs-starter-parent</artifactId>
+        <version>1.1.0</version>
+    </parent>
+
+    <artifactId>plm-bom-configuration</artifactId>
+    <version>${revision}</version>
+    <packaging>pom</packaging>
+
+    <name>plm-bom-configuration</name>
+    <description>BOM Middle Platform Configuration Services</description>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <maven.deploy.skip>true</maven.deploy.skip>
+        <lombok.version>1.18.26</lombok.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <revision>1.0.0-SNAPSHOT</revision>
+        <sdk.version>1.0.0-SNAPSHOT</sdk.version>
+        <swagger3.version>2.1.12</swagger3.version>
+        <burningwave.version>12.41.2</burningwave.version>
+        <commons.io.version>2.11.0</commons.io.version>
+        <kryo.version>4.0.2</kryo.version>
+        <druid.version>1.2.8</druid.version>
+        <dynamictp.version>1.1.0</dynamictp.version>
+        <dynamicTp.starter.version>1.0.2</dynamicTp.starter.version>
+        <easyexcel.version>3.0.5</easyexcel.version>
+        <fastjson.version>2.0.5</fastjson.version>
+        <spring.cloud.version>3.1.5</spring.cloud.version>
+        <ngfs.version>1.1.0</ngfs.version>
+    </properties>
+
+    <modules>
+        <module>plm-bom-configuration-api</module>
+        <module>plm-bom-configuration-parents</module>
+        <module>plm-bom-configuration-sdk</module>
+        <module>plm-bom-configuration-application</module>
+        <module>plm-bom-configuration-common</module>
+        <module>plm-bom-configuration-domain</module>
+        <module>plm-bom-configuration-persistence</module>
+        <module>plm-bom-configuration-spi</module>
+    </modules>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>${flatten-maven-plugin.version}</version>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                    <pomElements>
+                        <dependencyManagement>expand</dependencyManagement>
+                        <dependencies>expand</dependencies>
+                    </pomElements>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <distributionManagement>
+        <repository>
+            <id>central</id>
+            <name>maven-releases</name>
+            <url>https://artifactory.nioint.com/artifactory/dd-maven-releases-virtual</url>
+        </repository>
+        <snapshotRepository>
+            <id>maven-snapshots</id>
+            <name>maven-snapshots</name>
+            <url>https://artifactory.nioint.com/artifactory/dd-maven-snapshots-virtual</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+</project>

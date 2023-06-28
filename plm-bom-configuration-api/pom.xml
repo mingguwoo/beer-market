@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.nio.ngfs</groupId>
+        <artifactId>plm-bom-configuration-parents</artifactId>
+        <version>${revision}</version>
+        <relativePath>../plm-bom-configuration-parents/pom.xml</relativePath>
+    </parent>
+
+    <artifactId>plm-bom-configuration-api</artifactId>
+    <packaging>jar</packaging>
+
+    <name>plm-bom-configuration :: api</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.nio.ngfs</groupId>
+            <artifactId>plm-bom-configuration-sdk</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.nio.ngfs</groupId>
+            <artifactId>plm-bom-configuration-application</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.nio.ngfs</groupId>
+            <artifactId>ngfs-starter-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.nio.ngfs</groupId>
+            <artifactId>ngfs-starter-redisson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.nio.ngfs</groupId>
+            <artifactId>ngfs-starter-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.nio.ngfs</groupId>
+            <artifactId>ngfs-starter-openfeign</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-context</artifactId>
+            <version>${spring.cloud.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+            <version>${spring.cloud.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.esotericsoftware</groupId>
+            <artifactId>kryo-shaded</artifactId>
+            <version>${kryo.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>${druid.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons.io.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>${swagger3.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-models</artifactId>
+            <version>${swagger3.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.burningwave</groupId>
+            <artifactId>core</artifactId>
+            <version>${burningwave.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.nio</groupId>
+            <artifactId>nio-dynamic-threadpool-starter</artifactId>
+            <version>${dynamicTp.starter.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>cn.hutool</groupId>
+                    <artifactId>hutool-all</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>com.nio.ngfs.plm.bom.configuration.api.BomConfigurationApplication</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

@@ -1,0 +1,39 @@
+spring:
+    profiles:
+        #切换apollo地址
+        active: test
+eureka:
+    client:
+        register-with-eureka: false
+app:
+    id: plm-bom-configuration
+
+springdoc:
+    paths-to-exclude: /status,/health
+
+common:
+    pool:
+        coreSize: 5
+        maxCoreSize: 10
+        keepAliveSeconds: 60
+        namePrefix: common-pool-
+        queueCapacity: 200
+
+---
+env: dev
+apollo:
+    meta: https://apollo-config-cn-dev.nioint.com
+    cluster: plm-bom-configuration-tc-tke-dev
+spring:
+    config:
+        activate:
+            on-profile: dev
+---
+env: test
+apollo:
+    meta: https://apollo-config-cn-test.nioint.com
+    cluster: plm-bom-configuration-tc-tke-test
+spring:
+    config:
+        activate:
+            on-profile: test

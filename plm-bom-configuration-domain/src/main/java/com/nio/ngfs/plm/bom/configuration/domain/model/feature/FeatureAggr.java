@@ -28,9 +28,9 @@ public class FeatureAggr {
 
     private static final int MAX_LENGTH = 128;
 
-    private FeatureAggr parent;
+    private transient FeatureAggr parent;
 
-    private List<FeatureAggr> childrenList = Collections.emptyList();
+    private transient List<FeatureAggr> childrenList = Collections.emptyList();
 
     private String featureCode;
 

@@ -22,6 +22,10 @@ public class FeatureDomainService {
     private final FeatureRepository featureRepository;
 
     public void addGroup(AddGroupDO addGroupDO) {
+        // 1、新增操作，使用工厂创建聚合根
+        // 2、调用聚合根自己可以完成的操作
+        // 3、领域服务完成的操作
+        // 4、Repository保存
         FeatureAggr featureAggr = FeatureFactory.create(addGroupDO);
         featureAggr.addGroup();
         checkGroupCodeUnique(featureAggr);
@@ -29,6 +33,10 @@ public class FeatureDomainService {
     }
 
     public void editGroup(EditGroupDO editGroupDO) {
+        // 1、更新/删除操作，Repository查询聚合根
+        // 2、调用聚合根自己可以完成的操作
+        // 3、领域服务完成的操作
+        // 4、Repository保存
         FeatureAggr featureAggr = checkAndGetFeatureAggr(editGroupDO.getId(), true);
         checkGroupCodeUnique(featureAggr);
         featureAggr.editGroup(editGroupDO);

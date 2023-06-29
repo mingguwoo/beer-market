@@ -2,7 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.persistence.converter;
 
 import com.nio.ngfs.common.utils.BeanConvertUtils;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
-import com.nio.ngfs.plm.bom.configuration.persistence.entity.FeatureEntity;
+import com.nio.ngfs.plm.bom.configuration.persistence.entity.BomsFeatureLibraryEntity;
 
 /**
  * @author xiaozhou.tu
@@ -10,11 +10,11 @@ import com.nio.ngfs.plm.bom.configuration.persistence.entity.FeatureEntity;
  */
 public class FeatureConverter {
 
-    public static FeatureEntity convertToEntity(FeatureAggr featureAggr) {
-        return BeanConvertUtils.convertTo(featureAggr, FeatureEntity::new);
+    public static BomsFeatureLibraryEntity convertToEntity(FeatureAggr featureAggr) {
+        return BeanConvertUtils.convertTo(featureAggr, BomsFeatureLibraryEntity::new);
     }
 
-    public static FeatureAggr convertEntityTo(FeatureEntity featureEntity) {
+    public static FeatureAggr convertEntityTo(BomsFeatureLibraryEntity featureEntity) {
         return BeanConvertUtils.convertTo(featureEntity, FeatureAggr::new);
     }
 

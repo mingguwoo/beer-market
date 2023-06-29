@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("boms_feature_library")
-public class FeatureEntity extends BaseEntity {
+public class BomsFeatureLibraryEntity extends BaseEntity {
 
     private String featureCode;
 

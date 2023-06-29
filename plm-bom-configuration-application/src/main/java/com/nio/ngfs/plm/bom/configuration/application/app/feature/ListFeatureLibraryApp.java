@@ -22,6 +22,10 @@ public class ListFeatureLibraryApp implements Application<ListFeatureLibraryRequ
 
     @Override
     public List<FeatureLibraryDTO> doAction(ListFeatureLibraryRequest listFeatureLibraryRequest) {
+        // 查询
+        // 1、可以直接调Repository查询
+        // 2、也可以调DomainService
+        // 3、也可以抽一层QueryService（通用化，多个请求都需要用到）
         List<FeatureAggr> featureAggrList = featureRepository.listFeatureLibrary();
         return null;
     }

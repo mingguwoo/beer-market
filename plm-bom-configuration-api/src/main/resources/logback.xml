@@ -22,8 +22,8 @@
         </layout>
     </appender>
 
-<!--    <appender name="LogTraceAppender" class="com.nio.ngfs.plm.bom.color.service.config.LogTraceAppender">-->
-<!--    </appender>-->
+    <appender name="LogTraceAppender" class="com.nio.ngfs.plm.bom.configuration.api.config.warn.LogTraceAppender">
+    </appender>
 
     <root level="INFO">
         <appender-ref ref="LogTraceAppender"/>

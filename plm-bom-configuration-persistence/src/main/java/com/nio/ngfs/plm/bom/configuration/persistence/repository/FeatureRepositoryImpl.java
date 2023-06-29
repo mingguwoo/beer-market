@@ -6,8 +6,8 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.persistence.converter.FeatureConverter;
-import com.nio.ngfs.plm.bom.configuration.persistence.entity.FeatureEntity;
-import com.nio.ngfs.plm.bom.configuration.persistence.mapper.FeatureMapper;
+import com.nio.ngfs.plm.bom.configuration.persistence.entity.BomsFeatureLibraryEntity;
+import com.nio.ngfs.plm.bom.configuration.persistence.mapper.BomsFeatureLibraryMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,11 +17,11 @@ import java.util.List;
  * @date 2023/6/28
  */
 @Repository
-public class FeatureRepositoryImpl extends AbstractRepository<FeatureMapper, FeatureEntity, WherePageRequest<FeatureEntity>> implements FeatureRepository {
+public class FeatureRepositoryImpl extends AbstractRepository<BomsFeatureLibraryMapper, BomsFeatureLibraryEntity, WherePageRequest<BomsFeatureLibraryEntity>> implements FeatureRepository {
 
     @Override
     public void save(FeatureAggr featureAggr) {
-        FeatureEntity featureEntity = FeatureConverter.convertToEntity(featureAggr);
+        BomsFeatureLibraryEntity featureEntity = FeatureConverter.convertToEntity(featureAggr);
         if (featureEntity.getId() != null) {
             getBaseMapper().updateById(featureEntity);
         } else {
@@ -31,9 +31,9 @@ public class FeatureRepositoryImpl extends AbstractRepository<FeatureMapper, Fea
 
     @Override
     public FeatureAggr find(String featureCode, FeatureTypeEnum featureType) {
-        LambdaQueryWrapper<FeatureEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(FeatureEntity::getFeatureCode, featureCode);
-        lambdaQueryWrapper.eq(FeatureEntity::getType, featureType.getType());
+        LambdaQueryWrapper<BomsFeatureLibraryEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(BomsFeatureLibraryEntity::getFeatureCode, featureCode);
+        lambdaQueryWrapper.eq(BomsFeatureLibraryEntity::getType, featureType.getType());
         return FeatureConverter.convertEntityTo(getBaseMapper().selectOne(lambdaQueryWrapper));
     }
 
@@ -53,7 +53,7 @@ public class FeatureRepositoryImpl extends AbstractRepository<FeatureMapper, Fea
     }
 
     @Override
-    protected void fuzzyConditions(WherePageRequest<FeatureEntity> featureEntityWherePageRequest, LambdaQueryWrapper<FeatureEntity> queryWrapper) {
+    protected void fuzzyConditions(WherePageRequest<BomsFeatureLibraryEntity> featureEntityWherePageRequest, LambdaQueryWrapper<BomsFeatureLibraryEntity> queryWrapper) {
     }
 
 }

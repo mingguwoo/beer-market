@@ -1,6 +1,5 @@
-package com.nio.ngfs.plm.bom.configuration.domain.model.feature.dos;
+package com.nio.ngfs.plm.bom.configuration.domain.model.feature.domainobject;
 
-import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -8,8 +7,9 @@ import lombok.Data;
  * @date 2023/6/28
  */
 @Data
-@Builder
-public class AddGroupDO {
+public class EditGroupDO {
+
+    private Long id;
 
     private String featureCode;
 
@@ -19,6 +19,8 @@ public class AddGroupDO {
 
     private String description;
 
-    private String createUser;
+    private String status;
+
+    private String updateUser;
 
 }

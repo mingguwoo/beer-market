@@ -1,7 +1,7 @@
-package com.nio.ngfs.plm.bom.configuration.application.app.feature;
+package com.nio.ngfs.plm.bom.configuration.application.command.feature;
 
-import com.nio.ngfs.plm.bom.configuration.application.app.Application;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.dos.AddGroupDO;
+import com.nio.ngfs.plm.bom.configuration.application.command.Command;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.domainobject.AddGroupDO;
 import com.nio.ngfs.plm.bom.configuration.domain.service.FeatureDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.AddGroupRequest;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.AddGroupResponse;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class AddGroupApp implements Application<AddGroupRequest, AddGroupResponse> {
+public class AddGroupCommand implements Command<AddGroupRequest, AddGroupResponse> {
 
     private final FeatureDomainService featureDomainService;
 

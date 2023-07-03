@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.persistence.entity;
+package com.nio.ngfs.plm.bom.configuration.persistence.po;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,6 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.feature;
 
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.dos.AddGroupDO;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.domainobject.AddGroupDO;
 
 /**
  * @author xiaozhou.tu

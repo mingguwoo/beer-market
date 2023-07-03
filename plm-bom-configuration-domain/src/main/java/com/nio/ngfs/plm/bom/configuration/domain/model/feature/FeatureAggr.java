@@ -1,16 +1,16 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.feature;
 
-import com.google.common.collect.Lists;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ErrorCode;
 import com.nio.ngfs.plm.bom.configuration.common.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.common.util.PreconditionUtil;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.dos.EditGroupDO;
+import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractEntity;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.domainobject.EditGroupDO;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.util.Collections;
 import java.util.List;
@@ -21,10 +21,10 @@ import java.util.Objects;
  * @date 2023/6/28
  */
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FeatureAggr {
+public class FeatureAggr extends AbstractEntity {
 
     private static final int MAX_LENGTH = 128;
 
@@ -45,10 +45,6 @@ public class FeatureAggr {
     private String description;
 
     private String status;
-
-    private String createUser;
-
-    private String updateUser;
 
     private transient boolean statusChanged;
 

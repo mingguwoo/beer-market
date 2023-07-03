@@ -1,6 +1,8 @@
-package com.nio.ngfs.plm.bom.configuration.application.app;
+package com.nio.ngfs.plm.bom.configuration.application;
 
 /**
+ * 应用（请求-响应模型）
+ *
  * @author xiaozhou.tu
  * @date 2023/6/28
  */

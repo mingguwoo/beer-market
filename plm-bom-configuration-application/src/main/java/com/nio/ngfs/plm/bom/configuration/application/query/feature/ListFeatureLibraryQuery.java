@@ -1,6 +1,6 @@
-package com.nio.ngfs.plm.bom.configuration.application.app.feature;
+package com.nio.ngfs.plm.bom.configuration.application.query.feature;
 
-import com.nio.ngfs.plm.bom.configuration.application.app.Application;
+import com.nio.ngfs.plm.bom.configuration.application.query.Query;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.ListFeatureLibraryRequest;
@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Component
 @RequiredArgsConstructor
-public class ListFeatureLibraryApp implements Application<ListFeatureLibraryRequest, List<FeatureLibraryDTO>> {
+public class ListFeatureLibraryQuery implements Query<ListFeatureLibraryRequest, List<FeatureLibraryDTO>> {
 
     private final FeatureRepository featureRepository;
 

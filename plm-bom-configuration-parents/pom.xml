@@ -45,6 +45,22 @@
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.nio.ngfs</groupId>
+            <artifactId>plm-bom-share</artifactId>
+            <version>${plm-bom-share.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.nio</groupId>
+            <artifactId>nio-dynamic-threadpool-starter</artifactId>
+            <version>${dynamicTp.starter.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>cn.hutool</groupId>
+                    <artifactId>hutool-all</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
 
     <build>

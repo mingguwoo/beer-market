@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.feature;
 
+import com.nio.bom.share.enums.ErrorCodeEnum;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.common.util.PreconditionUtil;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;

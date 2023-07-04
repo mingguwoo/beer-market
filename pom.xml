@@ -40,6 +40,7 @@
         <springdoc.version>1.6.6</springdoc.version>
 
         <plm-bom-share.version>1.0.0</plm-bom-share.version>
+        <dynamicTp.starter.version>1.0.2</dynamicTp.starter.version>
     </properties>
 
     <modules>

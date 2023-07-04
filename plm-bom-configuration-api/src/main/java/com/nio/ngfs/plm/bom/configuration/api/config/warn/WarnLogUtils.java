@@ -1,8 +1,8 @@
 package com.nio.ngfs.plm.bom.configuration.api.config.warn;
 
 import com.alibaba.fastjson.JSON;
+import com.nio.bom.share.configuration.WarnLogConfig;
 import com.nio.ngfs.common.utils.SpringContextHolder;
-import com.nio.ngfs.plm.bom.configuration.api.config.properties.WarnLogConfig;
 import com.nio.ngfs.plm.bom.configuration.remote.FeishuIntegrationClient;
 import lombok.Data;
 import lombok.NoArgsConstructor;

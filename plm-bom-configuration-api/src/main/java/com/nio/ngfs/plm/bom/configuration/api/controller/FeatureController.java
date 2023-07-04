@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.api.controller;
 
+import com.nio.bom.share.annotation.NeedAuthorization;
 import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.application.command.feature.AddGroupCommand;
 import com.nio.ngfs.plm.bom.configuration.application.query.feature.ListFeatureLibraryQuery;
@@ -33,12 +34,14 @@ public class FeatureController implements PlmFeatureClient {
 
     @PostMapping("/addGroup")
     @Override
+    @NeedAuthorization
     public ResultInfo<AddGroupRespDto> addGroup(@Valid @RequestBody AddGroupCmd request) {
         return ResultInfo.success(addGroupCommand.doAction(request));
     }
 
     @PostMapping("/listFeatureLibrary")
     @Override
+    @NeedAuthorization
     public ResultInfo<List<FeatureLibraryDto>> listFeatureLibrary(@Valid @RequestBody ListFeatureLibraryQry request) {
         return ResultInfo.success(listFeatureLibraryQuery.doAction(request));
     }

@@ -50,11 +50,6 @@
             <version>${commons.io.version}</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>com.nio.ngfs</groupId>
-            <artifactId>plm-bom-share</artifactId>
-            <version>${plm-bom-share.version}</version>
-        </dependency>
     </dependencies>
 
     <build>

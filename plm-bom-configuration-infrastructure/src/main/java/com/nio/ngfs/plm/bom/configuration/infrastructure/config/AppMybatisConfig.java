@@ -13,8 +13,8 @@ import org.springframework.context.annotation.PropertySource;
  * @since 1.0.0
  */
 @Configuration
-@MapperScan({"com.nio.ngfs.plm.bom.configuration.persistence.mapper"})
-@PropertySource(value = {"classpath:app-persistence.properties"})
+@MapperScan({"com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper"})
+@PropertySource(value = {"classpath:app-infrastructure.properties"})
 @Slf4j
 public class AppMybatisConfig {
 

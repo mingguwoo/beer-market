@@ -1,10 +1,10 @@
 package com.nio.ngfs.plm.bom.configuration.sdk;
 
 import com.nio.bom.share.result.ResultInfo;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.AddGroupRequest;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.ListFeatureLibraryRequest;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.AddGroupResponse;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.FeatureLibraryDTO;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.AddGroupCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.ListFeatureLibraryQry;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.AddGroupRespDto;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.FeatureLibraryDto;
 
 import java.util.List;
 
@@ -17,17 +17,17 @@ public interface PlmFeatureClient {
     /**
      * 添加Group
      *
-     * @param request 请求
+     * @param cmd 命令
      * @return 响应
      */
-    ResultInfo<AddGroupResponse> addGroup(AddGroupRequest request);
+    ResultInfo<AddGroupRespDto> addGroup(AddGroupCmd cmd);
 
     /**
      * Feature库列表
      *
-     * @param request 请求
+     * @param qry 查询
      * @return 响应
      */
-    ResultInfo<List<FeatureLibraryDTO>> listFeatureLibrary(ListFeatureLibraryRequest request);
+    ResultInfo<List<FeatureLibraryDto>> listFeatureLibrary(ListFeatureLibraryQry qry);
 
 }

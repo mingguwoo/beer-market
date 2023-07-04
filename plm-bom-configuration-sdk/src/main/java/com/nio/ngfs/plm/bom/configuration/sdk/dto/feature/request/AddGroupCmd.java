@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request;
 
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.Cmd;
 import lombok.Data;
 
 /**
@@ -7,7 +8,7 @@ import lombok.Data;
  * @date 2023/6/28
  */
 @Data
-public class AddGroupRequest {
+public class AddGroupCmd extends Cmd {
 
     private String groupCode;
 

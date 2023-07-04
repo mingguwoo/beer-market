@@ -3,8 +3,8 @@ package com.nio.ngfs.plm.bom.configuration.application.query.feature;
 import com.nio.ngfs.plm.bom.configuration.application.query.Query;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.ListFeatureLibraryRequest;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.FeatureLibraryDTO;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.ListFeatureLibraryQry;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.FeatureLibraryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -16,12 +16,12 @@ import java.util.List;
  */
 @Component
 @RequiredArgsConstructor
-public class ListFeatureLibraryQuery implements Query<ListFeatureLibraryRequest, List<FeatureLibraryDTO>> {
+public class ListFeatureLibraryQuery implements Query<ListFeatureLibraryQry, List<FeatureLibraryDto>> {
 
     private final FeatureRepository featureRepository;
 
     @Override
-    public List<FeatureLibraryDTO> doAction(ListFeatureLibraryRequest listFeatureLibraryRequest) {
+    public List<FeatureLibraryDto> doAction(ListFeatureLibraryQry qry) {
         // 查询
         // 1、可以直接调Repository查询
         // 2、也可以调DomainService

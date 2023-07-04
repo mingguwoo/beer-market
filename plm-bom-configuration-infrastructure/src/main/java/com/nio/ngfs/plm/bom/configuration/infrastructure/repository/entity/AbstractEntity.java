@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.po;
+package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -17,7 +17,7 @@ import java.util.Date;
  * @date 02/17/2023
  */
 @Data
-public class AbstractPO implements Serializable {
+public class AbstractEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 5862727978698906376L;

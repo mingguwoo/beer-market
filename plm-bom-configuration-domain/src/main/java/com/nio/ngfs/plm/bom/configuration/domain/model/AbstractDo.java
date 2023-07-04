@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.Objects;
 
 /**
- * 抽象实体
+ * 抽象实体（Domain Object）
  *
  * @author xiaozhou.tu
  * @date 2023/7/3
@@ -19,7 +19,7 @@ import java.util.Objects;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class AbstractEntity {
+public abstract class AbstractDo {
 
     /**
      * 删除标记

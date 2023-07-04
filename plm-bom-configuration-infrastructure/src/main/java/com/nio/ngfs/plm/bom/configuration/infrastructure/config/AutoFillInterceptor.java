@@ -1,6 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.config;
 
-import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.po.BasePO;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BasePO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.MappedStatement;

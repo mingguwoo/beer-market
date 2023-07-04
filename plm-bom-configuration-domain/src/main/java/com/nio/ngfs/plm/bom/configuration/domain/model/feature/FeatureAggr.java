@@ -1,12 +1,11 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.feature;
 
-import com.nio.bom.share.enums.ErrorCodeEnum;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.common.util.PreconditionUtil;
-import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractEntity;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.domainobject.EditGroupDO;
+import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.EditGroupCmd;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,7 +23,7 @@ import java.util.Objects;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FeatureAggr extends AbstractEntity {
+public class FeatureAggr extends AbstractDo {
 
     private static final int MAX_LENGTH = 128;
 
@@ -58,17 +57,17 @@ public class FeatureAggr extends AbstractEntity {
         setStatus(FeatureStatusEnum.ACTIVE.getStatus());
     }
 
-    public void editGroup(EditGroupDO editGroupDO) {
+    public void editGroup(EditGroupCmd cmd) {
         if (!Objects.equals(type, FeatureTypeEnum.GROUP.getType())) {
             throw new BusinessException(ErrorCodeEnum.FEATURE_ADD_GROUP_GROUP_CODE_REPEAT);
         }
-        setDisplayName(editGroupDO.getDisplayName());
-        setChineseName(editGroupDO.getChineseName());
-        setDescription(editGroupDO.getDescription());
-        setUpdateUser(editGroupDO.getUpdateUser());
+        setDisplayName(cmd.getDisplayName());
+        setChineseName(cmd.getChineseName());
+        setDescription(cmd.getDescription());
+        setUpdateUser(cmd.getUpdateUser());
         // status未更新
-        if (Objects.equals(status, editGroupDO.getStatus())) {
-            updateFeatureCode(editGroupDO.getFeatureCode());
+        if (Objects.equals(status, cmd.getStatus())) {
+            updateFeatureCode(cmd.getFeatureCode());
             return;
         }
         if (isActive()) {
@@ -80,10 +79,10 @@ public class FeatureAggr extends AbstractEntity {
             }
         } else {
             // status从Inactive变为Active
-            setStatus(editGroupDO.getStatus());
+            setStatus(cmd.getStatus());
             setStatusChanged(true);
             updateChildrenStatusActive();
-            updateFeatureCode(editGroupDO.getFeatureCode());
+            updateFeatureCode(cmd.getFeatureCode());
         }
     }
 

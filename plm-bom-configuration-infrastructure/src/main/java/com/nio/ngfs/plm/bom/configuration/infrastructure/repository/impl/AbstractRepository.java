@@ -10,7 +10,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.nio.ngfs.common.model.page.PageRequestUtils;
 import com.nio.ngfs.common.model.page.WherePageRequest;
 import com.nio.ngfs.plm.bom.configuration.common.constants.Constants;
-import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.po.AbstractPO;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.AbstractEntity;
 import io.micrometer.core.lang.Nullable;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 
@@ -24,11 +24,11 @@ import java.util.function.Supplier;
  * @author luke.zhu
  * @date 02/20/2023
  */
-public abstract class AbstractRepository<MAPPER extends BaseMapper<ENTITY>, ENTITY extends AbstractPO, WHERE extends WherePageRequest<ENTITY>> extends ServiceImpl<MAPPER, ENTITY> {
+public abstract class AbstractRepository<MAPPER extends BaseMapper<ENTITY>, ENTITY extends AbstractEntity, WHERE extends WherePageRequest<ENTITY>> extends ServiceImpl<MAPPER, ENTITY> {
 
     static {
         // 注意：下面一行必须加来将BaseDomain基类信息注入mybatis
-        TableInfoHelper.initTableInfo(new MapperBuilderAssistant(new MybatisConfiguration(), ""), AbstractPO.class);
+        TableInfoHelper.initTableInfo(new MapperBuilderAssistant(new MybatisConfiguration(), ""), AbstractEntity.class);
     }
 
     /**

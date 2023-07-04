@@ -3,7 +3,7 @@ package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter;
 import com.nio.ngfs.common.utils.BeanConvertUtils;
 import com.nio.ngfs.plm.bom.configuration.common.util.ConverterUtil;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
-import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.po.BomsFeatureLibraryPO;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureLibraryEntity;
 
 import java.util.List;
 
@@ -13,20 +13,20 @@ import java.util.List;
  */
 public class FeatureConverter {
 
-    public static BomsFeatureLibraryPO convertEntityToPo(FeatureAggr entity) {
-        return BeanConvertUtils.convertTo(entity, BomsFeatureLibraryPO::new);
+    public static BomsFeatureLibraryEntity convertDoToEntity(FeatureAggr aggr) {
+        return BeanConvertUtils.convertTo(aggr, BomsFeatureLibraryEntity::new);
     }
 
-    public static FeatureAggr convertPoToEntity(BomsFeatureLibraryPO po) {
-        return BeanConvertUtils.convertTo(po, FeatureAggr::new);
+    public static FeatureAggr convertEntityToDo(BomsFeatureLibraryEntity entity) {
+        return BeanConvertUtils.convertTo(entity, FeatureAggr::new);
     }
 
-    public static List<BomsFeatureLibraryPO> convertEntityListToPoList(List<FeatureAggr> entityList) {
-        return ConverterUtil.convertList(entityList, FeatureConverter::convertEntityToPo);
+    public static List<BomsFeatureLibraryEntity> convertDoListToEntityList(List<FeatureAggr> aggrList) {
+        return ConverterUtil.convertList(aggrList, FeatureConverter::convertDoToEntity);
     }
 
-    public static List<FeatureAggr> convertPoListToEntityList(List<BomsFeatureLibraryPO> poList) {
-        return ConverterUtil.convertList(poList, FeatureConverter::convertPoToEntity);
+    public static List<FeatureAggr> convertEntityListToDoList(List<BomsFeatureLibraryEntity> entityList) {
+        return ConverterUtil.convertList(entityList, FeatureConverter::convertEntityToDo);
     }
 
 }

@@ -7,8 +7,8 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.GroupAddEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.service.FeatureDomainService;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.AddGroupRequest;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.AddGroupResponse;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.AddGroupCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.AddGroupRespDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -18,16 +18,16 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class AddGroupCommand implements Command<AddGroupRequest, AddGroupResponse> {
+public class AddGroupCommand implements Command<AddGroupCmd, AddGroupRespDto> {
 
     private final FeatureDomainService featureDomainService;
     private final FeatureRepository featureRepository;
     private final EventPublisher eventPublisher;
 
     @Override
-    public AddGroupResponse doAction(AddGroupRequest request) {
+    public AddGroupRespDto doAction(AddGroupCmd cmd) {
         // 1、新增操作，使用工厂创建聚合根
-        FeatureAggr featureAggr = FeatureFactory.create(request);
+        FeatureAggr featureAggr = FeatureFactory.create(cmd);
         // 2、调用聚合根自己可以完成的操作
         featureAggr.addGroup();
         // 3、领域服务完成的操作
@@ -36,7 +36,7 @@ public class AddGroupCommand implements Command<AddGroupRequest, AddGroupRespons
         featureRepository.save(featureAggr);
         // 5、发布领域事件
         eventPublisher.publish(new GroupAddEvent());
-        return new AddGroupResponse();
+        return new AddGroupRespDto();
     }
 
 }

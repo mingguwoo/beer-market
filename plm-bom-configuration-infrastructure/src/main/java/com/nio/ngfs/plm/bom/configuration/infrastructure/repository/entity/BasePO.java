@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.po;
+package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

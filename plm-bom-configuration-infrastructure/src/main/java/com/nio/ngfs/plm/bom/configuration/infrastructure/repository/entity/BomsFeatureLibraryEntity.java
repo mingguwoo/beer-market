@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.po;
+package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("boms_feature_library")
-public class BomsFeatureLibraryPO extends AbstractPO {
+public class BomsFeatureLibraryEntity extends AbstractEntity {
 
     private String featureCode;
 

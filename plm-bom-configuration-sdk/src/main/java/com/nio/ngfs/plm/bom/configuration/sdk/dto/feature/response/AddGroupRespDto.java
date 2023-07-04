@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response;
 
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.Dto;
 import lombok.Data;
 
 /**
@@ -7,5 +8,5 @@ import lombok.Data;
  * @date 2023/6/28
  */
 @Data
-public class AddGroupResponse {
+public class AddGroupRespDto extends Dto {
 }

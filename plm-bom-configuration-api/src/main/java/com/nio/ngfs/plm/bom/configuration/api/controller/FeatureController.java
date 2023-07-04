@@ -4,10 +4,10 @@ import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.application.command.feature.AddGroupCommand;
 import com.nio.ngfs.plm.bom.configuration.application.query.feature.ListFeatureLibraryQuery;
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmFeatureClient;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.AddGroupRequest;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.ListFeatureLibraryRequest;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.AddGroupResponse;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.FeatureLibraryDTO;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.AddGroupCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.ListFeatureLibraryQry;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.AddGroupRespDto;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.FeatureLibraryDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,13 +33,13 @@ public class FeatureController implements PlmFeatureClient {
 
     @PostMapping("/addGroup")
     @Override
-    public ResultInfo<AddGroupResponse> addGroup(@Valid @RequestBody AddGroupRequest request) {
+    public ResultInfo<AddGroupRespDto> addGroup(@Valid @RequestBody AddGroupCmd request) {
         return ResultInfo.success(addGroupCommand.doAction(request));
     }
 
     @PostMapping("/listFeatureLibrary")
     @Override
-    public ResultInfo<List<FeatureLibraryDTO>> listFeatureLibrary(@Valid @RequestBody ListFeatureLibraryRequest request) {
+    public ResultInfo<List<FeatureLibraryDto>> listFeatureLibrary(@Valid @RequestBody ListFeatureLibraryQry request) {
         return ResultInfo.success(listFeatureLibraryQuery.doAction(request));
     }
 

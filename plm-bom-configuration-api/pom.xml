@@ -80,6 +80,11 @@
             <version>${swagger3.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.burningwave</groupId>
             <artifactId>core</artifactId>
             <version>${burningwave.version}</version>

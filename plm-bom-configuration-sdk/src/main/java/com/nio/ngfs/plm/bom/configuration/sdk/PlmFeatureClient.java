@@ -1,6 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.sdk;
 
-import com.nio.ngfs.common.model.BaseResponse;
+import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.AddGroupRequest;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.ListFeatureLibraryRequest;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.AddGroupResponse;
@@ -20,7 +20,7 @@ public interface PlmFeatureClient {
      * @param request 请求
      * @return 响应
      */
-    BaseResponse<AddGroupResponse> addGroup(AddGroupRequest request);
+    ResultInfo<AddGroupResponse> addGroup(AddGroupRequest request);
 
     /**
      * Feature库列表
@@ -28,6 +28,6 @@ public interface PlmFeatureClient {
      * @param request 请求
      * @return 响应
      */
-    BaseResponse<List<FeatureLibraryDTO>> listFeatureLibrary(ListFeatureLibraryRequest request);
+    ResultInfo<List<FeatureLibraryDTO>> listFeatureLibrary(ListFeatureLibraryRequest request);
 
 }

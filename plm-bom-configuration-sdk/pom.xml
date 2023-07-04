@@ -17,6 +17,7 @@
         <maven.deploy.skip>true</maven.deploy.skip>
         <lombok.version>1.18.26</lombok.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <plm-bom-share.version>1.0.0</plm-bom-share.version>
     </properties>
 
     <dependencies>
@@ -26,11 +27,15 @@
             <version>${lombok.version}</version>
             <scope>compile</scope>
         </dependency>
-
         <dependency>
             <groupId>com.nio.ngfs</groupId>
             <artifactId>ngfs-build-common</artifactId>
             <version>1.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.nio.ngfs</groupId>
+            <artifactId>plm-bom-share</artifactId>
+            <version>${plm-bom-share.version}</version>
         </dependency>
     </dependencies>
 

@@ -20,7 +20,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableAsync
 @EnableAspectJAutoProxy(proxyTargetClass = true, exposeProxy = true)
 @OpenAPIDefinition(servers = {@Server(url = "/", description = "BOM Configuration application default URL")})
-@SpringBootApplication(scanBasePackages = {"com.nio.ngfs"})
+@SpringBootApplication(scanBasePackages = {"com.nio.ngfs", "org.springdoc.webmvc.ui"})
 public class BomConfigurationApplication {
 
     public static void main(String[] args) {

@@ -1,7 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.feature;
 
-import com.nio.ngfs.plm.bom.configuration.common.enums.ErrorCode;
-import com.nio.ngfs.plm.bom.configuration.common.exception.BusinessException;
+import com.nio.bom.share.enums.ErrorCodeEnum;
+import com.nio.bom.share.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.common.util.PreconditionUtil;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractEntity;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.domainobject.EditGroupDO;
@@ -60,7 +60,7 @@ public class FeatureAggr extends AbstractEntity {
 
     public void editGroup(EditGroupDO editGroupDO) {
         if (!Objects.equals(type, FeatureTypeEnum.GROUP.getType())) {
-            throw new BusinessException(ErrorCode.FEATURE_ADD_GROUP_GROUP_CODE_REPEAT);
+            throw new BusinessException(ErrorCodeEnum.FEATURE_ADD_GROUP_GROUP_CODE_REPEAT);
         }
         setDisplayName(editGroupDO.getDisplayName());
         setChineseName(editGroupDO.getChineseName());
@@ -75,7 +75,7 @@ public class FeatureAggr extends AbstractEntity {
             // status从Active变为Inactive
             for (FeatureAggr children : childrenList) {
                 if (children.isActive()) {
-                    throw new BusinessException(ErrorCode.FEATURE_EDIT_GROUP_FEATURE_EXISTS_ACTIVE);
+                    throw new BusinessException(ErrorCodeEnum.FEATURE_EDIT_GROUP_FEATURE_EXISTS_ACTIVE);
                 }
             }
         } else {

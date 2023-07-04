@@ -1,9 +1,8 @@
 package com.nio.ngfs.plm.bom.configuration.api.config;
 
+import com.nio.bom.share.enums.ErrorCodeEnum;
+import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.common.exception.BusinessSilentException;
-import com.nio.ngfs.common.model.BaseResponse;
-import com.nio.ngfs.plm.bom.configuration.common.enums.ErrorCode;
-import com.nio.ngfs.plm.bom.configuration.common.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 /**
@@ -29,46 +29,66 @@ import java.util.stream.Collectors;
 @Slf4j
 public class AppExceptionHandler {
 
-    @ExceptionHandler(value = BusinessException.class)
-    @ResponseStatus(value = HttpStatus.OK)
-    @ResponseBody
-    public BaseResponse<Void> businessExceptionHandler(HttpServletRequest servletRequest, BusinessException e) {
-        log.error(String.format("request method [%s] [%s] business exception: [%s]", servletRequest.getMethod(), servletRequest.getRequestURI(), e.toString()), e);
-        return new BaseResponse<>(null, e.getCode(), e.getMessage(), null);
-    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
-    public BaseResponse<Void> methodArgumentNotValidExceptionHandler(HttpServletRequest servletRequest, MethodArgumentNotValidException e) {
+    public ResultInfo<String> methodArgumentNotValidExceptionHandler(HttpServletRequest servletRequest, MethodArgumentNotValidException e) {
         String message = e.getBindingResult().getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.joining());
         log.error("request method [{}] [{}] MethodArgumentNotValidException: [{}]", servletRequest.getMethod(), servletRequest.getRequestURI(), e.toString());
-        return new BaseResponse<>(null, ErrorCode.PARAMETER_ERROR.getCode(), StringUtils.defaultString(message, ErrorCode.PARAMETER_ERROR.getMessage()), null);
+        return new ResultInfo<>(ErrorCodeEnum.PARAMETER_ERROR.getCode(), StringUtils.defaultString(message, ErrorCodeEnum.PARAMETER_ERROR.getMessage()));
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
-    public BaseResponse<Void> constraintViolationExceptionHandler(HttpServletRequest servletRequest, ConstraintViolationException e) {
+    public ResultInfo<String> constraintViolationExceptionHandler(HttpServletRequest servletRequest, ConstraintViolationException e) {
         String message = e.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.joining());
         log.error("request method [{}] [{}] ConstraintViolationException: [{}]", servletRequest.getMethod(), servletRequest.getRequestURI(), e.toString());
-        return new BaseResponse<>(null, ErrorCode.PARAMETER_ERROR.getCode(), StringUtils.defaultString(message, ErrorCode.PARAMETER_ERROR.getMessage()), null);
+        return new ResultInfo<>(ErrorCodeEnum.PARAMETER_ERROR.getCode(), StringUtils.defaultString(message, ErrorCodeEnum.PARAMETER_ERROR.getMessage()));
+    }
+
+    @ExceptionHandler(value = com.nio.ngfs.common.exception.BusinessException.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    public ResultInfo<String> businessExceptionHandler(HttpServletRequest servletRequest, com.nio.ngfs.common.exception.BusinessException ex) {
+        ResultInfo<String> res = new ResultInfo<>();
+        res.setCode(ErrorCodeEnum.SERVER_ERROR.getCode());
+        res.setMessage(ex.getMessage());
+        log.error("request method [{}] [{}] business exception: [{}]", servletRequest.getMethod(), servletRequest.getRequestURI(), ex.toString());
+        return res;
     }
 
     @ExceptionHandler(value = BusinessSilentException.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
-    public BaseResponse<Void> businessSilentExceptionHandler(HttpServletRequest servletRequest, BusinessSilentException e) {
-        log.error("request method [{}] [{}] business silent exception: [{}]", servletRequest.getMethod(), servletRequest.getRequestURI(), e.toString());
-        return new BaseResponse<>(null, e.getResultCode(), e.getMessage(), null);
+    public ResultInfo<String> businessSilentExceptionHandler(HttpServletRequest servletRequest, BusinessSilentException ex) {
+        ResultInfo<String> res = new ResultInfo<>();
+        res.setCode(ErrorCodeEnum.SERVER_ERROR.getCode());
+        res.setMessage(ex.getMessage());
+        log.error("request method [{}] [{}] business silent exception: [{}]", servletRequest.getMethod(), servletRequest.getRequestURI(), ex.toString());
+        return res;
     }
 
-    @ExceptionHandler(value = Exception.class)
+    @ExceptionHandler(value = ClassNotFoundException.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
-    public BaseResponse<Void> basicExceptionHandler(HttpServletRequest request, Exception e) {
-        log.error("request method [{}] [{}] exception: [{}]", request.getMethod(), request.getRequestURI(), e.toString(), e);
-        return new BaseResponse<>(null, ErrorCode.SERVER_ERROR.getCode(), ErrorCode.SERVER_ERROR.getMessage(), null);
+    public ResultInfo<String> classNotFoundExceptionHandler(HttpServletRequest servletRequest, Exception ex){
+        ResultInfo<String> res = new ResultInfo<>();
+        res.setCode(ErrorCodeEnum.SERVER_ERROR.getCode());
+        res.setMessage(ex.getMessage());
+        log.error("request method [{}] [{}] class not found exception: [{}]", servletRequest.getMethod(), servletRequest.getRequestURI(), ex.toString());
+        return res;
+    }
+
+    @ExceptionHandler(value = {ExecutionException.class, InterruptedException.class})
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    public ResultInfo<String> threadPoolExceptionHandler(HttpServletRequest servletRequest, Exception ex){
+        ResultInfo<String> res = new ResultInfo<>();
+        res.setCode(ErrorCodeEnum.SERVER_ERROR.getCode());
+        res.setMessage(ex.getMessage());
+        log.error("request method [{}] [{}] execution or interrupted exception: [{}]", servletRequest.getMethod(), servletRequest.getRequestURI(), ex.toString());
+        return res;
     }
 
 }

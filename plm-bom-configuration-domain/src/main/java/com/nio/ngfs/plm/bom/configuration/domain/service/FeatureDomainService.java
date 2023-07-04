@@ -1,7 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service;
 
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.domainobject.AddGroupDO;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.domainobject.EditGroupDO;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 
 /**
  * Feature领域服务员
@@ -12,17 +11,19 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.feature.domainobject.Edit
 public interface FeatureDomainService {
 
     /**
-     * 新增Group
+     * check并获取集合根
      *
-     * @param addGroupDO addGroupDO
+     * @param id               主键ID
+     * @param containsChildren 是否包含children
+     * @return 集合根
      */
-    void addGroup(AddGroupDO addGroupDO);
+    FeatureAggr checkAndGetFeatureAggr(Long id, boolean containsChildren);
 
     /**
-     * 编辑Group
+     * 检查Group Code是否唯一
      *
-     * @param editGroupDO editGroupDO
+     * @param featureAggr featureAggr
      */
-    void editGroup(EditGroupDO editGroupDO);
+    void checkGroupCodeUnique(FeatureAggr featureAggr);
 
 }

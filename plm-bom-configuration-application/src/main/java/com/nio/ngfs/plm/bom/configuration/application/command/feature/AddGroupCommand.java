@@ -23,7 +23,7 @@ public class AddGroupCommand implements Command<AddGroupRequest, AddGroupRespons
         // 1、基本的请求参数校验直接在Request对象上使用Validation注解
         // 2、特殊场景下的参数校验
         // 3、请求参数转换为DO
-        // 4、领域服务编排
+        // 4、领域服务编排，不处理业务逻辑
         featureDomainService.addGroup(buildAddGroupDO(request));
         return new AddGroupResponse();
     }

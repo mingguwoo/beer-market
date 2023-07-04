@@ -1,7 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.application.event.oxo;
 
 import com.nio.ngfs.plm.bom.configuration.application.event.EventHandler;
-import com.nio.ngfs.plm.bom.configuration.domain.event.feature.AddGroupEvent;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.AddGroupEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 

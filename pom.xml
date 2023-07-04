@@ -45,7 +45,7 @@
         <module>plm-bom-configuration-application</module>
         <module>plm-bom-configuration-common</module>
         <module>plm-bom-configuration-domain</module>
-        <module>plm-bom-configuration-persistence</module>
+        <module>plm-bom-configuration-infrastructure</module>
         <module>plm-bom-configuration-spi</module>
     </modules>
 

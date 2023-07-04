@@ -3,7 +3,7 @@ package com.nio.ngfs.plm.bom.configuration.domain.service.impl;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ErrorCode;
 import com.nio.ngfs.plm.bom.configuration.common.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.domain.event.EventPublisher;
-import com.nio.ngfs.plm.bom.configuration.domain.event.feature.AddGroupEvent;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.AddGroupEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
@@ -33,6 +33,7 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
         // 2、调用聚合根自己可以完成的操作
         // 3、领域服务完成的操作
         // 4、Repository保存
+        // 5、发布领域事件
         FeatureAggr featureAggr = FeatureFactory.create(addGroupDO);
         featureAggr.addGroup();
         checkGroupCodeUnique(featureAggr);

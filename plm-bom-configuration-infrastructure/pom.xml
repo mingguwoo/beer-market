@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.nio.ngfs</groupId>
+        <artifactId>plm-bom-configuration-parents</artifactId>
+        <version>${revision}</version>
+        <relativePath>../plm-bom-configuration-parents/pom.xml</relativePath>
+    </parent>
+
+    <artifactId>plm-bom-configuration-infrastructure</artifactId>
+    <packaging>jar</packaging>
+
+    <name>plm-bom-configuration :: infrastructure</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.nio.ngfs</groupId>
+            <artifactId>plm-bom-configuration-domain</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.nio.ngfs</groupId>
+            <artifactId>ngfs-starter-mybatis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>${swagger3.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-models</artifactId>
+            <version>${swagger3.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.nio</groupId>
+            <artifactId>nio-dynamic-threadpool-starter</artifactId>
+            <version>${dynamicTp.starter.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>cn.hutool</groupId>
+                    <artifactId>hutool-all</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}</finalName>
+    </build>
+
+</project>

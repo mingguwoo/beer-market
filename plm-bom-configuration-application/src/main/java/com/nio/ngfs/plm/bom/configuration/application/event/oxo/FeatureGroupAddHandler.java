@@ -1,7 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.application.event.oxo;
 
 import com.nio.ngfs.plm.bom.configuration.application.event.EventHandler;
-import com.nio.ngfs.plm.bom.configuration.domain.event.feature.AddGroupEvent;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.GroupAddEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -10,11 +10,11 @@ import org.springframework.stereotype.Component;
  * @date 2023/7/3
  */
 @Component
-public class FeatureGroupAddHandler implements EventHandler<AddGroupEvent> {
+public class FeatureGroupAddHandler implements EventHandler<GroupAddEvent> {
 
     @Override
     @EventListener
-    public void handle(AddGroupEvent event) {
+    public void handle(GroupAddEvent event) {
     }
 
 }

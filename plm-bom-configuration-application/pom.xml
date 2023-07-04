@@ -23,7 +23,7 @@
         </dependency>
         <dependency>
             <groupId>com.nio.ngfs</groupId>
-            <artifactId>plm-bom-configuration-persistence</artifactId>
+            <artifactId>plm-bom-configuration-infrastructure</artifactId>
             <version>${revision}</version>
         </dependency>
         <dependency>

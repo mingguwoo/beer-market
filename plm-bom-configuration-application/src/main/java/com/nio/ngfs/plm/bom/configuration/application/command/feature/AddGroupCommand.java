@@ -1,7 +1,11 @@
 package com.nio.ngfs.plm.bom.configuration.application.command.feature;
 
 import com.nio.ngfs.plm.bom.configuration.application.command.Command;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.domainobject.AddGroupDO;
+import com.nio.ngfs.plm.bom.configuration.domain.event.EventPublisher;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureFactory;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.GroupAddEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.service.FeatureDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.AddGroupRequest;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.AddGroupResponse;
@@ -17,24 +21,22 @@ import org.springframework.stereotype.Component;
 public class AddGroupCommand implements Command<AddGroupRequest, AddGroupResponse> {
 
     private final FeatureDomainService featureDomainService;
+    private final FeatureRepository featureRepository;
+    private final EventPublisher eventPublisher;
 
     @Override
     public AddGroupResponse doAction(AddGroupRequest request) {
-        // 1、基本的请求参数校验直接在Request对象上使用Validation注解
-        // 2、特殊场景下的参数校验
-        // 3、请求参数转换为DO
-        // 4、领域服务编排
-        featureDomainService.addGroup(buildAddGroupDO(request));
+        // 1、新增操作，使用工厂创建聚合根
+        FeatureAggr featureAggr = FeatureFactory.create(request);
+        // 2、调用聚合根自己可以完成的操作
+        featureAggr.addGroup();
+        // 3、领域服务完成的操作
+        featureDomainService.checkGroupCodeUnique(featureAggr);
+        // 4、Repository保存
+        featureRepository.save(featureAggr);
+        // 5、发布领域事件
+        eventPublisher.publish(new GroupAddEvent());
         return new AddGroupResponse();
-    }
-
-    private AddGroupDO buildAddGroupDO(AddGroupRequest request) {
-        return AddGroupDO.builder()
-                .featureCode(request.getGroupCode())
-                .displayName(request.getDisplayName())
-                .chineseName(request.getChineseName())
-                .description(request.getDescription())
-                .build();
     }
 
 }

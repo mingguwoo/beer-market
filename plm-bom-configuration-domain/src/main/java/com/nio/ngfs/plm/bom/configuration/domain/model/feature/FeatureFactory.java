@@ -1,6 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.feature;
 
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.domainobject.AddGroupDO;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.AddGroupRequest;
 
 /**
  * @author xiaozhou.tu
@@ -8,14 +8,14 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.feature.domainobject.AddG
  */
 public class FeatureFactory {
 
-    public static FeatureAggr create(AddGroupDO addGroupDO) {
+    public static FeatureAggr create(AddGroupRequest addGroupDO) {
         return FeatureAggr.builder()
-                .featureCode(addGroupDO.getFeatureCode())
+                .featureCode(addGroupDO.getGroupCode())
                 .displayName(addGroupDO.getDisplayName())
                 .chineseName(addGroupDO.getChineseName())
                 .description(addGroupDO.getDescription())
-                .createUser(addGroupDO.getCreateUser())
-                .updateUser(addGroupDO.getCreateUser())
+                .createUser("")
+                .updateUser("")
                 .build();
     }
 

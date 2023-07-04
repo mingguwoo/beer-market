@@ -17,7 +17,7 @@ import java.util.Date;
  * @date 02/17/2023
  */
 @Data
-public class AbstractEntity implements Serializable {
+public class BaseEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 5862727978698906376L;

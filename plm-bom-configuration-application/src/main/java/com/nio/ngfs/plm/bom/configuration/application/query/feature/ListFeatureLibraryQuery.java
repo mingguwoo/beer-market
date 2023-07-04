@@ -21,7 +21,7 @@ public class ListFeatureLibraryQuery implements Query<ListFeatureLibraryQry, Lis
     private final FeatureRepository featureRepository;
 
     @Override
-    public List<FeatureLibraryDto> doAction(ListFeatureLibraryQry qry) {
+    public List<FeatureLibraryDto> execute(ListFeatureLibraryQry qry) {
         // 查询
         // 1、可以直接调Repository查询
         // 2、也可以调DomainService

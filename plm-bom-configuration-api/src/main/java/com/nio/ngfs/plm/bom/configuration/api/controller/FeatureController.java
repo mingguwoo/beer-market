@@ -33,14 +33,14 @@ public class FeatureController implements PlmFeatureClient {
 
     @PostMapping("/addGroup")
     @Override
-    public ResultInfo<AddGroupRespDto> addGroup(@Valid @RequestBody AddGroupCmd request) {
-        return ResultInfo.success(addGroupCommand.doAction(request));
+    public ResultInfo<AddGroupRespDto> addGroup(@Valid @RequestBody AddGroupCmd cmd) {
+        return ResultInfo.success(addGroupCommand.execute(cmd));
     }
 
     @PostMapping("/listFeatureLibrary")
     @Override
-    public ResultInfo<List<FeatureLibraryDto>> listFeatureLibrary(@Valid @RequestBody ListFeatureLibraryQry request) {
-        return ResultInfo.success(listFeatureLibraryQuery.doAction(request));
+    public ResultInfo<List<FeatureLibraryDto>> listFeatureLibrary(@Valid @RequestBody ListFeatureLibraryQry qry) {
+        return ResultInfo.success(listFeatureLibraryQuery.execute(qry));
     }
 
 }

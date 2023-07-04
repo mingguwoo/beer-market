@@ -25,7 +25,7 @@ public class AddGroupCommand implements Command<AddGroupCmd, AddGroupRespDto> {
     private final EventPublisher eventPublisher;
 
     @Override
-    public AddGroupRespDto doAction(AddGroupCmd cmd) {
+    public AddGroupRespDto execute(AddGroupCmd cmd) {
         // 1、新增操作，使用工厂创建聚合根
         FeatureAggr featureAggr = FeatureFactory.create(cmd);
         // 2、调用聚合根自己可以完成的操作

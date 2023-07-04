@@ -21,4 +21,6 @@ public class BomsFeatureLibraryEntity extends BaseEntity {
 
     private String type;
 
+    private String parentFeatureCode;
+
 }

@@ -3,7 +3,7 @@ package com.nio.ngfs.plm.bom.configuration.domain.service;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 
 /**
- * Feature领域服务员
+ * Feature领域服务
  *
  * @author xiaozhou.tu
  * @date 2023/6/28

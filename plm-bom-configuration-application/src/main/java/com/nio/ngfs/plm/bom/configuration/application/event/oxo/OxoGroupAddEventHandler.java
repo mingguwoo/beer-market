@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  * @date 2023/7/3
  */
 @Component
-public class FeatureGroupAddHandler implements EventHandler<GroupAddEvent> {
+public class OxoGroupAddEventHandler implements EventHandler<GroupAddEvent> {
 
     @Override
     @EventListener

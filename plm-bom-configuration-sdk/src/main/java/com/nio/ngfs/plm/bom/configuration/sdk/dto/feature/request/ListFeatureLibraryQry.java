@@ -8,5 +8,5 @@ import lombok.Data;
  * @date 2023/6/28
  */
 @Data
-public class ListFeatureLibraryQry extends Qry {
+public class ListFeatureLibraryQry implements Qry {
 }

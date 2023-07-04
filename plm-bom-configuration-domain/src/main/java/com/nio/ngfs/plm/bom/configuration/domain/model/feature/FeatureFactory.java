@@ -11,10 +11,8 @@ public class FeatureFactory {
 
     public static FeatureAggr create(AddGroupCmd cmd) {
         return FeatureAggr.builder()
-                .featureId(FeatureId.builder()
-                        .featureCode(cmd.getGroupCode())
-                        .type(FeatureTypeEnum.GROUP.getType())
-                        .build())
+                .featureCode(cmd.getGroupCode())
+                .type(FeatureTypeEnum.GROUP.getType())
                 .displayName(cmd.getDisplayName())
                 .chineseName(cmd.getChineseName())
                 .description(cmd.getDescription())

@@ -8,7 +8,7 @@ import lombok.Data;
  * @date 2023/7/4
  */
 @Data
-public class EditGroupCmd extends Cmd {
+public class EditGroupCmd implements Cmd {
 
     private String featureCode;
 

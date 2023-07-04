@@ -8,5 +8,5 @@ import lombok.Data;
  * @date 2023/6/28
  */
 @Data
-public class AddGroupRespDto extends Dto {
+public class AddGroupRespDto implements Dto {
 }

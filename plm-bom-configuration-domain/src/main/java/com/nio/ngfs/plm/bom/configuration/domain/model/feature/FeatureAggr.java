@@ -25,7 +25,7 @@ import java.util.Objects;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
+public class FeatureAggr extends AbstractDo implements AggrRoot<Long> {
 
     private static final int MAX_LENGTH = 128;
 
@@ -33,7 +33,11 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
 
     private transient List<FeatureAggr> childrenList = Collections.emptyList();
 
-    private FeatureId featureId;
+    private Long id;
+
+    private String featureCode;
+
+    private String type;
 
     private String parentFeatureCode;
 
@@ -48,13 +52,13 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
     private transient boolean statusChanged;
 
     @Override
-    public FeatureId getId() {
-        return featureId;
+    public Long getUniqId() {
+        return id;
     }
 
     public void addGroup() {
-        PreconditionUtil.checkNotNull(getId().getFeatureCode(), "Group Code");
-        PreconditionUtil.checkMaxLength(getId().getFeatureCode(), MAX_LENGTH, "Group Code");
+        PreconditionUtil.checkNotNull(featureCode, "Group Code");
+        PreconditionUtil.checkMaxLength(featureCode, MAX_LENGTH, "Group Code");
         PreconditionUtil.checkMaxLength(displayName, MAX_LENGTH, "Display Name");
         PreconditionUtil.checkMaxLength(chineseName, MAX_LENGTH, "Chinese Name");
         PreconditionUtil.checkMaxLength(description, MAX_LENGTH, "Description");
@@ -62,7 +66,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
     }
 
     public void editGroup(EditGroupCmd cmd) {
-        if (!Objects.equals(getId().getType(), FeatureTypeEnum.GROUP.getType())) {
+        if (!Objects.equals(type, FeatureTypeEnum.GROUP.getType())) {
             throw new BusinessException(ErrorCode.FEATURE_ADD_GROUP_GROUP_CODE_REPEAT);
         }
         setDisplayName(cmd.getDisplayName());
@@ -95,19 +99,15 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
     }
 
     private void updateFeatureCode(String newFeatureCode) {
-        if (Objects.equals(getId().getFeatureCode(), newFeatureCode)) {
+        if (Objects.equals(featureCode, newFeatureCode)) {
             return;
         }
-        getId().setFeatureCode(newFeatureCode);
+        setFeatureCode(newFeatureCode);
         childrenList.forEach(children -> children.setParentFeatureCode(newFeatureCode));
     }
 
     public boolean isActive() {
         return Objects.equals(status, FeatureStatusEnum.ACTIVE.getStatus());
-    }
-
-    public boolean isInactive() {
-        return Objects.equals(status, FeatureStatusEnum.INACTIVE.getStatus());
     }
 
 }

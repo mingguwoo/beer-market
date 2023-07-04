@@ -10,7 +10,7 @@ import java.util.List;
  * @date 2023/6/28
  */
 @Data
-public class FeatureLibraryDto extends Dto {
+public class FeatureLibraryDto implements Dto {
 
     private String featureCode;
 

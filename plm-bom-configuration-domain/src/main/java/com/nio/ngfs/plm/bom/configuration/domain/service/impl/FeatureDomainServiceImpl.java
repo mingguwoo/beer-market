@@ -20,12 +20,12 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
 
     @Override
     public FeatureAggr checkAndGetFeatureAggr(Long id, boolean containsChildren) {
-        FeatureAggr featureAggr = featureRepository.getById(id);
+        FeatureAggr featureAggr = featureRepository.find(id);
         if (featureAggr == null) {
             throw new BusinessException(ErrorCode.FEATURE_ADD_GROUP_GROUP_CODE_REPEAT);
         }
         if (containsChildren) {
-            featureAggr.setChildrenList(featureRepository.queryByParentFeatureCode(featureAggr.getId().getFeatureCode()));
+            featureAggr.setChildrenList(featureRepository.queryByParentFeatureCode(featureAggr.getFeatureCode()));
         }
         return featureAggr;
     }

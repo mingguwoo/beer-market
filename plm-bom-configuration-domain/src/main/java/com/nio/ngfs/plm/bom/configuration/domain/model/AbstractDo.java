@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.Objects;
 
 /**
- * 抽象实体（Domain Object）
+ * 抽象领域对象（Domain Object）
  *
  * @author xiaozhou.tu
  * @date 2023/7/3

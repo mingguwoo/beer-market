@@ -15,10 +15,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("boms_feature_library")
-public class BomsFeatureLibraryEntity extends AbstractEntity {
+public class BomsFeatureLibraryEntity extends BaseEntity {
 
     private String featureCode;
 
     private String type;
+
+    private String parentFeatureCode;
 
 }

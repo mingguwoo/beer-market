@@ -11,11 +11,11 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.Dto;
 public interface Application<Request extends Dto, Response> {
 
     /**
-     * 处理业务动作
+     * 应用执行
      *
      * @param request 请求
      * @return 响应
      */
-    Response doAction(Request request);
+    Response execute(Request request);
 
 }

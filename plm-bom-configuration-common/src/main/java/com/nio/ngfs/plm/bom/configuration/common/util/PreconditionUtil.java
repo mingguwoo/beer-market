@@ -1,8 +1,8 @@
 package com.nio.ngfs.plm.bom.configuration.common.util;
 
 import com.google.common.base.Preconditions;
-import com.nio.bom.share.enums.ErrorCodeEnum;
-import com.nio.bom.share.exception.BusinessException;
+import com.nio.ngfs.plm.bom.configuration.common.enums.ErrorCode;
+import com.nio.ngfs.plm.bom.configuration.common.exception.BusinessException;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -23,7 +23,7 @@ public class PreconditionUtil {
         try {
             Preconditions.checkArgument(expression, errorMessage);
         } catch (Exception e) {
-            throw new BusinessException(ErrorCodeEnum.PARAMETER_ERROR.getCode(), errorMessage);
+            throw new BusinessException(ErrorCode.PARAMETER_ERROR.getCode(), errorMessage);
         }
     }
 
@@ -31,7 +31,7 @@ public class PreconditionUtil {
         try {
             Preconditions.checkNotNull(reference, errorMessage);
         } catch (Exception e) {
-            throw new BusinessException(ErrorCodeEnum.PARAMETER_ERROR.getCode(), errorMessage);
+            throw new BusinessException(ErrorCode.PARAMETER_ERROR.getCode(), errorMessage);
         }
     }
 

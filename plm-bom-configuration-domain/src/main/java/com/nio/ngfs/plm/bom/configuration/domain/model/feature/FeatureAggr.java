@@ -1,7 +1,8 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.feature;
 
-import com.nio.bom.share.enums.ErrorCodeEnum;
-import com.nio.bom.share.exception.BusinessException;
+import com.nio.bom.share.domain.model.AggrRoot;
+import com.nio.ngfs.plm.bom.configuration.common.enums.ErrorCode;
+import com.nio.ngfs.plm.bom.configuration.common.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.common.util.PreconditionUtil;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusEnum;
@@ -24,7 +25,7 @@ import java.util.Objects;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FeatureAggr extends AbstractDo {
+public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
 
     private static final int MAX_LENGTH = 128;
 
@@ -32,11 +33,9 @@ public class FeatureAggr extends AbstractDo {
 
     private transient List<FeatureAggr> childrenList = Collections.emptyList();
 
-    private String featureCode;
+    private FeatureId featureId;
 
     private String parentFeatureCode;
-
-    private String type;
 
     private String displayName;
 
@@ -48,19 +47,23 @@ public class FeatureAggr extends AbstractDo {
 
     private transient boolean statusChanged;
 
+    @Override
+    public FeatureId getId() {
+        return featureId;
+    }
+
     public void addGroup() {
-        PreconditionUtil.checkNotNull(featureCode, "Group Code");
-        PreconditionUtil.checkMaxLength(featureCode, MAX_LENGTH, "Group Code");
+        PreconditionUtil.checkNotNull(getId().getFeatureCode(), "Group Code");
+        PreconditionUtil.checkMaxLength(getId().getFeatureCode(), MAX_LENGTH, "Group Code");
         PreconditionUtil.checkMaxLength(displayName, MAX_LENGTH, "Display Name");
         PreconditionUtil.checkMaxLength(chineseName, MAX_LENGTH, "Chinese Name");
         PreconditionUtil.checkMaxLength(description, MAX_LENGTH, "Description");
-        setType(FeatureTypeEnum.GROUP.getType());
         setStatus(FeatureStatusEnum.ACTIVE.getStatus());
     }
 
     public void editGroup(EditGroupCmd cmd) {
-        if (!Objects.equals(type, FeatureTypeEnum.GROUP.getType())) {
-            throw new BusinessException(ErrorCodeEnum.FEATURE_ADD_GROUP_GROUP_CODE_REPEAT);
+        if (!Objects.equals(getId().getType(), FeatureTypeEnum.GROUP.getType())) {
+            throw new BusinessException(ErrorCode.FEATURE_ADD_GROUP_GROUP_CODE_REPEAT);
         }
         setDisplayName(cmd.getDisplayName());
         setChineseName(cmd.getChineseName());
@@ -75,7 +78,7 @@ public class FeatureAggr extends AbstractDo {
             // status从Active变为Inactive
             for (FeatureAggr children : childrenList) {
                 if (children.isActive()) {
-                    throw new BusinessException(ErrorCodeEnum.FEATURE_EDIT_GROUP_FEATURE_EXISTS_ACTIVE);
+                    throw new BusinessException(ErrorCode.FEATURE_EDIT_GROUP_FEATURE_EXISTS_ACTIVE);
                 }
             }
         } else {
@@ -92,10 +95,10 @@ public class FeatureAggr extends AbstractDo {
     }
 
     private void updateFeatureCode(String newFeatureCode) {
-        if (Objects.equals(featureCode, newFeatureCode)) {
+        if (Objects.equals(getId().getFeatureCode(), newFeatureCode)) {
             return;
         }
-        setFeatureCode(newFeatureCode);
+        getId().setFeatureCode(newFeatureCode);
         childrenList.forEach(children -> children.setParentFeatureCode(newFeatureCode));
     }
 

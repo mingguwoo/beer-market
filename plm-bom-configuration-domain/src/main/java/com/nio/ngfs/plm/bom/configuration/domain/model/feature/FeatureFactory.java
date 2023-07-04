@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.feature;
 
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.AddGroupCmd;
 
 /**
@@ -10,7 +11,10 @@ public class FeatureFactory {
 
     public static FeatureAggr create(AddGroupCmd cmd) {
         return FeatureAggr.builder()
-                .featureCode(cmd.getGroupCode())
+                .featureId(FeatureId.builder()
+                        .featureCode(cmd.getGroupCode())
+                        .type(FeatureTypeEnum.GROUP.getType())
+                        .build())
                 .displayName(cmd.getDisplayName())
                 .chineseName(cmd.getChineseName())
                 .description(cmd.getDescription())

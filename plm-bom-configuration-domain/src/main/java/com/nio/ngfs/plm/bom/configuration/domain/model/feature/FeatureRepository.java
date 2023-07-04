@@ -1,6 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.feature;
 
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
+import com.nio.bom.share.domain.repository.Repository;
 
 import java.util.List;
 
@@ -8,34 +8,29 @@ import java.util.List;
  * @author xiaozhou.tu
  * @date 2023/6/28
  */
-public interface FeatureRepository {
+public interface FeatureRepository extends Repository<FeatureAggr, FeatureId> {
 
     /**
-     * 保存
-     *
-     * @param featureAggr featureAggr
-     */
-    void save(FeatureAggr featureAggr);
-
-    /**
-     * 查找Feature
-     *
-     * @param featureCode featureCode
-     * @param featureType 类型
-     * @return Feature
-     */
-    FeatureAggr find(String featureCode, FeatureTypeEnum featureType);
-
-    /**
-     * 查找Feature
+     * 根据主键id查找
      *
      * @param id id
-     * @return Feature
+     * @return FeatureAggr
      */
-    FeatureAggr find(Long id);
+    FeatureAggr getById(Long id);
 
+    /**
+     * 根据parentFeatureCode查找
+     *
+     * @param parentFeatureCode parentFeatureCode
+     * @return FeatureAggr列表
+     */
     List<FeatureAggr> queryByParentFeatureCode(String parentFeatureCode);
 
-    List<FeatureAggr> listFeatureLibrary();
+    /**
+     * 查找所有
+     *
+     * @return FeatureAggr列表
+     */
+    List<FeatureAggr> queryAll();
 
 }

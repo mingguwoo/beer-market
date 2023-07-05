@@ -1,20 +1,30 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.dtp.core.thread.DtpExecutor;
+import com.google.common.collect.Lists;
 import com.nio.ngfs.common.model.page.WherePageRequest;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsFeatureLibraryDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureLibraryEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsFeatureLibraryMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 /**
  * @author xiaozhou.tu
  * @date 2023/7/5
  */
 @Repository
+@Slf4j
 public class BomsFeatureLibraryDaoImpl extends AbstractDao<BomsFeatureLibraryMapper, BomsFeatureLibraryEntity, WherePageRequest<BomsFeatureLibraryEntity>> implements BomsFeatureLibraryDao {
+
+    @Resource
+    private DtpExecutor ioThreadPool;
 
     @Override
     protected void fuzzyConditions(WherePageRequest<BomsFeatureLibraryEntity> bomsFeatureLibraryEntityWherePageRequest, LambdaQueryWrapper<BomsFeatureLibraryEntity> queryWrapper) {
@@ -38,6 +48,19 @@ public class BomsFeatureLibraryDaoImpl extends AbstractDao<BomsFeatureLibraryMap
     @Override
     public List<BomsFeatureLibraryEntity> queryAll() {
         return getBaseMapper().selectList(new LambdaQueryWrapper<>());
+    }
+
+    /**
+     * 测试动态线程池使用
+     * */
+    public List<BomsFeatureLibraryEntity> batchQuery() {
+        Future<List<BomsFeatureLibraryEntity>> queryFuture = ioThreadPool.submit(() -> getBaseMapper().selectList(new LambdaQueryWrapper<>()));
+        try {
+            return queryFuture.get();
+        } catch (ExecutionException | InterruptedException ex) {
+            log.error("Encountered exception: {} ", ex.getMessage());
+        }
+        return Lists.newArrayList();
     }
 
 }

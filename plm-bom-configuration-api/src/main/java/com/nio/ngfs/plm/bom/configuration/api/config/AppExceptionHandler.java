@@ -1,6 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.api.config;
 
-import com.nio.bom.share.enums.ErrorCodeEnum;
+import com.nio.bom.share.enums.CommonErrorCode;
 import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.common.exception.BusinessSilentException;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +35,7 @@ public class AppExceptionHandler {
     public ResultInfo<String> methodArgumentNotValidExceptionHandler(HttpServletRequest servletRequest, MethodArgumentNotValidException e) {
         String message = e.getBindingResult().getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.joining());
         log.error("request method [{}] [{}] MethodArgumentNotValidException: [{}]", servletRequest.getMethod(), servletRequest.getRequestURI(), e.toString());
-        return new ResultInfo<>(ErrorCodeEnum.PARAMETER_ERROR.getCode(), StringUtils.defaultString(message, ErrorCodeEnum.PARAMETER_ERROR.getMessage()));
+        return new ResultInfo<>(CommonErrorCode.PARAMETER_ERROR.getCode(), StringUtils.defaultString(message, CommonErrorCode.PARAMETER_ERROR.getMessage()));
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
@@ -44,7 +44,7 @@ public class AppExceptionHandler {
     public ResultInfo<String> constraintViolationExceptionHandler(HttpServletRequest servletRequest, ConstraintViolationException e) {
         String message = e.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.joining());
         log.error("request method [{}] [{}] ConstraintViolationException: [{}]", servletRequest.getMethod(), servletRequest.getRequestURI(), e.toString());
-        return new ResultInfo<>(ErrorCodeEnum.PARAMETER_ERROR.getCode(), StringUtils.defaultString(message, ErrorCodeEnum.PARAMETER_ERROR.getMessage()));
+        return new ResultInfo<>(CommonErrorCode.PARAMETER_ERROR.getCode(), StringUtils.defaultString(message, CommonErrorCode.PARAMETER_ERROR.getMessage()));
     }
 
     @ExceptionHandler(value = com.nio.ngfs.common.exception.BusinessException.class)
@@ -52,7 +52,7 @@ public class AppExceptionHandler {
     @ResponseBody
     public ResultInfo<String> businessExceptionHandler(HttpServletRequest servletRequest, com.nio.ngfs.common.exception.BusinessException ex) {
         ResultInfo<String> res = new ResultInfo<>();
-        res.setCode(ErrorCodeEnum.SERVER_ERROR.getCode());
+        res.setCode(CommonErrorCode.SERVER_ERROR.getCode());
         res.setMessage(ex.getMessage());
         log.error("request method [{}] [{}] business exception: [{}]", servletRequest.getMethod(), servletRequest.getRequestURI(), ex.toString());
         return res;
@@ -63,7 +63,7 @@ public class AppExceptionHandler {
     @ResponseBody
     public ResultInfo<String> businessSilentExceptionHandler(HttpServletRequest servletRequest, BusinessSilentException ex) {
         ResultInfo<String> res = new ResultInfo<>();
-        res.setCode(ErrorCodeEnum.SERVER_ERROR.getCode());
+        res.setCode(CommonErrorCode.SERVER_ERROR.getCode());
         res.setMessage(ex.getMessage());
         log.error("request method [{}] [{}] business silent exception: [{}]", servletRequest.getMethod(), servletRequest.getRequestURI(), ex.toString());
         return res;
@@ -74,7 +74,7 @@ public class AppExceptionHandler {
     @ResponseBody
     public ResultInfo<String> classNotFoundExceptionHandler(HttpServletRequest servletRequest, Exception ex){
         ResultInfo<String> res = new ResultInfo<>();
-        res.setCode(ErrorCodeEnum.SERVER_ERROR.getCode());
+        res.setCode(CommonErrorCode.SERVER_ERROR.getCode());
         res.setMessage(ex.getMessage());
         log.error("request method [{}] [{}] class not found exception: [{}]", servletRequest.getMethod(), servletRequest.getRequestURI(), ex.toString());
         return res;
@@ -85,7 +85,7 @@ public class AppExceptionHandler {
     @ResponseBody
     public ResultInfo<String> threadPoolExceptionHandler(HttpServletRequest servletRequest, Exception ex){
         ResultInfo<String> res = new ResultInfo<>();
-        res.setCode(ErrorCodeEnum.SERVER_ERROR.getCode());
+        res.setCode(CommonErrorCode.SERVER_ERROR.getCode());
         res.setMessage(ex.getMessage());
         log.error("request method [{}] [{}] execution or interrupted exception: [{}]", servletRequest.getMethod(), servletRequest.getRequestURI(), ex.toString());
         return res;

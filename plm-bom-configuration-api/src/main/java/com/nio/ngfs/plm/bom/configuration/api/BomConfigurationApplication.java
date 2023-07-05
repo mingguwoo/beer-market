@@ -1,9 +1,9 @@
 package com.nio.ngfs.plm.bom.configuration.api;
 
-import com.dtp.core.spring.EnableDynamicTp;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.servers.Server;
 import org.burningwave.core.assembler.StaticComponentContainer;
+import org.dromara.dynamictp.core.spring.EnableDynamicTp;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;

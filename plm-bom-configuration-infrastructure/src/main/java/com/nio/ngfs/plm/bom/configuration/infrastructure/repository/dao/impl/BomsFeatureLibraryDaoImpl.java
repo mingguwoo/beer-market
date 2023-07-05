@@ -1,13 +1,13 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.dtp.core.thread.DtpExecutor;
 import com.google.common.collect.Lists;
 import com.nio.ngfs.common.model.page.WherePageRequest;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsFeatureLibraryDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureLibraryEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsFeatureLibraryMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.dynamictp.core.thread.DtpExecutor;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;

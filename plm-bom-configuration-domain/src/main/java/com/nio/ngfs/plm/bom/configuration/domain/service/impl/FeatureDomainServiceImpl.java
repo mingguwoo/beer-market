@@ -1,7 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service.impl;
 
+import com.nio.bom.share.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
-import com.nio.ngfs.plm.bom.configuration.common.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.service.FeatureDomainService;

@@ -1,9 +1,9 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.feature;
 
 import com.nio.bom.share.domain.model.AggrRoot;
+import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.PreconditionUtil;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
-import com.nio.ngfs.plm.bom.configuration.common.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;

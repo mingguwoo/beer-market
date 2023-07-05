@@ -7,9 +7,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.nio.bom.share.constants.CommonConstants;
 import com.nio.ngfs.common.model.page.PageRequestUtils;
 import com.nio.ngfs.common.model.page.WherePageRequest;
-import com.nio.ngfs.plm.bom.configuration.common.constants.Constants;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BaseEntity;
 import io.micrometer.core.lang.Nullable;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
@@ -40,12 +40,12 @@ public abstract class AbstractDao<MAPPER extends BaseMapper<ENTITY>, ENTITY exte
      */
     public String delete(ENTITY entity, LambdaUpdateWrapper<ENTITY> updateWrapper) {
         if (Objects.isNull(entity)) {
-            updateWrapper.set(ENTITY::getDelFlag, Constants.DEL_FLAG);
+            updateWrapper.set(ENTITY::getDelFlag, CommonConstants.DEL_FLAG);
         } else {
-            entity.setDelFlag(Constants.DEL_FLAG);
+            entity.setDelFlag(CommonConstants.DEL_FLAG);
         }
         int result = getBaseMapper().update(entity, updateWrapper);
-        return result == Constants.DEL_FLAG ? "删除成功!" : "删除失败!!!";
+        return result == CommonConstants.DEL_FLAG ? "删除成功!" : "删除失败!!!";
     }
 
     /**
@@ -61,7 +61,7 @@ public abstract class AbstractDao<MAPPER extends BaseMapper<ENTITY>, ENTITY exte
             // 模糊查询
             fuzzyConditions(where, queryWrapper);
         }
-        queryWrapper.eq(ENTITY::getDelFlag, Constants.NOT_DEL_FLAG);
+        queryWrapper.eq(ENTITY::getDelFlag, CommonConstants.NOT_DEL_FLAG);
         queryWrapper.orderByDesc(ENTITY::getId);
         return getBaseMapper().selectList(queryWrapper);
     }
@@ -76,7 +76,7 @@ public abstract class AbstractDao<MAPPER extends BaseMapper<ENTITY>, ENTITY exte
         LambdaQueryWrapper<ENTITY> queryWrapper = new LambdaQueryWrapper<>();
         // 模糊查询
         fuzzyConditions(whereRequest, queryWrapper);
-        queryWrapper.eq(ENTITY::getDelFlag, Constants.NOT_DEL_FLAG);
+        queryWrapper.eq(ENTITY::getDelFlag, CommonConstants.NOT_DEL_FLAG);
         queryWrapper.orderByDesc(ENTITY::getId);
         return this.page(itemPage, queryWrapper);
     }

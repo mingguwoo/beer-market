@@ -1,6 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model;
 
-import com.nio.ngfs.plm.bom.configuration.common.constants.Constants;
+import com.nio.bom.share.constants.CommonConstants;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -52,7 +52,7 @@ public abstract class AbstractDo {
      * @return true|false
      */
     public boolean isDeleted() {
-        return Objects.equals(delFlag, Constants.DEL_FLAG);
+        return Objects.equals(delFlag, CommonConstants.DEL_FLAG);
     }
 
 }

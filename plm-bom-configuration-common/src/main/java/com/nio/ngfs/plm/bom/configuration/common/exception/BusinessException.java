@@ -1,6 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.common.exception;
 
-import com.nio.ngfs.plm.bom.configuration.common.enums.ErrorCode;
+import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 
 /**
  * @author xiaozhou.tu
@@ -17,17 +17,17 @@ public class BusinessException extends RuntimeException {
         this.message = message;
     }
 
-    public BusinessException(ErrorCode errorCode, String dynamicMessage) {
-        super(errorCode.getMessage() + ", " + dynamicMessage);
-        this.code = errorCode.getCode();
-        this.message = errorCode.getMessage();
+    public BusinessException(ConfigErrorCode configErrorCode, String dynamicMessage) {
+        super(configErrorCode.getMessage() + ", " + dynamicMessage);
+        this.code = configErrorCode.getCode();
+        this.message = configErrorCode.getMessage();
     }
 
 
-    public BusinessException(ErrorCode errorCode) {
-        super(errorCode.getMessage());
-        this.code = errorCode.getCode();
-        this.message = errorCode.getMessage();
+    public BusinessException(ConfigErrorCode configErrorCode) {
+        super(configErrorCode.getMessage());
+        this.code = configErrorCode.getCode();
+        this.message = configErrorCode.getMessage();
     }
 
     public String getCode() {

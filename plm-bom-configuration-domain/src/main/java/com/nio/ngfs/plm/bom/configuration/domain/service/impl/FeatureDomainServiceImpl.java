@@ -1,6 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service.impl;
 
-import com.nio.ngfs.plm.bom.configuration.common.enums.ErrorCode;
+import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.common.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
@@ -22,7 +22,7 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
     public FeatureAggr checkAndGetFeatureAggr(Long id, boolean containsChildren) {
         FeatureAggr featureAggr = featureRepository.find(id);
         if (featureAggr == null) {
-            throw new BusinessException(ErrorCode.FEATURE_ADD_GROUP_GROUP_CODE_REPEAT);
+            throw new BusinessException(ConfigErrorCode.FEATURE_ADD_GROUP_GROUP_CODE_REPEAT);
         }
         if (containsChildren) {
             featureAggr.setChildrenList(featureRepository.queryByParentFeatureCode(featureAggr.getFeatureCode()));
@@ -34,7 +34,7 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
     public void checkGroupCodeUnique(FeatureAggr featureAggr) {
         FeatureAggr originFeatureAggr = featureRepository.find(featureAggr.getId());
         if (originFeatureAggr != null) {
-            throw new BusinessException(ErrorCode.FEATURE_ADD_GROUP_GROUP_CODE_REPEAT);
+            throw new BusinessException(ConfigErrorCode.FEATURE_ADD_GROUP_GROUP_CODE_REPEAT);
         }
     }
 

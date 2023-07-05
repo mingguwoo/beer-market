@@ -1,9 +1,9 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.feature;
 
 import com.nio.bom.share.domain.model.AggrRoot;
-import com.nio.ngfs.plm.bom.configuration.common.enums.ErrorCode;
+import com.nio.bom.share.utils.PreconditionUtil;
+import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.common.exception.BusinessException;
-import com.nio.ngfs.plm.bom.configuration.common.util.PreconditionUtil;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
@@ -67,7 +67,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<Long> {
 
     public void editGroup(EditGroupCmd cmd) {
         if (!Objects.equals(type, FeatureTypeEnum.GROUP.getType())) {
-            throw new BusinessException(ErrorCode.FEATURE_ADD_GROUP_GROUP_CODE_REPEAT);
+            throw new BusinessException(ConfigErrorCode.FEATURE_ADD_GROUP_GROUP_CODE_REPEAT);
         }
         setDisplayName(cmd.getDisplayName());
         setChineseName(cmd.getChineseName());
@@ -82,7 +82,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<Long> {
             // status从Active变为Inactive
             for (FeatureAggr children : childrenList) {
                 if (children.isActive()) {
-                    throw new BusinessException(ErrorCode.FEATURE_EDIT_GROUP_FEATURE_EXISTS_ACTIVE);
+                    throw new BusinessException(ConfigErrorCode.FEATURE_EDIT_GROUP_FEATURE_EXISTS_ACTIVE);
                 }
             }
         } else {

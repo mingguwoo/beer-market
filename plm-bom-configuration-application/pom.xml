@@ -26,39 +26,6 @@
             <artifactId>plm-bom-configuration-infrastructure</artifactId>
             <version>${revision}</version>
         </dependency>
-        <dependency>
-            <groupId>com.nio.ngfs</groupId>
-            <artifactId>ngfs-starter-redis</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.nio.ngfs</groupId>
-            <artifactId>ngfs-starter-redisson</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.nio.ngfs</groupId>
-            <artifactId>ngfs-starter-config</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.nio.ngfs</groupId>
-            <artifactId>ngfs-starter-openfeign</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-context</artifactId>
-            <version>${spring.cloud.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-            <version>${spring.cloud.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>${commons.io.version}</version>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
 
     <build>

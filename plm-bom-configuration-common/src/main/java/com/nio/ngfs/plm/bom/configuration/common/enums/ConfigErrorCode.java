@@ -1,7 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.common.enums;
 
 /**
- * 配置管理特有的错误，如果是通用错误请使用share包中的ErrorCode
+ * 配置管理特有的错误，如果是通用错误请使用share包中的CommonErrorCode
  *
  * @author xiaozhou.tu
  * @date 2023/6/28

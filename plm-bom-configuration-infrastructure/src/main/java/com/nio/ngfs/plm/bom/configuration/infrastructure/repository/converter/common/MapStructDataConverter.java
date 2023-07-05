@@ -1,6 +1,5 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.common;
 
-import com.nio.ngfs.common.utils.BeanConvertUtils;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BaseEntity;
 

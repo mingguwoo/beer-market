@@ -1,12 +1,10 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.nio.ngfs.common.model.page.WherePageRequest;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.FeatureConverter;
-import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureLibraryEntity;
-import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsFeatureLibraryMapper;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsFeatureLibraryDao;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.common.DaoSupport;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -18,47 +16,34 @@ import java.util.List;
  */
 @Repository
 @RequiredArgsConstructor
-public class FeatureRepositoryImpl extends AbstractRepository<BomsFeatureLibraryMapper, BomsFeatureLibraryEntity, WherePageRequest<BomsFeatureLibraryEntity>> implements FeatureRepository {
+public class FeatureRepositoryImpl implements FeatureRepository {
 
+    private final BomsFeatureLibraryDao bomsFeatureLibraryDao;
     private final FeatureConverter featureConverter;
 
     @Override
     public void save(FeatureAggr aggr) {
-        BomsFeatureLibraryEntity entity = featureConverter.convertDoToEntity(aggr);
-        if (entity.getId() != null) {
-            getBaseMapper().updateById(entity);
-        } else {
-            getBaseMapper().insert(entity);
-        }
+        DaoSupport.saveOrUpdate(bomsFeatureLibraryDao, featureConverter.convertDoToEntity(aggr));
     }
 
     @Override
     public FeatureAggr find(Long id) {
-        return featureConverter.convertEntityToDo(getBaseMapper().selectById(id));
+        return featureConverter.convertEntityToDo(bomsFeatureLibraryDao.getById(id));
     }
 
     @Override
     public FeatureAggr getByFeatureCodeAndType(String featureCode, String type) {
-        LambdaQueryWrapper<BomsFeatureLibraryEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(BomsFeatureLibraryEntity::getFeatureCode, featureCode);
-        lambdaQueryWrapper.eq(BomsFeatureLibraryEntity::getType, type);
-        return featureConverter.convertEntityToDo(getBaseMapper().selectOne(lambdaQueryWrapper));
+        return featureConverter.convertEntityToDo(bomsFeatureLibraryDao.getByFeatureCodeAndType(featureCode, type));
     }
 
     @Override
     public List<FeatureAggr> queryByParentFeatureCode(String parentFeatureCode) {
-        LambdaQueryWrapper<BomsFeatureLibraryEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(BomsFeatureLibraryEntity::getParentFeatureCode, parentFeatureCode);
-        return featureConverter.convertEntityListToDoList(getBaseMapper().selectList(lambdaQueryWrapper));
+        return featureConverter.convertEntityListToDoList(bomsFeatureLibraryDao.queryByParentFeatureCode(parentFeatureCode));
     }
 
     @Override
     public List<FeatureAggr> queryAll() {
-        return featureConverter.convertEntityListToDoList(getBaseMapper().selectList(new LambdaQueryWrapper<>()));
-    }
-
-    @Override
-    protected void fuzzyConditions(WherePageRequest<BomsFeatureLibraryEntity> featureEntityWherePageRequest, LambdaQueryWrapper<BomsFeatureLibraryEntity> queryWrapper) {
+        return featureConverter.convertEntityListToDoList(bomsFeatureLibraryDao.queryAll());
     }
 
 }

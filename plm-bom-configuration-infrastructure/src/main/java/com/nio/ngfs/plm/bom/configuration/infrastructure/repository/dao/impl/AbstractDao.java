@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.impl;
+package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.impl;
 
 import com.baomidou.mybatisplus.core.MybatisConfiguration;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -24,7 +24,7 @@ import java.util.function.Supplier;
  * @author luke.zhu
  * @date 02/20/2023
  */
-public abstract class AbstractRepository<MAPPER extends BaseMapper<ENTITY>, ENTITY extends BaseEntity, WHERE extends WherePageRequest<ENTITY>> extends ServiceImpl<MAPPER, ENTITY> {
+public abstract class AbstractDao<MAPPER extends BaseMapper<ENTITY>, ENTITY extends BaseEntity, WHERE extends WherePageRequest<ENTITY>> extends ServiceImpl<MAPPER, ENTITY> {
 
     static {
         // 注意：下面一行必须加来将BaseDomain基类信息注入mybatis

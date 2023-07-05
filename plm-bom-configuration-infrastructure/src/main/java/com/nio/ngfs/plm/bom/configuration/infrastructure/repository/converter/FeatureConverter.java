@@ -1,6 +1,8 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter;
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.common.MapStructDataConverter;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.mapping.FeatureMapper;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureLibraryEntity;
 import org.springframework.stereotype.Component;
 
@@ -9,16 +11,16 @@ import org.springframework.stereotype.Component;
  * @date 2023/6/28
  */
 @Component
-public class FeatureConverter implements DataConverter<FeatureAggr, BomsFeatureLibraryEntity> {
+public class FeatureConverter implements MapStructDataConverter<FeatureAggr, BomsFeatureLibraryEntity> {
 
     @Override
-    public FeatureAggr newDo() {
-        return new FeatureAggr();
+    public BomsFeatureLibraryEntity doToEntity(FeatureAggr domainObject) {
+        return FeatureMapper.INSTANCE.convertDoToEntity(domainObject);
     }
 
     @Override
-    public BomsFeatureLibraryEntity newEntity() {
-        return new BomsFeatureLibraryEntity();
+    public FeatureAggr entityToDo(BomsFeatureLibraryEntity entity) {
+        return FeatureMapper.INSTANCE.convertEntityToDo(entity);
     }
 
 }

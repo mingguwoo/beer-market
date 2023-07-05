@@ -1,6 +1,5 @@
-package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter;
+package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.common;
 
-import com.nio.ngfs.common.utils.BeanConvertUtils;
 import com.nio.ngfs.plm.bom.configuration.common.util.ConverterUtil;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BaseEntity;
@@ -14,28 +13,12 @@ import java.util.List;
 public interface DataConverter<DO extends AbstractDo, Entity extends BaseEntity> {
 
     /**
-     * 创建新的DomainObject
-     *
-     * @return domainObject
-     */
-    DO newDo();
-
-    /**
-     * 创建新的Entity
-     *
-     * @return entity
-     */
-    Entity newEntity();
-
-    /**
      * DomainObject转换为Entity
      *
      * @param domainObject domainObject
      * @return entity
      */
-    default Entity convertDoToEntity(DO domainObject) {
-        return BeanConvertUtils.convertTo(domainObject, this::newEntity, this::convertDoToEntityCallback);
-    }
+    Entity convertDoToEntity(DO domainObject);
 
     /**
      * DomainObject转换为Entity回调
@@ -52,9 +35,7 @@ public interface DataConverter<DO extends AbstractDo, Entity extends BaseEntity>
      * @param entity entity
      * @return domainObject
      */
-    default DO convertEntityToDo(Entity entity) {
-        return BeanConvertUtils.convertTo(entity, this::newDo, this::convertEntityToDoCallback);
-    }
+    DO convertEntityToDo(Entity entity);
 
     /**
      * Entity转换为DomainObject回调

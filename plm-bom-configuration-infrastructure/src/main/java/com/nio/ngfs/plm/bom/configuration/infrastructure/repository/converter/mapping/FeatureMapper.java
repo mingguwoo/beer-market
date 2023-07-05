@@ -2,16 +2,17 @@ package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.m
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureLibraryEntity;
-import org.mapstruct.Mapping;
+import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
 /**
  * @author xiaozhou.tu
  * @date 2023/7/5
  */
+@Mapper
 public interface FeatureMapper {
 
-//    FeatureMapper INSTANCE = Mappers.getMapper(FeatureMapper.class);
+    FeatureMapper INSTANCE = Mappers.getMapper(FeatureMapper.class);
 
     /**
      * convertDoToEntity
@@ -19,7 +20,6 @@ public interface FeatureMapper {
      * @param domainObject domainObject
      * @return BomsFeatureLibraryEntity
      */
-    @Mapping(source = "FeatureAggr", target = "BomsFeatureLibraryEntity")
     BomsFeatureLibraryEntity convertDoToEntity(FeatureAggr domainObject);
 
     /**
@@ -28,7 +28,6 @@ public interface FeatureMapper {
      * @param entity entity
      * @return FeatureAggr
      */
-    @Mapping(source = "BomsFeatureLibraryEntity", target = "FeatureAggr")
     FeatureAggr convertEntityToDo(BomsFeatureLibraryEntity entity);
 
 }

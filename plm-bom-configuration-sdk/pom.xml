@@ -17,7 +17,7 @@
         <maven.deploy.skip>true</maven.deploy.skip>
         <lombok.version>1.18.26</lombok.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <plm-bom-share.version>1.0.0</plm-bom-share.version>
+        <plm-bom-share.version>1.0.1-SNAPSHOT</plm-bom-share.version>
     </properties>
 
     <dependencies>

@@ -28,7 +28,7 @@ public class ListFeatureLibraryQuery implements Query<ListFeatureLibraryQry, Lis
         // 2、也可以调DomainService
         // 3、也可以抽一层QueryService（通用化，多个请求都需要用到）
         List<FeatureAggr> featureAggrList = featureRepository.queryAll();
-        return LambdaUtil.map(featureAggrList, FeatureDtoAssembler::assembly);
+        return LambdaUtil.map(featureAggrList, FeatureDtoAssembler::assemble);
     }
 
 }

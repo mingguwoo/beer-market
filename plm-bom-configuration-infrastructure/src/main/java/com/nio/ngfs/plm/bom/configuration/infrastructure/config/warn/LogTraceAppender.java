@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.api.config.warn;
+package com.nio.ngfs.plm.bom.configuration.infrastructure.config.warn;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;

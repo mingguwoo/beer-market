@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.api.config.warn;
+package com.nio.ngfs.plm.bom.configuration.infrastructure.config.warn;
 
 import com.alibaba.fastjson.JSON;
 import com.nio.bom.share.configuration.WarnLogConfig;

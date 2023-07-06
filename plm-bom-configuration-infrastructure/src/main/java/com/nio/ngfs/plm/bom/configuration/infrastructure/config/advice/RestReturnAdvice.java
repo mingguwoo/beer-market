@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.api.config.advice;
+package com.nio.ngfs.plm.bom.configuration.infrastructure.config.advice;
 
 import com.alibaba.fastjson.JSON;
 import com.nio.bom.share.result.ResultInfo;

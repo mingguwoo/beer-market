@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.api.config.aspect;
+package com.nio.ngfs.plm.bom.configuration.infrastructure.config.aspect;
 
 import com.nio.bom.share.annotation.NeedAuthorization;
 import com.nio.bom.share.constants.CommonConstants;

@@ -22,7 +22,7 @@
         </layout>
     </appender>
 
-    <appender name="LogTraceAppender" class="com.nio.ngfs.plm.bom.configuration.api.config.warn.LogTraceAppender">
+    <appender name="LogTraceAppender" class="com.nio.ngfs.plm.bom.configuration.infrastructure.config.warn.LogTraceAppender">
     </appender>
 
     <root level="INFO">

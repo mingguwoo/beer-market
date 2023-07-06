@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.api.config;
+package com.nio.ngfs.plm.bom.configuration.infrastructure.config;
 
 import com.ctrip.framework.apollo.model.ConfigChangeEvent;
 import com.ctrip.framework.apollo.spring.annotation.ApolloConfigChangeListener;

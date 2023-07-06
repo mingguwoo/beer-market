@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.api.config;
+package com.nio.ngfs.plm.bom.configuration.infrastructure.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;

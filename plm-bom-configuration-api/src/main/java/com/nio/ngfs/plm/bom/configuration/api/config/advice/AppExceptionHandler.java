@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.api.config;
+package com.nio.ngfs.plm.bom.configuration.api.config.advice;
 
 import com.nio.bom.share.enums.CommonErrorCode;
 import com.nio.bom.share.result.ResultInfo;

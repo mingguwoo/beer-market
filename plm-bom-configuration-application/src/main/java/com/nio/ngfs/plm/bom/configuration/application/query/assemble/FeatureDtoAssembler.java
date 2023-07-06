@@ -9,7 +9,7 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.FeatureLibrar
  */
 public class FeatureDtoAssembler {
 
-    public static FeatureLibraryDto assembly(FeatureAggr aggr) {
+    public static FeatureLibraryDto assemble(FeatureAggr aggr) {
         FeatureLibraryDto dto = new FeatureLibraryDto();
         dto.setFeatureCode(aggr.getFeatureCode());
         return dto;

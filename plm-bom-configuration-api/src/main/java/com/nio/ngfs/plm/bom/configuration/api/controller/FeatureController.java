@@ -11,9 +11,7 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.AddGroupRespD
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.FeatureLibraryDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -25,21 +23,18 @@ import java.util.List;
  */
 @RestController
 @Slf4j
-@RequestMapping("/feature")
 @RequiredArgsConstructor
 public class FeatureController implements PlmFeatureClient {
 
     private final AddGroupCommand addGroupCommand;
     private final ListFeatureLibraryQuery listFeatureLibraryQuery;
 
-    @PostMapping("/addGroup")
     @Override
     @NeedAuthorization
     public ResultInfo<AddGroupRespDto> addGroup(@Valid @RequestBody AddGroupCmd cmd) {
         return ResultInfo.success(addGroupCommand.execute(cmd));
     }
 
-    @PostMapping("/listFeatureLibrary")
     @Override
     @NeedAuthorization
     public ResultInfo<List<FeatureLibraryDto>> listFeatureLibrary(@Valid @RequestBody ListFeatureLibraryQry qry) {

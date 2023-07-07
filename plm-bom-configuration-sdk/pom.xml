@@ -25,6 +25,11 @@
             <artifactId>plm-bom-share</artifactId>
             <version>${plm-bom-share.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.nio.ngfs</groupId>
+            <artifactId>ngfs-starter-openfeign</artifactId>
+            <version>1.1.0</version>
+        </dependency>
     </dependencies>
 
     <build>

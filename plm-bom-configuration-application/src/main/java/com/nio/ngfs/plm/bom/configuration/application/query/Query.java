@@ -9,5 +9,5 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.Qry;
  * @author xiaozhou.tu
  * @date 2023/7/3
  */
-public interface Query<Query extends Qry, Response> extends Application<Query, Response> {
+public interface Query<Q extends Qry, Response> extends Application<Q, Response> {
 }

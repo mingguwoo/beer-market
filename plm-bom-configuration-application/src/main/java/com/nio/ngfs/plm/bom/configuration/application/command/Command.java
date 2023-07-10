@@ -9,5 +9,5 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.Cmd;
  * @author xiaozhou.tu
  * @date 2023/7/3
  */
-public interface Command<Command extends Cmd, Response> extends Application<Command, Response> {
+public interface Command<C extends Cmd, Response> extends Application<C, Response> {
 }

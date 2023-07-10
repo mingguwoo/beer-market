@@ -10,9 +10,14 @@ import com.nio.bom.share.enums.ErrorCode;
  */
 public enum ConfigErrorCode implements ErrorCode {
 
+    /**
+     * 错误码
+     */
+    LOCK_FAILED(50000, "The Operation Failed. Please Try Again Later!"),
+
     FEATURE_ADD_GROUP_GROUP_CODE_REPEAT(80000, "The Group Is Already Existed，Please Input A New One!"),
     FEATURE_NOT_EXISTS(80001, "Feature not exists!"),
-    FEATURE_EDIT_GROUP_FEATURE_EXISTS_ACTIVE(80000, "The Group Can Not Be Inactive，Because The Following Features Have \"Active\" Status!");
+    FEATURE_EDIT_GROUP_FEATURE_EXISTS_ACTIVE(80002, "The Group Can Not Be Inactive，Because The Following Features Have \"Active\" Status!");
 
     /**
      * 错误码编号

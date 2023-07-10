@@ -1,6 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.application.command.feature;
 
-import com.nio.ngfs.plm.bom.configuration.application.command.Command;
+import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockCommand;
+import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
 import com.nio.ngfs.plm.bom.configuration.domain.event.EventPublisher;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureFactory;
@@ -18,14 +19,19 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class AddGroupCommand implements Command<AddGroupCmd, AddGroupRespDto> {
+public class AddGroupCommand extends AbstractLockCommand<AddGroupCmd, AddGroupRespDto> {
 
     private final FeatureDomainService featureDomainService;
     private final FeatureRepository featureRepository;
     private final EventPublisher eventPublisher;
 
     @Override
-    public AddGroupRespDto execute(AddGroupCmd cmd) {
+    protected String getLockKey(AddGroupCmd cmd) {
+        return RedisKeyConstant.FEATURE_GROUP_LOCK_KEY_PREFIX + cmd.getGroupCode();
+    }
+
+    @Override
+    public AddGroupRespDto executeWithLock(AddGroupCmd cmd) {
         // 1、新增操作，使用工厂创建聚合根
         FeatureAggr featureAggr = FeatureFactory.create(cmd);
         // 2、调用聚合根自己可以完成的操作

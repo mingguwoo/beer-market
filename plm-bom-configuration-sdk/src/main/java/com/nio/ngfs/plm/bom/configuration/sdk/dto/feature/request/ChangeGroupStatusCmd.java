@@ -4,7 +4,7 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.Cmd;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * @author xiaozhou.tu
@@ -13,8 +13,9 @@ import javax.validation.constraints.NotNull;
 @Data
 public class ChangeGroupStatusCmd implements Cmd {
 
-    @NotNull(message = "Group Id is null")
-    private Long groupId;
+    @NotBlank(message = "Group Code is blank")
+    @Size(max = 128, message = "Group Code max length is 128")
+    private String groupCode;
 
     @NotBlank(message = "Status is blank")
     private String status;

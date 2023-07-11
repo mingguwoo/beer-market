@@ -19,7 +19,7 @@ public enum ConfigErrorCode implements ErrorCode {
 
     FEATURE_GROUP_CODE_REPEAT(80000, "The Group Is Already Existed，Please Input A New One!"),
     FEATURE_GROUP_CODE_FORMAT_ERROR(80001, "Group Code Must Only Contains Alphabet Number And Blank!"),
-    FEATURE_GROUP_NOT_EXISTS(80002, "Group Not Exists!"),
+    FEATURE_GROUP_NOT_EXISTS(80002, "Group Not Existed!"),
     FEATURE_TYPE_NOT_MATCH(80003, "Type Not Match!"),
     FEATURE_STATUS_INVALID(80004, "Status Is Invalid!"),
     FEATURE_CHANGE_GROUP_STATUS_FEATURE_EXISTS_ACTIVE(80099, "The Group Can Not Be Inactive，Because The Following Features Have \"Active\" Status!"),

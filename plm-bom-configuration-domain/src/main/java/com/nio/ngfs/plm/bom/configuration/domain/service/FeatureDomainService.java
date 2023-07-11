@@ -1,10 +1,9 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service;
 
+import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureId;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusChangeTypeEnum;
-
-import java.util.List;
 
 /**
  * Feature领域服务
@@ -15,13 +14,13 @@ import java.util.List;
 public interface FeatureDomainService {
 
     /**
-     * check并获取聚合根
+     * 获取并校验聚合根
      *
      * @param featureId 唯一id
-     * @param message   错误信息
+     * @param errorCode 错误码
      * @return 聚合根
      */
-    FeatureAggr getAndCheckFeatureAggr(FeatureId featureId, String message);
+    FeatureAggr getAndCheckFeatureAggr(FeatureId featureId, ConfigErrorCode errorCode);
 
     /**
      * 检查Group Code是否唯一

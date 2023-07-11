@@ -28,10 +28,10 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
     private final FeatureRepository featureRepository;
 
     @Override
-    public FeatureAggr getAndCheckFeatureAggr(FeatureId featureId, String message) {
+    public FeatureAggr getAndCheckFeatureAggr(FeatureId featureId, ConfigErrorCode errorCode) {
         FeatureAggr featureAggr = featureRepository.find(featureId);
         if (featureAggr == null) {
-            throw new BusinessException(ConfigErrorCode.DATA_NOT_EXISTS.getCode(), message);
+            throw new BusinessException(errorCode);
         }
         return featureAggr;
     }

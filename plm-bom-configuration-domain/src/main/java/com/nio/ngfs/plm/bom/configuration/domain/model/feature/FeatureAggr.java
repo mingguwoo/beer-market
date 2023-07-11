@@ -2,8 +2,8 @@ package com.nio.ngfs.plm.bom.configuration.domain.model.feature;
 
 import com.nio.bom.share.domain.model.AggrRoot;
 import com.nio.bom.share.exception.BusinessException;
-import com.nio.bom.share.utils.PreconditionUtil;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
+import com.nio.ngfs.plm.bom.configuration.common.util.RegexUtil;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
@@ -25,85 +25,144 @@ import java.util.Objects;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FeatureAggr extends AbstractDo implements AggrRoot<Long> {
+public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
 
     private static final int MAX_LENGTH = 128;
 
-    private transient FeatureAggr parent;
+    private FeatureId featureId;
 
-    private transient List<FeatureAggr> childrenList = Collections.emptyList();
-
-    private Long id;
-
-    private String featureCode;
-
-    private String type;
-
+    /**
+     * Parent Feature Code
+     */
     private String parentFeatureCode;
 
+    /**
+     * 英文描述
+     */
     private String displayName;
 
+    /**
+     * 中文描述
+     */
     private String chineseName;
 
+    /**
+     * 补充描述
+     */
     private String description;
 
+    /**
+     * Feature的可选性
+     */
+    private String selectionType;
+
+    /**
+     * Feature的必须性
+     */
+    private String mayMust;
+
+    /**
+     * Feature的分类
+     */
+    private String catalog;
+
+    /**
+     * Feature的成熟度
+     */
+    private String maturity;
+
+    /**
+     * 版本，颜色件相关
+     */
+    private String version;
+
+    /**
+     * 创建方
+     */
+    private String requestor;
+
+    /**
+     * 状态，Active/Inactive
+     */
     private String status;
 
-    private transient boolean statusChanged;
+    /**
+     * children节点列表
+     */
+    private transient List<FeatureAggr> childrenList = Collections.emptyList();
 
     @Override
-    public Long getUniqId() {
-        return id;
+    public FeatureId getUniqId() {
+        return featureId;
     }
 
+    /**
+     * 新增Group
+     */
     public void addGroup() {
-        PreconditionUtil.checkNotNull(featureCode, "Group Code");
-        PreconditionUtil.checkMaxLength(featureCode, MAX_LENGTH, "Group Code");
-        PreconditionUtil.checkMaxLength(displayName, MAX_LENGTH, "Display Name");
-        PreconditionUtil.checkMaxLength(chineseName, MAX_LENGTH, "Chinese Name");
-        PreconditionUtil.checkMaxLength(description, MAX_LENGTH, "Description");
+        checkType(FeatureTypeEnum.GROUP);
+        checkGroupCode(featureId.getFeatureCode());
         setStatus(FeatureStatusEnum.ACTIVE.getStatus());
     }
 
+    /**
+     * 编辑Group
+     */
     public void editGroup(EditGroupCmd cmd) {
-        if (!Objects.equals(type, FeatureTypeEnum.GROUP.getType())) {
-            throw new BusinessException(ConfigErrorCode.FEATURE_ADD_GROUP_GROUP_CODE_REPEAT);
-        }
+        String newGroupCode = cmd.getGroupCode().trim();
+        checkType(FeatureTypeEnum.GROUP);
+        checkGroupCode(newGroupCode);
+        // 属性更新
         setDisplayName(cmd.getDisplayName());
         setChineseName(cmd.getChineseName());
         setDescription(cmd.getDescription());
         setUpdateUser(cmd.getUpdateUser());
-        // status未更新
-        if (Objects.equals(status, cmd.getStatus())) {
-            updateFeatureCode(cmd.getFeatureCode());
-            return;
-        }
-        if (isActive()) {
-            // status从Active变为Inactive
-            for (FeatureAggr children : childrenList) {
-                if (children.isActive()) {
-                    throw new BusinessException(ConfigErrorCode.FEATURE_EDIT_GROUP_FEATURE_EXISTS_ACTIVE);
-                }
-            }
-        } else {
-            // status从Inactive变为Active
-            setStatus(cmd.getStatus());
-            setStatusChanged(true);
-            updateChildrenStatusActive();
-            updateFeatureCode(cmd.getFeatureCode());
+        changeGroupCode(newGroupCode);
+    }
+
+    /**
+     * 新增Feature
+     */
+    public void addFeature() {
+        checkType(FeatureTypeEnum.FEATURE);
+    }
+
+    /**
+     * 校验类型
+     */
+    private void checkType(FeatureTypeEnum typeEnum) {
+        if (!Objects.equals(featureId.getType(), typeEnum.getType())) {
+            throw new BusinessException(ConfigErrorCode.FEATURE_TYPE_NOT_MATCH);
         }
     }
 
-    private void updateChildrenStatusActive() {
-        childrenList.forEach(children -> children.setStatus(FeatureStatusEnum.ACTIVE.getStatus()));
+    /**
+     * 校验Group Code，只允许字母、数字和空格
+     */
+    private void checkGroupCode(String groupCode) {
+        if (!RegexUtil.isMatchAlphabetNumberAndBlank(groupCode)) {
+            throw new BusinessException(ConfigErrorCode.FEATURE_GROUP_CODE_FORMAT_ERROR);
+        }
     }
 
-    private void updateFeatureCode(String newFeatureCode) {
-        if (Objects.equals(featureCode, newFeatureCode)) {
+    /**
+     * 更新Group Code
+     */
+    private void changeGroupCode(String newGroupCode) {
+        if (Objects.equals(featureId.getFeatureCode(), newGroupCode)) {
+            // Group Code未更新
             return;
         }
-        setFeatureCode(newFeatureCode);
-        childrenList.forEach(children -> children.setParentFeatureCode(newFeatureCode));
+        // Group Code更新
+        featureId.setFeatureCode(newGroupCode);
+        childrenList.forEach(children -> changeParentFeatureCode(children, newGroupCode));
+    }
+
+    /**
+     * 更新ParentFeatureCode
+     */
+    private void changeParentFeatureCode(FeatureAggr featureAggr, String newParentFeatureCode) {
+        featureAggr.setParentFeatureCode(newParentFeatureCode);
     }
 
     public boolean isActive() {

@@ -1,6 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter;
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureId;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.common.MapStructDataConverter;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.mapping.FeatureMapper;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureLibraryEntity;
@@ -21,6 +22,17 @@ public class FeatureConverter implements MapStructDataConverter<FeatureAggr, Bom
     @Override
     public FeatureAggr entityToDo(BomsFeatureLibraryEntity entity) {
         return FeatureMapper.INSTANCE.convertEntityToDo(entity);
+    }
+
+    @Override
+    public void convertDoToEntityCallback(FeatureAggr domainObject, BomsFeatureLibraryEntity entity) {
+        entity.setFeatureCode(domainObject.getFeatureId().getFeatureCode());
+        entity.setType(domainObject.getFeatureId().getType());
+    }
+
+    @Override
+    public void convertEntityToDoCallback(BomsFeatureLibraryEntity entity, FeatureAggr domainObject) {
+        domainObject.setFeatureId(new FeatureId(entity.getFeatureCode(), entity.getType()));
     }
 
 }

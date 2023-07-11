@@ -33,6 +33,9 @@ public interface MapStructDataConverter<DO extends AbstractDo, Entity extends Ba
      * @return entity
      */
     default Entity convertDoToEntity(DO domainObject) {
+        if (domainObject == null) {
+            return null;
+        }
         Entity entity = doToEntity(domainObject);
         convertDoToEntityCallback(domainObject, entity);
         return entity;
@@ -45,6 +48,9 @@ public interface MapStructDataConverter<DO extends AbstractDo, Entity extends Ba
      * @return domainObject
      */
     default DO convertEntityToDo(Entity entity) {
+        if (entity == null) {
+            return null;
+        }
         DO domainObject = entityToDo(entity);
         convertEntityToDoCallback(entity, domainObject);
         return domainObject;

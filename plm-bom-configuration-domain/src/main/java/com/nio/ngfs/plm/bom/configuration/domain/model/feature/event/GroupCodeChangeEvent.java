@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Group新增事件
+ * GroupCode变更事件
  *
  * @author xiaozhou.tu
  * @date 2023/7/3
@@ -14,8 +14,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GroupAddEvent extends DomainEvent {
+public class GroupCodeChangeEvent extends DomainEvent {
 
-    private String groupCode;
+    private Long groupId;
+
+    private String oldGroupCode;
+
+    private String newGroupCode;
 
 }

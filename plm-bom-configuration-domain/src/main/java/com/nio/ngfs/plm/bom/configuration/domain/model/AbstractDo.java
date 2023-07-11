@@ -22,29 +22,34 @@ import java.util.Objects;
 public abstract class AbstractDo {
 
     /**
-     * 删除标记
+     * 主键ID
      */
-    private Integer delFlag;
+    protected Long id;
 
     /**
      * 创建人
      */
-    private String createUser;
+    protected String createUser;
 
     /**
      * 更新人
      */
-    private String updateUser;
+    protected String updateUser;
 
     /**
      * 创建时间
      */
-    private Date createTime;
+    protected Date createTime;
 
     /**
      * 更新时间
      */
-    private Date updateTime;
+    protected Date updateTime;
+
+    /**
+     * 删除标记
+     */
+    protected Integer delFlag;
 
     /**
      * 是否已删除

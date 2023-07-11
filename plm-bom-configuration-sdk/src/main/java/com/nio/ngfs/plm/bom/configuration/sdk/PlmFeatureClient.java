@@ -2,10 +2,11 @@ package com.nio.ngfs.plm.bom.configuration.sdk;
 
 import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.AddGroupCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.EditGroupCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.ListFeatureLibraryQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.AddGroupRespDto;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.EditGroupRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.FeatureLibraryDto;
-import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
@@ -14,17 +15,25 @@ import java.util.List;
  * @author xiaozhou.tu
  * @date 2023/6/28
  */
-@FeignClient
 public interface PlmFeatureClient {
 
     /**
-     * 添加Group
+     * 新增Group
      *
      * @param cmd 命令
      * @return 响应
      */
     @PostMapping("/feature/addGroup")
     ResultInfo<AddGroupRespDto> addGroup(AddGroupCmd cmd);
+
+    /**
+     * 编辑Group
+     *
+     * @param cmd 命令
+     * @return 响应
+     */
+    @PostMapping("/feature/editGroup")
+    ResultInfo<EditGroupRespDto> editGroup(EditGroupCmd cmd);
 
     /**
      * Feature库列表

@@ -11,7 +11,7 @@ public class FeatureDtoAssembler {
 
     public static FeatureLibraryDto assemble(FeatureAggr aggr) {
         FeatureLibraryDto dto = new FeatureLibraryDto();
-        dto.setFeatureCode(aggr.getFeatureCode());
+        dto.setFeatureCode(aggr.getFeatureId().getFeatureCode());
         return dto;
     }
 

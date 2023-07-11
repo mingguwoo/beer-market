@@ -39,9 +39,10 @@ public class BomsFeatureLibraryDaoImpl extends AbstractDao<BomsFeatureLibraryMap
     }
 
     @Override
-    public List<BomsFeatureLibraryEntity> queryByParentFeatureCode(String parentFeatureCode) {
+    public List<BomsFeatureLibraryEntity> queryByParentFeatureCodeAndType(String parentFeatureCode, String type) {
         LambdaQueryWrapper<BomsFeatureLibraryEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(BomsFeatureLibraryEntity::getParentFeatureCode, parentFeatureCode);
+        lambdaQueryWrapper.eq(BomsFeatureLibraryEntity::getType, type);
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 
@@ -52,7 +53,7 @@ public class BomsFeatureLibraryDaoImpl extends AbstractDao<BomsFeatureLibraryMap
 
     /**
      * 测试动态线程池使用
-     * */
+     */
     public List<BomsFeatureLibraryEntity> batchQuery() {
         Future<List<BomsFeatureLibraryEntity>> queryFuture = ioThreadPool.submit(() -> getBaseMapper().selectList(new LambdaQueryWrapper<>()));
         try {

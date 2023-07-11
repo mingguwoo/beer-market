@@ -32,16 +32,16 @@ public class AddGroupCommand extends AbstractLockCommand<AddGroupCmd, AddGroupRe
 
     @Override
     public AddGroupRespDto executeWithLock(AddGroupCmd cmd) {
-        // 1、新增操作，使用工厂创建聚合根
+        // 使用工厂创建聚合根
         FeatureAggr featureAggr = FeatureFactory.create(cmd);
-        // 2、调用聚合根自己可以完成的操作
+        // 聚合根操作新增Group
         featureAggr.addGroup();
-        // 3、领域服务完成的操作
+        // 校验GroupCode唯一
         featureDomainService.checkGroupCodeUnique(featureAggr);
-        // 4、Repository保存
+        // Repository保存聚合根
         featureRepository.save(featureAggr);
-        // 5、发布领域事件
-        eventPublisher.publish(new GroupAddEvent());
+        // 发布Group新增事件
+        eventPublisher.publish(new GroupAddEvent(featureAggr.getFeatureId().getFeatureCode()));
         return new AddGroupRespDto();
     }
 

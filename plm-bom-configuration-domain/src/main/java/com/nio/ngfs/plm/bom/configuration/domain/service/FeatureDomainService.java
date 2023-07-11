@@ -1,6 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service;
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureId;
 
 /**
  * Feature领域服务
@@ -11,13 +12,13 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 public interface FeatureDomainService {
 
     /**
-     * check并获取集合根
+     * check并获取聚合根
      *
-     * @param id               主键ID
-     * @param containsChildren 是否包含children
-     * @return 集合根
+     * @param featureId 唯一id
+     * @param message   错误信息
+     * @return 聚合根
      */
-    FeatureAggr checkAndGetFeatureAggr(Long id, boolean containsChildren);
+    FeatureAggr getAndCheckFeatureAggr(FeatureId featureId, String message);
 
     /**
      * 检查Group Code是否唯一

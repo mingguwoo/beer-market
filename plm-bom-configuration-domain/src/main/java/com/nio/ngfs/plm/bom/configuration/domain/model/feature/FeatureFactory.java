@@ -11,13 +11,12 @@ public class FeatureFactory {
 
     public static FeatureAggr create(AddGroupCmd cmd) {
         return FeatureAggr.builder()
-                .featureCode(cmd.getGroupCode())
-                .type(FeatureTypeEnum.GROUP.getType())
+                .featureId(new FeatureId(cmd.getGroupCode().trim(), FeatureTypeEnum.GROUP.getType()))
                 .displayName(cmd.getDisplayName())
                 .chineseName(cmd.getChineseName())
                 .description(cmd.getDescription())
-                .createUser("")
-                .updateUser("")
+                .createUser(cmd.getCreateUser())
+                .updateUser(cmd.getCreateUser())
                 .build();
     }
 

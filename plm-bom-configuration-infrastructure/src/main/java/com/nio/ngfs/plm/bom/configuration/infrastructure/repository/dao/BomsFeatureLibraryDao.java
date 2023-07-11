@@ -24,9 +24,10 @@ public interface BomsFeatureLibraryDao extends IService<BomsFeatureLibraryEntity
      * 根据parentFeatureCode查找
      *
      * @param parentFeatureCode parentFeatureCode
+     * @param type              类型
      * @return BomsFeatureLibraryEntity列表
      */
-    List<BomsFeatureLibraryEntity> queryByParentFeatureCode(String parentFeatureCode);
+    List<BomsFeatureLibraryEntity> queryByParentFeatureCodeAndType(String parentFeatureCode, String type);
 
     /**
      * 查找所有

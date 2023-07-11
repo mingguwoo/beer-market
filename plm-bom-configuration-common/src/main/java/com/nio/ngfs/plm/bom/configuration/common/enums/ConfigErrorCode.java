@@ -15,9 +15,14 @@ public enum ConfigErrorCode implements ErrorCode {
      */
     LOCK_FAILED(50000, "The Operation Failed. Please Try Again Later!"),
 
-    FEATURE_ADD_GROUP_GROUP_CODE_REPEAT(80000, "The Group Is Already Existed，Please Input A New One!"),
-    FEATURE_NOT_EXISTS(80001, "Feature not exists!"),
-    FEATURE_EDIT_GROUP_FEATURE_EXISTS_ACTIVE(80002, "The Group Can Not Be Inactive，Because The Following Features Have \"Active\" Status!");
+    DATA_NOT_EXISTS(70000, "Data Not Existed!"),
+
+    FEATURE_GROUP_CODE_REPEAT(80000, "The Group Is Already Existed，Please Input A New One!"),
+    FEATURE_GROUP_CODE_FORMAT_ERROR(80001, "Group Code Must Only Contains Alphabet Number And Blank!"),
+    FEATURE_GROUP_NOT_EXISTS(80002, "Group Not Exists!"),
+    FEATURE_TYPE_NOT_MATCH(80003, "Type Not Match!"),
+    FEATURE_EDIT_GROUP_FEATURE_EXISTS_ACTIVE(80099, "The Group Can Not Be Inactive，Because The Following Features Have \"Active\" Status!"),
+    ;
 
     /**
      * 错误码编号

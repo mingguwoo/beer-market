@@ -14,7 +14,7 @@ import java.util.List;
  * @author xiaozhou.tu
  * @date 2023/6/28
  */
-@FeignClient
+@FeignClient(name = "plm-bom-configuration")
 public interface PlmFeatureClient {
 
     /**

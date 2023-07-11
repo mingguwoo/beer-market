@@ -7,6 +7,7 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.ListFeatureLib
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.AddGroupRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.EditGroupRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.FeatureLibraryDto;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
  * @author xiaozhou.tu
  * @date 2023/6/28
  */
+@FeignClient(name = "plm-bom-configuration")
 public interface PlmFeatureClient {
 
     /**

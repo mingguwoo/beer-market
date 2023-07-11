@@ -8,6 +8,6 @@ import org.springframework.context.annotation.Configuration;
  * @date 2023/7/7
  */
 @Configuration
-@ComponentScan(basePackages = "com.nio.ngfs.plm.bom.configuration.sdk")
+//@ComponentScan(basePackages = "com.nio.ngfs.plm.bom.configuration.sdk")
 public class FeignClientAutoConfiguration {
 }

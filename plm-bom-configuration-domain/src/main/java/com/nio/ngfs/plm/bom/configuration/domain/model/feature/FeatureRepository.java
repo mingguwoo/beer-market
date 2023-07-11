@@ -28,10 +28,27 @@ public interface FeatureRepository extends Repository<FeatureAggr, FeatureId> {
     List<FeatureAggr> queryByParentFeatureCodeAndType(String parentFeatureCode, String type);
 
     /**
+     * 根据parentFeatureCode列表和类型查找
+     *
+     * @param parentFeatureCodeList parentFeatureCode列表
+     * @param type                  类型
+     * @return FeatureAggr列表
+     */
+    List<FeatureAggr> queryByParentFeatureCodeListAndType(List<String> parentFeatureCodeList, String type);
+
+    /**
      * 查找所有
      *
      * @return FeatureAggr列表
      */
     List<FeatureAggr> queryAll();
+
+    /**
+     * 批量更新状态
+     *
+     * @param idList id列表
+     * @param status 状态
+     */
+    void batchUpdateStatus(List<Long> idList, String status);
 
 }

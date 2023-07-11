@@ -30,10 +30,27 @@ public interface BomsFeatureLibraryDao extends IService<BomsFeatureLibraryEntity
     List<BomsFeatureLibraryEntity> queryByParentFeatureCodeAndType(String parentFeatureCode, String type);
 
     /**
+     * 根据parentFeatureCode列表查找
+     *
+     * @param parentFeatureCodeList parentFeatureCode列表
+     * @param type                  类型
+     * @return BomsFeatureLibraryEntity列表
+     */
+    List<BomsFeatureLibraryEntity> queryByParentFeatureCodeListAndType(List<String> parentFeatureCodeList, String type);
+
+    /**
      * 查找所有
      *
      * @return BomsFeatureLibraryEntity列表
      */
     List<BomsFeatureLibraryEntity> queryAll();
+
+    /**
+     * 批量更新状态
+     *
+     * @param idList id列表
+     * @param status 状态
+     */
+    void batchUpdateStatus(List<Long> idList, String status);
 
 }

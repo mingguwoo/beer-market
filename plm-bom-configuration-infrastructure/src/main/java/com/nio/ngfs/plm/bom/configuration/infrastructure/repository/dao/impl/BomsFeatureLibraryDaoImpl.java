@@ -7,6 +7,7 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsFeat
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureLibraryEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsFeatureLibraryMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.dromara.dynamictp.core.thread.DtpExecutor;
 import org.springframework.stereotype.Repository;
 
@@ -47,8 +48,31 @@ public class BomsFeatureLibraryDaoImpl extends AbstractDao<BomsFeatureLibraryMap
     }
 
     @Override
+    public List<BomsFeatureLibraryEntity> queryByParentFeatureCodeListAndType(List<String> parentFeatureCodeList, String type) {
+        if (CollectionUtils.isEmpty(parentFeatureCodeList)) {
+            return Lists.newArrayList();
+        }
+        LambdaQueryWrapper<BomsFeatureLibraryEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.in(BomsFeatureLibraryEntity::getParentFeatureCode, parentFeatureCodeList);
+        lambdaQueryWrapper.eq(BomsFeatureLibraryEntity::getType, type);
+        return getBaseMapper().selectList(lambdaQueryWrapper);
+    }
+
+    @Override
     public List<BomsFeatureLibraryEntity> queryAll() {
         return getBaseMapper().selectList(new LambdaQueryWrapper<>());
+    }
+
+    @Override
+    public void batchUpdateStatus(List<Long> idList, String status) {
+        if (CollectionUtils.isEmpty(idList)) {
+            return;
+        }
+        LambdaQueryWrapper<BomsFeatureLibraryEntity> updateWrapper = new LambdaQueryWrapper<>();
+        updateWrapper.in(BomsFeatureLibraryEntity::getId, idList);
+        BomsFeatureLibraryEntity updateEntity = new BomsFeatureLibraryEntity();
+        updateEntity.setStatus(status);
+        getBaseMapper().update(updateEntity, updateWrapper);
     }
 
     /**

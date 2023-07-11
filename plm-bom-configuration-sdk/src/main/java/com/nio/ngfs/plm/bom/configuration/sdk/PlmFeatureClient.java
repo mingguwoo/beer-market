@@ -2,9 +2,11 @@ package com.nio.ngfs.plm.bom.configuration.sdk;
 
 import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.AddGroupCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.ChangeGroupStatusCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.EditGroupCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.ListFeatureLibraryQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.AddGroupRespDto;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.ChangeGroupStatusRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.EditGroupRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.FeatureLibraryDto;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -36,6 +38,15 @@ public interface PlmFeatureClient {
      */
     @PostMapping("/feature/editGroup")
     ResultInfo<EditGroupRespDto> editGroup(EditGroupCmd cmd);
+
+    /**
+     * 改变Group状态
+     *
+     * @param cmd 命令
+     * @return 响应
+     */
+    @PostMapping("/feature/changeGroupStatus")
+    ResultInfo<ChangeGroupStatusRespDto> changeGroupStatus(ChangeGroupStatusCmd cmd);
 
     /**
      * Feature库列表

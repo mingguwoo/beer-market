@@ -2,9 +2,11 @@ package com.nio.ngfs.plm.bom.configuration.domain.model.feature;
 
 import com.nio.bom.share.domain.model.AggrRoot;
 import com.nio.bom.share.exception.BusinessException;
+import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.common.util.RegexUtil;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.EditGroupCmd;
@@ -103,6 +105,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
         checkType(FeatureTypeEnum.GROUP);
         checkGroupCode(featureId.getFeatureCode());
         setStatus(FeatureStatusEnum.ACTIVE.getStatus());
+        setParentFeatureCode(ConfigConstants.GROUP_PARENT_FEATURE_CODE);
     }
 
     /**
@@ -118,6 +121,29 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
         setDescription(cmd.getDescription());
         setUpdateUser(cmd.getUpdateUser());
         changeGroupCode(newGroupCode);
+    }
+
+    /**
+     * 改变Group状态
+     */
+    public FeatureStatusChangeTypeEnum changeGroupStatus(String newStatus) {
+        FeatureStatusEnum oldStatusEnum = FeatureStatusEnum.getByStatus(status);
+        FeatureStatusEnum newStatusEnum = FeatureStatusEnum.getByStatus(newStatus);
+        if (oldStatusEnum == null || newStatusEnum == null) {
+            throw new BusinessException(ConfigErrorCode.FEATURE_STATUS_INVALID);
+        }
+        checkType(FeatureTypeEnum.GROUP);
+        if (oldStatusEnum == FeatureStatusEnum.INACTIVE && newStatusEnum == FeatureStatusEnum.ACTIVE) {
+            return FeatureStatusChangeTypeEnum.INACTIVE_TO_ACTIVE;
+        } else if (oldStatusEnum == FeatureStatusEnum.ACTIVE && newStatusEnum == FeatureStatusEnum.INACTIVE) {
+            childrenList.forEach(children -> {
+                if (children.isActive()) {
+                    throw new BusinessException(ConfigErrorCode.FEATURE_CHANGE_GROUP_STATUS_FEATURE_EXISTS_ACTIVE);
+                }
+            });
+            return FeatureStatusChangeTypeEnum.ACTIVE_TO_INACTIVE;
+        }
+        return FeatureStatusChangeTypeEnum.NO_CHANGE;
     }
 
     /**
@@ -165,8 +191,18 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
         featureAggr.setParentFeatureCode(newParentFeatureCode);
     }
 
+    /**
+     * 状态是否Active
+     */
     public boolean isActive() {
         return Objects.equals(status, FeatureStatusEnum.ACTIVE.getStatus());
+    }
+
+    /**
+     * 是否指定类型
+     */
+    public boolean isType(FeatureTypeEnum typeEnum) {
+        return Objects.equals(featureId.getType(), typeEnum.getType());
     }
 
 }

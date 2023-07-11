@@ -70,8 +70,18 @@ public class FeatureRepositoryImpl implements FeatureRepository {
     }
 
     @Override
+    public List<FeatureAggr> queryByParentFeatureCodeListAndType(List<String> parentFeatureCodeList, String type) {
+        return featureConverter.convertEntityListToDoList(bomsFeatureLibraryDao.queryByParentFeatureCodeListAndType(parentFeatureCodeList, type));
+    }
+
+    @Override
     public List<FeatureAggr> queryAll() {
         return featureConverter.convertEntityListToDoList(bomsFeatureLibraryDao.queryAll());
+    }
+
+    @Override
+    public void batchUpdateStatus(List<Long> idList, String status) {
+        bomsFeatureLibraryDao.batchUpdateStatus(idList, status);
     }
 
 }

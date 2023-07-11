@@ -2,6 +2,9 @@ package com.nio.ngfs.plm.bom.configuration.domain.service;
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureId;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusChangeTypeEnum;
+
+import java.util.List;
 
 /**
  * Feature领域服务
@@ -26,5 +29,13 @@ public interface FeatureDomainService {
      * @param featureAggr featureAggr
      */
     void checkGroupCodeUnique(FeatureAggr featureAggr);
+
+    /**
+     * Group下的Feature/Option状态改为Active
+     *
+     * @param featureAggr    聚合根
+     * @param changeTypeEnum Feature状态变更类型
+     */
+    void changeGroupFeatureOptionStatusByGroup(FeatureAggr featureAggr, FeatureStatusChangeTypeEnum changeTypeEnum);
 
 }

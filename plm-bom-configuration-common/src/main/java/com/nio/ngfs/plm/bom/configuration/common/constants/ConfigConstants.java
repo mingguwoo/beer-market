@@ -8,4 +8,6 @@ package com.nio.ngfs.plm.bom.configuration.common.constants;
  */
 public interface ConfigConstants {
 
+    String GROUP_PARENT_FEATURE_CODE = "GROUP_ROOT";
+
 }

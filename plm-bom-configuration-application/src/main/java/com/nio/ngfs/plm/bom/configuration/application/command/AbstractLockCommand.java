@@ -1,6 +1,5 @@
 package com.nio.ngfs.plm.bom.configuration.application.command;
 
-import com.nio.ngfs.plm.bom.configuration.application.Application;
 import com.nio.ngfs.plm.bom.configuration.common.lock.RedissonLocker;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.Cmd;
 
@@ -10,7 +9,7 @@ import javax.annotation.Resource;
  * @author xiaozhou.tu
  * @date 2023/7/10
  */
-public abstract class AbstractLockCommand<C extends Cmd, Resp> implements Application<C, Resp> {
+public abstract class AbstractLockCommand<C extends Cmd, Resp> implements Command<C, Resp> {
 
     @Resource
     private RedissonLocker redissonLocker;

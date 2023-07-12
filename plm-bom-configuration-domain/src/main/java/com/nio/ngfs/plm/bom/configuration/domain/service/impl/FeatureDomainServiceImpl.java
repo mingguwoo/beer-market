@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author xiaozhou.tu
@@ -92,6 +93,14 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
                 featureAggr.getDisplayName(), featureAggr.getCatalog(), featureAggr.getFeatureId().getType());
         if (CollectionUtils.isNotEmpty(existedFeatureAggrList)) {
             throw new BusinessException(ConfigErrorCode.FEATURE_DISPLAY_NAME_REPEAT);
+        }
+    }
+
+    @Override
+    public void checkOptionChineseNameUnique(FeatureAggr parentFeatureAggr,FeatureAggr featureAggr) {
+        List<String> chineseNameList = parentFeatureAggr.getChildrenList().stream().map(obj->obj.getChineseName()).collect(Collectors.toList());
+        if (chineseNameList.contains(featureAggr.getChineseName())){
+            throw new BusinessException(ConfigErrorCode.FEATURE_OPTION_CHINESE_NAME_REPEAT);
         }
     }
 

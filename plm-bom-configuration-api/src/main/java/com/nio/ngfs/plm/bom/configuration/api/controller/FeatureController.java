@@ -72,7 +72,6 @@ public class FeatureController implements PlmFeatureClient {
         return ResultInfo.success(listFeatureLibraryQuery.execute(qry));
     }
 
-
     @Override
     @NeedAuthorization
     @NotLogResult

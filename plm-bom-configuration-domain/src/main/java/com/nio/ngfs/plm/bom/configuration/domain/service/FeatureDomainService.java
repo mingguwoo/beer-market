@@ -51,4 +51,11 @@ public interface FeatureDomainService {
      */
     void checkDisplayNameUnique(FeatureAggr featureAggr);
 
+    /**
+     * Chinese Name在同一feature下是否唯一
+     *
+     * @param parentFeatureAggr 聚合根
+     * @param featureAggr 聚合根
+     */
+    void checkOptionChineseNameUnique(FeatureAggr parentFeatureAggr,FeatureAggr featureAggr);
 }

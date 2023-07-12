@@ -10,6 +10,6 @@ public interface RedisKeyConstant {
 
     String FEATURE_GROUP_LOCK_KEY_PREFIX = CONFIGURATION_PREFIX + "feature:group:lock:";
 
-    String OPTION_FEATURE_LOCK_KEY_PREFIX = CONFIGURATION_PREFIX + "option:feature:lock:";
+    String FEATURE_OPTION_LOCK_KEY_PREFIX = CONFIGURATION_PREFIX + "feature:option:lock:";
 
 }

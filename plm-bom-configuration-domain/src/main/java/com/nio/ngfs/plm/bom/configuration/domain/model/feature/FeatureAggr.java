@@ -63,7 +63,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
     /**
      * Feature的必须性
      */
-    private String mayMust;
+    private String  mayMust;
 
     /**
      * Feature的分类
@@ -261,14 +261,17 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
         return Objects.equals(featureId.getType(), typeEnum.getType());
     }
 
-//    /**
-//     * 新增Option
-//     */
-//    public void addOption() {
-//        checkType(FeatureTypeEnum.OPTION);
-//        checkGroupCode(featureId.getFeatureCode());
-//        setStatus(FeatureStatusEnum.ACTIVE.getStatus());
-//        setParentFeatureCode(ConfigConstants.GROUP_PARENT_FEATURE_CODE);
-//    }
+    /**
+     * 新增Option
+     */
+    public void addOption() {
+        checkType(FeatureTypeEnum.OPTION);
+        checkFeatureAndOptionCode();
+        checkRequestor(requestor);
+        // 字段赋值
+        setStatus(FeatureStatusEnum.ACTIVE.getStatus());
+        setVersion(ConfigConstants.VERSION_A);
+        setStatus(FeatureStatusEnum.ACTIVE.getStatus());
+    }
 
 }

@@ -75,6 +75,22 @@ public class BomsFeatureLibraryDaoImpl extends AbstractDao<BomsFeatureLibraryMap
         getBaseMapper().update(updateEntity, updateWrapper);
     }
 
+    @Override
+    public List<BomsFeatureLibraryEntity> queryByFeatureCode(String featureCode) {
+        LambdaQueryWrapper<BomsFeatureLibraryEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(BomsFeatureLibraryEntity::getFeatureCode, featureCode);
+        return getBaseMapper().selectList(lambdaQueryWrapper);
+    }
+
+    @Override
+    public List<BomsFeatureLibraryEntity> queryByDisplayNameCatalogAndType(String displayName, String catalog, String type) {
+        LambdaQueryWrapper<BomsFeatureLibraryEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(BomsFeatureLibraryEntity::getDisplayName, displayName);
+        lambdaQueryWrapper.eq(BomsFeatureLibraryEntity::getCatalog, catalog);
+        lambdaQueryWrapper.eq(BomsFeatureLibraryEntity::getType, type);
+        return getBaseMapper().selectList(lambdaQueryWrapper);
+    }
+
     /**
      * 测试动态线程池使用
      */

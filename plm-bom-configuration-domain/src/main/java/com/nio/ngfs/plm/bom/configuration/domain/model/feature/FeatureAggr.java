@@ -91,9 +91,19 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
     private String status;
 
     /**
+     * 父节点
+     */
+    private transient FeatureAggr parent;
+
+    /**
      * children节点列表
      */
     private transient List<FeatureAggr> childrenList = Collections.emptyList();
+
+    /**
+     * children节点列表是否变更
+     */
+    private transient boolean childrenChanged = false;
 
     @Override
     public FeatureId getUniqId() {
@@ -153,13 +163,17 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
      * 新增Feature
      */
     public void addFeature() {
+        // Group状态校验
+        if (!parent.isActive()) {
+            throw new BusinessException(ConfigErrorCode.FEATURE_GROUP_IS_NOT_ACTIVE);
+        }
         // 字段校验
         checkType(FeatureTypeEnum.FEATURE);
         checkFeatureAndOptionCode();
         checkCatalog(catalog);
         checkRequestor(requestor);
         // 字段赋值
-        setSelectionType(ConfigConstants.SELECTION_TYPE_SINGLE);
+        setSelectionType(ConfigConstants.SINGLE);
         setMayMust(ConfigConstants.MAY);
         setMaturity(ConfigConstants.IN_WORK);
         setVersion(ConfigConstants.VERSION_A);
@@ -194,15 +208,21 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
         }
     }
 
+    /**
+     * 校验Catalog
+     */
     private void checkCatalog(String catalog) {
         if (CatalogEnum.getByCatalog(catalog) == null) {
-            throw new BusinessException(ConfigErrorCode.FEATURE_GROUP_CODE_FORMAT_ERROR);
+            throw new BusinessException(ConfigErrorCode.FEATURE_CATALOG_INVALID);
         }
     }
 
+    /**
+     * 校验Requestor
+     */
     private void checkRequestor(String requestor) {
         if (BrandEnum.getByName(requestor) == null) {
-            throw new BusinessException(ConfigErrorCode.FEATURE_GROUP_CODE_FORMAT_ERROR);
+            throw new BusinessException(ConfigErrorCode.FEATURE_REQUESTOR_INVALID);
         }
     }
 
@@ -217,6 +237,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
         // Group Code更新
         featureId.setFeatureCode(newGroupCode);
         childrenList.forEach(children -> changeParentFeatureCode(children, newGroupCode));
+        setChildrenChanged(true);
     }
 
     /**

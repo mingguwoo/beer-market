@@ -13,7 +13,7 @@ public class FeatureFactory {
 
     public static FeatureAggr createGroup(AddGroupCmd cmd) {
         return FeatureAggr.builder()
-                .featureId(new FeatureId(cmd.getGroupCode().trim(), FeatureTypeEnum.GROUP.getType()))
+                .featureId(new FeatureId(cmd.getGroupCode().trim(), FeatureTypeEnum.GROUP))
                 .displayName(cmd.getDisplayName())
                 .chineseName(cmd.getChineseName())
                 .description(cmd.getDescription())
@@ -23,7 +23,7 @@ public class FeatureFactory {
 
     public static FeatureAggr createFeature(AddFeatureCmd cmd) {
         return FeatureAggr.builder()
-                .featureId(new FeatureId(convertFeatureAndOptionCode(cmd.getFeatureCode()), FeatureTypeEnum.FEATURE.getType()))
+                .featureId(new FeatureId(convertFeatureAndOptionCode(cmd.getFeatureCode()), FeatureTypeEnum.FEATURE))
                 .parentFeatureCode(cmd.getGroupCode())
                 .displayName(cmd.getDisplayName())
                 .chineseName(cmd.getChineseName())
@@ -36,7 +36,7 @@ public class FeatureFactory {
 
     public static FeatureAggr createOption(AddOptionCmd cmd) {
         return FeatureAggr.builder()
-                .featureId(new FeatureId(cmd.getOptionCode().trim(), FeatureTypeEnum.GROUP.getType()))
+                .featureId(new FeatureId(cmd.getOptionCode().trim(), FeatureTypeEnum.GROUP))
                 .displayName(cmd.getDisplayName())
                 .chineseName(cmd.getChineseName())
                 .description(cmd.getDescription())

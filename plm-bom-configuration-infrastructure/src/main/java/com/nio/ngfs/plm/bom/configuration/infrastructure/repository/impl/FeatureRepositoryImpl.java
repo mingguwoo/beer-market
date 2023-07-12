@@ -30,15 +30,16 @@ public class FeatureRepositoryImpl implements FeatureRepository {
     @Transactional(rollbackFor = Exception.class)
     public void save(FeatureAggr aggr) {
         DaoSupport.saveOrUpdate(bomsFeatureLibraryDao, featureConverter.convertDoToEntity(aggr));
+        // 节点变更不会影响父节点，此处不处理父节点
         // 保存子节点列表
-        if (CollectionUtils.isNotEmpty(aggr.getChildrenList())) {
+        if (CollectionUtils.isNotEmpty(aggr.getChildrenList()) && aggr.isChildrenChanged()) {
             bomsFeatureLibraryDao.updateBatchById(featureConverter.convertDoListToEntityList(aggr.getChildrenList()));
         }
     }
 
     @Override
     public FeatureAggr find(FeatureId featureId) {
-        return getFeatureAggrWithChildren(
+        return getFeatureAggrWithParentAndChildren(
                 featureConverter.convertEntityToDo(bomsFeatureLibraryDao.getByFeatureCodeAndType(
                         featureId.getFeatureCode(), featureId.getType()
                 ))
@@ -47,17 +48,24 @@ public class FeatureRepositoryImpl implements FeatureRepository {
 
     @Override
     public FeatureAggr getById(Long id) {
-        return getFeatureAggrWithChildren(
+        return getFeatureAggrWithParentAndChildren(
                 featureConverter.convertEntityToDo(bomsFeatureLibraryDao.getById(id))
         );
     }
 
-    private FeatureAggr getFeatureAggrWithChildren(FeatureAggr featureAggr) {
+    /**
+     * 构建带父子节点的聚合根
+     */
+    private FeatureAggr getFeatureAggrWithParentAndChildren(FeatureAggr featureAggr) {
         if (featureAggr == null) {
             return null;
         }
-        // 查询子节点列表
         FeatureTypeEnum typeEnum = FeatureTypeEnum.getByType(featureAggr.getFeatureId().getType());
+        // 查询父节点
+        if (StringUtils.isNotBlank(typeEnum.getParentType())) {
+            featureAggr.setParent(find(new FeatureId(featureAggr.getParentFeatureCode(), typeEnum.getParentType())));
+        }
+        // 查询子节点列表
         if (StringUtils.isNotBlank(typeEnum.getChildrenType())) {
             featureAggr.setChildrenList(queryByParentFeatureCodeAndType(featureAggr.getFeatureId().getFeatureCode(), typeEnum.getChildrenType()));
         }
@@ -82,6 +90,16 @@ public class FeatureRepositoryImpl implements FeatureRepository {
     @Override
     public void batchUpdateStatus(List<Long> idList, String status) {
         bomsFeatureLibraryDao.batchUpdateStatus(idList, status);
+    }
+
+    @Override
+    public List<FeatureAggr> queryByFeatureCode(String featureCode) {
+        return featureConverter.convertEntityListToDoList(bomsFeatureLibraryDao.queryByFeatureCode(featureCode));
+    }
+
+    @Override
+    public List<FeatureAggr> queryByDisplayNameCatalogAndType(String displayName, String catalog, String type) {
+        return featureConverter.convertEntityListToDoList(bomsFeatureLibraryDao.queryByDisplayNameCatalogAndType(displayName, catalog, type));
     }
 
 }

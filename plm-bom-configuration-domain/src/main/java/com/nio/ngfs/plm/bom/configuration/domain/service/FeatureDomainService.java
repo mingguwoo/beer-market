@@ -25,7 +25,7 @@ public interface FeatureDomainService {
     /**
      * 检查Group Code是否唯一
      *
-     * @param featureAggr featureAggr
+     * @param featureAggr 聚合根
      */
     void checkGroupCodeUnique(FeatureAggr featureAggr);
 
@@ -36,5 +36,19 @@ public interface FeatureDomainService {
      * @param changeTypeEnum Feature状态变更类型
      */
     void changeGroupFeatureOptionStatusByGroup(FeatureAggr featureAggr, FeatureStatusChangeTypeEnum changeTypeEnum);
+
+    /**
+     * 校验Feature/Option Code是否唯一
+     *
+     * @param featureAggr 聚合根
+     */
+    void checkFeatureOptionCodeUnique(FeatureAggr featureAggr);
+
+    /**
+     * 校验Display Name是否唯一
+     *
+     * @param featureAggr 聚合根
+     */
+    void checkDisplayNameUnique(FeatureAggr featureAggr);
 
 }

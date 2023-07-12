@@ -14,9 +14,11 @@ public enum ConfigErrorCode implements ErrorCode {
      * 错误码
      */
     LOCK_FAILED(50000, "The Operation Failed. Please Try Again Later!"),
-
     DATA_NOT_EXISTS(70000, "Data Not Existed!"),
 
+    /**
+     * Feature Library
+     */
     FEATURE_GROUP_CODE_REPEAT(80000, "The Group Is Already Existed，Please Input A New One!"),
     FEATURE_GROUP_CODE_FORMAT_ERROR(80001, "Group Code Must Only Contains Alphabet Number And Blank!"),
     FEATURE_GROUP_NOT_EXISTS(80002, "Group Not Existed!"),
@@ -27,6 +29,10 @@ public enum ConfigErrorCode implements ErrorCode {
     FEATURE_OPTION_CODE_FORMAT_ERROR(80007, "Option Code Must Only Contains Alphabet And Number!"),
     FEATURE_CATALOG_INVALID(80008, "Catalog Is Invalid!"),
     FEATURE_REQUESTOR_INVALID(80009, "Requestor Is Invalid!"),
+    FEATURE_GROUP_IS_NOT_ACTIVE(80010, "Group Is Not Active!"),
+    FEATURE_FEATURE_CODE_REPEAT(80011, "The Feature Is Already Existed，Please Input A New One!"),
+    FEATURE_OPTION_CODE_REPEAT(80012, "The Option Is Already Existed，Please Input A New One!"),
+    FEATURE_DISPLAY_NAME_REPEAT(80013, "The Display Name Is Already Existed, Please Input A New One!"),
     ;
 
     /**

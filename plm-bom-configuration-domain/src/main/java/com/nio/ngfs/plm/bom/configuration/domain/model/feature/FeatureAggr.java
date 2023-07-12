@@ -3,6 +3,8 @@ package com.nio.ngfs.plm.bom.configuration.domain.model.feature;
 import com.nio.bom.share.domain.model.AggrRoot;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
+import com.nio.ngfs.plm.bom.configuration.common.enums.BrandEnum;
+import com.nio.ngfs.plm.bom.configuration.common.enums.CatalogEnum;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.common.util.RegexUtil;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
@@ -151,7 +153,17 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
      * 新增Feature
      */
     public void addFeature() {
+        // 字段校验
         checkType(FeatureTypeEnum.FEATURE);
+        checkFeatureAndOptionCode();
+        checkCatalog(catalog);
+        checkRequestor(requestor);
+        // 字段赋值
+        setSelectionType(ConfigConstants.SELECTION_TYPE_SINGLE);
+        setMayMust(ConfigConstants.MAY);
+        setMaturity(ConfigConstants.IN_WORK);
+        setVersion(ConfigConstants.VERSION_A);
+        setStatus(FeatureStatusEnum.ACTIVE.getStatus());
     }
 
     /**
@@ -168,6 +180,28 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
      */
     private void checkGroupCode(String groupCode) {
         if (!RegexUtil.isMatchAlphabetNumberAndBlank(groupCode)) {
+            throw new BusinessException(ConfigErrorCode.FEATURE_GROUP_CODE_FORMAT_ERROR);
+        }
+    }
+
+    /**
+     * 校验Feature/Option Code，只允许字母、数字和空格
+     */
+    private void checkFeatureAndOptionCode() {
+        if (!RegexUtil.isMatchAlphabetAndNumber(featureId.getFeatureCode())) {
+            throw new BusinessException(isType(FeatureTypeEnum.FEATURE) ?
+                    ConfigErrorCode.FEATURE_FEATURE_CODE_FORMAT_ERROR : ConfigErrorCode.FEATURE_OPTION_CODE_FORMAT_ERROR);
+        }
+    }
+
+    private void checkCatalog(String catalog) {
+        if (CatalogEnum.getByCatalog(catalog) == null) {
+            throw new BusinessException(ConfigErrorCode.FEATURE_GROUP_CODE_FORMAT_ERROR);
+        }
+    }
+
+    private void checkRequestor(String requestor) {
+        if (BrandEnum.getByName(requestor) == null) {
             throw new BusinessException(ConfigErrorCode.FEATURE_GROUP_CODE_FORMAT_ERROR);
         }
     }

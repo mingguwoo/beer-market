@@ -11,20 +11,32 @@ import javax.validation.constraints.Size;
  * @date 2023/6/28
  */
 @Data
-public class AddGroupCmd implements Cmd {
+public class AddFeatureCmd implements Cmd {
 
     @NotBlank(message = "Group Code is blank")
     @Size(max = 128, message = "Group Code max length is 128")
     private String groupCode;
 
+    @NotBlank(message = "Feature Code is blank")
+    @Size(max = 128, message = "Feature Code max length is 128")
+    private String featureCode;
+
+    @NotBlank(message = "Display Name is blank")
     @Size(max = 128, message = "Display Name max length is 128")
     private String displayName;
 
+    @NotBlank(message = "Chinese Name is blank")
     @Size(max = 128, message = "Chinese Name max length is 128")
     private String chineseName;
 
     @Size(max = 128, message = "Description Name max length is 128")
     private String description;
+
+    @NotBlank(message = "Catalog is blank")
+    private String catalog;
+
+    @NotBlank(message = "Requestor is blank")
+    private String requestor;
 
     @NotBlank(message = "Create User is blank")
     private String createUser;

@@ -22,7 +22,11 @@ public enum ConfigErrorCode implements ErrorCode {
     FEATURE_GROUP_NOT_EXISTS(80002, "Group Not Existed!"),
     FEATURE_TYPE_NOT_MATCH(80003, "Type Not Match!"),
     FEATURE_STATUS_INVALID(80004, "Feature Status Is Invalid!"),
-    FEATURE_CHANGE_GROUP_STATUS_FEATURE_EXIST_ACTIVE(80099, "The Group Can Not Be Inactive，Because The Following Features Have \"Active\" Status!"),
+    FEATURE_CHANGE_GROUP_STATUS_FEATURE_EXIST_ACTIVE(80005, "The Group Can Not Be Inactive，Because The Following Features Have \"Active\" Status!"),
+    FEATURE_FEATURE_CODE_FORMAT_ERROR(80006, "Feature Code Must Only Contains Alphabet And Number!"),
+    FEATURE_OPTION_CODE_FORMAT_ERROR(80007, "Option Code Must Only Contains Alphabet And Number!"),
+    FEATURE_CATALOG_INVALID(80008, "Catalog Is Invalid!"),
+    FEATURE_REQUESTOR_INVALID(80009, "Requestor Is Invalid!"),
     ;
 
     /**

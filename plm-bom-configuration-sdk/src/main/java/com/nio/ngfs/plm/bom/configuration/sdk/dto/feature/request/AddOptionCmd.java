@@ -25,4 +25,8 @@ public class AddOptionCmd implements Cmd {
     @Size(max = 128, message = "Feature Code max length is 128")
     private String featureCode;
 
+    @NotBlank(message = "Create User is blank")
+    private String createUser;
+
+
 }

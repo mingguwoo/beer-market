@@ -255,4 +255,14 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
         return Objects.equals(featureId.getType(), typeEnum.getType());
     }
 
+//    /**
+//     * 新增Option
+//     */
+//    public void addOption() {
+//        checkType(FeatureTypeEnum.OPTION);
+//        checkGroupCode(featureId.getFeatureCode());
+//        setStatus(FeatureStatusEnum.ACTIVE.getStatus());
+//        setParentFeatureCode(ConfigConstants.GROUP_PARENT_FEATURE_CODE);
+//    }
+
 }

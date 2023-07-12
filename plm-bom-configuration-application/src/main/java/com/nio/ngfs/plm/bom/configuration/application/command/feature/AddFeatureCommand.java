@@ -36,7 +36,7 @@ public class AddFeatureCommand extends AbstractLockCommand<AddFeatureCmd, AddFea
     protected AddFeatureRespDto executeWithLock(AddFeatureCmd cmd) {
         FeatureAggr featureAggr = FeatureFactory.createFeature(cmd);
         FeatureAggr parentFeatureAggr = featureDomainService.getAndCheckFeatureAggr(
-                new FeatureId(featureAggr.getParentFeatureCode(), FeatureTypeEnum.GROUP.getType()),
+                new FeatureId(featureAggr.getParentFeatureCode(), FeatureTypeEnum.GROUP),
                 ConfigErrorCode.FEATURE_GROUP_NOT_EXISTS);
         featureAggr.setParent(parentFeatureAggr);
         featureAggr.addFeature();

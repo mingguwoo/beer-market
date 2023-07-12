@@ -36,13 +36,13 @@ public class FeatureFactory {
 
     public static FeatureAggr createOption(AddOptionCmd cmd) {
         return FeatureAggr.builder()
-                .featureId(new FeatureId(cmd.getOptionCode().trim(), FeatureTypeEnum.GROUP))
+                .featureId(new FeatureId(convertFeatureAndOptionCode(cmd.getOptionCode()).trim(), FeatureTypeEnum.OPTION.getType()))
+                .parentFeatureCode(cmd.getParentCode())
                 .displayName(cmd.getDisplayName())
                 .chineseName(cmd.getChineseName())
                 .description(cmd.getDescription())
                 .requestor(cmd.getRequestor())
                 .createUser(cmd.getCreateUser())
-                .updateUser(cmd.getCreateUser())
                 .build();
     }
 

@@ -5,10 +5,7 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.AddGroupCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.ChangeGroupStatusCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.EditGroupCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.ListFeatureLibraryQry;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.AddGroupRespDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.ChangeGroupStatusRespDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.EditGroupRespDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.FeatureLibraryDto;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -56,5 +53,8 @@ public interface PlmFeatureClient {
      */
     @PostMapping("/feature/listFeatureLibrary")
     ResultInfo<List<FeatureLibraryDto>> listFeatureLibrary(ListFeatureLibraryQry qry);
+
+    @PostMapping("/feature/addOption")
+    ResultInfo<AddOptionRespDto> addOption(AddGroupCmd cmd);
 
 }

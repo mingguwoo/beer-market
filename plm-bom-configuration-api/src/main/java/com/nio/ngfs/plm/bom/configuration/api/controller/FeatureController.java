@@ -4,24 +4,20 @@ import com.nio.bom.share.annotation.NeedAuthorization;
 import com.nio.bom.share.annotation.NotLogResult;
 import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.application.command.feature.AddGroupCommand;
+import com.nio.ngfs.plm.bom.configuration.application.command.feature.AddOptionCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.feature.ChangeGroupStatusCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.feature.EditGroupCommand;
 import com.nio.ngfs.plm.bom.configuration.application.query.feature.ListFeatureLibraryQuery;
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmFeatureClient;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.AddGroupCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.ChangeGroupStatusCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.EditGroupCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.ListFeatureLibraryQry;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.AddGroupRespDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.ChangeGroupStatusRespDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.EditGroupRespDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.FeatureLibraryDto;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.*;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import javax.xml.transform.Result;
 import java.util.List;
 
 /**
@@ -37,6 +33,7 @@ public class FeatureController implements PlmFeatureClient {
     private final EditGroupCommand editGroupCommand;
     private final ChangeGroupStatusCommand changeGroupStatusCommand;
     private final ListFeatureLibraryQuery listFeatureLibraryQuery;
+    private final AddOptionCommand addOptionCommand;
 
     @Override
     @NeedAuthorization
@@ -64,6 +61,12 @@ public class FeatureController implements PlmFeatureClient {
     @NotLogResult
     public ResultInfo<List<FeatureLibraryDto>> listFeatureLibrary(@Valid @RequestBody ListFeatureLibraryQry qry) {
         return ResultInfo.success(listFeatureLibraryQuery.execute(qry));
+    }
+    @Override
+    @NeedAuthorization
+    @NotLogResult
+    public ResultInfo<AddOptionRespDto> addOption(@Valid @RequestBody AddOptionCmd cmd) {
+        return ResultInfo.success(addOptionCommand.execute(cmd));
     }
 
 }

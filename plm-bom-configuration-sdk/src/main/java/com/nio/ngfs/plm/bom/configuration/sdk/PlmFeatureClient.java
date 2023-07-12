@@ -1,6 +1,8 @@
 package com.nio.ngfs.plm.bom.configuration.sdk;
 
 import com.nio.bom.share.result.ResultInfo;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.*;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.AddGroupCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.ChangeGroupStatusCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.EditGroupCmd;
@@ -44,6 +46,15 @@ public interface PlmFeatureClient {
      */
     @PostMapping("/feature/changeGroupStatus")
     ResultInfo<ChangeGroupStatusRespDto> changeGroupStatus(ChangeGroupStatusCmd cmd);
+
+    /**
+     * 新增Feature
+     *
+     * @param cmd 命令
+     * @return 响应
+     */
+    @PostMapping("/feature/addFeature")
+    ResultInfo<AddFeatureRespDto> addFeature(AddFeatureCmd cmd);
 
     /**
      * Feature库列表

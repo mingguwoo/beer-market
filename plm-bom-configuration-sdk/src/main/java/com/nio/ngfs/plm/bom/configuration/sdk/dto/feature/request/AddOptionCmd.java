@@ -31,9 +31,9 @@ public class AddOptionCmd implements Cmd {
     @Size(max = 128, message = "Requestor max length is 128")
     private String requestor;
 
-    @NotBlank(message = "Parent Feature Code is blank")
+    @NotBlank(message = "Feature Code is blank")
     @Size(max = 128, message = "Feature Code max length is 128")
-    private String parentCode;
+    private String featureCode;
 
     @NotBlank(message = "Create User is blank")
     private String createUser;

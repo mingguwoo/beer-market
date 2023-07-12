@@ -21,6 +21,7 @@ import lombok.experimental.SuperBuilder;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author xiaozhou.tu
@@ -196,6 +197,20 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
     }
 
     /**
+     * 新增Option
+     */
+    public void addOption() {
+        checkType(FeatureTypeEnum.OPTION);
+        checkFeatureAndOptionCode();
+        checkRequestor(requestor);
+        // 字段赋值
+        setVersion(ConfigConstants.VERSION_A);
+        setStatus(FeatureStatusEnum.ACTIVE.getStatus());
+        checkOptionChineseNameUnique();
+        checkOptionCodeAndFeatureCodeTwoDigits();
+    }
+
+    /**
      * 校验类型
      */
     private void checkType(FeatureTypeEnum typeEnum) {
@@ -277,15 +292,22 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
     }
 
     /**
-     * 新增Option
+     * Chinese Name在同一feature下是否唯一
      */
-    public void addOption() {
-        checkType(FeatureTypeEnum.OPTION);
-        checkFeatureAndOptionCode();
-        checkRequestor(requestor);
-        // 字段赋值
-        setVersion(ConfigConstants.VERSION_A);
-        setStatus(FeatureStatusEnum.ACTIVE.getStatus());
+    public void checkOptionChineseNameUnique() {
+        List<String> chineseNameList = parent.getChildrenList().stream().map(obj->obj.getChineseName()).collect(Collectors.toList());
+        if (chineseNameList.contains(chineseName)){
+            throw new BusinessException(ConfigErrorCode.FEATURE_OPTION_CHINESE_NAME_REPEAT);
+        }
+    }
+
+    /**
+     * 校验OptionCode前两位与所属Feature是否一致
+     */
+    public void checkOptionCodeAndFeatureCodeTwoDigits() {
+        if (featureId.getFeatureCode().substring(0,3).equals(parentFeatureCode.substring(0,3))){
+            throw new BusinessException(ConfigErrorCode.FEATURE_OPTION_CODE_DIFF_FROM_FEATURE_CODE);
+        }
     }
 
 }

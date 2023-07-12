@@ -27,13 +27,12 @@ public class AddOptionCommand extends AbstractLockCommand<AddOptionCmd, AddOptio
     private final FeatureRepository featureRepository;
     @Override
     protected String getLockKey(AddOptionCmd cmd) {
-        return RedisKeyConstant.FEATURE_OPTION_LOCK_KEY_PREFIX + cmd.getParentCode();
+        return RedisKeyConstant.FEATURE_FEATURE_LOCK_KEY_PREFIX + cmd.getFeatureCode();
     }
 
     @Override
     protected AddOptionRespDto executeWithLock(AddOptionCmd cmd) {
         FeatureAggr featureAggr = FeatureFactory.createOption(cmd);
-        featureAggr.addOption();
         featureDomainService.checkFeatureOptionCodeUnique(featureAggr);
         featureDomainService.checkDisplayNameUnique(featureAggr);
         FeatureAggr parentFeatureAggr = featureDomainService.getAndCheckFeatureAggr(
@@ -41,7 +40,7 @@ public class AddOptionCommand extends AbstractLockCommand<AddOptionCmd, AddOptio
                 ConfigErrorCode.FEATURE_FEATURE_NOT_EXISTS);
         featureAggr.setParent(parentFeatureAggr);
         featureAggr.setCatalog(parentFeatureAggr.getCatalog());
-        featureDomainService.checkOptionChineseNameUnique(featureAggr);
+        featureAggr.addOption();
         featureRepository.save(featureAggr);
         return new AddOptionRespDto();
     }

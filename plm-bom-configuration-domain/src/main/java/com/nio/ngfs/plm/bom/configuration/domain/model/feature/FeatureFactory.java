@@ -37,7 +37,7 @@ public class FeatureFactory {
     public static FeatureAggr createOption(AddOptionCmd cmd) {
         return FeatureAggr.builder()
                 .featureId(new FeatureId(convertFeatureAndOptionCode(cmd.getOptionCode()).trim(), FeatureTypeEnum.OPTION.getType()))
-                .parentFeatureCode(cmd.getParentCode())
+                .parentFeatureCode(cmd.getFeatureCode())
                 .displayName(cmd.getDisplayName())
                 .chineseName(cmd.getChineseName())
                 .description(cmd.getDescription())

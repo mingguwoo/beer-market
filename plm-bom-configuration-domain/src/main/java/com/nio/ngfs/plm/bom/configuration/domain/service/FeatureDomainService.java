@@ -52,19 +52,6 @@ public interface FeatureDomainService {
     void checkDisplayNameUnique(FeatureAggr featureAggr);
 
     /**
-     * Chinese Name在同一feature下是否唯一
-     *
-     * @param featureAggr 聚合根
-     */
-    void checkOptionChineseNameUnique(FeatureAggr featureAggr);
-
-    /**
-     * 校验OptionCode前两位与所属Feature是否一致
-     *
-     * @param featureAggr 聚合根
-     */
-    void checkOptionCodeAndFeatureCodeTwoDigits(FeatureAggr featureAggr);
-    /**
      * 改变Feature的Group Code
      *
      * @param featureAggr  聚合根

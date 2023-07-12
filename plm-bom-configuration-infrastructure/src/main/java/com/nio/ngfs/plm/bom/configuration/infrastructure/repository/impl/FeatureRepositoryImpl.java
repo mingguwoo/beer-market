@@ -84,4 +84,14 @@ public class FeatureRepositoryImpl implements FeatureRepository {
         bomsFeatureLibraryDao.batchUpdateStatus(idList, status);
     }
 
+    @Override
+    public List<FeatureAggr> queryByFeatureCode(String featureCode) {
+        return featureConverter.convertEntityListToDoList(bomsFeatureLibraryDao.queryByFeatureCode(featureCode));
+    }
+
+    @Override
+    public List<FeatureAggr> queryByDisplayNameCatalogAndType(String displayName, String catalog, String type) {
+        return featureConverter.convertEntityListToDoList(bomsFeatureLibraryDao.queryByDisplayNameCatalogAndType(displayName, catalog, type));
+    }
+
 }

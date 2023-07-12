@@ -51,4 +51,22 @@ public interface FeatureRepository extends Repository<FeatureAggr, FeatureId> {
      */
     void batchUpdateStatus(List<Long> idList, String status);
 
+    /**
+     * 根据FeatureCode查询
+     *
+     * @param featureCode FeatureCode
+     * @return FeatureAggr列表
+     */
+    List<FeatureAggr> queryByFeatureCode(String featureCode);
+
+    /**
+     * 根据Display Name、Catalog、Type查询
+     *
+     * @param displayName Display Name
+     * @param catalog     Catalog
+     * @param type        Type
+     * @return FeatureAggr列表
+     */
+    List<FeatureAggr> queryByDisplayNameCatalogAndType(String displayName, String catalog, String type);
+
 }

@@ -9,7 +9,7 @@ package com.nio.ngfs.plm.bom.configuration.common.constants;
 public interface ConfigConstants {
 
     String GROUP_PARENT_FEATURE_CODE = "GROUP_ROOT";
-    String SELECTION_TYPE_SINGLE = "Single";
+    String SINGLE = "Single";
     String MAY = "May";
     String VERSION_A = "A";
     String IN_WORK = "In Work";

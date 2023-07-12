@@ -12,6 +12,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStat
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.service.FeatureDomainService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -69,6 +70,29 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
         idList.add(featureAggr.getId());
         // 批量更新Group/Feature/Option的状态为Active
         featureRepository.batchUpdateStatus(idList, FeatureStatusEnum.ACTIVE.getStatus());
+    }
+
+    @Override
+    public void checkFeatureOptionCodeUnique(FeatureAggr featureAggr) {
+        List<FeatureAggr> existedFeatureAggrList = featureRepository.queryByFeatureCode(featureAggr.getFeatureId().getFeatureCode());
+        if (CollectionUtils.isEmpty(existedFeatureAggrList)) {
+            return;
+        }
+        existedFeatureAggrList.forEach(existedFeatureAggr -> {
+            if (existedFeatureAggr.isType(FeatureTypeEnum.FEATURE) || existedFeatureAggr.isType(FeatureTypeEnum.OPTION)) {
+                throw new BusinessException(featureAggr.isType(FeatureTypeEnum.FEATURE) ?
+                        ConfigErrorCode.FEATURE_FEATURE_CODE_REPEAT : ConfigErrorCode.FEATURE_OPTION_CODE_REPEAT);
+            }
+        });
+    }
+
+    @Override
+    public void checkDisplayNameUnique(FeatureAggr featureAggr) {
+        List<FeatureAggr> existedFeatureAggrList = featureRepository.queryByDisplayNameCatalogAndType(
+                featureAggr.getDisplayName(), featureAggr.getCatalog(), featureAggr.getFeatureId().getType());
+        if (CollectionUtils.isNotEmpty(existedFeatureAggrList)) {
+            throw new BusinessException(ConfigErrorCode.FEATURE_DISPLAY_NAME_REPEAT);
+        }
     }
 
 }

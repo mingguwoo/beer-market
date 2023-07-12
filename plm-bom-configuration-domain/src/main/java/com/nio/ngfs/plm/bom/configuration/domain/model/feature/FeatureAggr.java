@@ -100,6 +100,11 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
      */
     private transient List<FeatureAggr> childrenList = Collections.emptyList();
 
+    /**
+     * children节点列表是否变更
+     */
+    private transient boolean childrenChanged = false;
+
     @Override
     public FeatureId getUniqId() {
         return featureId;
@@ -232,6 +237,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
         // Group Code更新
         featureId.setFeatureCode(newGroupCode);
         childrenList.forEach(children -> changeParentFeatureCode(children, newGroupCode));
+        setChildrenChanged(true);
     }
 
     /**

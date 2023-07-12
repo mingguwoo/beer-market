@@ -11,6 +11,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.EditFeatureCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.EditGroupCmd;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -178,6 +179,20 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
         setMaturity(ConfigConstants.IN_WORK);
         setVersion(ConfigConstants.VERSION_A);
         setStatus(FeatureStatusEnum.ACTIVE.getStatus());
+    }
+
+    public void editFeature(EditFeatureCmd cmd) {
+        checkType(FeatureTypeEnum.FEATURE);
+        // 参数校验
+        checkCatalog(cmd.getCatalog());
+        checkRequestor(cmd.getRequestor());
+        // 属性更新
+        setDisplayName(cmd.getDisplayName());
+        setChineseName(cmd.getChineseName());
+        setDescription(cmd.getDescription());
+        setCatalog(cmd.getCatalog());
+        setRequestor(cmd.getRequestor());
+        setUpdateUser(cmd.getUpdateUser());
     }
 
     /**

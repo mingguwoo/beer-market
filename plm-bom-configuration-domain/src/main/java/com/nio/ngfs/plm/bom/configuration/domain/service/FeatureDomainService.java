@@ -51,4 +51,12 @@ public interface FeatureDomainService {
      */
     void checkDisplayNameUnique(FeatureAggr featureAggr);
 
+    /**
+     * 改变Feature的Group Code
+     *
+     * @param featureAggr  聚合根
+     * @param newGroupCode 新的Group Code
+     */
+    void changeFeatureGroupCode(FeatureAggr featureAggr, String newGroupCode);
+
 }

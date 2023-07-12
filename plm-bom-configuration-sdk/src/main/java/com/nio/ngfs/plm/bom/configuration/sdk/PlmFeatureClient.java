@@ -57,6 +57,14 @@ public interface PlmFeatureClient {
     ResultInfo<AddFeatureRespDto> addFeature(AddFeatureCmd cmd);
 
     /**
+     * 编辑Feature
+     *
+     * @param cmd 命令
+     * @return 响应
+     */
+    ResultInfo<EditFeatureCmdRespDto> editFeature(EditFeatureCmd cmd);
+
+    /**
      * Feature库列表
      *
      * @param qry 查询

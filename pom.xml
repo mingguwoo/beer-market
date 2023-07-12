@@ -42,6 +42,7 @@
         <org.mapstruct.version>1.5.3.Final</org.mapstruct.version>
         <lombok.version>1.18.24</lombok.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
+        <sugar-third-party.version>0.0.7.BETA.6</sugar-third-party.version>
     </properties>
 
     <modules>

@@ -74,6 +74,11 @@
             <artifactId>mapstruct-processor</artifactId>
             <version>${org.mapstruct.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.nio.ps</groupId>
+            <artifactId>sugar-third-party</artifactId>
+            <version>${sugar-third-party.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

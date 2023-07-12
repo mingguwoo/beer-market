@@ -1,6 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.application.command.feature;
 
-import com.nio.ngfs.plm.bom.configuration.application.command.Command;
+import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockCommand;
+import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureId;
@@ -18,12 +19,17 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class ChangeGroupStatusCommand implements Command<ChangeGroupStatusCmd, ChangeGroupStatusRespDto> {
+public class ChangeGroupStatusCommand extends AbstractLockCommand<ChangeGroupStatusCmd, ChangeGroupStatusRespDto> {
 
     private final FeatureDomainService featureDomainService;
 
     @Override
-    public ChangeGroupStatusRespDto execute(ChangeGroupStatusCmd cmd) {
+    protected String getLockKey(ChangeGroupStatusCmd cmd) {
+        return RedisKeyConstant.FEATURE_GROUP_LOCK_KEY_PREFIX + cmd.getGroupCode();
+    }
+
+    @Override
+    protected ChangeGroupStatusRespDto executeWithLock(ChangeGroupStatusCmd cmd) {
         FeatureId featureId = new FeatureId(cmd.getGroupCode(), FeatureTypeEnum.GROUP);
         // 查询聚合根
         FeatureAggr featureAggr = featureDomainService.getAndCheckFeatureAggr(featureId, ConfigErrorCode.FEATURE_GROUP_NOT_EXISTS);

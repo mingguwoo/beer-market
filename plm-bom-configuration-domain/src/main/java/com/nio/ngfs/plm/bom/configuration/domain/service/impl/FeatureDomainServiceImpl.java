@@ -79,6 +79,7 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
             return;
         }
         existedFeatureAggrList.forEach(existedFeatureAggr -> {
+            // Feature和Option的Code不可重复
             if (existedFeatureAggr.isType(FeatureTypeEnum.FEATURE) || existedFeatureAggr.isType(FeatureTypeEnum.OPTION)) {
                 throw new BusinessException(featureAggr.isType(FeatureTypeEnum.FEATURE) ?
                         ConfigErrorCode.FEATURE_FEATURE_CODE_REPEAT : ConfigErrorCode.FEATURE_OPTION_CODE_REPEAT);
@@ -93,6 +94,21 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
         if (CollectionUtils.isNotEmpty(existedFeatureAggrList)) {
             throw new BusinessException(ConfigErrorCode.FEATURE_DISPLAY_NAME_REPEAT);
         }
+    }
+
+    @Override
+    public void changeFeatureGroupCode(FeatureAggr featureAggr, String newGroupCode) {
+        newGroupCode = newGroupCode.trim();
+        if (Objects.equals(featureAggr.getParentFeatureCode(), newGroupCode)) {
+            // Group Code未变更
+            return;
+        }
+        FeatureId groupFeatureId = new FeatureId(newGroupCode, FeatureTypeEnum.GROUP);
+        FeatureAggr groupFeatureAggr = getAndCheckFeatureAggr(groupFeatureId, ConfigErrorCode.FEATURE_GROUP_NOT_EXISTS);
+        if (!groupFeatureAggr.isActive()) {
+            throw new BusinessException(ConfigErrorCode.FEATURE_GROUP_IS_NOT_ACTIVE);
+        }
+        featureAggr.setParentFeatureCode(newGroupCode);
     }
 
 }

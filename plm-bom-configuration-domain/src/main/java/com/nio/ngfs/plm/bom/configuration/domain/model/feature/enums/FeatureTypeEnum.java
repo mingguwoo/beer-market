@@ -15,8 +15,19 @@ public enum FeatureTypeEnum {
     FEATURE("Feature", "Group", "Option"),
     OPTION("Option", "Feature", null);
 
+    /**
+     * 类型
+     */
     private final String type;
+
+    /**
+     * 父类型
+     */
     private final String parentType;
+
+    /**
+     * 子类型
+     */
     private final String childrenType;
 
     FeatureTypeEnum(String type, String parentType, String childrenType) {

@@ -39,11 +39,7 @@ public class FeatureRepositoryImpl implements FeatureRepository {
 
     @Override
     public FeatureAggr find(FeatureId featureId) {
-        return getFeatureAggrWithParentAndChildren(
-                featureConverter.convertEntityToDo(bomsFeatureLibraryDao.getByFeatureCodeAndType(
-                        featureId.getFeatureCode(), featureId.getType()
-                ))
-        );
+        return getFeatureAggrWithParentAndChildren(findWithoutParentAndChildren(featureId));
     }
 
     @Override
@@ -51,6 +47,12 @@ public class FeatureRepositoryImpl implements FeatureRepository {
         return getFeatureAggrWithParentAndChildren(
                 featureConverter.convertEntityToDo(bomsFeatureLibraryDao.getById(id))
         );
+    }
+
+    private FeatureAggr findWithoutParentAndChildren(FeatureId featureId) {
+        return featureConverter.convertEntityToDo(bomsFeatureLibraryDao.getByFeatureCodeAndType(
+                featureId.getFeatureCode(), featureId.getType()
+        ));
     }
 
     /**
@@ -63,7 +65,7 @@ public class FeatureRepositoryImpl implements FeatureRepository {
         FeatureTypeEnum typeEnum = FeatureTypeEnum.getByType(featureAggr.getFeatureId().getType());
         // 查询父节点
         if (StringUtils.isNotBlank(typeEnum.getParentType())) {
-            featureAggr.setParent(find(new FeatureId(featureAggr.getParentFeatureCode(), typeEnum.getParentType())));
+            featureAggr.setParent(findWithoutParentAndChildren(new FeatureId(featureAggr.getParentFeatureCode(), typeEnum.getParentType())));
         }
         // 查询子节点列表
         if (StringUtils.isNotBlank(typeEnum.getChildrenType())) {

@@ -30,7 +30,7 @@ public interface FeatureDomainService {
     void checkGroupCodeUnique(FeatureAggr featureAggr);
 
     /**
-     * Group下的Feature/Option状态改为Active
+     * 变更Group下的Group/Feature/Option的状态
      *
      * @param featureAggr    聚合根
      * @param changeTypeEnum Feature状态变更类型

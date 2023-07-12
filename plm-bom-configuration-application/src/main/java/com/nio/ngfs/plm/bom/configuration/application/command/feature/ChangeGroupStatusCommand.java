@@ -24,8 +24,8 @@ public class ChangeGroupStatusCommand implements Command<ChangeGroupStatusCmd, C
 
     @Override
     public ChangeGroupStatusRespDto execute(ChangeGroupStatusCmd cmd) {
-        // 查询聚合根
         FeatureId featureId = new FeatureId(cmd.getGroupCode(), FeatureTypeEnum.GROUP.getType());
+        // 查询聚合根
         FeatureAggr featureAggr = featureDomainService.getAndCheckFeatureAggr(featureId, ConfigErrorCode.FEATURE_GROUP_NOT_EXISTS);
         FeatureStatusChangeTypeEnum changeTypeEnum = featureAggr.changeGroupStatus(cmd.getStatus());
         featureDomainService.changeGroupFeatureOptionStatusByGroup(featureAggr, changeTypeEnum);

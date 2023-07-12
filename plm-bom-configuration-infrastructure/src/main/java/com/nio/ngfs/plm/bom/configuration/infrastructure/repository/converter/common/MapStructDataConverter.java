@@ -38,6 +38,9 @@ public interface MapStructDataConverter<DO extends AbstractDo, Entity extends Ba
         }
         Entity entity = doToEntity(domainObject);
         convertDoToEntityCallback(domainObject, entity);
+        // createTime和updateTime设为null
+        entity.setCreateTime(null);
+        entity.setUpdateTime(null);
         return entity;
     }
 

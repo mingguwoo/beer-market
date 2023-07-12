@@ -41,7 +41,7 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
         FeatureAggr existedFeatureAggr = featureRepository.find(featureAggr.getUniqId());
         if (existedFeatureAggr != null) {
             if (Objects.equals(featureAggr.getId(), existedFeatureAggr.getId())) {
-                // id相同，同一条记录
+                // id相同，代表同一条记录，忽略
                 return;
             }
             throw new BusinessException(ConfigErrorCode.FEATURE_GROUP_CODE_REPEAT);
@@ -56,12 +56,12 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
         if (!featureAggr.isType(FeatureTypeEnum.GROUP)) {
             return;
         }
-        // 状态由Active变为Inactive
+        // Group的状态由Active变为Inactive
         if (changeTypeEnum == FeatureStatusChangeTypeEnum.ACTIVE_TO_INACTIVE) {
             featureRepository.batchUpdateStatus(Lists.newArrayList(featureAggr.getId()), FeatureStatusEnum.INACTIVE.getStatus());
             return;
         }
-        // 状态由Inactive变为Active
+        // Group的状态状态由Inactive变为Active
         List<String> featureCodeList = LambdaUtil.map(featureAggr.getChildrenList(), i -> i.getFeatureId().getFeatureCode());
         List<FeatureAggr> optionList = featureRepository.queryByParentFeatureCodeListAndType(featureCodeList, FeatureTypeEnum.OPTION.getType());
         List<Long> idList = LambdaUtil.map(optionList, FeatureAggr::getId);

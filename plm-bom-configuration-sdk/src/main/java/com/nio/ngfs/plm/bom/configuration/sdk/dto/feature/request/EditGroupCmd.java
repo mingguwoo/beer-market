@@ -30,6 +30,7 @@ public class EditGroupCmd implements Cmd {
     @Size(max = 128, message = "Description Name max length is 128")
     private String description;
 
+    @NotBlank(message = "Update User is blank")
     private String updateUser;
 
 }

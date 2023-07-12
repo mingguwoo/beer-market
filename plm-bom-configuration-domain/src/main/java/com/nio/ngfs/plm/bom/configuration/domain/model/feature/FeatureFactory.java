@@ -15,6 +15,7 @@ public class FeatureFactory {
                 .displayName(cmd.getDisplayName())
                 .chineseName(cmd.getChineseName())
                 .description(cmd.getDescription())
+                .requestor(cmd.getBrand())
                 .createUser(cmd.getCreateUser())
                 .updateUser(cmd.getCreateUser())
                 .build();

@@ -127,18 +127,19 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
      * 改变Group状态
      */
     public FeatureStatusChangeTypeEnum changeGroupStatus(String newStatus) {
+        checkType(FeatureTypeEnum.GROUP);
+        // status校验
         FeatureStatusEnum oldStatusEnum = FeatureStatusEnum.getByStatus(status);
         FeatureStatusEnum newStatusEnum = FeatureStatusEnum.getByStatus(newStatus);
         if (oldStatusEnum == null || newStatusEnum == null) {
             throw new BusinessException(ConfigErrorCode.FEATURE_STATUS_INVALID);
         }
-        checkType(FeatureTypeEnum.GROUP);
         if (oldStatusEnum == FeatureStatusEnum.INACTIVE && newStatusEnum == FeatureStatusEnum.ACTIVE) {
             return FeatureStatusChangeTypeEnum.INACTIVE_TO_ACTIVE;
         } else if (oldStatusEnum == FeatureStatusEnum.ACTIVE && newStatusEnum == FeatureStatusEnum.INACTIVE) {
             childrenList.forEach(children -> {
                 if (children.isActive()) {
-                    throw new BusinessException(ConfigErrorCode.FEATURE_CHANGE_GROUP_STATUS_FEATURE_EXISTS_ACTIVE);
+                    throw new BusinessException(ConfigErrorCode.FEATURE_CHANGE_GROUP_STATUS_FEATURE_EXIST_ACTIVE);
                 }
             });
             return FeatureStatusChangeTypeEnum.ACTIVE_TO_INACTIVE;

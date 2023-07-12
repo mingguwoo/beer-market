@@ -26,6 +26,10 @@ public class AddGroupCmd implements Cmd {
     @Size(max = 128, message = "Description Name max length is 128")
     private String description;
 
+    @NotBlank(message = "Brand is blank")
+    private String brand;
+
+    @NotBlank(message = "Create User is blank")
     private String createUser;
 
 }

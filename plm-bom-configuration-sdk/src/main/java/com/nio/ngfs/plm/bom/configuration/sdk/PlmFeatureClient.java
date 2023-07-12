@@ -66,6 +66,6 @@ public interface PlmFeatureClient {
     ResultInfo<List<FeatureLibraryDto>> listFeatureLibrary(ListFeatureLibraryQry qry);
 
     @PostMapping("/feature/addOption")
-    ResultInfo<AddOptionRespDto> addOption(AddGroupCmd cmd);
+    ResultInfo<AddOptionRespDto> addOption(AddOptionCmd cmd);
 
 }

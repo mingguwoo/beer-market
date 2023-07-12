@@ -43,7 +43,6 @@ public class FeatureFactory {
                 .description(cmd.getDescription())
                 .requestor(cmd.getRequestor())
                 .createUser(cmd.getCreateUser())
-                .updateUser(cmd.getCreateUser())
                 .build();
     }
 

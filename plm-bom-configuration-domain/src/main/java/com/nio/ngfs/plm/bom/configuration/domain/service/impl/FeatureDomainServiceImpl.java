@@ -97,10 +97,17 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
     }
 
     @Override
-    public void checkOptionChineseNameUnique(FeatureAggr parentFeatureAggr,FeatureAggr featureAggr) {
-        List<String> chineseNameList = parentFeatureAggr.getChildrenList().stream().map(obj->obj.getChineseName()).collect(Collectors.toList());
+    public void checkOptionChineseNameUnique(FeatureAggr featureAggr) {
+        List<String> chineseNameList = featureAggr.getParent().getChildrenList().stream().map(obj->obj.getChineseName()).collect(Collectors.toList());
         if (chineseNameList.contains(featureAggr.getChineseName())){
             throw new BusinessException(ConfigErrorCode.FEATURE_OPTION_CHINESE_NAME_REPEAT);
+        }
+    }
+
+    @Override
+    public void checkOptionCodeAndFeatureCodeTwoDigits(FeatureAggr featureAggr) {
+        if (featureAggr.getFeatureId().getFeatureCode().substring(0,3).equals(featureAggr.getParentFeatureCode().substring(0,3))){
+            throw new BusinessException(ConfigErrorCode.FEATURE_OPTION_CODE_DIFF_FROM_FEATURE_CODE);
         }
     }
 

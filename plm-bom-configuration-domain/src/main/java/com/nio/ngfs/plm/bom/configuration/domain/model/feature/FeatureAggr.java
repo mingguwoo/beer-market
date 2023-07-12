@@ -269,7 +269,6 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
         checkFeatureAndOptionCode();
         checkRequestor(requestor);
         // 字段赋值
-        setStatus(FeatureStatusEnum.ACTIVE.getStatus());
         setVersion(ConfigConstants.VERSION_A);
         setStatus(FeatureStatusEnum.ACTIVE.getStatus());
     }

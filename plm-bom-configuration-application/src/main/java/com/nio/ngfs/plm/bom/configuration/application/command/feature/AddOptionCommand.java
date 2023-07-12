@@ -41,7 +41,7 @@ public class AddOptionCommand extends AbstractLockCommand<AddOptionCmd, AddOptio
                 ConfigErrorCode.FEATURE_FEATURE_NOT_EXISTS);
         featureAggr.setParent(parentFeatureAggr);
         featureAggr.setCatalog(parentFeatureAggr.getCatalog());
-        featureDomainService.checkOptionChineseNameUnique(parentFeatureAggr,featureAggr);
+        featureDomainService.checkOptionChineseNameUnique(featureAggr);
         featureRepository.save(featureAggr);
         return new AddOptionRespDto();
     }

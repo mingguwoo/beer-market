@@ -31,7 +31,7 @@ public class ChangeOptionStatusCommand extends AbstractLockCommand<ChangeOptionS
     @Override
     protected ChangeOptionStatusRespDto executeWithLock(ChangeOptionStatusCmd cmd) {
         FeatureAggr featureAggr = featureDomainService.getAndCheckFeatureAggr(cmd.getOptionCode(), FeatureTypeEnum.OPTION);
-        featureAggr.changeOptionStatus(cmd.getStatus());
+        featureAggr.changeOptionStatus(cmd.getStatus(),cmd.getUpdateUser());
         featureRepository.save(featureAggr);
         return new ChangeOptionStatusRespDto();
     }

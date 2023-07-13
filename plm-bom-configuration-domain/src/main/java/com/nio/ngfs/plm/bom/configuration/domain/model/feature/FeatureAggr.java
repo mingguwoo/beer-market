@@ -393,7 +393,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
         }
     }
 
-    public void changeOptionStatus(String newStatus){
+    public void changeOptionStatus(String newStatus,String updateUser){
         checkType(FeatureTypeEnum.OPTION);
         // status校验
         FeatureStatusEnum oldStatusEnum = FeatureStatusEnum.getByStatus(status);
@@ -403,6 +403,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
         }
         if (!(oldStatusEnum.getStatus().equals(newStatusEnum.getStatus()))){
             setStatus(newStatusEnum.getStatus());
+            setUpdateUser(updateUser);
         }
     }
 

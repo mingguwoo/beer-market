@@ -13,6 +13,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStat
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.EditFeatureCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.EditGroupCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.EditOptionCmd;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -229,11 +230,28 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
         checkType(FeatureTypeEnum.OPTION);
         checkFeatureAndOptionCode();
         checkRequestor(requestor);
+        checkOptionChineseNameUnique();
+        checkOptionCodeAndFeatureCodeTwoDigits();
         // 字段赋值
         setVersion(ConfigConstants.VERSION_A);
         setStatus(FeatureStatusEnum.ACTIVE.getStatus());
+    }
+
+    /**
+     * 编辑Option
+     */
+    public void editOption(EditOptionCmd cmd) {
+        //参数校验
+        checkType(FeatureTypeEnum.OPTION);
+        checkRequestor(cmd.getRequestor());
         checkOptionChineseNameUnique();
         checkOptionCodeAndFeatureCodeTwoDigits();
+        //字段赋值
+        setDisplayName(cmd.getDisplayName());
+        setChineseName(cmd.getChineseName());
+        setDescription(cmd.getDescription());
+        setRequestor(cmd.getRequestor());
+
     }
 
     /**
@@ -350,6 +368,19 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
     public void checkOptionCodeAndFeatureCodeTwoDigits() {
         if (featureId.getFeatureCode().substring(0, 3).equals(parentFeatureCode.substring(0, 3))) {
             throw new BusinessException(ConfigErrorCode.FEATURE_OPTION_CODE_DIFF_FROM_FEATURE_CODE);
+        }
+    }
+
+    public void changeOptionStatus(String newStatus){
+        checkType(FeatureTypeEnum.OPTION);
+        // status校验
+        FeatureStatusEnum oldStatusEnum = FeatureStatusEnum.getByStatus(status);
+        FeatureStatusEnum newStatusEnum = FeatureStatusEnum.getByStatus(newStatus);
+        if (oldStatusEnum == null || newStatusEnum == null) {
+            throw new BusinessException(ConfigErrorCode.FEATURE_STATUS_INVALID);
+        }
+        if (!(oldStatusEnum.getStatus().equals(newStatusEnum.getStatus()))){
+            setStatus(newStatusEnum.getStatus());
         }
     }
 

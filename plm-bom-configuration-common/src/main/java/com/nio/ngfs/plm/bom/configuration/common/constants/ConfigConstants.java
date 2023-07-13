@@ -14,4 +14,13 @@ public interface ConfigConstants {
     String VERSION_A = "A";
     String IN_WORK = "In Work";
 
+    String FEATURE_ATTRIBUTE_FEATURE_CODE = "Feature Code";
+    String FEATURE_ATTRIBUTE_GROUP = "Group";
+    String FEATURE_ATTRIBUTE_DISPLAY_NAME = "Display Name";
+    String FEATURE_ATTRIBUTE_CHINESE = "Chinese Name";
+    String FEATURE_ATTRIBUTE_DESCRIPTION = "Description";
+    String FEATURE_ATTRIBUTE_CATALOG = "Catalog";
+    String FEATURE_ATTRIBUTE_REQUESTOR = "Requestor";
+    String FEATURE_ATTRIBUTE_STATUS = "Status";
+
 }

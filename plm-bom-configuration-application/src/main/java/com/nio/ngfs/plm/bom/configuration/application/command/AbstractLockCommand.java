@@ -9,13 +9,13 @@ import javax.annotation.Resource;
  * @author xiaozhou.tu
  * @date 2023/7/10
  */
-public abstract class AbstractLockCommand<C extends Cmd, Resp> implements Command<C, Resp> {
+public abstract class AbstractLockCommand<C extends Cmd, Resp> extends AbstractCommand<C, Resp> {
 
     @Resource
     private RedissonLocker redissonLocker;
 
     @Override
-    public Resp execute(C c) {
+    protected Resp executeCommand(C c) {
         return redissonLocker.executeWithLock(getLockKey(c), () -> executeWithLock(c));
     }
 

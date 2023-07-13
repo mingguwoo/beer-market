@@ -18,6 +18,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -28,11 +30,12 @@ import java.util.stream.Collectors;
  * @author xiaozhou.tu
  * @date 2023/6/28
  */
+@Slf4j
 @Data
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
+public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Cloneable {
 
     private static final int MAX_LENGTH = 128;
 
@@ -113,6 +116,23 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
         return featureId;
     }
 
+    @Override
+    public FeatureAggr clone() {
+        try {
+            FeatureAggr copy = (FeatureAggr) super.clone();
+            if (parent != null) {
+                copy.setParent(parent.clone());
+            }
+            if (CollectionUtils.isNotEmpty(childrenList)) {
+                copy.setChildrenList(childrenList.stream().map(FeatureAggr::clone).collect(Collectors.toList()));
+            }
+            return copy;
+        } catch (CloneNotSupportedException e) {
+            log.error("FeatureAggr clone error", e);
+            throw new BusinessException(ConfigErrorCode.CLONE_ERROR);
+        }
+    }
+
     /**
      * 新增Group
      */
@@ -157,6 +177,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
                     throw new BusinessException(ConfigErrorCode.FEATURE_CHANGE_GROUP_STATUS_FEATURE_EXIST_ACTIVE);
                 }
             });
+            setStatus(newStatus);
             return FeatureStatusChangeTypeEnum.ACTIVE_TO_INACTIVE;
         }
         return FeatureStatusChangeTypeEnum.NO_CHANGE;

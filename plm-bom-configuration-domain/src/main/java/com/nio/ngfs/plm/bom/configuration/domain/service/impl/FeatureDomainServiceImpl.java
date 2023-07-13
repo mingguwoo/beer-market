@@ -1,15 +1,17 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service.impl;
 
-import com.google.common.collect.Lists;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
+import com.nio.ngfs.plm.bom.configuration.domain.event.EventPublisher;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureId;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.domainobject.FeatureChangeLog;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureStatusChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.service.FeatureDomainService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -27,6 +29,7 @@ import java.util.Objects;
 public class FeatureDomainServiceImpl implements FeatureDomainService {
 
     private final FeatureRepository featureRepository;
+    private final EventPublisher eventPublisher;
 
     @Override
     public FeatureAggr getAndCheckFeatureAggr(String featureCode, FeatureTypeEnum typeEnum) {
@@ -62,7 +65,7 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
         }
         // Group的状态由Active变为Inactive
         if (changeTypeEnum == FeatureStatusChangeTypeEnum.ACTIVE_TO_INACTIVE) {
-            featureRepository.batchUpdateStatus(Lists.newArrayList(featureAggr.getId()), FeatureStatusEnum.INACTIVE.getStatus());
+            featureRepository.save(featureAggr);
             return;
         }
         // Group的状态状态由Inactive变为Active
@@ -73,6 +76,7 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
         idList.add(featureAggr.getId());
         // 批量更新Group/Feature/Option的状态为Active
         featureRepository.batchUpdateStatus(idList, FeatureStatusEnum.ACTIVE.getStatus());
+        eventPublisher.publish(new FeatureStatusChangeEvent(idList, FeatureStatusEnum.INACTIVE, FeatureStatusEnum.ACTIVE));
     }
 
     @Override
@@ -111,6 +115,11 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
             throw new BusinessException(ConfigErrorCode.FEATURE_GROUP_IS_NOT_ACTIVE);
         }
         featureAggr.setParentFeatureCode(newGroupCode);
+    }
+
+    @Override
+    public void saveFeatureChangeLog(List<FeatureChangeLog> featureChangeLogList) {
+        // todo
     }
 
 }

@@ -3,6 +3,7 @@ package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.impl;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureId;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.common.FeatureAggrThreadLocal;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.FeatureConverter;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsFeatureLibraryDao;
@@ -74,6 +75,7 @@ public class FeatureRepositoryImpl implements FeatureRepository {
         if (StringUtils.isNotBlank(typeEnum.getChildrenType())) {
             featureAggr.setChildrenList(queryByParentFeatureCodeAndType(featureAggr.getFeatureId().getFeatureCode(), typeEnum.getChildrenType()));
         }
+        FeatureAggrThreadLocal.add(featureAggr);
         return featureAggr;
     }
 

@@ -34,14 +34,19 @@ public class FeatureRepositoryAspect {
 
     @Around("save()")
     public Object doAround(ProceedingJoinPoint point) throws Throwable {
+        Object result = point.proceed();
         Object[] objects = point.getArgs();
-        if (objects == null || objects.length != 1 || !(objects[0] instanceof FeatureAggr saveFeatureAggr)) {
-            return point.proceed();
+        if (objects != null && objects.length == 1 && objects[0] instanceof FeatureAggr saveFeatureAggr) {
+            try {
+                Map<Long, FeatureAggr> featureAggrMap = FeatureAggrThreadLocal.get();
+                FeatureAggr findFeatureAggr = featureAggrMap.get(saveFeatureAggr.getId());
+                // 发布Feature属性变更事件
+                eventPublisher.publish(new FeatureAttributeChangeEvent(findFeatureAggr, saveFeatureAggr));
+            } catch (Exception e) {
+                log.error("Publish FeatureAttributeChangeEvent error featureId=" + saveFeatureAggr.getId(), e);
+            }
         }
-        Map<Long, FeatureAggr> featureAggrMap = FeatureAggrThreadLocal.get();
-        FeatureAggr findFeatureAggr = featureAggrMap.get(saveFeatureAggr.getId());
-        eventPublisher.publish(new FeatureAttributeChangeEvent(findFeatureAggr, saveFeatureAggr));
-        return point.proceed();
+        return result;
     }
 
 }

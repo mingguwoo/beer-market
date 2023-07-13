@@ -1,7 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service;
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.domainobject.FeatureChangeLog;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.domainobject.FeatureChangeLogDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 
@@ -65,8 +65,8 @@ public interface FeatureDomainService {
     /**
      * 保存Feature变更记录
      *
-     * @param featureChangeLogList Feature变更记录列表
+     * @param featureChangeLogDoList Feature变更记录列表
      */
-    void saveFeatureChangeLog(List<FeatureChangeLog> featureChangeLogList);
+    void saveFeatureChangeLog(List<FeatureChangeLogDo> featureChangeLogDoList);
 
 }

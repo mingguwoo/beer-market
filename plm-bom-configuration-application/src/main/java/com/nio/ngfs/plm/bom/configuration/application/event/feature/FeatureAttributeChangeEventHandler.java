@@ -5,7 +5,7 @@ import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.application.event.EventHandler;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.domainobject.FeatureChangeLog;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.domainobject.FeatureChangeLogDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureAttributeChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.service.FeatureDomainService;
 import lombok.RequiredArgsConstructor;
@@ -38,49 +38,53 @@ public class FeatureAttributeChangeEventHandler implements EventHandler<FeatureA
         if (event.getBeforeFeatureAggr() == null || event.getAfterFeatureAggr() == null) {
             return;
         }
-        List<FeatureChangeLog> featureChangeLogList = Lists.newArrayList();
-        collectFeatureChangeLog(featureChangeLogList, event.getBeforeFeatureAggr(), event.getAfterFeatureAggr());
-        featureDomainService.saveFeatureChangeLog(featureChangeLogList);
+        List<FeatureChangeLogDo> featureChangeLogDoList = Lists.newArrayList();
+        collectFeatureChangeLog(featureChangeLogDoList, event.getBeforeFeatureAggr(), event.getAfterFeatureAggr());
+        featureDomainService.saveFeatureChangeLog(featureChangeLogDoList);
     }
 
-    private void collectFeatureChangeLog(List<FeatureChangeLog> featureChangeLogList, FeatureAggr before, FeatureAggr after) {
-        handleFeatureChange(featureChangeLogList, before, after);
+    private void collectFeatureChangeLog(List<FeatureChangeLogDo> featureChangeLogDoList, FeatureAggr before, FeatureAggr after) {
+        // 更新人
+        String updateUser = after.getUpdateUser();
+        handleFeatureChange(featureChangeLogDoList, updateUser, before, after);
         if (CollectionUtils.isNotEmpty(before.getChildrenList())) {
             Map<Long, FeatureAggr> afterChildrenMap = LambdaUtil.toKeyMap(after.getChildrenList(), FeatureAggr::getId);
             before.getChildrenList().forEach(beforeChildren -> {
                 FeatureAggr afterChildren = afterChildrenMap.get(beforeChildren.getId());
-                handleFeatureChange(featureChangeLogList, beforeChildren, afterChildren);
+                handleFeatureChange(featureChangeLogDoList, updateUser, beforeChildren, afterChildren);
             });
         }
     }
 
-    private void handleFeatureChange(List<FeatureChangeLog> featureChangeLogList, FeatureAggr before, FeatureAggr after) {
+    private void handleFeatureChange(List<FeatureChangeLogDo> featureChangeLogDoList, String updateUser, FeatureAggr before, FeatureAggr after) {
         if (before == null || after == null) {
             return;
         }
-        handleAttributeChange(featureChangeLogList, before, after, i -> i.getFeatureId().getFeatureCode(), ConfigConstants.FEATURE_ATTRIBUTE_FEATURE_CODE);
-        handleAttributeChange(featureChangeLogList, before, after, FeatureAggr::getParentFeatureCode, ConfigConstants.FEATURE_ATTRIBUTE_GROUP);
-        handleAttributeChange(featureChangeLogList, before, after, FeatureAggr::getDisplayName, ConfigConstants.FEATURE_ATTRIBUTE_DISPLAY_NAME);
-        handleAttributeChange(featureChangeLogList, before, after, FeatureAggr::getChineseName, ConfigConstants.FEATURE_ATTRIBUTE_CHINESE);
-        handleAttributeChange(featureChangeLogList, before, after, FeatureAggr::getDescription, ConfigConstants.FEATURE_ATTRIBUTE_DESCRIPTION);
-        handleAttributeChange(featureChangeLogList, before, after, FeatureAggr::getCatalog, ConfigConstants.FEATURE_ATTRIBUTE_CATALOG);
-        handleAttributeChange(featureChangeLogList, before, after, FeatureAggr::getRequestor, ConfigConstants.FEATURE_ATTRIBUTE_REQUESTOR);
-        handleAttributeChange(featureChangeLogList, before, after, FeatureAggr::getStatus, ConfigConstants.FEATURE_ATTRIBUTE_STATUS);
+        handleAttributeChange(featureChangeLogDoList, updateUser, before, after, i -> i.getFeatureId().getFeatureCode(), ConfigConstants.FEATURE_ATTRIBUTE_FEATURE_CODE);
+        handleAttributeChange(featureChangeLogDoList, updateUser, before, after, FeatureAggr::getParentFeatureCode, ConfigConstants.FEATURE_ATTRIBUTE_GROUP);
+        handleAttributeChange(featureChangeLogDoList, updateUser, before, after, FeatureAggr::getDisplayName, ConfigConstants.FEATURE_ATTRIBUTE_DISPLAY_NAME);
+        handleAttributeChange(featureChangeLogDoList, updateUser, before, after, FeatureAggr::getChineseName, ConfigConstants.FEATURE_ATTRIBUTE_CHINESE);
+        handleAttributeChange(featureChangeLogDoList, updateUser, before, after, FeatureAggr::getDescription, ConfigConstants.FEATURE_ATTRIBUTE_DESCRIPTION);
+        handleAttributeChange(featureChangeLogDoList, updateUser, before, after, FeatureAggr::getCatalog, ConfigConstants.FEATURE_ATTRIBUTE_CATALOG);
+        handleAttributeChange(featureChangeLogDoList, updateUser, before, after, FeatureAggr::getRequestor, ConfigConstants.FEATURE_ATTRIBUTE_REQUESTOR);
+        handleAttributeChange(featureChangeLogDoList, updateUser, before, after, FeatureAggr::getStatus, ConfigConstants.FEATURE_ATTRIBUTE_STATUS);
     }
 
-    private void handleAttributeChange(List<FeatureChangeLog> featureChangeLogList, FeatureAggr before, FeatureAggr after,
+    private void handleAttributeChange(List<FeatureChangeLogDo> featureChangeLogDoList, String updateUser, FeatureAggr before, FeatureAggr after,
                                        Function<FeatureAggr, String> valueFunction, String attributeName) {
         String oldValue = valueFunction.apply(before);
         String newValue = valueFunction.apply(after);
         if (Objects.equals(oldValue, newValue)) {
             return;
         }
-        FeatureChangeLog featureChangeLog = new FeatureChangeLog();
-        featureChangeLog.setFeatureId(before.getId());
-        featureChangeLog.setChangeAttribute(attributeName);
-        featureChangeLog.setOldValue(oldValue);
-        featureChangeLog.setNewValue(newValue);
-        featureChangeLogList.add(featureChangeLog);
+        FeatureChangeLogDo featureChangeLogDo = new FeatureChangeLogDo();
+        featureChangeLogDo.setFeatureId(before.getId());
+        featureChangeLogDo.setChangeAttribute(attributeName);
+        featureChangeLogDo.setOldValue(oldValue);
+        featureChangeLogDo.setNewValue(newValue);
+        featureChangeLogDo.setCreateUser(updateUser);
+        featureChangeLogDo.setUpdateUser(updateUser);
+        featureChangeLogDoList.add(featureChangeLogDo);
     }
 
 }

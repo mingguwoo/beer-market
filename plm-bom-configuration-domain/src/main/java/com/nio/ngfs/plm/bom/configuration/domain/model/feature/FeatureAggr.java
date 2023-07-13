@@ -153,7 +153,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
         setChineseName(cmd.getChineseName());
         setDescription(cmd.getDescription());
         setUpdateUser(cmd.getUpdateUser());
-        changeGroupCode(newGroupCode);
+        changeGroupCode(newGroupCode, cmd.getUpdateUser());
     }
 
     /**
@@ -327,21 +327,22 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
     /**
      * 更新Group Code
      */
-    private void changeGroupCode(String newGroupCode) {
+    private void changeGroupCode(String newGroupCode, String updateUser) {
         if (Objects.equals(featureId.getFeatureCode(), newGroupCode)) {
             // Group Code未更新
             return;
         }
         // Group Code更新
         featureId.setFeatureCode(newGroupCode);
-        childrenList.forEach(children -> changeParentFeatureCode(children, newGroupCode));
+        childrenList.forEach(children -> changeParentFeatureCode(children, newGroupCode, updateUser));
     }
 
     /**
      * 更新ParentFeatureCode
      */
-    private void changeParentFeatureCode(FeatureAggr featureAggr, String newParentFeatureCode) {
+    private void changeParentFeatureCode(FeatureAggr featureAggr, String newParentFeatureCode, String updateUser) {
         featureAggr.setParentFeatureCode(newParentFeatureCode);
+        featureAggr.setUpdateUser(updateUser);
         featureAggr.setChildrenChanged(true);
     }
 
@@ -396,7 +397,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
         }
     }
 
-    public void changeOptionStatus(String newStatus,String updateUser){
+    public void changeOptionStatus(String newStatus, String updateUser) {
         checkType(FeatureTypeEnum.OPTION);
         // status校验
         FeatureStatusEnum oldStatusEnum = FeatureStatusEnum.getByStatus(status);
@@ -404,7 +405,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
         if (oldStatusEnum == null || newStatusEnum == null) {
             throw new BusinessException(ConfigErrorCode.FEATURE_STATUS_INVALID);
         }
-        if (!(oldStatusEnum.getStatus().equals(newStatusEnum.getStatus()))){
+        if (!(oldStatusEnum.getStatus().equals(newStatusEnum.getStatus()))) {
             setStatus(newStatusEnum.getStatus());
             setUpdateUser(updateUser);
         }

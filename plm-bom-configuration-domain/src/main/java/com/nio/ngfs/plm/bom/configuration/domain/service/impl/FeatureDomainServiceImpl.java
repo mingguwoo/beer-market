@@ -7,7 +7,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.event.EventPublisher;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureId;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.domainobject.FeatureChangeLog;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.domainobject.FeatureChangeLogDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
@@ -76,7 +76,7 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
         idList.add(featureAggr.getId());
         // 批量更新Group/Feature/Option的状态为Active
         featureRepository.batchUpdateStatus(idList, FeatureStatusEnum.ACTIVE.getStatus(), updateUser);
-        eventPublisher.publish(new FeatureStatusChangeEvent(idList, FeatureStatusEnum.INACTIVE, FeatureStatusEnum.ACTIVE));
+        eventPublisher.publish(new FeatureStatusChangeEvent(idList, FeatureStatusEnum.INACTIVE, FeatureStatusEnum.ACTIVE, updateUser));
     }
 
     @Override
@@ -118,7 +118,7 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
     }
 
     @Override
-    public void saveFeatureChangeLog(List<FeatureChangeLog> featureChangeLogList) {
+    public void saveFeatureChangeLog(List<FeatureChangeLogDo> featureChangeLogDoList) {
         // todo
     }
 

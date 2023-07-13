@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FeatureChangeLog extends AbstractDo implements Entity<Long> {
+public class FeatureChangeLogDo extends AbstractDo implements Entity<Long> {
 
     private Long id;
 

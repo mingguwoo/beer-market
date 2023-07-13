@@ -23,4 +23,6 @@ public class FeatureStatusChangeEvent extends DomainEvent {
 
     private FeatureStatusEnum newStatus;
 
+    private String updateUser;
+
 }

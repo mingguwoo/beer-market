@@ -12,7 +12,7 @@ CREATE TABLE `boms_feature_library`
     `catalog`             varchar(32)     NOT NULL DEFAULT '' COMMENT 'Feature的分类',
     `maturity`            varchar(32)     NOT NULL DEFAULT '' COMMENT 'Feature的成熟度',
     `version`             varchar(32)     NOT NULL DEFAULT '' COMMENT '版本，颜色件相关',
-    `requester`           varchar(32)     NOT NULL DEFAULT '' COMMENT '创建方',
+    `requestor`           varchar(32)     NOT NULL DEFAULT '' COMMENT '创建方',
     `status`              varchar(16)     NOT NULL DEFAULT '' COMMENT '状态，Active/Inactive',
     `create_user`         varchar(32)     NOT NULL DEFAULT '' COMMENT '创建人',
     `update_user`         varchar(32)     NOT NULL DEFAULT '' COMMENT '更新人',

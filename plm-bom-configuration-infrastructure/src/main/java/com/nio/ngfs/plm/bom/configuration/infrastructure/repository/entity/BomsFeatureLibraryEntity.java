@@ -2,9 +2,9 @@ package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 /**
  * <p>
@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
  * @since 2023-07-11
  */
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("boms_feature_library")

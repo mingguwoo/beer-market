@@ -37,7 +37,6 @@ public class FeatureController implements PlmFeatureClient {
     private final ChangeOptionStatusCommand changeOptionStatusCommand;
 
     @Override
-    @NeedAuthorization
     @NotLogResult
     public ResultInfo<AddGroupRespDto> addGroup(@Valid @RequestBody AddGroupCmd cmd) {
         return ResultInfo.success(addGroupCommand.execute(cmd));
@@ -58,7 +57,6 @@ public class FeatureController implements PlmFeatureClient {
     }
 
     @Override
-    @NeedAuthorization
     @NotLogResult
     public ResultInfo<AddFeatureRespDto> addFeature(@Valid @RequestBody AddFeatureCmd cmd) {
         return ResultInfo.success(addFeatureCommand.execute(cmd));

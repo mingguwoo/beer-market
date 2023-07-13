@@ -356,7 +356,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
      * Chinese Name在同一feature下是否唯一
      */
     public void checkOptionChineseNameUnique() {
-        List<String> chineseNameList = parent.getChildrenList().stream().map(obj -> obj.getChineseName()).collect(Collectors.toList());
+        List<String> chineseNameList = parent.getChildrenList().stream().map(FeatureAggr::getChineseName).toList();
         if (chineseNameList.contains(chineseName)) {
             throw new BusinessException(ConfigErrorCode.FEATURE_OPTION_CHINESE_NAME_REPEAT);
         }

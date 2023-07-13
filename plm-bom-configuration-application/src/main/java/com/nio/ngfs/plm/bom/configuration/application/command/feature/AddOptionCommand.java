@@ -33,11 +33,11 @@ public class AddOptionCommand extends AbstractLockCommand<AddOptionCmd, AddOptio
     @Override
     protected AddOptionRespDto executeWithLock(AddOptionCmd cmd) {
         FeatureAggr featureAggr = FeatureFactory.createOption(cmd);
-        featureDomainService.checkFeatureOptionCodeUnique(featureAggr);
-        featureDomainService.checkDisplayNameUnique(featureAggr);
         FeatureAggr parentFeatureAggr = featureDomainService.getAndCheckFeatureAggr(
                 featureAggr.getParentFeatureCode(), FeatureTypeEnum.FEATURE);
         featureAggr.setParent(parentFeatureAggr);
+        featureDomainService.checkFeatureOptionCodeUnique(featureAggr);
+        featureDomainService.checkDisplayNameUnique(featureAggr);
         featureAggr.setCatalog(parentFeatureAggr.getCatalog());
         featureAggr.addOption();
         featureRepository.save(featureAggr);

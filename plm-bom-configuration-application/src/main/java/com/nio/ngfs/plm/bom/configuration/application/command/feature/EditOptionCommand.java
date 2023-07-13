@@ -25,15 +25,12 @@ public class EditOptionCommand extends AbstractLockCommand<EditOptionCmd, EditOp
 
     @Override
     protected String getLockKey(EditOptionCmd cmd) {
-        return RedisKeyConstant.FEATURE_FEATURE_LOCK_KEY_PREFIX + cmd.getFeatureCode();
+        return RedisKeyConstant.FEATURE_OPTION_LOCK_KEY_PREFIX + cmd.getOptionCode();
     }
 
     @Override
     protected EditOptionRespDto executeWithLock(EditOptionCmd cmd) {
         FeatureAggr featureAggr = featureDomainService.getAndCheckFeatureAggr(cmd.getOptionCode(), FeatureTypeEnum.OPTION);
-        FeatureAggr parentFeatureAggr = featureDomainService.getAndCheckFeatureAggr(
-                featureAggr.getParentFeatureCode(), FeatureTypeEnum.FEATURE);
-        featureAggr.setParent(parentFeatureAggr);
         featureAggr.editOption(cmd);
         featureDomainService.checkDisplayNameUnique(featureAggr);
         featureRepository.save(featureAggr);

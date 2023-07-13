@@ -19,7 +19,4 @@ public class ChangeOptionStatusCmd implements Cmd {
     @NotBlank(message = "Status is blank")
     private String status;
 
-    @NotBlank(message = "Feature Code is blank")
-    @Size(max = 128, message = "Feature Code max length is 128")
-    private String featureCode;
 }

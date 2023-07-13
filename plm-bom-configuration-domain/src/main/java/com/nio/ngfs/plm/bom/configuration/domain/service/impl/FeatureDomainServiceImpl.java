@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * @author xiaozhou.tu
@@ -30,10 +29,15 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
     private final FeatureRepository featureRepository;
 
     @Override
-    public FeatureAggr getAndCheckFeatureAggr(FeatureId featureId, ConfigErrorCode errorCode) {
+    public FeatureAggr getAndCheckFeatureAggr(String featureCode, FeatureTypeEnum typeEnum) {
+        FeatureId featureId = new FeatureId(featureCode, typeEnum);
         FeatureAggr featureAggr = featureRepository.find(featureId);
         if (featureAggr == null) {
-            throw new BusinessException(errorCode);
+            switch (typeEnum) {
+                case GROUP -> throw new BusinessException(ConfigErrorCode.FEATURE_GROUP_NOT_EXISTS);
+                case FEATURE -> throw new BusinessException(ConfigErrorCode.FEATURE_FEATURE_NOT_EXISTS);
+                default -> throw new BusinessException(ConfigErrorCode.FEATURE_OPTION_NOT_EXISTS);
+            }
         }
         return featureAggr;
     }
@@ -104,8 +108,7 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
             // Group Code未变更
             return;
         }
-        FeatureId groupFeatureId = new FeatureId(newGroupCode, FeatureTypeEnum.GROUP);
-        FeatureAggr groupFeatureAggr = getAndCheckFeatureAggr(groupFeatureId, ConfigErrorCode.FEATURE_GROUP_NOT_EXISTS);
+        FeatureAggr groupFeatureAggr = getAndCheckFeatureAggr(newGroupCode, FeatureTypeEnum.GROUP);
         if (!groupFeatureAggr.isActive()) {
             throw new BusinessException(ConfigErrorCode.FEATURE_GROUP_IS_NOT_ACTIVE);
         }

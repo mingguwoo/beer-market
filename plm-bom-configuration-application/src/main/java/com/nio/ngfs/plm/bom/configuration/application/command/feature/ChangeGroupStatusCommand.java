@@ -2,9 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.application.command.feature;
 
 import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockCommand;
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
-import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureId;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.service.FeatureDomainService;
@@ -30,9 +28,8 @@ public class ChangeGroupStatusCommand extends AbstractLockCommand<ChangeGroupSta
 
     @Override
     protected ChangeGroupStatusRespDto executeWithLock(ChangeGroupStatusCmd cmd) {
-        FeatureId featureId = new FeatureId(cmd.getGroupCode(), FeatureTypeEnum.GROUP);
         // 查询聚合根
-        FeatureAggr featureAggr = featureDomainService.getAndCheckFeatureAggr(featureId, ConfigErrorCode.FEATURE_GROUP_NOT_EXISTS);
+        FeatureAggr featureAggr = featureDomainService.getAndCheckFeatureAggr(cmd.getGroupCode(), FeatureTypeEnum.GROUP);
         FeatureStatusChangeTypeEnum changeTypeEnum = featureAggr.changeGroupStatus(cmd.getStatus());
         featureDomainService.changeGroupFeatureOptionStatusByGroup(featureAggr, changeTypeEnum);
         return new ChangeGroupStatusRespDto();

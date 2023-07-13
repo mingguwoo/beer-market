@@ -2,10 +2,8 @@ package com.nio.ngfs.plm.bom.configuration.application.command.feature;
 
 import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockCommand;
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
-import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureFactory;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureId;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.service.FeatureDomainService;
@@ -35,9 +33,7 @@ public class AddFeatureCommand extends AbstractLockCommand<AddFeatureCmd, AddFea
     @Override
     protected AddFeatureRespDto executeWithLock(AddFeatureCmd cmd) {
         FeatureAggr featureAggr = FeatureFactory.createFeature(cmd);
-        FeatureAggr parentFeatureAggr = featureDomainService.getAndCheckFeatureAggr(
-                new FeatureId(featureAggr.getParentFeatureCode(), FeatureTypeEnum.GROUP),
-                ConfigErrorCode.FEATURE_GROUP_NOT_EXISTS);
+        FeatureAggr parentFeatureAggr = featureDomainService.getAndCheckFeatureAggr(featureAggr.getParentFeatureCode(), FeatureTypeEnum.GROUP);
         featureAggr.setParent(parentFeatureAggr);
         featureAggr.addFeature();
         featureDomainService.checkFeatureOptionCodeUnique(featureAggr);

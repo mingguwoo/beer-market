@@ -4,6 +4,7 @@ import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockComman
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.common.FeatureAggrThreadLocal;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.service.FeatureDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.EditFeatureCmd;
@@ -37,6 +38,11 @@ public class EditFeatureCommand extends AbstractLockCommand<EditFeatureCmd, Edit
         featureDomainService.checkDisplayNameUnique(featureAggr);
         featureRepository.save(featureAggr);
         return new EditFeatureCmdRespDto();
+    }
+
+    @Override
+    protected void close() {
+        FeatureAggrThreadLocal.remove();
     }
 
 }

@@ -1,8 +1,11 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service;
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.domainobject.FeatureChangeLog;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
+
+import java.util.List;
 
 /**
  * Feature领域服务
@@ -57,5 +60,12 @@ public interface FeatureDomainService {
      * @param newGroupCode 新的Group Code
      */
     void changeFeatureGroupCode(FeatureAggr featureAggr, String newGroupCode);
+
+    /**
+     * 保存Feature变更记录
+     *
+     * @param featureChangeLogList Feature变更记录列表
+     */
+    void saveFeatureChangeLog(List<FeatureChangeLog> featureChangeLogList);
 
 }

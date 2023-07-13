@@ -56,7 +56,7 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
     }
 
     @Override
-    public void changeGroupFeatureOptionStatusByGroup(FeatureAggr featureAggr, FeatureStatusChangeTypeEnum changeTypeEnum) {
+    public void changeGroupFeatureOptionStatusByGroup(FeatureAggr featureAggr, FeatureStatusChangeTypeEnum changeTypeEnum, String updateUser) {
         if (changeTypeEnum == FeatureStatusChangeTypeEnum.NO_CHANGE) {
             return;
         }
@@ -75,7 +75,7 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
         idList.addAll(LambdaUtil.map(featureAggr.getChildrenList(), FeatureAggr::getId));
         idList.add(featureAggr.getId());
         // 批量更新Group/Feature/Option的状态为Active
-        featureRepository.batchUpdateStatus(idList, FeatureStatusEnum.ACTIVE.getStatus());
+        featureRepository.batchUpdateStatus(idList, FeatureStatusEnum.ACTIVE.getStatus(), updateUser);
         eventPublisher.publish(new FeatureStatusChangeEvent(idList, FeatureStatusEnum.INACTIVE, FeatureStatusEnum.ACTIVE));
     }
 

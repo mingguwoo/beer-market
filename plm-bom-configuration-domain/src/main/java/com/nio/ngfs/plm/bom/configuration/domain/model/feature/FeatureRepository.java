@@ -46,10 +46,11 @@ public interface FeatureRepository extends Repository<FeatureAggr, FeatureId> {
     /**
      * 批量更新状态
      *
-     * @param idList id列表
-     * @param status 状态
+     * @param idList     id列表
+     * @param status     状态
+     * @param updateUser 更新人
      */
-    void batchUpdateStatus(List<Long> idList, String status);
+    void batchUpdateStatus(List<Long> idList, String status, String updateUser);
 
     /**
      * 根据FeatureCode查询

@@ -33,7 +33,7 @@ public class ChangeFeatureStatusCommand extends AbstractLockCommand<ChangeFeatur
     @Override
     protected ChangeFeatureStatusRespDto executeWithLock(ChangeFeatureStatusCmd cmd) {
         FeatureAggr featureAggr = featureDomainService.getAndCheckFeatureAggr(cmd.getFeatureCode(), FeatureTypeEnum.FEATURE);
-        FeatureStatusChangeTypeEnum changeTypeEnum = featureAggr.changeFeatureStatus(cmd.getStatus());
+        FeatureStatusChangeTypeEnum changeTypeEnum = featureAggr.changeFeatureStatus(cmd);
         if (changeTypeEnum != FeatureStatusChangeTypeEnum.NO_CHANGE) {
             // Status变更，保存到数据库
             featureRepository.save(featureAggr);

@@ -20,4 +20,7 @@ public class ChangeGroupStatusCmd implements Cmd {
     @NotBlank(message = "Status is blank")
     private String status;
 
+    @NotBlank(message = "Update User is blank")
+    private String updateUser;
+
 }

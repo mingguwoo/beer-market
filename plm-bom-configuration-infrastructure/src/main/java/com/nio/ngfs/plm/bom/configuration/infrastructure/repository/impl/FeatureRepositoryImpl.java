@@ -95,8 +95,8 @@ public class FeatureRepositoryImpl implements FeatureRepository {
     }
 
     @Override
-    public void batchUpdateStatus(List<Long> idList, String status) {
-        bomsFeatureLibraryDao.batchUpdateStatus(idList, status);
+    public void batchUpdateStatus(List<Long> idList, String status, String updateUser) {
+        bomsFeatureLibraryDao.batchUpdateStatus(idList, status, updateUser);
     }
 
     @Override

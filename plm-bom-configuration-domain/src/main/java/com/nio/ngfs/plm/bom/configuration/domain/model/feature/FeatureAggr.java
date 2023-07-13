@@ -11,9 +11,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.EditFeatureCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.EditGroupCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.EditOptionCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -161,9 +159,10 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
     /**
      * 改变Group状态
      */
-    public FeatureStatusChangeTypeEnum changeGroupStatus(String newStatus) {
+    public FeatureStatusChangeTypeEnum changeGroupStatus(ChangeGroupStatusCmd cmd) {
         checkType(FeatureTypeEnum.GROUP);
         // status校验
+        String newStatus = cmd.getStatus();
         FeatureStatusEnum oldStatusEnum = FeatureStatusEnum.getByStatus(status);
         FeatureStatusEnum newStatusEnum = FeatureStatusEnum.getByStatus(newStatus);
         if (oldStatusEnum == null || newStatusEnum == null) {
@@ -178,6 +177,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
                 }
             });
             setStatus(newStatus);
+            setUpdateUser(cmd.getUpdateUser());
             return FeatureStatusChangeTypeEnum.ACTIVE_TO_INACTIVE;
         }
         return FeatureStatusChangeTypeEnum.NO_CHANGE;
@@ -221,9 +221,10 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
     /**
      * 改变Feature状态
      */
-    public FeatureStatusChangeTypeEnum changeFeatureStatus(String newStatus) {
+    public FeatureStatusChangeTypeEnum changeFeatureStatus(ChangeFeatureStatusCmd cmd) {
         checkType(FeatureTypeEnum.FEATURE);
         // status校验
+        String newStatus = cmd.getStatus();
         FeatureStatusEnum oldStatusEnum = FeatureStatusEnum.getByStatus(status);
         FeatureStatusEnum newStatusEnum = FeatureStatusEnum.getByStatus(newStatus);
         if (oldStatusEnum == null || newStatusEnum == null) {
@@ -234,8 +235,9 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
         }
         // Feature状态变更
         setStatus(newStatusEnum.getStatus());
+        setUpdateUser(cmd.getUpdateUser());
         // Feature下的Option列表状态变更
-        changeChildrenListStatus(newStatusEnum);
+        changeChildrenListStatus(newStatusEnum, cmd.getUpdateUser());
         if (oldStatusEnum == FeatureStatusEnum.INACTIVE && newStatusEnum == FeatureStatusEnum.ACTIVE) {
             // 状态由Inactive变为Active
             return FeatureStatusChangeTypeEnum.INACTIVE_TO_ACTIVE;
@@ -348,15 +350,16 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
      *
      * @param newStatusEnum 新的状态
      */
-    private void changeChildrenListStatus(FeatureStatusEnum newStatusEnum) {
-        childrenList.forEach(children -> changeStatus(children, newStatusEnum));
+    private void changeChildrenListStatus(FeatureStatusEnum newStatusEnum, String updateUser) {
+        childrenList.forEach(children -> changeStatus(children, newStatusEnum, updateUser));
     }
 
     /**
      * 更新状态
      */
-    private void changeStatus(FeatureAggr featureAggr, FeatureStatusEnum newStatusEnum) {
+    private void changeStatus(FeatureAggr featureAggr, FeatureStatusEnum newStatusEnum, String updateUser) {
         featureAggr.setStatus(newStatusEnum.getStatus());
+        featureAggr.setUpdateUser(updateUser);
         featureAggr.setChildrenChanged(true);
     }
 

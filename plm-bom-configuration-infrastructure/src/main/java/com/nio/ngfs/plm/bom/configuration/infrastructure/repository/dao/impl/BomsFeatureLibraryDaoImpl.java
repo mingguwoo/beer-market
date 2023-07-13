@@ -64,7 +64,7 @@ public class BomsFeatureLibraryDaoImpl extends AbstractDao<BomsFeatureLibraryMap
     }
 
     @Override
-    public void batchUpdateStatus(List<Long> idList, String status) {
+    public void batchUpdateStatus(List<Long> idList, String status, String updateUser) {
         if (CollectionUtils.isEmpty(idList)) {
             return;
         }
@@ -72,6 +72,7 @@ public class BomsFeatureLibraryDaoImpl extends AbstractDao<BomsFeatureLibraryMap
         updateWrapper.in(BomsFeatureLibraryEntity::getId, idList);
         BomsFeatureLibraryEntity updateEntity = new BomsFeatureLibraryEntity();
         updateEntity.setStatus(status);
+        updateEntity.setUpdateUser(updateUser);
         getBaseMapper().update(updateEntity, updateWrapper);
     }
 

@@ -32,8 +32,8 @@ public class ChangeGroupStatusCommand extends AbstractLockCommand<ChangeGroupSta
     protected ChangeGroupStatusRespDto executeWithLock(ChangeGroupStatusCmd cmd) {
         // 查询聚合根
         FeatureAggr featureAggr = featureDomainService.getAndCheckFeatureAggr(cmd.getGroupCode(), FeatureTypeEnum.GROUP);
-        FeatureStatusChangeTypeEnum changeTypeEnum = featureAggr.changeGroupStatus(cmd.getStatus());
-        featureDomainService.changeGroupFeatureOptionStatusByGroup(featureAggr, changeTypeEnum);
+        FeatureStatusChangeTypeEnum changeTypeEnum = featureAggr.changeGroupStatus(cmd);
+        featureDomainService.changeGroupFeatureOptionStatusByGroup(featureAggr, changeTypeEnum, cmd.getUpdateUser());
         return new ChangeGroupStatusRespDto();
     }
 

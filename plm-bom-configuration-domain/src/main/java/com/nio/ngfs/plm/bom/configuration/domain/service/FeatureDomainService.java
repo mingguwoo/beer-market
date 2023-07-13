@@ -36,8 +36,9 @@ public interface FeatureDomainService {
      *
      * @param featureAggr    聚合根
      * @param changeTypeEnum Feature状态变更类型
+     * @param updateUser     更新人
      */
-    void changeGroupFeatureOptionStatusByGroup(FeatureAggr featureAggr, FeatureStatusChangeTypeEnum changeTypeEnum);
+    void changeGroupFeatureOptionStatusByGroup(FeatureAggr featureAggr, FeatureStatusChangeTypeEnum changeTypeEnum, String updateUser);
 
     /**
      * 校验Feature/Option Code是否唯一

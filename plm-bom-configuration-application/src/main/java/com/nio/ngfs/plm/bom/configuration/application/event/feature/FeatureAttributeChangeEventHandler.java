@@ -11,7 +11,6 @@ import com.nio.ngfs.plm.bom.configuration.domain.service.FeatureDomainService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.context.event.EventListener;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -32,7 +31,6 @@ public class FeatureAttributeChangeEventHandler implements EventHandler<FeatureA
     private final FeatureDomainService featureDomainService;
 
     @Override
-    @Async
     @EventListener
     public void handle(FeatureAttributeChangeEvent event) {
         if (event.getBeforeFeatureAggr() == null || event.getAfterFeatureAggr() == null) {

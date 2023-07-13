@@ -9,7 +9,6 @@ import com.nio.ngfs.plm.bom.configuration.domain.service.FeatureDomainService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.context.event.EventListener;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -25,7 +24,6 @@ public class FeatureStatusChangeEventHandler implements EventHandler<FeatureStat
     private final FeatureDomainService featureDomainService;
 
     @Override
-    @Async
     @EventListener
     public void handle(FeatureStatusChangeEvent event) {
         List<FeatureChangeLogDo> featureChangeLogDoList = Lists.newArrayList();

@@ -7,14 +7,18 @@ import lombok.Data;
 
 /**
  * @author bill.wang
- * @date 2023/7/12
+ * @date 2023/7/13
  */
 @Data
-public class AddOptionCmd implements Cmd {
+public class EditOptionCmd implements Cmd {
 
     @NotBlank(message = "Option Code is blank")
     @Size(max = 128, message = "Option Code max length is 128")
     private String optionCode;
+
+    @NotBlank(message = "Feature Code is blank")
+    @Size(max = 128, message = "Feature Code max length is 128")
+    private String featureCode;
 
     @NotBlank(message = "Display Name is blank")
     @Size(max = 128, message = "Display Name max length is 128")
@@ -30,12 +34,8 @@ public class AddOptionCmd implements Cmd {
     @NotBlank(message = "Requestor is blank")
     private String requestor;
 
-    @NotBlank(message = "Feature Code is blank")
-    @Size(max = 128, message = "Feature Code max length is 128")
-    private String featureCode;
+    @NotBlank(message = "Update User is blank")
+    private String updateUser;
 
-    @NotBlank(message = "Create User is blank")
-    private String createUser;
-
-
+    private String status;
 }

@@ -82,7 +82,31 @@ public interface PlmFeatureClient {
     @PostMapping("/feature/listFeatureLibrary")
     ResultInfo<List<FeatureLibraryDto>> listFeatureLibrary(ListFeatureLibraryQry qry);
 
+    /**
+     * 新增Option
+     *
+     * @param cmd 命令
+     * @return 响应
+     */
     @PostMapping("/feature/addOption")
     ResultInfo<AddOptionRespDto> addOption(AddOptionCmd cmd);
+
+    /**
+     * 编辑Option
+     *
+     * @param cmd 命令
+     * @return 响应
+     */
+    @PostMapping("/option/editOption")
+    ResultInfo<EditOptionRespDto> editOption(EditOptionCmd cmd);
+
+    /**
+     * 改变Option状态
+     *
+     * @param cmd 命令
+     * @return 响应
+     */
+    @PostMapping("/feature/changeOptionStatus")
+    ResultInfo<ChangeOptionStatusRespDto> changeOptionStatus(ChangeOptionStatusCmd cmd);
 
 }

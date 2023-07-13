@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 /**
+ * 新增Group
+ *
  * @author xiaozhou.tu
  * @date 2023/6/28
  */

@@ -65,7 +65,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
     /**
      * Feature的必须性
      */
-    private String  mayMust;
+    private String mayMust;
 
     /**
      * Feature的分类
@@ -103,7 +103,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
     private transient List<FeatureAggr> childrenList = Collections.emptyList();
 
     /**
-     * children节点列表是否变更
+     * children是否变更（仅适用于childrenList中对象）
      */
     private transient boolean childrenChanged = false;
 
@@ -197,6 +197,32 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
     }
 
     /**
+     * 改变Feature状态
+     */
+    public FeatureStatusChangeTypeEnum changeFeatureStatus(String newStatus) {
+        checkType(FeatureTypeEnum.FEATURE);
+        // status校验
+        FeatureStatusEnum oldStatusEnum = FeatureStatusEnum.getByStatus(status);
+        FeatureStatusEnum newStatusEnum = FeatureStatusEnum.getByStatus(newStatus);
+        if (oldStatusEnum == null || newStatusEnum == null) {
+            throw new BusinessException(ConfigErrorCode.FEATURE_STATUS_INVALID);
+        }
+        if (oldStatusEnum == newStatusEnum) {
+            return FeatureStatusChangeTypeEnum.NO_CHANGE;
+        }
+        // Feature状态变更
+        setStatus(newStatusEnum.getStatus());
+        // Feature下的Option列表状态变更
+        changeChildrenListStatus(newStatusEnum);
+        if (oldStatusEnum == FeatureStatusEnum.INACTIVE && newStatusEnum == FeatureStatusEnum.ACTIVE) {
+            // 状态由Inactive变为Active
+            return FeatureStatusChangeTypeEnum.INACTIVE_TO_ACTIVE;
+        }
+        // 状态由Active变为Inactive
+        return FeatureStatusChangeTypeEnum.ACTIVE_TO_INACTIVE;
+    }
+
+    /**
      * 新增Option
      */
     public void addOption() {
@@ -267,7 +293,6 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
         // Group Code更新
         featureId.setFeatureCode(newGroupCode);
         childrenList.forEach(children -> changeParentFeatureCode(children, newGroupCode));
-        setChildrenChanged(true);
     }
 
     /**
@@ -275,6 +300,24 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
      */
     private void changeParentFeatureCode(FeatureAggr featureAggr, String newParentFeatureCode) {
         featureAggr.setParentFeatureCode(newParentFeatureCode);
+        featureAggr.setChildrenChanged(true);
+    }
+
+    /**
+     * 改变子节点列表的状态
+     *
+     * @param newStatusEnum 新的状态
+     */
+    private void changeChildrenListStatus(FeatureStatusEnum newStatusEnum) {
+        childrenList.forEach(children -> changeStatus(children, newStatusEnum));
+    }
+
+    /**
+     * 更新状态
+     */
+    private void changeStatus(FeatureAggr featureAggr, FeatureStatusEnum newStatusEnum) {
+        featureAggr.setStatus(newStatusEnum.getStatus());
+        featureAggr.setChildrenChanged(true);
     }
 
     /**
@@ -295,8 +338,8 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
      * Chinese Name在同一feature下是否唯一
      */
     public void checkOptionChineseNameUnique() {
-        List<String> chineseNameList = parent.getChildrenList().stream().map(obj->obj.getChineseName()).collect(Collectors.toList());
-        if (chineseNameList.contains(chineseName)){
+        List<String> chineseNameList = parent.getChildrenList().stream().map(obj -> obj.getChineseName()).collect(Collectors.toList());
+        if (chineseNameList.contains(chineseName)) {
             throw new BusinessException(ConfigErrorCode.FEATURE_OPTION_CHINESE_NAME_REPEAT);
         }
     }
@@ -305,7 +348,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId> {
      * 校验OptionCode前两位与所属Feature是否一致
      */
     public void checkOptionCodeAndFeatureCodeTwoDigits() {
-        if (featureId.getFeatureCode().substring(0,3).equals(parentFeatureCode.substring(0,3))){
+        if (featureId.getFeatureCode().substring(0, 3).equals(parentFeatureCode.substring(0, 3))) {
             throw new BusinessException(ConfigErrorCode.FEATURE_OPTION_CODE_DIFF_FROM_FEATURE_CODE);
         }
     }

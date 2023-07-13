@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author xiaozhou.tu
@@ -32,8 +33,10 @@ public class FeatureRepositoryImpl implements FeatureRepository {
         DaoSupport.saveOrUpdate(bomsFeatureLibraryDao, featureConverter.convertDoToEntity(aggr));
         // 节点变更不会影响父节点，此处不处理父节点
         // 保存子节点列表
-        if (CollectionUtils.isNotEmpty(aggr.getChildrenList()) && aggr.isChildrenChanged()) {
-            bomsFeatureLibraryDao.updateBatchById(featureConverter.convertDoListToEntityList(aggr.getChildrenList()));
+        if (CollectionUtils.isNotEmpty(aggr.getChildrenList())) {
+            bomsFeatureLibraryDao.updateBatchById(featureConverter.convertDoListToEntityList(
+                    aggr.getChildrenList().stream().filter(FeatureAggr::isChildrenChanged).collect(Collectors.toList())
+            ));
         }
     }
 

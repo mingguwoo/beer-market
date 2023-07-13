@@ -61,7 +61,17 @@ public interface PlmFeatureClient {
      * @param cmd 命令
      * @return 响应
      */
+    @PostMapping("/feature/editFeature")
     ResultInfo<EditFeatureCmdRespDto> editFeature(EditFeatureCmd cmd);
+
+    /**
+     * 改变Feature状态
+     *
+     * @param cmd 命令
+     * @return 响应
+     */
+    @PostMapping("/feature/changeFeatureStatus")
+    ResultInfo<ChangeFeatureStatusRespDto> changeFeatureStatus(ChangeFeatureStatusCmd cmd);
 
     /**
      * Feature库列表

@@ -33,11 +33,9 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
         FeatureId featureId = new FeatureId(featureCode, typeEnum);
         FeatureAggr featureAggr = featureRepository.find(featureId);
         if (featureAggr == null) {
-            switch (typeEnum) {
-                case GROUP -> throw new BusinessException(ConfigErrorCode.FEATURE_GROUP_NOT_EXISTS);
-                case FEATURE -> throw new BusinessException(ConfigErrorCode.FEATURE_FEATURE_NOT_EXISTS);
-                default -> throw new BusinessException(ConfigErrorCode.FEATURE_OPTION_NOT_EXISTS);
-            }
+            throw new BusinessException(typeEnum == FeatureTypeEnum.GROUP ? ConfigErrorCode.FEATURE_GROUP_NOT_EXISTS :
+                    (typeEnum == FeatureTypeEnum.FEATURE ? ConfigErrorCode.FEATURE_FEATURE_NOT_EXISTS :
+                            ConfigErrorCode.FEATURE_OPTION_NOT_EXISTS));
         }
         return featureAggr;
     }

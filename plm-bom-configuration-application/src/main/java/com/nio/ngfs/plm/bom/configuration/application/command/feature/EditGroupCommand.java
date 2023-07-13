@@ -7,6 +7,7 @@ import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.event.EventPublisher;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.common.FeatureAggrThreadLocal;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.GroupCodeChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.service.FeatureDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.EditGroupCmd;
@@ -66,6 +67,11 @@ public class EditGroupCommand extends AbstractLockCommand<EditGroupCmd, EditGrou
         groupCodeChangeEvent.setOldGroupCode(oldGroupCode);
         groupCodeChangeEvent.setNewGroupCode(featureAggr.getFeatureId().getFeatureCode());
         eventPublisher.publish(groupCodeChangeEvent);
+    }
+
+    @Override
+    protected void close() {
+        FeatureAggrThreadLocal.remove();
     }
 
 }

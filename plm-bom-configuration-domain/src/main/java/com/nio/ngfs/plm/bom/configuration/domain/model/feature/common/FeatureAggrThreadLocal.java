@@ -27,7 +27,6 @@ public class FeatureAggrThreadLocal {
     public static void add(FeatureAggr aggr) {
         // copy一份数据
         FeatureAggr copyAggr = aggr.clone();
-        BeanUtils.copyProperties(aggr, copyAggr);
         get().put(copyAggr.getId(), copyAggr);
     }
 

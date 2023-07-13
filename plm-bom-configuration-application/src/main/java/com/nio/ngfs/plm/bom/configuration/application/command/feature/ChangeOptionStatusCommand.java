@@ -4,6 +4,7 @@ import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockComman
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.common.FeatureAggrThreadLocal;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.service.FeatureDomainService;
@@ -31,8 +32,14 @@ public class ChangeOptionStatusCommand extends AbstractLockCommand<ChangeOptionS
     @Override
     protected ChangeOptionStatusRespDto executeWithLock(ChangeOptionStatusCmd cmd) {
         FeatureAggr featureAggr = featureDomainService.getAndCheckFeatureAggr(cmd.getOptionCode(), FeatureTypeEnum.OPTION);
-        featureAggr.changeOptionStatus(cmd.getStatus(),cmd.getUpdateUser());
+        featureAggr.changeOptionStatus(cmd.getStatus(), cmd.getUpdateUser());
         featureRepository.save(featureAggr);
         return new ChangeOptionStatusRespDto();
     }
+
+    @Override
+    protected void close() {
+        FeatureAggrThreadLocal.remove();
+    }
+
 }

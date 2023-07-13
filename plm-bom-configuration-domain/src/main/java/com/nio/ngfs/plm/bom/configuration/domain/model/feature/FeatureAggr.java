@@ -35,8 +35,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Cloneable {
 
-    private static final int MAX_LENGTH = 128;
-
     private FeatureId featureId;
 
     /**
@@ -118,6 +116,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
     public FeatureAggr clone() {
         try {
             FeatureAggr copy = (FeatureAggr) super.clone();
+            copy.setFeatureId(new FeatureId(featureId.getFeatureCode(), featureId.getType()));
             if (parent != null) {
                 copy.setParent(parent.clone());
             }

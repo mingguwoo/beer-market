@@ -3,6 +3,7 @@ package com.nio.ngfs.plm.bom.configuration.application.command.feature;
 import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockCommand;
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.common.FeatureAggrThreadLocal;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.service.FeatureDomainService;
@@ -35,6 +36,11 @@ public class ChangeGroupStatusCommand extends AbstractLockCommand<ChangeGroupSta
         FeatureStatusChangeTypeEnum changeTypeEnum = featureAggr.changeGroupStatus(cmd);
         featureDomainService.changeGroupFeatureOptionStatusByGroup(featureAggr, changeTypeEnum, cmd.getUpdateUser());
         return new ChangeGroupStatusRespDto();
+    }
+
+    @Override
+    protected void close() {
+        FeatureAggrThreadLocal.remove();
     }
 
 }

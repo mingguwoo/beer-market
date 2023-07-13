@@ -272,6 +272,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
         setChineseName(cmd.getChineseName());
         setDescription(cmd.getDescription());
         setRequestor(cmd.getRequestor());
+        setUpdateUser(cmd.getUpdateUser());
 
     }
 

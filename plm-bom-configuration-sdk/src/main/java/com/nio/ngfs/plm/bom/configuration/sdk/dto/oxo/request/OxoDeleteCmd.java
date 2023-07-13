@@ -1,7 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request;
 
 
-import jakarta.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

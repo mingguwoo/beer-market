@@ -28,7 +28,11 @@ public class OxoDeleteCommand extends AbstractLockCommand<OxoDeleteCmd, Object> 
     }
 
 
+
+
     public void delete(OxoDeleteCmd cmd) {
+
+
 
 
 

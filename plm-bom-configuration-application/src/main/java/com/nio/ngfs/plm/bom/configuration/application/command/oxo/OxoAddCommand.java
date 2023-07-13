@@ -28,8 +28,15 @@ public class OxoAddCommand extends AbstractLockCommand<OxoAddCmd, Object> {
     }
 
 
-
+    /**
+     * 添加 optionCode FeatureCode至OXO
+     * @param cmd
+     */
     public void add(OxoAddCmd cmd) {
+
+
+
+
 
 
 

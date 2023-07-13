@@ -2,10 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.domain.service.oxo.impl;
 
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.PageData;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoAddCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoBaseCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoCompareCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoListCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoChangeLogRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListsRespDto;
 import lombok.RequiredArgsConstructor;
@@ -60,5 +57,10 @@ public class OxoDomainServiceImpl implements OxoDomainService {
     @Override
     public List<String> queryEmailGroup() {
         return null;
+    }
+
+    @Override
+    public void renewSort(OxoSnapshotCmd cmd) {
+
     }
 }

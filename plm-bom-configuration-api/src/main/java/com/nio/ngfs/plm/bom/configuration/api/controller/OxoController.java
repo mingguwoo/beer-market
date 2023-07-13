@@ -139,16 +139,26 @@ public class OxoController {
 
 
     /**
-     * 排序
+     * todo 排序
      * @param cmd
      * @return
      */
     @PostMapping("/renewSort")
     public ResultInfo renewSort(@Valid @RequestBody OxoSnapshotCmd cmd) {
-       // oxoDomainService.renewSort(cmd);
+        oxoDomainService.renewSort(cmd);
         return ResultInfo.success(true);
     }
 
+
+    /**
+     * todo 排序 查询
+     * @param cmd
+     * @return
+     */
+    @PostMapping("/querySortFeatureList")
+    public ResultInfo querySortFeatureList(@Valid @RequestBody OxoSnapshotCmd cmd) {
+        return ResultInfo.success( oxoDomainService.querySortFeatureList(cmd));
+    }
 
     /**
      * 版本对比

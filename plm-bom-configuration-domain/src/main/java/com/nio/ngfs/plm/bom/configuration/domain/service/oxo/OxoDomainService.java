@@ -1,10 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service.oxo;
 
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.PageData;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoAddCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoBaseCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoCompareCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoListCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoChangeLogRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListsRespDto;
 
@@ -74,6 +71,12 @@ public interface OxoDomainService {
     List<String> queryEmailGroup();
 
 
+    /**
+     * 排序
+     * @param cmd
+     */
+    void renewSort(OxoSnapshotCmd cmd);
 
 
+    Object querySortFeatureList(OxoSnapshotCmd cmd);
 }

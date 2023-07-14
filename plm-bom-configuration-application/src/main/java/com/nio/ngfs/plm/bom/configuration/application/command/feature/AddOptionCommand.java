@@ -38,8 +38,8 @@ public class AddOptionCommand extends AbstractLockCommand<AddOptionCmd, AddOptio
         featureAggr.setParent(parentFeatureAggr);
         featureDomainService.checkFeatureOptionCodeUnique(featureAggr);
         featureDomainService.checkDisplayNameUnique(featureAggr);
-        featureAggr.setCatalog(parentFeatureAggr.getCatalog());
         featureAggr.addOption();
+        featureAggr.setCatalog(parentFeatureAggr.getCatalog());
         featureRepository.save(featureAggr);
         return new AddOptionRespDto();
     }

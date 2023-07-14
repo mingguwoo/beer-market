@@ -35,8 +35,8 @@ public enum ConfigErrorCode implements ErrorCode {
     FEATURE_OPTION_CODE_REPEAT(80012, "The Option Is Already Existed，Please Input A New One!"),
     FEATURE_DISPLAY_NAME_REPEAT(80013, "The Display Name Is Already Existed, Please Input A New One!"),
     FEATURE_FEATURE_NOT_EXISTS(80014, "Feature Not Existed!"),
-    FEATURE_OPTION_CHINESE_NAME_REPEAT(80015, "Chinese Name Is Already Existed, Please Input A New One!"),
-    FEATURE_OPTION_CODE_DIFF_FROM_FEATURE_CODE(80016, "The First Two Digits Of Option Code Is Different From Feature Code"),
+    FEATURE_OPTION_CHINESE_NAME_REPEAT(80015, "The Chinese Name Is Already Existed, Please Input A New One!"),
+    FEATURE_OPTION_CODE_DIFF_FROM_FEATURE_CODE(80016, "The Top Two of The Option Must Be The Same With Feature!"),
     FEATURE_OPTION_NOT_EXISTS(80017, "Option Not Existed!"),
     ;
 

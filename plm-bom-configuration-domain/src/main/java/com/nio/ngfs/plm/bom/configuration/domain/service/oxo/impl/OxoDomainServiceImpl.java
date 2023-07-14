@@ -63,4 +63,9 @@ public class OxoDomainServiceImpl implements OxoDomainService {
     public void renewSort(OxoSnapshotCmd cmd) {
 
     }
+
+    @Override
+    public Object querySortFeatureList(OxoSnapshotCmd cmd) {
+        return null;
+    }
 }

@@ -9,12 +9,10 @@ import java.util.List;
 @Data
 public class OxoListsRespDto implements Dto {
 
-
         /**
          * 行信息
          */
         private List<OxoRowsRespDto>  oxoRowsRespDtos;
-
 
         /**
          * 表头信息

@@ -15,10 +15,7 @@ import java.util.List;
 @ToString
 public class OxoAddCmd extends OxoBaseCmd {
 
-
     private List<OxoFeatureOption> oxoAdds;
-
-
 
     @Getter
     @Setter
@@ -27,10 +24,8 @@ public class OxoAddCmd extends OxoBaseCmd {
 
          private String featureCode;
 
-
          private List<String> optionCodes;
 
     }
-
 
 }

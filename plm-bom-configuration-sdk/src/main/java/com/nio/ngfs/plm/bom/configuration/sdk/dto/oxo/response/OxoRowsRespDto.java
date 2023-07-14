@@ -12,28 +12,19 @@ import java.util.List;
 @Data
 public class OxoRowsRespDto implements Dto {
 
-
-
         private String featureCode;
-
 
         private String displayName;
 
-
         private String chineseName;
-
 
         private String group;
 
-
         private String comments;
-
 
         private Long id;
 
-
         private String ruleCheck;
-        
 
         private String catalog;
 
@@ -42,14 +33,8 @@ public class OxoRowsRespDto implements Dto {
          */
         private List<OxoRowsRespDto> options;
 
-
         /**
          * 打点信息
          */
         private List<OxoEditCmd> packInfos;
-
-
-
-
-
 }

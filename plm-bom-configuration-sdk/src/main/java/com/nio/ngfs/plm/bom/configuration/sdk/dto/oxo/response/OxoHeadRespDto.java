@@ -15,12 +15,9 @@ import java.util.List;
 @Data
 public class OxoHeadRespDto implements Dto {
 
-
     private String modelYear;
 
-
     private List<RegionInfo> regionInfos;
-
 
     @Getter
     @Setter
@@ -29,9 +26,7 @@ public class OxoHeadRespDto implements Dto {
 
         private String regionCode;
 
-
         private String regionName;
-
 
         private List<DriveHandInfo> driveHands;
     }
@@ -41,16 +36,12 @@ public class OxoHeadRespDto implements Dto {
     @ToString
     static class DriveHandInfo {
 
-
          private String driveHandCode;
-
 
          private String driveHandName;
 
-
          private List<SalesVersionInfo> salesVersionInfos;
     }
-
 
 
     @Getter
@@ -58,15 +49,10 @@ public class OxoHeadRespDto implements Dto {
     @ToString
     static class SalesVersionInfo {
 
-
          private String salesCode;
-
 
          private String salesName;
 
-
          private Long headId;
     }
-
-
 }

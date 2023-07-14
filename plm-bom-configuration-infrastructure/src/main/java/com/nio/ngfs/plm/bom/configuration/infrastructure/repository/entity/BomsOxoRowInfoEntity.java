@@ -7,8 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-
-
 /**
  * <p>
  * oxo行信息
@@ -23,7 +21,6 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @TableName("boms_oxo_row_info")
 public class BomsOxoRowInfoEntity extends BaseEntity{
-
 
     /**
      * 车型
@@ -45,7 +42,6 @@ public class BomsOxoRowInfoEntity extends BaseEntity{
      */
     private String comments;
 
-
     /**
      * 是否头节点 1 featureCode 2optionCode
      */
@@ -60,8 +56,5 @@ public class BomsOxoRowInfoEntity extends BaseEntity{
      * 软删除 1删除 0未删除
      */
     private Integer sortDelete;
-
-
-
 
 }

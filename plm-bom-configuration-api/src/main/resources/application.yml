@@ -33,6 +33,8 @@ env: test
 apollo:
     meta: https://apollo-config-cn-test.nioint.com
     cluster: plm-bom-configuration-tc-tke-test
+    accesskey:
+      secret: 2a09c0767319481aa0a0d69166ea2802
 spring:
     config:
         activate:

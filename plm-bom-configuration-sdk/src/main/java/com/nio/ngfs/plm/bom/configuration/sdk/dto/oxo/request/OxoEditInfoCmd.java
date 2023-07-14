@@ -8,6 +8,5 @@ import java.util.List;
 @Data
 public class OxoEditInfoCmd extends OxoBaseCmd{
 
-
        private List<OxoEditCmd> editCmds;
 }

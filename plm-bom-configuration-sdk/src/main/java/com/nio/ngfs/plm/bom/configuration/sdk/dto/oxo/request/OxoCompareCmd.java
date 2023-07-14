@@ -9,8 +9,6 @@ import lombok.Data;
 @Data
 public class OxoCompareCmd extends OxoBaseCmd{
 
-
-
     private String baseVersion;
 
     private String compareVersion;
@@ -19,9 +17,5 @@ public class OxoCompareCmd extends OxoBaseCmd{
      * 只展示不一样的结果
      */
     private boolean showDiff;
-
-
-
-
 
 }

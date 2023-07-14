@@ -1,7 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request;
 
 
-import jakarta.validation.constraints.Size;
+import javax.validation.constraints.Size;
 import lombok.Data;
 
 import java.util.List;

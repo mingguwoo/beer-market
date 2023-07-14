@@ -17,15 +17,11 @@ import lombok.experimental.SuperBuilder;
 @TableName("boms_oxo_version_snapshot")
 public class BomsOxoVersionSnapshotEntity extends BaseEntity{
 
-
-
-
     private String modelCode;
 
     private String version;
 
     private String oxoSnapshot;
-
 
     private String type;
 

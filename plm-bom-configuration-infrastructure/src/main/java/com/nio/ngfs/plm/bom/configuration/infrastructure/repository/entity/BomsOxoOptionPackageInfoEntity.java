@@ -17,8 +17,6 @@ import lombok.experimental.SuperBuilder;
 @TableName("boms_oxo_option_package_info")
 public class BomsOxoOptionPackageInfoEntity extends BaseEntity {
 
-
-
     private Long rowId;
 
     private Long baseVehicleId;

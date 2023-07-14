@@ -97,7 +97,7 @@ public interface PlmFeatureClient {
      * @param cmd 命令
      * @return 响应
      */
-    @PostMapping("/option/editOption")
+    @PostMapping("/feature/editOption")
     ResultInfo<EditOptionRespDto> editOption(EditOptionCmd cmd);
 
     /**

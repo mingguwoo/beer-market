@@ -10,18 +10,12 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class OxoEditCmd extends OxoBaseCmd{
 
-
-
-
      @NotBlank(message = "headId不能为空")
      private Long headId;
 
-
      private Long rowId;
 
-
      private String packageCode;
-
 
      private String description;
 
@@ -30,12 +24,7 @@ public class OxoEditCmd extends OxoBaseCmd{
       */
      private String comments;
 
-
-
      private String ruleCheck;
-
-
-
 
 }
 

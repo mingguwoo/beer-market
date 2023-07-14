@@ -1,6 +1,5 @@
 package com.nio.ngfs.plm.bom.configuration.api.controller;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.nio.bom.share.annotation.NeedAuthorization;
 import com.nio.bom.share.annotation.NotLogResult;
 import com.nio.bom.share.result.ResultInfo;
@@ -31,17 +30,11 @@ import java.util.List;
 public class OxoController {
 
     private final OxoDomainService oxoDomainService;
-
     private final OxoOperateCommand oxoOperateCommand;
-
     private final OxoSnapshootCommand oxoSnapshootCommand;
-
     private final OxoDeleteCommand oxoDeleteCommand;
-
     private final OxoAddCommand oxoAddCommand;
-
     private final OxoEditCommand oxoEditCommand;
-
 
     /**
      * 根据车型查询快照版本
@@ -55,7 +48,6 @@ public class OxoController {
         return ResultInfo.success(oxoDomainService.queryVersion(cmd));
     }
 
-
     /**
      * 查询oxo列表
      * @param cmd
@@ -65,7 +57,6 @@ public class OxoController {
     public ResultInfo<OxoListsRespDto> queryList(@Valid @RequestBody OxoListCmd cmd) {
         return ResultInfo.success(oxoDomainService.queryList(cmd));
     }
-
 
     /**
      * 批量删除oxo
@@ -78,7 +69,6 @@ public class OxoController {
         return  ResultInfo.success(true);
     }
 
-
     /**
      * 添加oxo信息
      * @param cmd
@@ -90,7 +80,6 @@ public class OxoController {
         return ResultInfo.success(true);
     }
 
-
     /**
      * 添加oxo 下拉code列表
      * @return
@@ -99,7 +88,6 @@ public class OxoController {
     public ResultInfo<List<OxoAddCmd>> queryFeatureList() {
         return ResultInfo.success(oxoDomainService.queryFeatureList());
     }
-
 
     /**
      * 编辑打点/Rule Check/填写备注
@@ -112,8 +100,6 @@ public class OxoController {
         return ResultInfo.success(true);
     }
 
-
-
     /**
      * 查询邮件group
      * @return
@@ -122,7 +108,6 @@ public class OxoController {
     public ResultInfo<List<String>> queryEmailGroup() {
         return ResultInfo.success(oxoDomainService.queryEmailGroup());
     }
-
 
     /**
      * 保存快照
@@ -135,9 +120,6 @@ public class OxoController {
         return ResultInfo.success(true);
     }
 
-
-
-
     /**
      * todo 排序
      * @param cmd
@@ -148,7 +130,6 @@ public class OxoController {
         oxoDomainService.renewSort(cmd);
         return ResultInfo.success(true);
     }
-
 
     /**
      * todo 排序 查询
@@ -170,18 +151,15 @@ public class OxoController {
         return ResultInfo.success(oxoDomainService.compare(compareCmd));
     }
 
-
-
     /**
      * oxo 导出
      * @param cmd
      * @return
      */
     @PostMapping("/export")
-    public void  export(@Valid @RequestBody OxoListCmd cmd,HttpServletResponse response) {
+    public void export(@Valid @RequestBody OxoListCmd cmd,HttpServletResponse response) {
         oxoDomainService.export(cmd,response);
     }
-
 
     /**
      * oxo 对比导出
@@ -189,11 +167,9 @@ public class OxoController {
      * @return
      */
     @PostMapping("/compareExport")
-    public void  compareExport(@Valid @RequestBody OxoCompareCmd compareCmd,HttpServletResponse response) {
+    public void compareExport(@Valid @RequestBody OxoCompareCmd compareCmd,HttpServletResponse response) {
         oxoDomainService.compareExport(compareCmd,response);
     }
-
-
 
     /**
      * 查询changeLog
@@ -201,7 +177,7 @@ public class OxoController {
      * @return
      */
     @PostMapping("/queryChangeLog")
-    public  ResultInfo<PageData<OxoChangeLogRespDto>> queryChangeLog(@Valid @RequestBody OxoBaseCmd oxoBaseCmd) {
+    public ResultInfo<PageData<OxoChangeLogRespDto>> queryChangeLog(@Valid @RequestBody OxoBaseCmd oxoBaseCmd) {
         return ResultInfo.success(oxoDomainService.queryChangeLog(oxoBaseCmd));
     }
 }

@@ -8,7 +8,6 @@ import lombok.Data;
 @Data
 public class OxoListCmd extends OxoBaseCmd {
 
-
     /**
      * 类型 为空查询所有 包括Marketing，Engineering，isShowDelete
      */

@@ -1,14 +1,13 @@
 package com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request;
 
 
-import javax.validation.constraints.Size;
 import lombok.Data;
 
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Data
 public class OxoSnapshotCmd extends OxoBaseCmd{
-
 
     /**
      * formal 大版本AA AB
@@ -16,15 +15,11 @@ public class OxoSnapshotCmd extends OxoBaseCmd{
      */
      private String type;
 
-
      @Size(max = 64)
      private String title;
 
-
      @Size(max = 300)
      private String changeContent;
-
-
 
      private List<String> emailUsers;
 }

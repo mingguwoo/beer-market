@@ -1,4 +1,4 @@
-CREATE TABLE `boms_oxo_version_snpashot` (
+CREATE TABLE `boms_oxo_version_snapshot` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
   `model_code` varchar(32) NOT NULL DEFAULT '' COMMENT '车型',
   `version` varchar(32) NOT NULL COMMENT '版本号',

@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service.oxo.impl;
 
+import com.nio.ngfs.plm.bom.configuration.domain.facade.AdministratorDetailFacade;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.PageData;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.*;
@@ -19,8 +20,22 @@ import java.util.List;
 public class OxoDomainServiceImpl implements OxoDomainService {
 
 
+
+    private final AdministratorDetailFacade administratorDetailFacade;
+
+
+
     @Override
     public List<String> queryVersion(OxoBaseCmd cmd) {
+        String userName= cmd.getUserName();
+
+
+        List<String> roleNames =administratorDetailFacade.queryRoleNamesByUserName(userName);
+
+
+
+
+
         return null;
     }
 

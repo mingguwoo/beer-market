@@ -99,7 +99,13 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
         List<FeatureAggr> existedFeatureAggrList = featureRepository.queryByDisplayNameCatalogAndType(
                 featureAggr.getDisplayName(), featureAggr.getCatalog(), featureAggr.getFeatureId().getType());
         if (CollectionUtils.isNotEmpty(existedFeatureAggrList)) {
-            throw new BusinessException(ConfigErrorCode.FEATURE_DISPLAY_NAME_REPEAT);
+            existedFeatureAggrList.forEach(existedFeatureAggr -> {
+                if (Objects.equals(featureAggr.getId(), existedFeatureAggr.getId())) {
+                    // 同一条记录。跳过
+                    return;
+                }
+                throw new BusinessException(ConfigErrorCode.FEATURE_DISPLAY_NAME_REPEAT);
+            });
         }
     }
 

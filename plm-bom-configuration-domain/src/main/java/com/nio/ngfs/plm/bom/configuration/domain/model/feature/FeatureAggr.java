@@ -255,6 +255,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
         checkOptionChineseNameUnique();
         checkOptionCodeAndFeatureCodeTwoDigits();
         // 字段赋值
+        setCatalog(parent.getCatalog());
         setVersion(ConfigConstants.VERSION_A);
         setStatus(FeatureStatusEnum.ACTIVE.getStatus());
     }
@@ -382,7 +383,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
      */
     public void checkOptionChineseNameUnique() {
         //如果没有同父级的子Option，直接返回
-        if (Objects.isNull(parent.getChildrenList())){
+        if (Objects.isNull(parent.getChildrenList())) {
             return;
         }
         List<String> chineseNameList = parent.getChildrenList().stream().map(FeatureAggr::getChineseName).toList();

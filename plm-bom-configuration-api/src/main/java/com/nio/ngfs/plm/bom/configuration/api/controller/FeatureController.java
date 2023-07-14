@@ -100,7 +100,7 @@ public class FeatureController implements PlmFeatureClient {
     @Override
 //    @NeedAuthorization
     @NotLogResult
-    public ResultInfo<ChangeOptionStatusRespDto> changeOptionStatus(ChangeOptionStatusCmd cmd) {
+    public ResultInfo<ChangeOptionStatusRespDto> changeOptionStatus(@Valid @RequestBody ChangeOptionStatusCmd cmd) {
         return ResultInfo.success(changeOptionStatusCommand.execute(cmd));
     }
 

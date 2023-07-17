@@ -1,5 +1,3 @@
 # Auto Configuration
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.nio.ngfs.plm.bom.configuration.infrastructure.config.AppDomainAutoConfiguration, \
-com.nio.ps.third.party.lanka.client.LankaApiClient, \
-com.nio.ps.third.party.lanka.feign.LankaApiFeign
+com.nio.ngfs.plm.bom.configuration.infrastructure.config.AppDomainAutoConfiguration

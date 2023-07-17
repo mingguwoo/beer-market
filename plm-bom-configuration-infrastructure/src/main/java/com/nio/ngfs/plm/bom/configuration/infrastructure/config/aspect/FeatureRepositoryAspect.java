@@ -28,7 +28,7 @@ public class FeatureRepositoryAspect {
 
     private final EventPublisher eventPublisher;
 
-    @Pointcut("execution(* com.nio.ngfs.plm.bom.configuration.infrastructure.repository.impl.FeatureRepositoryImpl.save())")
+    @Pointcut("execution(* com.nio.ngfs.plm.bom.configuration.infrastructure.repository.impl.FeatureRepositoryImpl.save(..))")
     public void save() {
     }
 

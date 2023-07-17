@@ -2,7 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.application.event.oxo;
 
 import com.nio.ngfs.plm.bom.configuration.application.event.EventHandler;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.GroupAddEvent;
-import org.springframework.context.event.EventListener;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,8 +13,7 @@ import org.springframework.stereotype.Component;
 public class OxoGroupAddEventHandler implements EventHandler<GroupAddEvent> {
 
     @Override
-    @EventListener
-    public void handle(GroupAddEvent event) {
+    public void onApplicationEvent(@NotNull GroupAddEvent event) {
     }
 
 }

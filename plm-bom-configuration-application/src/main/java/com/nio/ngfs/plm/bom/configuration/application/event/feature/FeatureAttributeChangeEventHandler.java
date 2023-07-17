@@ -10,9 +10,10 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureAttr
 import com.nio.ngfs.plm.bom.configuration.domain.service.FeatureDomainService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -31,8 +32,8 @@ public class FeatureAttributeChangeEventHandler implements EventHandler<FeatureA
     private final FeatureDomainService featureDomainService;
 
     @Override
-    @EventListener
-    public void handle(FeatureAttributeChangeEvent event) {
+    @Async("asyncEventExecutor")
+    public void onApplicationEvent(@NotNull FeatureAttributeChangeEvent event) {
         if (event.getBeforeFeatureAggr() == null || event.getAfterFeatureAggr() == null) {
             return;
         }

@@ -25,8 +25,8 @@ import java.util.List;
 public class AdministratorDetailFacadeImpl implements AdministratorDetailFacade {
 
 
-    @Resource
-    private  LankaApiClient lankaApiClient;
+
+    private  final  LankaApiClient lankaApiClient;
 
 
     /**

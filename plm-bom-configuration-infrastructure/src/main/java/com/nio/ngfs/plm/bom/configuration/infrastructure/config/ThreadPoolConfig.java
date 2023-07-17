@@ -24,7 +24,7 @@ public class ThreadPoolConfig {
         executor.setCorePoolSize(10);
         executor.setMaxPoolSize(20);
         executor.setKeepAliveSeconds(60);
-        executor.setQueueCapacity(20000);
+        executor.setQueueCapacity(200);
         executor.setWaitForTasksToCompleteOnShutdown(true);
         executor.setAwaitTerminationSeconds(10);
         executor.setThreadNamePrefix("async-event-executor-");

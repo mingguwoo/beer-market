@@ -1,6 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.config.advice;
 
 import com.nio.bom.share.enums.CommonErrorCode;
+import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.common.exception.BusinessSilentException;
 import lombok.extern.slf4j.Slf4j;
@@ -72,7 +73,7 @@ public class AppExceptionHandler {
     @ExceptionHandler(value = ClassNotFoundException.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
-    public ResultInfo<String> classNotFoundExceptionHandler(HttpServletRequest servletRequest, Exception ex){
+    public ResultInfo<String> classNotFoundExceptionHandler(HttpServletRequest servletRequest, Exception ex) {
         ResultInfo<String> res = new ResultInfo<>();
         res.setCode(CommonErrorCode.SERVER_ERROR.getCode());
         res.setMessage(ex.getMessage());
@@ -83,11 +84,39 @@ public class AppExceptionHandler {
     @ExceptionHandler(value = {ExecutionException.class, InterruptedException.class})
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
-    public ResultInfo<String> threadPoolExceptionHandler(HttpServletRequest servletRequest, Exception ex){
+    public ResultInfo<String> threadPoolExceptionHandler(HttpServletRequest servletRequest, Exception ex) {
         ResultInfo<String> res = new ResultInfo<>();
         res.setCode(CommonErrorCode.SERVER_ERROR.getCode());
         res.setMessage(ex.getMessage());
         log.error("request method [{}] [{}] execution or interrupted exception: [{}]", servletRequest.getMethod(), servletRequest.getRequestURI(), ex.toString());
+        return res;
+    }
+
+    /**
+     * 业务异常处理
+     */
+    @ExceptionHandler(value = {BusinessException.class})
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    public ResultInfo<String> configurationBusinessExceptionHandler(HttpServletRequest servletRequest, BusinessException e) {
+        ResultInfo<String> res = new ResultInfo<>();
+        res.setCode(e.getCode());
+        res.setMessage(e.getMessage());
+        log.error("request method [{}] [{}] business exception: [{}]", servletRequest.getMethod(), servletRequest.getRequestURI(), e.toString());
+        return res;
+    }
+
+    /**
+     * 异常处理
+     */
+    @ExceptionHandler(value = {Exception.class})
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    public ResultInfo<String> exceptionHandler(HttpServletRequest servletRequest, Exception e) {
+        ResultInfo<String> res = new ResultInfo<>();
+        res.setCode(CommonErrorCode.SERVER_ERROR.getCode());
+        res.setMessage(e.getMessage());
+        log.error("request method [{}] [{}] exception: [{}]", servletRequest.getMethod(), servletRequest.getRequestURI(), e.toString());
         return res;
     }
 

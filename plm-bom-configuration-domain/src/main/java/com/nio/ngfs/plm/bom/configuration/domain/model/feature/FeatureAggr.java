@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.feature;
 
+import com.nio.bom.share.constants.CommonConstants;
 import com.nio.bom.share.domain.model.AggrRoot;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
@@ -22,6 +23,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -251,9 +253,9 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
     public void addOption() {
         checkType(FeatureTypeEnum.OPTION);
         checkFeatureAndOptionCode();
+        checkOptionCodeAndFeatureCodeTwoDigits();
         checkRequestor(requestor);
         checkOptionChineseNameUnique();
-        checkOptionCodeAndFeatureCodeTwoDigits();
         // 字段赋值
         setCatalog(parent.getCatalog());
         setVersion(ConfigConstants.VERSION_A);
@@ -268,14 +270,12 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
         checkType(FeatureTypeEnum.OPTION);
         checkRequestor(cmd.getRequestor());
         checkOptionChineseNameUnique();
-        checkOptionCodeAndFeatureCodeTwoDigits();
         //字段赋值
         setDisplayName(cmd.getDisplayName());
         setChineseName(cmd.getChineseName());
         setDescription(cmd.getDescription());
         setRequestor(cmd.getRequestor());
         setUpdateUser(cmd.getUpdateUser());
-
     }
 
     /**
@@ -385,12 +385,12 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
      * Chinese Name在同一feature下是否唯一
      */
     public void checkOptionChineseNameUnique() {
-        //如果没有同父级的子Option，直接返回
-        if (Objects.isNull(parent.getChildrenList())) {
+        // 如果没有同父级的子Option，直接返回
+        if (CollectionUtils.isEmpty(parent.getChildrenList())) {
             return;
         }
-        List<String> chineseNameList = parent.getChildrenList().stream().map(FeatureAggr::getChineseName).toList();
-        if (chineseNameList.contains(chineseName)) {
+        Set<String> chineseNameSet = parent.getChildrenList().stream().map(FeatureAggr::getChineseName).collect(Collectors.toSet());
+        if (chineseNameSet.contains(chineseName)) {
             throw new BusinessException(ConfigErrorCode.FEATURE_OPTION_CHINESE_NAME_REPEAT);
         }
     }
@@ -399,7 +399,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
      * 校验OptionCode前两位与所属Feature是否一致
      */
     public void checkOptionCodeAndFeatureCodeTwoDigits() {
-        if (featureId.getFeatureCode().substring(0, 3).equals(parentFeatureCode.substring(0, 3))) {
+        if (!featureId.getFeatureCode().substring(0, CommonConstants.INT_THREE).equals(parentFeatureCode.substring(0, CommonConstants.INT_THREE))) {
             throw new BusinessException(ConfigErrorCode.FEATURE_OPTION_CODE_DIFF_FROM_FEATURE_CODE);
         }
     }

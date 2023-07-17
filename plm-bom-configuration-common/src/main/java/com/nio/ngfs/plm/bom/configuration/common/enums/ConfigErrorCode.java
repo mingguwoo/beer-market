@@ -24,7 +24,7 @@ public enum ConfigErrorCode implements ErrorCode {
     FEATURE_GROUP_CODE_FORMAT_ERROR(80001, "Group Code Must Only Contains Alphabet Number And Blank!"),
     FEATURE_GROUP_NOT_EXISTS(80002, "Group Not Existed!"),
     FEATURE_TYPE_NOT_MATCH(80003, "Type Not Match!"),
-    FEATURE_STATUS_INVALID(80004, "Feature Status Is Invalid!"),
+    FEATURE_STATUS_INVALID(80004, "Status Is Invalid!"),
     FEATURE_CHANGE_GROUP_STATUS_FEATURE_EXIST_ACTIVE(80005, "The Group Can Not Be Inactive，Because The Following Features Have \"Active\" Status!"),
     FEATURE_FEATURE_CODE_FORMAT_ERROR(80006, "Feature Code Must Only Contains Alphabet And Number!"),
     FEATURE_OPTION_CODE_FORMAT_ERROR(80007, "Option Code Must Only Contains Alphabet And Number!"),
@@ -38,6 +38,7 @@ public enum ConfigErrorCode implements ErrorCode {
     FEATURE_OPTION_CHINESE_NAME_REPEAT(80015, "The Chinese Name Is Already Existed, Please Input A New One!"),
     FEATURE_OPTION_CODE_DIFF_FROM_FEATURE_CODE(80016, "The Top Two of The Option Must Be The Same With Feature!"),
     FEATURE_OPTION_NOT_EXISTS(80017, "Option Not Existed!"),
+    FEATURE_GROUP_ROOT_IS_INTERNAL(80018, "GROUP_ROOT Is Used For Internal!"),
     ;
 
     /**

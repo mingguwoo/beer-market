@@ -288,11 +288,11 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
     }
 
     /**
-     * 校验Group Code，只允许字母、数字和空格
+     * 校验Group Code
      */
     private void checkGroupCode(String groupCode) {
-        if (!RegexUtil.isMatchAlphabetNumberAndBlank(groupCode)) {
-            throw new BusinessException(ConfigErrorCode.FEATURE_GROUP_CODE_FORMAT_ERROR);
+        if (ConfigConstants.GROUP_PARENT_FEATURE_CODE.equals(groupCode)) {
+            throw new BusinessException(ConfigErrorCode.FEATURE_GROUP_ROOT_IS_INTERNAL);
         }
     }
 
@@ -303,6 +303,9 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
         if (!RegexUtil.isMatchAlphabetAndNumber(featureId.getFeatureCode())) {
             throw new BusinessException(isType(FeatureTypeEnum.FEATURE) ?
                     ConfigErrorCode.FEATURE_FEATURE_CODE_FORMAT_ERROR : ConfigErrorCode.FEATURE_OPTION_CODE_FORMAT_ERROR);
+        }
+        if (ConfigConstants.GROUP_PARENT_FEATURE_CODE.equals(featureId.getFeatureCode())) {
+            throw new BusinessException(ConfigErrorCode.FEATURE_GROUP_ROOT_IS_INTERNAL);
         }
     }
 

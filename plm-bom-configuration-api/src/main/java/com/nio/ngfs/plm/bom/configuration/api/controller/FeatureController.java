@@ -43,14 +43,12 @@ public class FeatureController implements PlmFeatureClient {
     }
 
     @Override
-    @NeedAuthorization
     @NotLogResult
     public ResultInfo<EditGroupRespDto> editGroup(@Valid @RequestBody EditGroupCmd cmd) {
         return ResultInfo.success(editGroupCommand.execute(cmd));
     }
 
     @Override
-    @NeedAuthorization
     @NotLogResult
     public ResultInfo<ChangeGroupStatusRespDto> changeGroupStatus(@Valid @RequestBody ChangeGroupStatusCmd cmd) {
         return ResultInfo.success(changeGroupStatusCommand.execute(cmd));
@@ -63,14 +61,12 @@ public class FeatureController implements PlmFeatureClient {
     }
 
     @Override
-    @NeedAuthorization
     @NotLogResult
     public ResultInfo<EditFeatureCmdRespDto> editFeature(@Valid @RequestBody EditFeatureCmd cmd) {
         return ResultInfo.success(editFeatureCommand.execute(cmd));
     }
 
     @Override
-    @NeedAuthorization
     @NotLogResult
     public ResultInfo<ChangeFeatureStatusRespDto> changeFeatureStatus(@Valid @RequestBody ChangeFeatureStatusCmd cmd) {
         return ResultInfo.success(changeFeatureStatusCommand.execute(cmd));

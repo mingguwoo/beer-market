@@ -7,6 +7,8 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsF
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsFeatureChangeLogMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author xiaozhou.tu
  * @date 2023/7/18
@@ -16,6 +18,14 @@ public class BomsFeatureChangeLogDaoImpl extends AbstractDao<BomsFeatureChangeLo
 
     @Override
     protected void fuzzyConditions(WherePageRequest<BomsFeatureChangeLogEntity> bomsFeatureChangeLogEntityWherePageRequest, LambdaQueryWrapper<BomsFeatureChangeLogEntity> queryWrapper) {
+    }
+
+    @Override
+    public List<BomsFeatureChangeLogEntity> queryByFeatureId(Long featureId) {
+        LambdaQueryWrapper<BomsFeatureChangeLogEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(BomsFeatureChangeLogEntity::getFeatureId, featureId);
+        lambdaQueryWrapper.orderByDesc(BomsFeatureChangeLogEntity::getUpdateTime);
+        return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 
 }

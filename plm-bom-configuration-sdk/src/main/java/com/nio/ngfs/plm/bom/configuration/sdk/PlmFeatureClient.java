@@ -109,4 +109,13 @@ public interface PlmFeatureClient {
     @PostMapping("/feature/changeOptionStatus")
     ResultInfo<ChangeOptionStatusRespDto> changeOptionStatus(ChangeOptionStatusCmd cmd);
 
+    /**
+     * 查询Logs记录
+     *
+     * @param qry 查询
+     * @return 响应
+     */
+    @PostMapping("/feature/getChangeLogList")
+    ResultInfo<List<GetChangeLogListDto>> getChangeLogList(GetChangeLogListQry qry);
+
 }

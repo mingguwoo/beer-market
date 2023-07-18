@@ -4,6 +4,7 @@ import com.nio.bom.share.annotation.NeedAuthorization;
 import com.nio.bom.share.annotation.NotLogResult;
 import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.application.command.feature.*;
+import com.nio.ngfs.plm.bom.configuration.application.query.feature.GetChangeLogListQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.feature.ListFeatureLibraryQuery;
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmFeatureClient;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.*;
@@ -35,6 +36,7 @@ public class FeatureController implements PlmFeatureClient {
     private final AddOptionCommand addOptionCommand;
     private final EditOptionCommand editOptionCommand;
     private final ChangeOptionStatusCommand changeOptionStatusCommand;
+    private final GetChangeLogListQuery getChangeLogListQuery;
 
     @Override
     @NotLogResult
@@ -98,6 +100,12 @@ public class FeatureController implements PlmFeatureClient {
     @NotLogResult
     public ResultInfo<ChangeOptionStatusRespDto> changeOptionStatus(@Valid @RequestBody ChangeOptionStatusCmd cmd) {
         return ResultInfo.success(changeOptionStatusCommand.execute(cmd));
+    }
+
+    @Override
+    @NotLogResult
+    public ResultInfo<List<GetChangeLogListDto>> getChangeLogList(@Valid @RequestBody GetChangeLogListQry qry) {
+        return ResultInfo.success(getChangeLogListQuery.execute(qry));
     }
 
 }

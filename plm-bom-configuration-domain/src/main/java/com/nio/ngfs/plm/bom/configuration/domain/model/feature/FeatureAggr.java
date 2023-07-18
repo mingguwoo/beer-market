@@ -375,6 +375,13 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
     }
 
     /**
+     * 状态是否Inactive
+     */
+    public boolean isInactive() {
+        return !isActive();
+    }
+
+    /**
      * 是否指定类型
      */
     public boolean isType(FeatureTypeEnum typeEnum) {

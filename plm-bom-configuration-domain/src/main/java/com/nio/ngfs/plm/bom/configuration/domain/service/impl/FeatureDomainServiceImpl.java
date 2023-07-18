@@ -7,7 +7,6 @@ import com.nio.ngfs.plm.bom.configuration.domain.event.EventPublisher;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureId;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.domainobject.FeatureChangeLogDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
@@ -70,9 +69,11 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
         }
         // Group的状态状态由Inactive变为Active
         List<String> featureCodeList = LambdaUtil.map(featureAggr.getChildrenList(), i -> i.getFeatureId().getFeatureCode());
+        // 查询Group下面所有的Option列表
         List<FeatureAggr> optionList = featureRepository.queryByParentFeatureCodeListAndType(featureCodeList, FeatureTypeEnum.OPTION.getType());
-        List<Long> idList = LambdaUtil.map(optionList, FeatureAggr::getId);
-        idList.addAll(LambdaUtil.map(featureAggr.getChildrenList(), FeatureAggr::getId));
+        // 筛选Group下状态为Inactive的Feature和Option
+        List<Long> idList = LambdaUtil.map(optionList, FeatureAggr::isInactive, FeatureAggr::getId);
+        idList.addAll(LambdaUtil.map(featureAggr.getChildrenList(), FeatureAggr::isInactive, FeatureAggr::getId));
         idList.add(featureAggr.getId());
         // 批量更新Group/Feature/Option的状态为Active
         featureRepository.batchUpdateStatus(idList, FeatureStatusEnum.ACTIVE.getStatus(), updateUser);
@@ -121,11 +122,6 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
             throw new BusinessException(ConfigErrorCode.FEATURE_GROUP_IS_NOT_ACTIVE);
         }
         featureAggr.setParentFeatureCode(newGroupCode);
-    }
-
-    @Override
-    public void saveFeatureChangeLog(List<FeatureChangeLogDo> featureChangeLogDoList) {
-        // todo
     }
 
 }

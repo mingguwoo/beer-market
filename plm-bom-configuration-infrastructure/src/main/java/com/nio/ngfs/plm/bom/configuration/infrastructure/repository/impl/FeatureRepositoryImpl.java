@@ -4,8 +4,11 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureId;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.common.FeatureAggrThreadLocal;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.domainobject.FeatureChangeLogDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.FeatureChangeLogConverter;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.FeatureConverter;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsFeatureChangeLogDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsFeatureLibraryDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.common.DaoSupport;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +29,9 @@ import java.util.stream.Collectors;
 public class FeatureRepositoryImpl implements FeatureRepository {
 
     private final BomsFeatureLibraryDao bomsFeatureLibraryDao;
+    private final BomsFeatureChangeLogDao bomsFeatureChangeLogDao;
     private final FeatureConverter featureConverter;
+    private final FeatureChangeLogConverter featureChangeLogConverter;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -107,6 +112,14 @@ public class FeatureRepositoryImpl implements FeatureRepository {
     @Override
     public List<FeatureAggr> queryByDisplayNameCatalogAndType(String displayName, String catalog, String type) {
         return featureConverter.convertEntityListToDoList(bomsFeatureLibraryDao.queryByDisplayNameCatalogAndType(displayName, catalog, type));
+    }
+
+    @Override
+    public void batchSaveFeatureChangeLog(List<FeatureChangeLogDo> featureChangeLogDoList) {
+        if (CollectionUtils.isEmpty(featureChangeLogDoList)) {
+            return;
+        }
+        bomsFeatureChangeLogDao.saveBatch(featureChangeLogConverter.convertDoListToEntityList(featureChangeLogDoList));
     }
 
 }

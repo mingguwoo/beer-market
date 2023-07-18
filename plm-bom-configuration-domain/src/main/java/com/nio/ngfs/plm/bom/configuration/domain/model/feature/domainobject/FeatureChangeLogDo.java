@@ -25,6 +25,8 @@ public class FeatureChangeLogDo extends AbstractDo implements Entity<Long> {
 
     private String newValue;
 
+    private String type;
+
     @Override
     public Long getUniqId() {
         return id;

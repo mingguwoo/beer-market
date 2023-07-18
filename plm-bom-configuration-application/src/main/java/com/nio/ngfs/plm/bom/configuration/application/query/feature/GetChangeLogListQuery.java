@@ -2,7 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.application.query.feature;
 
 import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.application.query.Query;
-import com.nio.ngfs.plm.bom.configuration.application.query.assemble.FeatureChangeLogAssembler;
+import com.nio.ngfs.plm.bom.configuration.application.query.feature.assemble.FeatureChangeLogAssembler;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsFeatureChangeLogDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureChangeLogEntity;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.GetChangeLogListQry;

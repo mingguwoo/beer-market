@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.application.query.assemble;
+package com.nio.ngfs.plm.bom.configuration.application.query.feature.assemble;
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.FeatureLibraryDto;

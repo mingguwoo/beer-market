@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.application.query.assemble;
+package com.nio.ngfs.plm.bom.configuration.application.query.feature.assemble;
 
 import com.nio.bom.share.utils.DateUtils;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureChangeLogEntity;

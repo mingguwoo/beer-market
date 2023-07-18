@@ -20,7 +20,7 @@ public class OxoAddCmd extends OxoBaseCmd {
     @Getter
     @Setter
     @ToString
-    static class OxoFeatureOption {
+    public static class OxoFeatureOption {
 
          private String featureCode;
 

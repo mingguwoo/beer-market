@@ -41,7 +41,6 @@ public class OxoController {
      * @param cmd
      * @return
      */
-    @NeedAuthorization
     @NotLogResult
     @PostMapping("/queryVersion")
     public ResultInfo<List<String>> queryVersion(@Valid @RequestBody OxoBaseCmd cmd) {
@@ -76,7 +75,7 @@ public class OxoController {
      */
     @PostMapping("/add")
     public ResultInfo add(@Valid @RequestBody OxoAddCmd cmd) {
-        oxoAddCommand.add(cmd);
+        oxoAddCommand.execute(cmd);
         return ResultInfo.success(true);
     }
 
@@ -85,7 +84,7 @@ public class OxoController {
      * @return
      */
     @PostMapping("/queryFeatureList")
-    public ResultInfo<List<OxoAddCmd>> queryFeatureList() {
+    public ResultInfo<List<OxoAddCmd>> queryFeatureList(@Valid @RequestBody OxoBaseCmd cmd) {
         return ResultInfo.success(oxoDomainService.queryFeatureList());
     }
 

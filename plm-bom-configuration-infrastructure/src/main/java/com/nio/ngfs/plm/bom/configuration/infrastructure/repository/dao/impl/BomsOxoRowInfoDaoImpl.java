@@ -8,6 +8,8 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsO
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 @Repository
 @Slf4j
@@ -18,6 +20,12 @@ public class BomsOxoRowInfoDaoImpl  extends AbstractDao<BomsOxoRowInfoMapper,
 
     @Override
     protected void fuzzyConditions(WherePageRequest<BomsOxoRowInfoEntity> bomsOxoRowInfoEntityWherePageRequest, LambdaQueryWrapper<BomsOxoRowInfoEntity> queryWrapper) {
+
+    }
+
+    @Override
+    public void insertOxoRows(List<BomsOxoRowInfoEntity> bomsOxoRowInfoEntitys) {
+        getBaseMapper().insertOxoRows(bomsOxoRowInfoEntitys);
 
     }
 }

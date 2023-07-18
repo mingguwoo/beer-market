@@ -1,6 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.application.command.feature;
 
 import com.nio.bom.share.exception.BusinessException;
+import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockCommand;
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
@@ -66,6 +67,8 @@ public class EditGroupCommand extends AbstractLockCommand<EditGroupCmd, EditGrou
         groupCodeChangeEvent.setGroupId(featureAggr.getId());
         groupCodeChangeEvent.setOldGroupCode(oldGroupCode);
         groupCodeChangeEvent.setNewGroupCode(featureAggr.getFeatureId().getFeatureCode());
+        groupCodeChangeEvent.setFeatureCodeList(LambdaUtil.map(featureAggr.getChildrenList(), i -> i.getFeatureId().getFeatureCode()));
+        groupCodeChangeEvent.setUpdateUser(featureAggr.getUpdateUser());
         eventPublisher.publish(groupCodeChangeEvent);
     }
 

@@ -16,6 +16,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
+ * Feature状态变更事件处理
+ *
  * @author xiaozhou.tu
  * @date 2023/7/13
  */

@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * GroupCode变更事件
  *
@@ -21,5 +23,9 @@ public class GroupCodeChangeEvent extends DomainEvent {
     private String oldGroupCode;
 
     private String newGroupCode;
+
+    private List<String> featureCodeList;
+
+    private String updateUser;
 
 }

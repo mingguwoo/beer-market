@@ -2,7 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.application.query.feature;
 
 import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.application.query.Query;
-import com.nio.ngfs.plm.bom.configuration.application.query.assemble.FeatureDtoAssembler;
+import com.nio.ngfs.plm.bom.configuration.application.query.feature.assemble.FeatureDtoAssembler;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.ListFeatureLibraryQry;

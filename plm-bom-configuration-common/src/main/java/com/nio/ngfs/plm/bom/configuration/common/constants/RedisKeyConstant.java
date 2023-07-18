@@ -20,4 +20,7 @@ public interface RedisKeyConstant {
 
     String FEATURE_OPTION_LOCK_KEY_PREFIX = CONFIGURATION_PREFIX + "feature:option:lock";
 
+
+    String MODEL_FEATURE_LOCK_KEY_PREFIX = CONFIGURATION_PREFIX + "modelCode:feature:lock:";
+
 }

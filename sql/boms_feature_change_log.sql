@@ -12,7 +12,7 @@ CREATE TABLE `boms_feature_change_log`
     `update_time`      timestamp       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     `del_flag`         tinyint(4)      NOT NULL DEFAULT 0 COMMENT '是否逻辑删除，0：否，1：是',
     PRIMARY KEY (`id`) USING BTREE,
-    INDEX `idx_feature_id` (`feature_id`) USING BTREE
+    INDEX `idx_feature_id_update_time` (`feature_id`, `update_time`) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   ROW_FORMAT = DYNAMIC COMMENT ='BOM中台Feature属性变更记录表';

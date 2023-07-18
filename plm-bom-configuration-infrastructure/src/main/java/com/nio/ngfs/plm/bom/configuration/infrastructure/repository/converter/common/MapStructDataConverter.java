@@ -1,6 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.common;
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.mapping.MapstructMapper;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BaseEntity;
 
 /**
@@ -10,12 +11,21 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BaseE
 public interface MapStructDataConverter<DO extends AbstractDo, Entity extends BaseEntity> extends DataConverter<DO, Entity> {
 
     /**
+     * 获取Mapper
+     *
+     * @return mapper
+     */
+    MapstructMapper<DO, Entity> getMapper();
+
+    /**
      * DomainObject转换为Entity
      *
      * @param domainObject domainObject
      * @return Entity
      */
-    Entity doToEntity(DO domainObject);
+    default Entity doToEntity(DO domainObject) {
+        return getMapper().convertDoToEntity(domainObject);
+    }
 
     /**
      * Entity转换为DomainObject
@@ -23,8 +33,9 @@ public interface MapStructDataConverter<DO extends AbstractDo, Entity extends Ba
      * @param entity entity
      * @return domainObject
      */
-    DO entityToDo(Entity entity);
-
+    default DO entityToDo(Entity entity) {
+        return getMapper().convertEntityToDo(entity);
+    }
 
     /**
      * DomainObject转换为Entity
@@ -37,10 +48,10 @@ public interface MapStructDataConverter<DO extends AbstractDo, Entity extends Ba
             return null;
         }
         Entity entity = doToEntity(domainObject);
-        convertDoToEntityCallback(domainObject, entity);
         // createTime和updateTime设为null
         entity.setCreateTime(null);
         entity.setUpdateTime(null);
+        convertDoToEntityCallback(domainObject, entity);
         return entity;
     }
 

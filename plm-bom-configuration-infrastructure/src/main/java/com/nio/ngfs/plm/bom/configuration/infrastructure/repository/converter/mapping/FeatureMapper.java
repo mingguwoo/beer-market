@@ -10,24 +10,8 @@ import org.mapstruct.factory.Mappers;
  * @date 2023/7/5
  */
 @Mapper
-public interface FeatureMapper {
+public interface FeatureMapper extends MapstructMapper<FeatureAggr, BomsFeatureLibraryEntity> {
 
     FeatureMapper INSTANCE = Mappers.getMapper(FeatureMapper.class);
-
-    /**
-     * convertDoToEntity
-     *
-     * @param domainObject domainObject
-     * @return BomsFeatureLibraryEntity
-     */
-    BomsFeatureLibraryEntity convertDoToEntity(FeatureAggr domainObject);
-
-    /**
-     * convertEntityToDo
-     *
-     * @param entity entity
-     * @return FeatureAggr
-     */
-    FeatureAggr convertEntityToDo(BomsFeatureLibraryEntity entity);
 
 }

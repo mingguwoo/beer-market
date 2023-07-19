@@ -3,14 +3,8 @@ package com.nio.ngfs.plm.bom.configuration.application.command.oxo;
 
 import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockCommand;
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.OxoRepository;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.oxo.OxoRowInfoAggr;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.Dto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.EditGroupCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.EditGroupRespDto;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.OxoRowInfoAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.repository.OxoRepository;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoAddCmd;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

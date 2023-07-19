@@ -1,10 +1,15 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service.oxo.impl;
 
 import com.nio.ngfs.plm.bom.configuration.common.constants.BaseConstants;
+import com.nio.ngfs.plm.bom.configuration.common.enums.BrandEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.AdministratorDetailFacade;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.OxoRepository;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.OxoSnapshotEnum;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.oxo.OxoVersionSnapshotAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.common.CommonRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.common.MatrixRuleQueryDo;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.OxoVersionSnapshotAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.enums.OxoSnapshotEnum;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.repository.OxoRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.PageData;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.*;
@@ -17,8 +22,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author wangchao.wang
@@ -34,8 +39,15 @@ public class OxoDomainServiceImpl implements OxoDomainService {
     private final OxoRepository oxoRepository;
 
 
+    private final FeatureRepository featureRepository;
+
+
+    private final CommonRepository commonRepository;
+
+
     /**
      * 查询车型下版本
+     *
      * @param cmd
      * @return
      */
@@ -111,14 +123,66 @@ public class OxoDomainServiceImpl implements OxoDomainService {
         return null;
     }
 
+
+    /**
+     * @return
+     */
     @Override
-    public List<OxoAddCmd> queryFeatureList() {
-        return null;
+    public OxoAddCmd queryFeatureList(OxoBaseCmd cmd) {
+
+
+        List<FeatureAggr> featureAggrs = featureRepository.queryFeatureOptionLists(cmd.getModelCode());
+
+        if (CollectionUtils.isEmpty(featureAggrs)) {
+            return null;
+        }
+
+        Map<String, List<FeatureAggr>> stringListMap =
+                featureAggrs.stream().collect(Collectors.groupingBy(FeatureAggr::getParentFeatureCode));
+
+        List<OxoAddCmd.OxoFeatureOption> optionList = new LinkedList<>();
+
+        stringListMap.forEach((k, v) -> {
+            OxoAddCmd.OxoFeatureOption featureOption = new OxoAddCmd.OxoFeatureOption();
+            featureOption.setFeatureCode(k);
+
+            List<String> optionCodes = Lists.newArrayList();
+            v.stream().forEach(option -> {
+                optionCodes.add(option.getFeatureId().getFeatureCode());
+            });
+            featureOption.setOptionCodes(optionCodes);
+            optionList.add(featureOption);
+        });
+        OxoAddCmd addCmd = new OxoAddCmd();
+        addCmd.setOxoAdds(optionList);
+        addCmd.setModelCode(cmd.getModelCode());
+        addCmd.setUserName(cmd.getUserName());
+        return addCmd;
     }
 
+
+    /**
+     * 获取email 收件人
+     * @return
+     */
     @Override
     public List<String> queryEmailGroup() {
-        return null;
+
+        String brandName = BaseConstants.brandName.get();
+
+        String name = BaseConstants.OXO_EMAIL_GROUP;
+        if (StringUtils.equals(brandName, BrandEnum.ALPS.name())) {
+            name = BaseConstants.OXO_EMAIL_GROUP_ALPS;
+        }
+
+        Map<String, String> map = commonRepository.queryMatrixRuleValuesByAbscissaOrOrdinate(new MatrixRuleQueryDo
+                (name, "matrix", null, "oxo.email", "PLM.EBOM.PartNumRequest"));
+
+        List<String> list = new LinkedList<>();
+        map.forEach((x, y) -> {
+            list.add(x);
+        });
+        return list.stream().distinct().toList();
     }
 
     @Override

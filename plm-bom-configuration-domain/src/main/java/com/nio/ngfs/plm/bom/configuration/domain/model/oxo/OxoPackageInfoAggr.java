@@ -1,4 +1,5 @@
-package com.nio.ngfs.plm.bom.configuration.domain.model.feature.oxo;
+package com.nio.ngfs.plm.bom.configuration.domain.model.oxo;
+
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
 import lombok.AllArgsConstructor;
@@ -15,24 +16,27 @@ import lombok.extern.slf4j.Slf4j;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OxoVersionSnapshotAggr extends AbstractDo {
+public class OxoPackageInfoAggr extends AbstractDo {
 
 
-    private String modelCode;
 
-    private String version;
+    private Long rowId;
 
-    private String oxoSnapshot;
+    private Long baseVehicleId;
 
-    private String type;
+    private String packageCode;
+
+    private String description;
 
     private String brand;
 
-    private String title;
 
-    private String changeContent;
 
-    private String emailGroup;
+
+
+
+
+
 
 
 }

@@ -79,4 +79,13 @@ public interface BomsFeatureLibraryDao extends IService<BomsFeatureLibraryEntity
      */
     List<BomsFeatureLibraryEntity> getGroupList();
 
+
+    /**
+     * 查询 没有选中oxo行的 feature_library
+     * @param modelCode
+     * @return
+     */
+    List<BomsFeatureLibraryEntity> queryFeatureOptionLists(String modelCode);
+
+
 }

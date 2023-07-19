@@ -117,4 +117,9 @@ public class FeatureRepositoryImpl implements FeatureRepository {
         bomsFeatureChangeLogDao.saveBatch(featureChangeLogConverter.convertDoListToEntityList(featureChangeLogDoList));
     }
 
+    @Override
+    public List<FeatureAggr> queryFeatureOptionLists(String modelCode) {
+        return featureConverter.convertEntityListToDoList(bomsFeatureLibraryDao.queryFeatureOptionLists(modelCode));
+    }
+
 }

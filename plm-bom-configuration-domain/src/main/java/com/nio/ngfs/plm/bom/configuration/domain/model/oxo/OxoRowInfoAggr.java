@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.domain.model.feature.oxo;
+package com.nio.ngfs.plm.bom.configuration.domain.model.oxo;
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoAddCmd;

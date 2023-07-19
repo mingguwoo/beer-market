@@ -61,7 +61,7 @@ public interface OxoDomainService {
      * 添加oxo 下拉code列表
      * @return
      */
-    List<OxoAddCmd> queryFeatureList();
+    OxoAddCmd queryFeatureList(OxoBaseCmd cmd);
 
 
     /**

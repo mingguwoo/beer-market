@@ -1,8 +1,9 @@
-package com.nio.ngfs.plm.bom.configuration.domain.model.feature;
+package com.nio.ngfs.plm.bom.configuration.domain.model.oxo.repository;
 
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.oxo.OxoPackageInfoAggr;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.oxo.OxoRowInfoAggr;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.oxo.OxoVersionSnapshotAggr;
+
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.OxoPackageInfoAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.OxoRowInfoAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.OxoVersionSnapshotAggr;
 
 import java.util.List;
 

@@ -28,7 +28,7 @@ public class GroupCodeChangeEventHandler implements EventHandler<GroupCodeChange
     private final FeatureRepository featureRepository;
 
     @Override
-    @Async("asyncEventExecutor")
+    @Async("commonThreadPool")
     public void onApplicationEvent(@NotNull GroupCodeChangeEvent event) {
         // 查询Feature下面的Option列表
         List<FeatureAggr> optionList = featureRepository.queryByParentFeatureCodeListAndType(event.getFeatureCodeList(), FeatureTypeEnum.OPTION.getType());

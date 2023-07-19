@@ -26,7 +26,7 @@ public class FeatureStatusChangeEventHandler implements EventHandler<FeatureStat
     private final FeatureRepository featureRepository;
 
     @Override
-    @Async("asyncEventExecutor")
+    @Async("commonThreadPool")
     public void onApplicationEvent(@NotNull FeatureStatusChangeEvent event) {
         List<FeatureChangeLogDo> featureChangeLogDoList = featureDomainService.buildStatusChangeLogByGroupFeatureAndOption(event);
         featureRepository.batchSaveFeatureChangeLog(featureChangeLogDoList);

@@ -3,6 +3,7 @@ package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.google.common.collect.Lists;
 import com.nio.ngfs.common.model.page.WherePageRequest;
+import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsFeatureLibraryDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureLibraryEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsFeatureLibraryMapper;
@@ -89,6 +90,13 @@ public class BomsFeatureLibraryDaoImpl extends AbstractDao<BomsFeatureLibraryMap
         lambdaQueryWrapper.eq(BomsFeatureLibraryEntity::getDisplayName, displayName);
         lambdaQueryWrapper.eq(BomsFeatureLibraryEntity::getCatalog, catalog);
         lambdaQueryWrapper.eq(BomsFeatureLibraryEntity::getType, type);
+        return getBaseMapper().selectList(lambdaQueryWrapper);
+    }
+
+    @Override
+    public List<BomsFeatureLibraryEntity> getGroupList() {
+        LambdaQueryWrapper<BomsFeatureLibraryEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(BomsFeatureLibraryEntity::getParentFeatureCode, ConfigConstants.GROUP_PARENT_FEATURE_CODE);
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 

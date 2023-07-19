@@ -72,4 +72,11 @@ public interface BomsFeatureLibraryDao extends IService<BomsFeatureLibraryEntity
      */
     List<BomsFeatureLibraryEntity> queryByDisplayNameCatalogAndType(String displayName, String catalog, String type);
 
+    /**
+     * 获取Group列表
+     *
+     * @return BomsFeatureLibraryEntity列表
+     */
+    List<BomsFeatureLibraryEntity> getGroupList();
+
 }

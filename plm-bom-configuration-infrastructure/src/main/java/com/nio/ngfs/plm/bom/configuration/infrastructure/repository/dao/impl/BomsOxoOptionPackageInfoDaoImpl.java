@@ -4,9 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.nio.ngfs.common.model.page.WherePageRequest;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoOptionPackageInfoDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsOxoOptionPackageInfoEntity;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsOxoRowInfoEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsOxoOptionPackageInfoMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @author wangchao.wang
@@ -20,5 +23,10 @@ public class BomsOxoOptionPackageInfoDaoImpl extends AbstractDao<BomsOxoOptionPa
     @Override
     protected void fuzzyConditions(WherePageRequest<BomsOxoOptionPackageInfoEntity> bomsOxoOptionPackageInfoEntityWherePageRequest, LambdaQueryWrapper<BomsOxoOptionPackageInfoEntity> queryWrapper) {
 
+    }
+
+    @Override
+    public void insertOxoOptionPackageInfos(List<BomsOxoOptionPackageInfoEntity> oxoOptionPackageInfos) {
+        getBaseMapper().insertOxoOptionPackageInfos(oxoOptionPackageInfos);
     }
 }

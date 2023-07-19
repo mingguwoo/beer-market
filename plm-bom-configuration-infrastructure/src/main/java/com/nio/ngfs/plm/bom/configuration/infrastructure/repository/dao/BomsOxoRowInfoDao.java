@@ -12,4 +12,6 @@ public interface BomsOxoRowInfoDao extends IService<BomsOxoRowInfoEntity> {
 
 
     void insertOxoRows(List<BomsOxoRowInfoEntity> bomsOxoRowInfoEntityList);
+
+
 }

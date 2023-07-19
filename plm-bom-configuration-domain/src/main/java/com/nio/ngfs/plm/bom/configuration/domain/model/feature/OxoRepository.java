@@ -1,6 +1,8 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.feature;
 
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.oxo.OxoPackageInfoAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.oxo.OxoRowInfoAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.oxo.OxoVersionSnapshotAggr;
 
 import java.util.List;
 
@@ -18,7 +20,17 @@ public interface OxoRepository {
 
 
 
-    void insertOxoOptionPackageInfo(List<OxoRowInfoAggr> rowInfoAggrs);
+
+    void insertOxoOptionPackageInfo(List<OxoPackageInfoAggr> oxoPackageInfoAggrs);
+
+
+
+
+    List<OxoVersionSnapshotAggr>  queryOxoVersionSnapshotLists(String modelCode);
+
+
+
+
 
 
 

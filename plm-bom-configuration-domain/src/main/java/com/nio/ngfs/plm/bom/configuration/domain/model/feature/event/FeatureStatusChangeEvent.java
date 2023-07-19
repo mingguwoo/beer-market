@@ -1,7 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.feature.event;
 
 import com.nio.ngfs.plm.bom.configuration.domain.event.DomainEvent;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusEnum;
+import com.nio.ngfs.plm.bom.configuration.common.enums.StatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,9 +19,9 @@ public class FeatureStatusChangeEvent extends DomainEvent {
 
     private List<Long> featureIdList;
 
-    private FeatureStatusEnum oldStatus;
+    private StatusEnum oldStatus;
 
-    private FeatureStatusEnum newStatus;
+    private StatusEnum newStatus;
 
     private String updateUser;
 

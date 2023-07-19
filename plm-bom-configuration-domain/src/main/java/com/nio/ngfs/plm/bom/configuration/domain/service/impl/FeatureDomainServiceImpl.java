@@ -13,8 +13,8 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureId;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.domainobject.FeatureChangeLogDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureChangeLogTypeEnum;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusChangeTypeEnum;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusEnum;
+import com.nio.ngfs.plm.bom.configuration.common.enums.StatusChangeTypeEnum;
+import com.nio.ngfs.plm.bom.configuration.common.enums.StatusEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureAttributeChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureStatusChangeEvent;
@@ -80,15 +80,15 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
     }
 
     @Override
-    public void changeGroupFeatureOptionStatusByGroup(FeatureAggr featureAggr, FeatureStatusChangeTypeEnum changeTypeEnum, String updateUser) {
-        if (changeTypeEnum == FeatureStatusChangeTypeEnum.NO_CHANGE) {
+    public void changeGroupFeatureOptionStatusByGroup(FeatureAggr featureAggr, StatusChangeTypeEnum changeTypeEnum, String updateUser) {
+        if (changeTypeEnum == StatusChangeTypeEnum.NO_CHANGE) {
             return;
         }
         if (!featureAggr.isType(FeatureTypeEnum.GROUP)) {
             return;
         }
         // Group的状态由Active变为Inactive
-        if (changeTypeEnum == FeatureStatusChangeTypeEnum.ACTIVE_TO_INACTIVE) {
+        if (changeTypeEnum == StatusChangeTypeEnum.ACTIVE_TO_INACTIVE) {
             featureRepository.save(featureAggr);
             return;
         }
@@ -101,8 +101,8 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
         idList.addAll(LambdaUtil.map(featureAggr.getChildrenList(), FeatureAggr::isInactive, FeatureAggr::getId));
         idList.add(featureAggr.getId());
         // 批量更新Group/Feature/Option的状态为Active
-        featureRepository.batchUpdateStatus(idList, FeatureStatusEnum.ACTIVE.getStatus(), updateUser);
-        eventPublisher.publish(new FeatureStatusChangeEvent(idList, FeatureStatusEnum.INACTIVE, FeatureStatusEnum.ACTIVE, updateUser));
+        featureRepository.batchUpdateStatus(idList, StatusEnum.ACTIVE.getStatus(), updateUser);
+        eventPublisher.publish(new FeatureStatusChangeEvent(idList, StatusEnum.INACTIVE, StatusEnum.ACTIVE, updateUser));
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.nio.bom.share.annotation.NotLogResult;
 import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.application.command.feature.*;
 import com.nio.ngfs.plm.bom.configuration.application.query.feature.GetChangeLogListQuery;
+import com.nio.ngfs.plm.bom.configuration.application.query.feature.GetGroupCodeListQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.feature.ListFeatureLibraryQuery;
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmFeatureClient;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.*;
@@ -37,6 +38,7 @@ public class FeatureController implements PlmFeatureClient {
     private final EditOptionCommand editOptionCommand;
     private final ChangeOptionStatusCommand changeOptionStatusCommand;
     private final GetChangeLogListQuery getChangeLogListQuery;
+    private final GetGroupCodeListQuery getGroupCodeListQuery;
 
     @Override
     @NotLogResult
@@ -106,6 +108,12 @@ public class FeatureController implements PlmFeatureClient {
     @NotLogResult
     public ResultInfo<List<GetChangeLogListDto>> getChangeLogList(@Valid @RequestBody GetChangeLogListQry qry) {
         return ResultInfo.success(getChangeLogListQuery.execute(qry));
+    }
+
+    @Override
+    @NotLogResult
+    public ResultInfo<List<String>> getGroupCodeList(@Valid @RequestBody GetGroupCodeListQry qry) {
+        return ResultInfo.success(getGroupCodeListQuery.execute(qry));
     }
 
 }

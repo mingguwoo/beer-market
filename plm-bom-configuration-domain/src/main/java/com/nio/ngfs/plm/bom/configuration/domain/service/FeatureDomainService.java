@@ -2,7 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.domain.service;
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.domainobject.FeatureChangeLogDo;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusChangeTypeEnum;
+import com.nio.ngfs.plm.bom.configuration.common.enums.StatusChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureAttributeChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureStatusChangeEvent;
@@ -41,7 +41,7 @@ public interface FeatureDomainService {
      * @param changeTypeEnum Feature状态变更类型
      * @param updateUser     更新人
      */
-    void changeGroupFeatureOptionStatusByGroup(FeatureAggr featureAggr, FeatureStatusChangeTypeEnum changeTypeEnum, String updateUser);
+    void changeGroupFeatureOptionStatusByGroup(FeatureAggr featureAggr, StatusChangeTypeEnum changeTypeEnum, String updateUser);
 
     /**
      * 校验Feature/Option Code是否唯一

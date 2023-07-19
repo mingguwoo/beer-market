@@ -118,4 +118,13 @@ public interface PlmFeatureClient {
     @PostMapping("/feature/getChangeLogList")
     ResultInfo<List<GetChangeLogListDto>> getChangeLogList(GetChangeLogListQry qry);
 
+    /**
+     * 查询Group Code列表
+     *
+     * @param qry 查询
+     * @return 响应
+     */
+    @PostMapping("/feature/getGroupCodeList")
+    ResultInfo<List<String>> getGroupCodeList(GetGroupCodeListQry qry);
+
 }

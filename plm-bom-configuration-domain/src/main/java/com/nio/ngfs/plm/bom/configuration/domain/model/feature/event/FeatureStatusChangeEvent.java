@@ -1,7 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.feature.event;
 
+import com.nio.bom.share.enums.StatusEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.event.DomainEvent;
-import com.nio.ngfs.plm.bom.configuration.common.enums.StatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

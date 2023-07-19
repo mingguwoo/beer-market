@@ -1,7 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.nio.ngfs.plm.bom.configuration.common.outresult.Result;
+import com.nio.bom.share.result.Result;
 import com.nio.ngfs.plm.bom.configuration.domain.model.common.CommonRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.common.MatrixRuleQueryDo;
 import com.nio.ngfs.plm.bom.configuration.remote.CommonClientFeign;

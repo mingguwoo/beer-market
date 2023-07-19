@@ -1,8 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.remote;
 
 
-import com.nio.bom.share.result.ResultInfo;
-import com.nio.ngfs.plm.bom.configuration.common.outresult.Result;
+import com.nio.bom.share.result.Result;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;

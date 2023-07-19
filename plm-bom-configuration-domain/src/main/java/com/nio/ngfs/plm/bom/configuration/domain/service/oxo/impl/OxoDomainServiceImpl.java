@@ -1,6 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service.oxo.impl;
 
-import com.nio.ngfs.plm.bom.configuration.common.constants.BaseConstants;
+import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.common.enums.BrandEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.AdministratorDetailFacade;
 import com.nio.ngfs.plm.bom.configuration.domain.model.common.CommonRepository;
@@ -22,7 +22,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -31,17 +34,10 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class OxoDomainServiceImpl implements OxoDomainService {
-
-
+    
     private final AdministratorDetailFacade administratorDetailFacade;
-
-
     private final OxoRepository oxoRepository;
-
-
     private final FeatureRepository featureRepository;
-
-
     private final CommonRepository commonRepository;
 
 
@@ -75,9 +71,9 @@ public class OxoDomainServiceImpl implements OxoDomainService {
                 .sorted(Comparator.reverseOrder()).toList();
 
         /**下拉框展示的值默认为Working（即展示OXO Working版本数据），下拉框可选值：Working版本、Formal版本、最新Informal版本*/
-        if (roleNames.contains(BaseConstants.CONFIG_ADMIN)) {
+        if (roleNames.contains(ConfigConstants.CONFIG_ADMIN)) {
 
-            revisions.add(BaseConstants.WORKING);
+            revisions.add(ConfigConstants.WORKING);
 
             // Formal版本
             revisions.addAll(roleRevisions);
@@ -90,8 +86,8 @@ public class OxoDomainServiceImpl implements OxoDomainService {
 
         /**下拉框展示的值默认为最新Formal发布版本（即展示OXO最新正式发布版本数据），
          * 下拉框可选值为所有Formal Version(不包含Working版本和Informal版本)*/
-        else if (roleNames.contains(BaseConstants.CONFIG_USER) ||
-                roleNames.contains(BaseConstants.FEATURE_LIBRARY)) {
+        else if (roleNames.contains(ConfigConstants.CONFIG_USER) ||
+                roleNames.contains(ConfigConstants.FEATURE_LIBRARY)) {
             revisions.addAll(roleRevisions);
         }
 
@@ -168,11 +164,11 @@ public class OxoDomainServiceImpl implements OxoDomainService {
     @Override
     public List<String> queryEmailGroup() {
 
-        String brandName = BaseConstants.brandName.get();
+        String brandName = ConfigConstants.brandName.get();
 
-        String name = BaseConstants.OXO_EMAIL_GROUP;
+        String name = ConfigConstants.OXO_EMAIL_GROUP;
         if (StringUtils.equals(brandName, BrandEnum.ALPS.name())) {
-            name = BaseConstants.OXO_EMAIL_GROUP_ALPS;
+            name = ConfigConstants.OXO_EMAIL_GROUP_ALPS;
         }
 
         Map<String, String> map = commonRepository.queryMatrixRuleValuesByAbscissaOrOrdinate(new MatrixRuleQueryDo

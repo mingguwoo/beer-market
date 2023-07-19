@@ -2,15 +2,15 @@ package com.nio.ngfs.plm.bom.configuration.domain.model.feature;
 
 import com.nio.bom.share.constants.CommonConstants;
 import com.nio.bom.share.domain.model.AggrRoot;
+import com.nio.bom.share.enums.StatusEnum;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.common.enums.BrandEnum;
 import com.nio.ngfs.plm.bom.configuration.common.enums.CatalogEnum;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
+import com.nio.ngfs.plm.bom.configuration.common.enums.StatusChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.common.util.RegexUtil;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
-import com.nio.ngfs.plm.bom.configuration.common.enums.StatusChangeTypeEnum;
-import com.nio.ngfs.plm.bom.configuration.common.enums.StatusEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.*;
 import lombok.AllArgsConstructor;

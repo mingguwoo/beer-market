@@ -23,4 +23,9 @@ public interface RedisKeyConstant {
 
     String MODEL_FEATURE_LOCK_KEY_PREFIX = CONFIGURATION_PREFIX + "modelCode:feature:lock:";
 
+    /**
+     * Base Vehicle的流水号
+     */
+    String BASE_VEHICLE_ID_KEY = CONFIGURATION_PREFIX + "baseVehicle:id";
+
 }

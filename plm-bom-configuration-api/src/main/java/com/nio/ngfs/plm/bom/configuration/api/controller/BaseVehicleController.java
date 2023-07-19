@@ -1,7 +1,9 @@
 package com.nio.ngfs.plm.bom.configuration.api.controller;
 
+import com.nio.bom.share.annotation.NeedAuthorization;
+import com.nio.bom.share.annotation.NotLogResult;
 import com.nio.bom.share.result.ResultInfo;
-import com.nio.ngfs.plm.bom.configuration.application.command.BaseVehicle.AddBaseVehicleCommand;
+import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.AddBaseVehicleCommand;
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmBaseVehicleClient;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.AddBaseVehicleCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.ListBaseVehicleQry;
@@ -9,8 +11,10 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.AddBaseVe
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.BaseVehicleDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -26,12 +30,16 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
     private final AddBaseVehicleCommand addBaseVehicleCommand;
 
     @Override
-    public ResultInfo<List<BaseVehicleDto>> listBaseVehicle(ListBaseVehicleQry qry) {
+    @NeedAuthorization
+    @NotLogResult
+    public ResultInfo<List<BaseVehicleDto>> listBaseVehicle(@Valid @RequestBody ListBaseVehicleQry qry) {
         return null;
     }
 
     @Override
-    public ResultInfo<AddBaseVehicleRespDto> addBaseVehicle(AddBaseVehicleCmd cmd) {
+    @NeedAuthorization
+    @NotLogResult
+    public ResultInfo<AddBaseVehicleRespDto> addBaseVehicle(@Valid @RequestBody AddBaseVehicleCmd cmd) {
         return ResultInfo.success(addBaseVehicleCommand.execute(cmd));
     }
 }

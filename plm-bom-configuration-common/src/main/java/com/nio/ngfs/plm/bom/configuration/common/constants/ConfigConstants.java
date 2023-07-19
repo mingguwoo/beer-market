@@ -23,4 +23,6 @@ public interface ConfigConstants {
     String FEATURE_ATTRIBUTE_REQUESTOR = "Requestor";
     String FEATURE_ATTRIBUTE_STATUS = "Status";
 
+    String BASE_VEHICLE_ID_PREFIX = "BV";
+
 }

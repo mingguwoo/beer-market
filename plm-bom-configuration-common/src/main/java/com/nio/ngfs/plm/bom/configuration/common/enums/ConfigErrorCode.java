@@ -41,6 +41,8 @@ public enum ConfigErrorCode implements ErrorCode {
     FEATURE_GROUP_ROOT_IS_INTERNAL(80018, "GROUP_ROOT Is Used For Internal!"),
     FEATURE_ADD_GROUP_IN_3DE_FIRST(80019, "Please Add This Group In 3DE Group Library First!"),
     FEATURE_UPDATE_GROUP_IN_3DE_FIRST(80020, "Please Update This Group In 3DE Group Library First!"),
+    BASE_VEHICLE_MATURITY_INVALID(80021,"Maturity Is Invalid!"),
+    BASE_VEHICLE_REPEAT(80022, "This Base Vehicle already exists, can not be created repeatedly!")
     ;
 
     /**

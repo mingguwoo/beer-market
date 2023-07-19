@@ -101,6 +101,16 @@ public class BomsFeatureLibraryDaoImpl extends AbstractDao<BomsFeatureLibraryMap
     }
 
     /**
+     * 查询 没有选中oxo行的 feature_library
+     * @param modelCode
+     * @return
+     */
+    @Override
+    public List<BomsFeatureLibraryEntity> queryFeatureOptionLists(String modelCode) {
+        return getBaseMapper().queryFeatureOptionLists(modelCode);
+    }
+
+    /**
      * 测试动态线程池使用
      */
     public List<BomsFeatureLibraryEntity> batchQuery() {
@@ -112,5 +122,11 @@ public class BomsFeatureLibraryDaoImpl extends AbstractDao<BomsFeatureLibraryMap
         }
         return Lists.newArrayList();
     }
+
+
+
+
+
+
 
 }

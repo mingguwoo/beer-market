@@ -1,6 +1,5 @@
 package com.nio.ngfs.plm.bom.configuration.api.controller;
 
-import com.nio.bom.share.annotation.NeedAuthorization;
 import com.nio.bom.share.annotation.NotLogResult;
 import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.application.command.oxo.*;
@@ -30,7 +29,6 @@ import java.util.List;
 public class OxoController {
 
     private final OxoDomainService oxoDomainService;
-    private final OxoOperateCommand oxoOperateCommand;
     private final OxoSnapshootCommand oxoSnapshootCommand;
     private final OxoDeleteCommand oxoDeleteCommand;
     private final OxoAddCommand oxoAddCommand;
@@ -84,8 +82,8 @@ public class OxoController {
      * @return
      */
     @PostMapping("/queryFeatureList")
-    public ResultInfo<List<OxoAddCmd>> queryFeatureList(@Valid @RequestBody OxoBaseCmd cmd) {
-        return ResultInfo.success(oxoDomainService.queryFeatureList());
+    public ResultInfo<OxoAddCmd> queryFeatureList(@Valid @RequestBody OxoBaseCmd cmd) {
+        return ResultInfo.success(oxoDomainService.queryFeatureList(cmd));
     }
 
     /**

@@ -78,4 +78,12 @@ public interface FeatureRepository extends Repository<FeatureAggr, FeatureId> {
      */
     void batchSaveFeatureChangeLog(List<FeatureChangeLogDo> featureChangeLogDoList);
 
+
+    /**
+     *  查询 没有选中oxo行的 feature_library
+     * @param modelCode
+     * @return
+     */
+    List<FeatureAggr>  queryFeatureOptionLists(String modelCode);
+
 }

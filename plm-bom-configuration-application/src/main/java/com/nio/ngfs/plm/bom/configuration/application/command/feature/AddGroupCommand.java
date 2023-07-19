@@ -40,6 +40,8 @@ public class AddGroupCommand extends AbstractLockCommand<AddGroupCmd, AddGroupRe
         featureAggr.addGroup();
         // 校验GroupCode唯一
         featureDomainService.checkGroupCodeUnique(featureAggr);
+        // 校验GroupCode在3DE Group Library库中是否存在
+        featureDomainService.checkGroupCodeExistInGroupLibrary(featureAggr.getFeatureId().getFeatureCode(), true);
         // Repository保存聚合根
         featureRepository.save(featureAggr);
         // 发布Group新增事件

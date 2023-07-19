@@ -90,4 +90,12 @@ public interface FeatureDomainService {
      */
     List<FeatureChangeLogDo> buildFeatureAttributeChangeLog(FeatureAttributeChangeEvent event);
 
+    /**
+     * 校验Group Code
+     *
+     * @param groupCode Group Code
+     * @param isAdd     是否新增
+     */
+    void checkGroupCodeExistInGroupLibrary(String groupCode, boolean isAdd);
+
 }

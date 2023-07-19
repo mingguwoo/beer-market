@@ -49,6 +49,8 @@ public class EditGroupCommand extends AbstractLockCommand<EditGroupCmd, EditGrou
         featureAggr.editGroup(cmd);
         // 校验GroupCode唯一
         featureDomainService.checkGroupCodeUnique(featureAggr);
+        // 校验GroupCode在3DE Group Library库中是否存在
+        featureDomainService.checkGroupCodeExistInGroupLibrary(featureAggr.getFeatureId().getFeatureCode(), false);
         // Repository保存聚合根
         featureRepository.save(featureAggr);
         // 发布GroupCode变更事件

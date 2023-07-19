@@ -6,6 +6,7 @@ import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.event.EventPublisher;
+import com.nio.ngfs.plm.bom.configuration.domain.facade.FeatureFacade;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureId;
@@ -52,6 +53,7 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
 
     private final FeatureRepository featureRepository;
     private final EventPublisher eventPublisher;
+    private final FeatureFacade featureFacade;
 
     @Override
     public FeatureAggr getAndCheckFeatureAggr(String featureCode, FeatureTypeEnum typeEnum) {
@@ -183,6 +185,14 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
             });
         }
         return featureChangeLogDoList;
+    }
+
+    @Override
+    public void checkGroupCodeExistInGroupLibrary(String groupCode, boolean isAdd) {
+        if (!featureFacade.isGroupExistedInGroupLibrary(groupCode)) {
+            throw new BusinessException(isAdd ? ConfigErrorCode.FEATURE_ADD_GROUP_IN_3DE_FIRST :
+                    ConfigErrorCode.FEATURE_UPDATE_GROUP_IN_3DE_FIRST);
+        }
     }
 
     /**

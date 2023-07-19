@@ -6,7 +6,7 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.AddGroupCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.ChangeGroupStatusCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.EditGroupCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.ListFeatureLibraryQry;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.QueryFeatureLibraryQry;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -74,15 +74,6 @@ public interface PlmFeatureClient {
     ResultInfo<ChangeFeatureStatusRespDto> changeFeatureStatus(ChangeFeatureStatusCmd cmd);
 
     /**
-     * Feature库列表
-     *
-     * @param qry 查询
-     * @return 响应
-     */
-    @PostMapping("/feature/listFeatureLibrary")
-    ResultInfo<List<FeatureLibraryDto>> listFeatureLibrary(ListFeatureLibraryQry qry);
-
-    /**
      * 新增Option
      *
      * @param cmd 命令
@@ -126,5 +117,14 @@ public interface PlmFeatureClient {
      */
     @PostMapping("/feature/getGroupCodeList")
     ResultInfo<List<String>> getGroupCodeList(GetGroupCodeListQry qry);
+
+    /**
+     * 查询Feature Library列表
+     *
+     * @param qry 查询
+     * @return 响应
+     */
+    @PostMapping("/feature/queryFeatureLibrary")
+    ResultInfo<List<QueryFeatureLibraryDto>> queryFeatureLibrary(QueryFeatureLibraryQry qry);
 
 }

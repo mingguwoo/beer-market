@@ -38,13 +38,6 @@ public interface FeatureRepository extends Repository<FeatureAggr, FeatureId> {
     List<FeatureAggr> queryByParentFeatureCodeListAndType(List<String> parentFeatureCodeList, String type);
 
     /**
-     * 查找所有
-     *
-     * @return FeatureAggr列表
-     */
-    List<FeatureAggr> queryAll();
-
-    /**
      * 批量更新状态
      *
      * @param idList     id列表

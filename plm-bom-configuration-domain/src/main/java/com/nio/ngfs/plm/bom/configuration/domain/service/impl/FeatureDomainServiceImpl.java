@@ -1,10 +1,12 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service.impl;
 
 import com.google.common.collect.Lists;
+import com.nio.bom.share.enums.StatusEnum;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
+import com.nio.ngfs.plm.bom.configuration.common.enums.StatusChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.event.EventPublisher;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.FeatureFacade;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
@@ -13,8 +15,6 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureId;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.domainobject.FeatureChangeLogDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureChangeLogTypeEnum;
-import com.nio.ngfs.plm.bom.configuration.common.enums.StatusChangeTypeEnum;
-import com.nio.ngfs.plm.bom.configuration.common.enums.StatusEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureAttributeChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureStatusChangeEvent;

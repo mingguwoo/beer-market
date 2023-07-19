@@ -8,12 +8,14 @@ package com.nio.ngfs.plm.bom.configuration.common.constants;
  */
 public interface ConfigConstants {
 
+    String NIO = "NIO";
+
+    ThreadLocal<String> brandName = new ThreadLocal<>();
     String GROUP_PARENT_FEATURE_CODE = "GROUP_ROOT";
     String SINGLE = "Single";
     String MAY = "May";
     String VERSION_A = "A";
     String IN_WORK = "In Work";
-
     String FEATURE_ATTRIBUTE_FEATURE_CODE = "Feature Code";
     String FEATURE_ATTRIBUTE_GROUP = "Group";
     String FEATURE_ATTRIBUTE_DISPLAY_NAME = "Display Name";
@@ -22,6 +24,20 @@ public interface ConfigConstants {
     String FEATURE_ATTRIBUTE_CATALOG = "Catalog";
     String FEATURE_ATTRIBUTE_REQUESTOR = "Requestor";
     String FEATURE_ATTRIBUTE_STATUS = "Status";
+
+    String FEATURE_CODE_AF00 = "AF00";
+
+    String CONFIG_ADMIN = "config_admin";
+
+    String CONFIG_USER = "config_user";
+
+    String FEATURE_LIBRARY = "feature_library_admin";
+
+    String WORKING = "Working";
+
+    String OXO_EMAIL_GROUP = "Engineering Config.OXO";
+
+    String OXO_EMAIL_GROUP_ALPS = "Engineering Config. OXO-Alps";
 
     String BASE_VEHICLE_ID_PREFIX = "BV";
 

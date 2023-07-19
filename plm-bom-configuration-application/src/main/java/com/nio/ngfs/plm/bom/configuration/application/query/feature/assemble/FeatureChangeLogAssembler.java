@@ -12,10 +12,10 @@ import org.springframework.beans.BeanUtils;
 public class FeatureChangeLogAssembler {
 
     public static GetChangeLogListDto assemble(BomsFeatureChangeLogEntity entity) {
-        GetChangeLogListDto getChangeLogListDto = new GetChangeLogListDto();
-        BeanUtils.copyProperties(entity, getChangeLogListDto);
-        getChangeLogListDto.setUpdateTime(DateUtils.dateTimeStr(entity.getUpdateTime()));
-        return getChangeLogListDto;
+        GetChangeLogListDto dto = new GetChangeLogListDto();
+        BeanUtils.copyProperties(entity, dto);
+        dto.setUpdateTime(DateUtils.dateTimeStr(entity.getUpdateTime()));
+        return dto;
     }
 
 }

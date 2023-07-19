@@ -95,11 +95,6 @@ public class FeatureRepositoryImpl implements FeatureRepository {
     }
 
     @Override
-    public List<FeatureAggr> queryAll() {
-        return featureConverter.convertEntityListToDoList(bomsFeatureLibraryDao.queryAll());
-    }
-
-    @Override
     public void batchUpdateStatus(List<Long> idList, String status, String updateUser) {
         bomsFeatureLibraryDao.batchUpdateStatus(idList, status, updateUser);
     }

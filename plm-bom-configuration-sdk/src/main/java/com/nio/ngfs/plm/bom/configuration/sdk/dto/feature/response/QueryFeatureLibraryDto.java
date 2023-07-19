@@ -10,10 +10,12 @@ import java.util.List;
  * @date 2023/6/28
  */
 @Data
-public class FeatureLibraryDto implements Dto {
+public class QueryFeatureLibraryDto implements Dto {
 
     private String featureCode;
 
-    private List<FeatureLibraryDto> childrenList;
+    private String displayName;
+
+    private List<QueryFeatureLibraryDto> children;
 
 }

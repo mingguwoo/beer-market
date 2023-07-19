@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 /**
  * <p>
  * BOM中台Feature Library配置库
@@ -85,6 +87,11 @@ public class BomsFeatureLibraryEntity extends BaseEntity {
      * 状态，Active/Inactive
      */
     private String status;
+
+    /**
+     * 子节点
+     */
+    private transient List<BomsFeatureLibraryEntity> children;
 
     public String getFeatureCode() {
         return featureCode;

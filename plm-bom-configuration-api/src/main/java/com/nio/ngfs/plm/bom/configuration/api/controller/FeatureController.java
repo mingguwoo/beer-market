@@ -6,7 +6,7 @@ import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.application.command.feature.*;
 import com.nio.ngfs.plm.bom.configuration.application.query.feature.GetChangeLogListQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.feature.GetGroupCodeListQuery;
-import com.nio.ngfs.plm.bom.configuration.application.query.feature.ListFeatureLibraryQuery;
+import com.nio.ngfs.plm.bom.configuration.application.query.feature.QueryFeatureLibraryQuery;
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmFeatureClient;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.*;
@@ -33,12 +33,12 @@ public class FeatureController implements PlmFeatureClient {
     private final AddFeatureCommand addFeatureCommand;
     private final EditFeatureCommand editFeatureCommand;
     private final ChangeFeatureStatusCommand changeFeatureStatusCommand;
-    private final ListFeatureLibraryQuery listFeatureLibraryQuery;
     private final AddOptionCommand addOptionCommand;
     private final EditOptionCommand editOptionCommand;
     private final ChangeOptionStatusCommand changeOptionStatusCommand;
     private final GetChangeLogListQuery getChangeLogListQuery;
     private final GetGroupCodeListQuery getGroupCodeListQuery;
+    private final QueryFeatureLibraryQuery queryFeatureLibraryQuery;
 
     @Override
     @NotLogResult
@@ -79,13 +79,6 @@ public class FeatureController implements PlmFeatureClient {
     @Override
     @NeedAuthorization
     @NotLogResult
-    public ResultInfo<List<FeatureLibraryDto>> listFeatureLibrary(@Valid @RequestBody ListFeatureLibraryQry qry) {
-        return ResultInfo.success(listFeatureLibraryQuery.execute(qry));
-    }
-
-    @Override
-    @NeedAuthorization
-    @NotLogResult
     public ResultInfo<AddOptionRespDto> addOption(@Valid @RequestBody AddOptionCmd cmd) {
         return ResultInfo.success(addOptionCommand.execute(cmd));
     }
@@ -114,6 +107,12 @@ public class FeatureController implements PlmFeatureClient {
     @NotLogResult
     public ResultInfo<List<String>> getGroupCodeList(@Valid @RequestBody GetGroupCodeListQry qry) {
         return ResultInfo.success(getGroupCodeListQuery.execute(qry));
+    }
+
+    @Override
+    @NotLogResult
+    public ResultInfo<List<QueryFeatureLibraryDto>> queryFeatureLibrary(@Valid @RequestBody QueryFeatureLibraryQry qry) {
+        return ResultInfo.success(queryFeatureLibraryQuery.execute(qry));
     }
 
 }

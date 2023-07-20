@@ -21,7 +21,7 @@ public class BomsBasicVehicleEntity extends BaseEntity{
 
     private String baseVehicleId;
 
-    private String model;
+    private String modelCode;
 
     private String modelYear;
 

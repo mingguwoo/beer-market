@@ -20,7 +20,7 @@ public class BomsBasicVehicleDaoImpl extends AbstractDao<BomsBasicVehicleMapper,
     @Override
     public List<BomsBasicVehicleEntity> queryByModelModelYearRegionDriveHandSalesVersion(String model, String modelYear, String region, String driveHand, String salesVersion) {
         LambdaQueryWrapper<BomsBasicVehicleEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(BomsBasicVehicleEntity::getModel, model);
+        lambdaQueryWrapper.eq(BomsBasicVehicleEntity::getModelCode, model);
         lambdaQueryWrapper.eq(BomsBasicVehicleEntity::getModelYear, modelYear);
         lambdaQueryWrapper.eq(BomsBasicVehicleEntity::getRegion, region);
         lambdaQueryWrapper.eq(BomsBasicVehicleEntity::getDriveHand, driveHand);
@@ -30,9 +30,16 @@ public class BomsBasicVehicleDaoImpl extends AbstractDao<BomsBasicVehicleMapper,
 
     @Override
     public BomsBasicVehicleEntity getLastestBaseVehicle() {
-        LambdaQueryWrapper<BomsBasicVehicleEntity> query = new LambdaQueryWrapper<>();
-        query.orderByDesc(BomsBasicVehicleEntity::getId).last("limit 1");
-        return getBaseMapper().selectOne(query);
+        LambdaQueryWrapper<BomsBasicVehicleEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.orderByDesc(BomsBasicVehicleEntity::getId).last("limit 1");
+        return getBaseMapper().selectOne(lambdaQueryWrapper);
+    }
+
+    @Override
+    public BomsBasicVehicleEntity queryBaseVehicleByBaseVehicleId(String baseVehicleId) {
+        LambdaQueryWrapper<BomsBasicVehicleEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(BomsBasicVehicleEntity::getBaseVehicleId,baseVehicleId);
+        return getBaseMapper().selectOne(lambdaQueryWrapper);
     }
 
     @Override

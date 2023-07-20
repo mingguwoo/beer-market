@@ -21,4 +21,6 @@ public interface BaseVehicleRepository extends Repository<BaseVehicleAggr,String
      * @return BaseVehicleAggr列表
      */
     List<BaseVehicleAggr> queryByModelModelYearRegionDriveHandSalesVersion(String model, String modelYear, String region, String driveHand, String salesVersion);
+
+    BaseVehicleAggr queryBaseVehicleByBaseVehicleId(String baseVehicleId);
 }

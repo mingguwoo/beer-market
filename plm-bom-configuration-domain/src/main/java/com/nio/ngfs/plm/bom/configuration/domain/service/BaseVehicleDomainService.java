@@ -15,4 +15,5 @@ public interface BaseVehicleDomainService {
      */
     void checkBaseVehicleUnique(BaseVehicleAggr baseVehicleAggr);
 
+    BaseVehicleAggr getBaseVehicleByBaseVehicleId(String baseVehicleId);
 }

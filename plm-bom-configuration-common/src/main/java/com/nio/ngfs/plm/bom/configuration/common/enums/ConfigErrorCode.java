@@ -42,7 +42,10 @@ public enum ConfigErrorCode implements ErrorCode {
     FEATURE_ADD_GROUP_IN_3DE_FIRST(80019, "Please Add This Group In 3DE Group Library First!"),
     FEATURE_UPDATE_GROUP_IN_3DE_FIRST(80020, "Please Update This Group In 3DE Group Library First!"),
     BASE_VEHICLE_MATURITY_INVALID(80021,"Maturity Is Invalid!"),
-    BASE_VEHICLE_REPEAT(80022, "This Base Vehicle already exists, can not be created repeatedly!")
+    BASE_VEHICLE_REPEAT(80022, "This Base Vehicle already exists, can not be created repeatedly!"),
+    BASE_VEHICLE_NOT_EXISTS(80023,"Base Vehicle Not Existed!"),
+    BASE_VEHICLE_MODEL_CODE_MODEL_YEAR_INVALID(80024, "Base Vehicle Can Not Change Model Code Or Model Year!"),
+    BASE_VEHICLE_MATURITY_CHANGE_INVALID(80025, "Base Vehicle Can Not Revert Its Maturity From P To U!"),
     ;
 
     /**

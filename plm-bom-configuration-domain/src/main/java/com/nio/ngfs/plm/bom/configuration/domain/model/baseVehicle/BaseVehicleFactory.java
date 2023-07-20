@@ -11,7 +11,7 @@ public class BaseVehicleFactory {
 
     public static BaseVehicleAggr createBaseVehicle(AddBaseVehicleCmd cmd){
         return BaseVehicleAggr.builder()
-                .model(cmd.getModel())
+                .modelCode(cmd.getModelCode())
                 .modelYear(cmd.getModelYear())
                 .region(cmd.getRegion())
                 .regionEn(cmd.getRegionEn())

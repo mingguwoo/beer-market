@@ -1,7 +1,7 @@
 CREATE TABLE `boms_basic_vehicle` (
    `id` bigint NOT NULL AUTO_INCREMENT,
    `base_vehicle_id` varchar(11) NOT NULL COMMENT '流水号',
-   `model` varchar(50) NOT NULL DEFAULT '' COMMENT '车型',
+   `model_code` varchar(50) NOT NULL DEFAULT '' COMMENT '车型',
    `model_year` varchar(50) NOT NULL DEFAULT '' COMMENT '年款',
    `region` varchar(50) NOT NULL DEFAULT '' COMMENT '区域',
    `region_english_name` varchar(50) NOT NULL DEFAULT '' COMMENT '区域英文名',

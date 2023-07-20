@@ -7,10 +7,13 @@ import javax.validation.constraints.NotBlank;
 
 /**
  * @author bill.wang
- * @date 2023/7/18
+ * @date 2023/7/20
  */
 @Data
-public class AddBaseVehicleCmd implements Cmd {
+public class EditBaseVehicleCmd implements Cmd {
+
+    @NotBlank(message = "Base Vehicle Id is blank")
+    private String baseVehicleId;
 
     @NotBlank(message = "Model Code is blank")
     private String modelCode;
@@ -29,24 +32,6 @@ public class AddBaseVehicleCmd implements Cmd {
 
     private String maturity;
 
-    private boolean copyFrom;
-
-    private String copyModel;
-
-    private String regionEn;
-
-    private String regionCn;
-
-    private String driveHandEn;
-
-    private String driveHandCn;
-
-    private String salesVersionEn;
-
-    private String salesVersionCn;
-
-    @NotBlank(message = "Create User is blank")
-    private String createUser;
-
-
+    @NotBlank(message = "Update User is blank")
+    private String updateUser;
 }

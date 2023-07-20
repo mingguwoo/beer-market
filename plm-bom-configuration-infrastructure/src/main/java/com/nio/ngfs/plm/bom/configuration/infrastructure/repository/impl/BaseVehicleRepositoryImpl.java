@@ -44,4 +44,9 @@ public class BaseVehicleRepositoryImpl implements BaseVehicleRepository {
     public List<BaseVehicleAggr> queryByModelModelYearRegionDriveHandSalesVersion(String model, String modelYear, String region, String driveHand, String salesVersion) {
         return baseVehicleConverter.convertEntityListToDoList(bomsBasicVehicleDao.queryByModelModelYearRegionDriveHandSalesVersion(model, modelYear, region, driveHand, salesVersion));
     }
+
+    @Override
+    public BaseVehicleAggr queryBaseVehicleByBaseVehicleId(String baseVehicleId) {
+        return baseVehicleConverter.convertEntityToDo(bomsBasicVehicleDao.queryBaseVehicleByBaseVehicleId(baseVehicleId));
+    }
 }

@@ -29,4 +29,6 @@ public interface BomsBasicVehicleDao extends IService<BomsBasicVehicleEntity> {
      * @return BomsBasicVehicle
      */
     BomsBasicVehicleEntity getLastestBaseVehicle();
+
+    BomsBasicVehicleEntity queryBaseVehicleByBaseVehicleId(String baseVehicleId);
 }

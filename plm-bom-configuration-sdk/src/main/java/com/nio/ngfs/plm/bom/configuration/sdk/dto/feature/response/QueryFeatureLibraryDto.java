@@ -14,7 +14,29 @@ public class QueryFeatureLibraryDto implements Dto {
 
     private String featureCode;
 
+    private String type;
+
     private String displayName;
+
+    private String chineseName;
+
+    private String description;
+
+    private String group;
+
+    private String catalog;
+
+    private String requestor;
+
+    private String status;
+
+    private String createUser;
+
+    private String updateUser;
+
+    private String createTime;
+
+    private String updateTime;
 
     private List<QueryFeatureLibraryDto> children;
 

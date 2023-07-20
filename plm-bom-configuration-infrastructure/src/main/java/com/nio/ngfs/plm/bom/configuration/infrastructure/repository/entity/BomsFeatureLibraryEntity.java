@@ -89,6 +89,11 @@ public class BomsFeatureLibraryEntity extends BaseEntity {
     private String status;
 
     /**
+     * Group
+     */
+    private transient String group;
+
+    /**
      * 子节点
      */
     private transient List<BomsFeatureLibraryEntity> children;

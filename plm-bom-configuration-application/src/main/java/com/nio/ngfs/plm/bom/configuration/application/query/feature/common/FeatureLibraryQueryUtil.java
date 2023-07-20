@@ -41,7 +41,11 @@ public class FeatureLibraryQueryUtil {
             group.setChildren(featureListByGroup.get(group.getFeatureCode()));
             if (CollectionUtils.isNotEmpty(group.getChildren())) {
                 group.getChildren().forEach(feature -> {
+                    feature.setGroup(group.getFeatureCode());
                     feature.setChildren(optionListByFeature.get(feature.getFeatureCode()));
+                    if (CollectionUtils.isNotEmpty(feature.getChildren())) {
+                        feature.getChildren().forEach(option -> option.setGroup(group.getFeatureCode()));
+                    }
                 });
             }
         });
@@ -58,7 +62,7 @@ public class FeatureLibraryQueryUtil {
             return Collections.emptyList();
         }
         entityList.forEach(entity -> entity.setChildren(sortFeatureLibraryTree(entity.getChildren())));
-        return entityList.stream().sorted(Comparator.comparing(BomsFeatureLibraryEntity::getFeatureCode)).collect(Collectors.toList());
+        return entityList.stream().sorted(Comparator.comparing(BomsFeatureLibraryEntity::getFeatureCode)).toList();
     }
 
 }

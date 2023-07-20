@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.application.query.feature;
 
+import com.google.common.collect.Sets;
 import com.nio.bom.share.enums.StatusEnum;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.LambdaUtil;
@@ -13,9 +14,14 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsF
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.QueryFeatureLibraryQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.QueryFeatureLibraryDto;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.Function;
 
 /**
  * 查询Feature Library列表
@@ -58,10 +64,22 @@ public class QueryFeatureLibraryQuery extends AbstractQuery<QueryFeatureLibraryQ
     }
 
     private List<BomsFeatureLibraryEntity> filter(List<BomsFeatureLibraryEntity> featureLibraryTree, QueryFeatureLibraryQry qry) {
+        // 过滤Group
+        if (CollectionUtils.isNotEmpty(qry.getGroupCodeList())) {
+            Set<String> groupCodeSet = Sets.newHashSet(qry.getGroupCodeList());
+            featureLibraryTree = featureLibraryTree.stream().filter(group -> groupCodeSet.contains(group.getFeatureCode())).toList();
+        }
+        // 过滤Catalog
+        if (StringUtils.isNotBlank(qry.getCatalog())) {
+            featureLibraryTree.forEach(group ->
+                    group.setChildren(LambdaUtil.map(group.getChildren(), feature -> Objects.equals(qry.getCatalog(), feature.getCatalog()), Function.identity()))
+            );
+        }
         return featureLibraryTree;
     }
 
     private void handleRelatedModel(List<QueryFeatureLibraryDto> dtoList) {
+        // todo
     }
 
 }

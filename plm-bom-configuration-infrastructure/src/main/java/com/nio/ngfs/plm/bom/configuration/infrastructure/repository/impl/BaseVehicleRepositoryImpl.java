@@ -1,7 +1,9 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.impl;
 
+import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
 import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.BaseVehicleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.BaseVehicleRepository;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.generator.BaseVehicleIdGenerator;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.BaseVehicleConverter;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsBasicVehicleDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.common.DaoSupport;
@@ -21,10 +23,15 @@ public class BaseVehicleRepositoryImpl implements BaseVehicleRepository {
 
     private final BomsBasicVehicleDao bomsBasicVehicleDao;
     private final BaseVehicleConverter baseVehicleConverter;
+    private final BaseVehicleIdGenerator baseVehicleIdGenerator;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void save(BaseVehicleAggr baseVehicleAggr) {
+        //判断是add还是edit，如果是add，需要加流水号
+        if (baseVehicleAggr.getId() == null){
+            baseVehicleAggr.setBaseVehicleId(baseVehicleIdGenerator.createBaseVehicleId(RedisKeyConstant.BASE_VEHICLE_ID_KEY));
+        }
         DaoSupport.saveOrUpdate(bomsBasicVehicleDao,baseVehicleConverter.convertDoToEntity(baseVehicleAggr));
     }
 

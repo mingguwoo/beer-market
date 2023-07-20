@@ -24,4 +24,10 @@ public interface BomsBasicVehicleDao extends IService<BomsBasicVehicleEntity> {
      */
     List<BomsBasicVehicleEntity> queryByModelModelYearRegionDriveHandSalesVersion(String model, String modelYear, String region, String driveHand, String salesVersion);
 
+    /**
+     * 获取最新BaseVehicle记录
+     *
+     * @return BomsBasicVehicle
+     */
+    BomsBasicVehicleEntity getLastestBaseVehicle();
 }

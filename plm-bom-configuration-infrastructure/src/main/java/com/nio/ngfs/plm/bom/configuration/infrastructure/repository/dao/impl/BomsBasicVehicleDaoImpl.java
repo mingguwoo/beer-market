@@ -1,6 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.nio.ngfs.common.model.page.WherePageRequest;
 import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.BaseVehicleAggr;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsBasicVehicleDao;
@@ -27,6 +28,13 @@ public class BomsBasicVehicleDaoImpl extends AbstractDao<BomsBasicVehicleMapper,
         lambdaQueryWrapper.eq(BomsBasicVehicleEntity::getDriveHand, driveHand);
         lambdaQueryWrapper.eq(BomsBasicVehicleEntity::getSalesVersion, salesVersion);
         return getBaseMapper().selectList(lambdaQueryWrapper);
+    }
+
+    @Override
+    public BomsBasicVehicleEntity getLastestBaseVehicle() {
+        LambdaQueryWrapper<BomsBasicVehicleEntity> query = new LambdaQueryWrapper<>();
+        query.orderByDesc(BomsBasicVehicleEntity::getId).last("limit 1");
+        return getBaseMapper().selectOne(query);
     }
 
     @Override

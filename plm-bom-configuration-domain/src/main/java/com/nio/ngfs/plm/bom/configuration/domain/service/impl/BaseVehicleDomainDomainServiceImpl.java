@@ -1,7 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service.impl;
 
 import com.nio.bom.share.exception.BusinessException;
-import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.BaseVehicleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.BaseVehicleRepository;
@@ -9,6 +8,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.service.BaseVehicleDomainServic
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 /**

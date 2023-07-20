@@ -3,10 +3,6 @@ package com.nio.ngfs.plm.bom.configuration.sdk;
 import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.*;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.AddGroupCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.ChangeGroupStatusCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.EditGroupCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.QueryFeatureLibraryQry;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 

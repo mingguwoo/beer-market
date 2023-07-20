@@ -1,7 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request;
 
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.Cmd;
-
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;

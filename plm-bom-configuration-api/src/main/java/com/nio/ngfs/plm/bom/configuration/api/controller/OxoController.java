@@ -2,7 +2,10 @@ package com.nio.ngfs.plm.bom.configuration.api.controller;
 
 import com.nio.bom.share.annotation.NotLogResult;
 import com.nio.bom.share.result.ResultInfo;
-import com.nio.ngfs.plm.bom.configuration.application.command.oxo.*;
+import com.nio.ngfs.plm.bom.configuration.application.command.oxo.OxoAddCommand;
+import com.nio.ngfs.plm.bom.configuration.application.command.oxo.OxoDeleteCommand;
+import com.nio.ngfs.plm.bom.configuration.application.command.oxo.OxoEditCommand;
+import com.nio.ngfs.plm.bom.configuration.application.command.oxo.OxoSnapshootCommand;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.PageData;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.*;

@@ -1,8 +1,5 @@
 package com.nio.ngfs.plm.bom.configuration.domain.facade;
 
-import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.GetColorCodeReqDto;
-import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.response.GetColorCodeRespDto;
-
 import java.util.List;
 
 /**

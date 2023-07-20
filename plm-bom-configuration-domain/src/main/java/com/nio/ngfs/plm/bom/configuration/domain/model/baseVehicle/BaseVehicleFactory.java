@@ -1,7 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle;
 
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.AddBaseVehicleCmd;
-import lombok.extern.slf4j.Slf4j;
 
 
 /**

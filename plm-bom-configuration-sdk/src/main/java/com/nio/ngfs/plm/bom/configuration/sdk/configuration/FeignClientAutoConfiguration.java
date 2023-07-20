@@ -1,6 +1,5 @@
 package com.nio.ngfs.plm.bom.configuration.sdk.configuration;
 
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**

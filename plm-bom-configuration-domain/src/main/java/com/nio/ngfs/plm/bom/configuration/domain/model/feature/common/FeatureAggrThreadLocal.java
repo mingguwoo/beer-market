@@ -2,7 +2,6 @@ package com.nio.ngfs.plm.bom.configuration.domain.model.feature.common;
 
 import com.google.common.collect.Maps;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
-import org.springframework.beans.BeanUtils;
 
 import java.util.Map;
 

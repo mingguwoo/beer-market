@@ -1,7 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums;
 
 import com.nio.bom.share.utils.EnumUtils;
-import com.nio.ngfs.plm.bom.configuration.common.enums.StatusEnum;
 
 /**
  * @author bill.wang

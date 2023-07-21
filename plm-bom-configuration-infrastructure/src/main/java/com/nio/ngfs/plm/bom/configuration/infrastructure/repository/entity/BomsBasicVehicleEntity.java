@@ -1,6 +1,5 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;

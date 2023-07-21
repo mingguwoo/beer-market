@@ -210,6 +210,9 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
         setStatus(StatusEnum.ACTIVE.getStatus());
     }
 
+    /**
+     * 编辑Feature
+     */
     public void editFeature(EditFeatureCmd cmd) {
         checkType(FeatureTypeEnum.FEATURE);
         // 参数校验
@@ -281,6 +284,23 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
         setDescription(cmd.getDescription());
         setRequestor(cmd.getRequestor());
         setUpdateUser(cmd.getUpdateUser());
+    }
+
+    /**
+     * 改变Option状态
+     */
+    public void changeOptionStatus(String newStatus, String updateUser) {
+        checkType(FeatureTypeEnum.OPTION);
+        // status校验
+        StatusEnum oldStatusEnum = StatusEnum.getByStatus(status);
+        StatusEnum newStatusEnum = StatusEnum.getByStatus(newStatus);
+        if (oldStatusEnum == null || newStatusEnum == null) {
+            throw new BusinessException(ConfigErrorCode.FEATURE_STATUS_INVALID);
+        }
+        if (!(oldStatusEnum.getStatus().equals(newStatusEnum.getStatus()))) {
+            setStatus(newStatusEnum.getStatus());
+            setUpdateUser(updateUser);
+        }
     }
 
     /**
@@ -396,7 +416,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
     /**
      * Chinese Name在同一feature下是否唯一
      */
-    public void checkOptionChineseNameUnique() {
+    private void checkOptionChineseNameUnique() {
         // 如果没有同父级的子Option，直接返回
         if (CollectionUtils.isEmpty(parent.getChildrenList())) {
             return;
@@ -410,23 +430,9 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
     /**
      * 校验OptionCode前两位与所属Feature是否一致
      */
-    public void checkOptionCodeAndFeatureCodeTwoDigits() {
+    private void checkOptionCodeAndFeatureCodeTwoDigits() {
         if (!featureId.getFeatureCode().substring(0, CommonConstants.INT_THREE).equals(parentFeatureCode.substring(0, CommonConstants.INT_THREE))) {
             throw new BusinessException(ConfigErrorCode.FEATURE_OPTION_CODE_DIFF_FROM_FEATURE_CODE);
-        }
-    }
-
-    public void changeOptionStatus(String newStatus, String updateUser) {
-        checkType(FeatureTypeEnum.OPTION);
-        // status校验
-        StatusEnum oldStatusEnum = StatusEnum.getByStatus(status);
-        StatusEnum newStatusEnum = StatusEnum.getByStatus(newStatus);
-        if (oldStatusEnum == null || newStatusEnum == null) {
-            throw new BusinessException(ConfigErrorCode.FEATURE_STATUS_INVALID);
-        }
-        if (!(oldStatusEnum.getStatus().equals(newStatusEnum.getStatus()))) {
-            setStatus(newStatusEnum.getStatus());
-            setUpdateUser(updateUser);
         }
     }
 

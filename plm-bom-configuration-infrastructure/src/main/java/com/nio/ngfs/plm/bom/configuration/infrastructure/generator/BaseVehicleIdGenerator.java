@@ -7,7 +7,7 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsB
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.text.DecimalFormat;
@@ -22,7 +22,7 @@ import java.text.Format;
 @RequiredArgsConstructor
 public class BaseVehicleIdGenerator {
 
-    private final RedisTemplate redisTemplate = new RedisTemplate<>();
+    private StringRedisTemplate redisTemplate;
 
     private final BomsBasicVehicleDao bomsBasicVehicleDao;
 

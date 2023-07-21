@@ -40,9 +40,7 @@ public class BaseVehicleDomainDomainServiceImpl implements BaseVehicleDomainServ
                 baseVehicleAggr.getRegionOptionCode(), baseVehicleAggr.getDriveHand(), baseVehicleAggr.getSalesVersion());
         if (CollectionUtils.isNotEmpty(existedBaseVehicleAggrList)){
             //如果是edit自身记录，不报错，直接跳过
-            if (checkIsEdit(existedBaseVehicleAggrList,baseVehicleAggr)){
-                return;
-            }
+            checkIsEdit(existedBaseVehicleAggrList,baseVehicleAggr);
             throw new BusinessException(ConfigErrorCode.BASE_VEHICLE_REPEAT);
         }
     }
@@ -64,18 +62,16 @@ public class BaseVehicleDomainDomainServiceImpl implements BaseVehicleDomainServ
         return baseVehicleAggr;
     }
 
-    private boolean checkIsEdit(List<BaseVehicleAggr> existedBaseVehicleAggrList, BaseVehicleAggr baseVehicleAggr){
+    private void checkIsEdit(List<BaseVehicleAggr> existedBaseVehicleAggrList, BaseVehicleAggr baseVehicleAggr){
         //判断是不是edit
         if (Objects.nonNull(baseVehicleAggr.getBaseVehicleId())) {
             existedBaseVehicleAggrList.forEach(existedBaseVehicleAggr -> {
-                //如果是自身记录，跳过
-                if (Objects.equals(baseVehicleAggr.getBaseVehicleId(), existedBaseVehicleAggr.getBaseVehicleId())) {
-                    return;
+                //如果不是自身记录，返回false
+                if (!Objects.equals(baseVehicleAggr.getBaseVehicleId(), existedBaseVehicleAggr.getBaseVehicleId())) {
+                    throw new BusinessException(ConfigErrorCode.BASE_VEHICLE_REPEAT);
                 }
-                throw new BusinessException(ConfigErrorCode.BASE_VEHICLE_REPEAT);
             });
         }
-        return true;
     }
 
 

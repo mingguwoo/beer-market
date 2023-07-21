@@ -22,7 +22,7 @@ import java.text.Format;
 @RequiredArgsConstructor
 public class BaseVehicleIdGenerator {
 
-    private StringRedisTemplate redisTemplate;
+    private final StringRedisTemplate redisTemplate;
 
     private final BomsBasicVehicleDao bomsBasicVehicleDao;
 

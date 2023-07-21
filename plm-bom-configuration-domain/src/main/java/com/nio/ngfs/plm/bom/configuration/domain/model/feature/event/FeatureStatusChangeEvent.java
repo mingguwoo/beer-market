@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
+ * Feature状态批量变更事件
+ *
  * @author xiaozhou.tu
  * @date 2023/7/13
  */

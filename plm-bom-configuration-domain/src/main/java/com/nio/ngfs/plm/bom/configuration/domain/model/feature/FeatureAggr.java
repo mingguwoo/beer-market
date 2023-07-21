@@ -27,6 +27,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
+ * Feature聚合根
+ *
  * @author xiaozhou.tu
  * @date 2023/6/28
  */
@@ -37,6 +39,9 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Cloneable {
 
+    /**
+     * Feature唯一标识
+     */
     private FeatureId featureId;
 
     /**

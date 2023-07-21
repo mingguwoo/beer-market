@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 /**
+ * 改变Option状态
+ *
  * @author bill.wang
  * @date 2023/7/13
  */

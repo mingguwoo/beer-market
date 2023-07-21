@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
+ * 查询Feature属性变更记录
+ *
  * @author xiaozhou.tu
  * @date 2023/7/18
  */

@@ -2,6 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.nio.ngfs.common.model.page.WherePageRequest;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.domainobject.OxoInfoDo;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoRowInfoDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsOxoRowInfoEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsOxoRowInfoMapper;
@@ -27,5 +28,10 @@ public class BomsOxoRowInfoDaoImpl  extends AbstractDao<BomsOxoRowInfoMapper,
     public void insertOxoRows(List<BomsOxoRowInfoEntity> bomsOxoRowInfoEntitys) {
         getBaseMapper().insertOxoRows(bomsOxoRowInfoEntitys);
 
+    }
+
+
+    public  List<OxoInfoDo> queryFeatureListsByModel(String modelCode) {
+        return getBaseMapper().queryFeatureListsByModel(modelCode);
     }
 }

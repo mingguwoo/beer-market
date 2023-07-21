@@ -14,7 +14,6 @@ import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.PageData;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoChangeLogRespDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListsRespDto;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.compress.utils.Lists;
@@ -94,10 +93,6 @@ public class OxoDomainServiceImpl implements OxoDomainService {
         return revisions.stream().filter(StringUtils::isNotBlank).distinct().toList();
     }
 
-    @Override
-    public OxoListsRespDto queryList(OxoListCmd cmd) {
-        return null;
-    }
 
     @Override
     public PageData<OxoChangeLogRespDto> queryChangeLog(OxoBaseCmd oxoBaseCmd) {
@@ -109,15 +104,15 @@ public class OxoDomainServiceImpl implements OxoDomainService {
 
     }
 
-    @Override
-    public void export(OxoListCmd cmd, HttpServletResponse response) {
-
-    }
-
-    @Override
-    public OxoListsRespDto compare(OxoCompareCmd compareCmd) {
-        return null;
-    }
+//    @Override
+//    public void export(OxoListCmd cmd, HttpServletResponse response) {
+//
+//    }
+//
+//    @Override
+//    public OxoListsRespDto compare(OxoCompareCmd compareCmd) {
+//        return null;
+//    }
 
 
     /**

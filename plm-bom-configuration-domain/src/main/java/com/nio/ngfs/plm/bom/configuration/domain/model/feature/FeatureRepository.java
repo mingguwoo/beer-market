@@ -52,7 +52,7 @@ public interface FeatureRepository extends Repository<FeatureAggr, FeatureId> {
      * @param featureCode FeatureCode
      * @return FeatureAggr列表
      */
-    List<FeatureAggr> queryByFeatureCode(String featureCode);
+    List<FeatureAggr> queryByFeatureCode(List<String> featureCodes);
 
     /**
      * 根据Display Name、Catalog、Type查询

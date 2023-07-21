@@ -1,6 +1,9 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service;
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.BaseVehicleAggr;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoHeadQry;
+
+import java.util.List;
 
 /**
  * @author bill.wang
@@ -16,4 +19,12 @@ public interface BaseVehicleDomainService {
     void checkBaseVehicleUnique(BaseVehicleAggr baseVehicleAggr);
 
     BaseVehicleAggr getBaseVehicleByBaseVehicleId(String baseVehicleId);
+
+    /**
+     * 查询oxo 头节点信息
+     * @param modelCode
+     * @return
+     */
+    List<OxoHeadQry> queryByModel(String modelCode);
+
 }

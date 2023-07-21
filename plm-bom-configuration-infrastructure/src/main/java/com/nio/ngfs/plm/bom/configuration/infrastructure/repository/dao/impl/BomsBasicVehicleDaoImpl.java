@@ -1,6 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.nio.bom.share.enums.StatusEnum;
 import com.nio.ngfs.common.model.page.WherePageRequest;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsBasicVehicleDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsBasicVehicleEntity;
@@ -41,6 +42,16 @@ public class BomsBasicVehicleDaoImpl extends AbstractDao<BomsBasicVehicleMapper,
         lambdaQueryWrapper.eq(BomsBasicVehicleEntity::getBaseVehicleId,baseVehicleId);
         return getBaseMapper().selectOne(lambdaQueryWrapper);
     }
+
+    @Override
+    public List<BomsBasicVehicleEntity> queryByModel(String modelCode) {
+        LambdaQueryWrapper<BomsBasicVehicleEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(BomsBasicVehicleEntity::getModelCode, modelCode);
+        lambdaQueryWrapper.eq(BomsBasicVehicleEntity::getStatus, StatusEnum.ACTIVE.getStatus());
+        lambdaQueryWrapper.orderByDesc(BomsBasicVehicleEntity::getModelYear);
+        return getBaseMapper().selectList(lambdaQueryWrapper);
+    }
+
 
     @Override
     protected void fuzzyConditions(WherePageRequest<BomsBasicVehicleEntity> bomsBasicVehicleEntityWherePageRequest, LambdaQueryWrapper<BomsBasicVehicleEntity> queryWrapper) {

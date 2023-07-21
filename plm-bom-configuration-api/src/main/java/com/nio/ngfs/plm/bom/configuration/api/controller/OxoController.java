@@ -6,11 +6,12 @@ import com.nio.ngfs.plm.bom.configuration.application.command.oxo.OxoAddCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.oxo.OxoDeleteCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.oxo.OxoEditCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.oxo.OxoSnapshootCommand;
+import com.nio.ngfs.plm.bom.configuration.application.query.oxo.OxoInfoQuery;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.PageData;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoChangeLogRespDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListsRespDto;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,6 +38,8 @@ public class OxoController {
     private final OxoAddCommand oxoAddCommand;
     private final OxoEditCommand oxoEditCommand;
 
+    private final OxoInfoQuery oxoInfoQuery;
+
     /**
      * 根据车型查询快照版本
      * @param cmd
@@ -54,8 +57,8 @@ public class OxoController {
      * @return
      */
     @PostMapping("/queryList")
-    public ResultInfo<OxoListsRespDto> queryList(@Valid @RequestBody OxoListCmd cmd) {
-        return ResultInfo.success(oxoDomainService.queryList(cmd));
+    public ResultInfo<OxoListQry> queryList(@Valid @RequestBody OxoBaseCmd cmd) {
+        return ResultInfo.success(oxoInfoQuery.execute(cmd));
     }
 
     /**
@@ -141,25 +144,25 @@ public class OxoController {
         return ResultInfo.success( oxoDomainService.querySortFeatureList(cmd));
     }
 
-    /**
-     * 版本对比
-     * @param compareCmd
-     * @return
-     */
-    @PostMapping("/compare")
-    public ResultInfo<OxoListsRespDto> compare(@Valid @RequestBody OxoCompareCmd compareCmd) {
-        return ResultInfo.success(oxoDomainService.compare(compareCmd));
-    }
-
-    /**
-     * oxo 导出
-     * @param cmd
-     * @return
-     */
-    @PostMapping("/export")
-    public void export(@Valid @RequestBody OxoListCmd cmd,HttpServletResponse response) {
-        oxoDomainService.export(cmd,response);
-    }
+//    /**
+//     * 版本对比
+//     * @param compareCmd
+//     * @return
+//     */
+//    @PostMapping("/compare")
+//    public ResultInfo<OxoListsRespDto> compare(@Valid @RequestBody OxoCompareCmd compareCmd) {
+//        return ResultInfo.success(oxoDomainService.compare(compareCmd));
+//    }
+//
+//    /**
+//     * oxo 导出
+//     * @param cmd
+//     * @return
+//     */
+//    @PostMapping("/export")
+//    public void export(@Valid @RequestBody OxoListCmd cmd,HttpServletResponse response) {
+//        oxoDomainService.export(cmd,response);
+//    }
 
     /**
      * oxo 对比导出

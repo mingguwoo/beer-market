@@ -1,5 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.nio.bom.share.enums.StatusEnum;
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
 import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.BaseVehicleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.BaseVehicleRepository;
@@ -7,6 +9,7 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.generator.BaseVehicleId
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.BaseVehicleConverter;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsBasicVehicleDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.common.DaoSupport;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsBasicVehicleEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,5 +51,11 @@ public class BaseVehicleRepositoryImpl implements BaseVehicleRepository {
     @Override
     public BaseVehicleAggr queryBaseVehicleByBaseVehicleId(String baseVehicleId) {
         return baseVehicleConverter.convertEntityToDo(bomsBasicVehicleDao.queryBaseVehicleByBaseVehicleId(baseVehicleId));
+    }
+
+
+    @Override
+    public List<BaseVehicleAggr> queryByModel(String modelCode) {
+        return baseVehicleConverter.convertEntityListToDoList(bomsBasicVehicleDao.queryByModel(modelCode));
     }
 }

@@ -4,6 +4,7 @@ import com.nio.ngfs.common.utils.BeanConvertUtils;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.OxoPackageInfoAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.OxoRowInfoAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.OxoVersionSnapshotAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.domainobject.OxoInfoDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.repository.OxoRepository;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoOptionPackageInfoDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoRowInfoDao;
@@ -50,6 +51,17 @@ public class OxoRepositoryImpl implements OxoRepository {
         List<BomsOxoVersionSnapshotEntity> entities =
                 bomsOxoVersionSnapShotDao.queryOxoVersionSnapshotLists(modelCode);
         return BeanConvertUtils.convertListTo(entities, OxoVersionSnapshotAggr::new);
+    }
+
+
+    /**
+     * 根据modelCode查询oxo
+     * @param modelCode
+     * @return
+     */
+    @Override
+    public List<OxoInfoDo>  queryFeatureListsByModel(String modelCode) {
+      return bomsOxoRowInfoDao.queryFeatureListsByModel(modelCode);
     }
 
 

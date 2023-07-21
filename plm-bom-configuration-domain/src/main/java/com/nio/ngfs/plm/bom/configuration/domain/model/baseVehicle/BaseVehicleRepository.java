@@ -22,5 +22,13 @@ public interface BaseVehicleRepository extends Repository<BaseVehicleAggr,String
      */
     List<BaseVehicleAggr> queryByModelModelYearRegionDriveHandSalesVersion(String model, String modelYear, String region, String driveHand, String salesVersion);
 
+
+    /**
+     * 根据车型
+     * @param modelCode
+     * @return
+     */
+    List<BaseVehicleAggr> queryByModel(String modelCode);
+
     BaseVehicleAggr queryBaseVehicleByBaseVehicleId(String baseVehicleId);
 }

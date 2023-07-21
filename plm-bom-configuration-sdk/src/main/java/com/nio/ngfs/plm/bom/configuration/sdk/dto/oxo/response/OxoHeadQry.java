@@ -13,16 +13,18 @@ import java.util.List;
  * @author wangchao.wang
  */
 @Data
-public class OxoHeadRespDto implements Dto {
+public class OxoHeadQry implements Dto {
 
     private String modelYear;
+
+    private String modelYearCode;
 
     private List<RegionInfo> regionInfos;
 
     @Getter
     @Setter
     @ToString
-    static class RegionInfo {
+    public static class RegionInfo {
 
         private String regionCode;
 
@@ -34,7 +36,7 @@ public class OxoHeadRespDto implements Dto {
     @Getter
     @Setter
     @ToString
-    static class DriveHandInfo {
+    public static class DriveHandInfo {
 
          private String driveHandCode;
 
@@ -47,7 +49,7 @@ public class OxoHeadRespDto implements Dto {
     @Getter
     @Setter
     @ToString
-    static class SalesVersionInfo {
+    public static class SalesVersionInfo {
 
          private String salesCode;
 

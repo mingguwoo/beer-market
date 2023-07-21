@@ -37,27 +37,35 @@ public class BaseVehicleDomainDomainServiceImpl implements BaseVehicleDomainServ
 
     @Override
     public void checkBaseVehicleUnique(BaseVehicleAggr baseVehicleAggr) {
-        List<BaseVehicleAggr> existedBaseVehicleAggrList = baseVehicleRepository.queryByModelModelYearRegionDriveHandSalesVersion(baseVehicleAggr.getModelCode(), baseVehicleAggr.getModelYear(),
+        List<BaseVehicleAggr> existedBaseVehicleAggrList = baseVehicleRepository.queryByModelCodeModelYearRegionDriveHandSalesVersion(baseVehicleAggr.getModelCode(), baseVehicleAggr.getModelYear(),
                 baseVehicleAggr.getRegionOptionCode(), baseVehicleAggr.getDriveHand(), baseVehicleAggr.getSalesVersion());
-        if (CollectionUtils.isNotEmpty(existedBaseVehicleAggrList)) {
-            //如果是edit且是自身记录，不报错，直接跳过
-            if (checkEditMaturity(existedBaseVehicleAggrList, baseVehicleAggr)) {
+        if (CollectionUtils.isNotEmpty(existedBaseVehicleAggrList)){
+            //如果是edit自身记录，不报错，直接跳过
+            if (checkIsEdit(existedBaseVehicleAggrList,baseVehicleAggr)){
                 return;
             }
             throw new BusinessException(ConfigErrorCode.BASE_VEHICLE_REPEAT);
         }
     }
 
+    /**
+     * 校验BaseVehicle是否存在
+     */
+    @Override
+    public void checkBaseVehicleExist(BaseVehicleAggr baseVehicleAggr) {
+        if (Objects.isNull(baseVehicleAggr)){
+            throw new BusinessException(ConfigErrorCode.BASE_VEHICLE_NOT_EXISTS);
+        }
+    }
+
+
     @Override
     public BaseVehicleAggr getBaseVehicleByBaseVehicleId(String baseVehicleId) {
         BaseVehicleAggr baseVehicleAggr = baseVehicleRepository.queryBaseVehicleByBaseVehicleId(baseVehicleId);
-        if (Objects.isNull(baseVehicleAggr)) {
-            throw new BusinessException(ConfigErrorCode.BASE_VEHICLE_NOT_EXISTS);
-        }
         return baseVehicleAggr;
     }
 
-    private boolean checkEditMaturity(List<BaseVehicleAggr> existedBaseVehicleAggrList, BaseVehicleAggr baseVehicleAggr) {
+    private boolean checkIsEdit(List<BaseVehicleAggr> existedBaseVehicleAggrList, BaseVehicleAggr baseVehicleAggr){
         //判断是不是edit
         if (Objects.nonNull(baseVehicleAggr.getBaseVehicleId())) {
             existedBaseVehicleAggrList.forEach(existedBaseVehicleAggr -> {

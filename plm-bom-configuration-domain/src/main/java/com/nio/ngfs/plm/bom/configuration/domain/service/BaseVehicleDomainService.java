@@ -18,6 +18,11 @@ public interface BaseVehicleDomainService {
      */
     void checkBaseVehicleUnique(BaseVehicleAggr baseVehicleAggr);
 
+    /**
+     * 根据BaseVehicleId获取BaseVehicle
+     *
+     * @param baseVehicleId id
+     */
     BaseVehicleAggr getBaseVehicleByBaseVehicleId(String baseVehicleId);
 
     /**
@@ -26,5 +31,10 @@ public interface BaseVehicleDomainService {
      * @return
      */
     List<OxoHeadQry> queryByModel(String modelCode);
+
+    /**
+     * 校验BaseVehicle是否存在
+     */
+    void checkBaseVehicleExist(BaseVehicleAggr baseVehicleAggr);
 
 }

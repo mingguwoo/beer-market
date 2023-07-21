@@ -1,7 +1,5 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.nio.bom.share.enums.StatusEnum;
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
 import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.BaseVehicleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.BaseVehicleRepository;
@@ -9,7 +7,6 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.generator.BaseVehicleId
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.BaseVehicleConverter;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsBasicVehicleDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.common.DaoSupport;
-import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsBasicVehicleEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,10 +39,12 @@ public class BaseVehicleRepositoryImpl implements BaseVehicleRepository {
     public BaseVehicleAggr find(String s) {
         return null;
     }
-
+    /**
+     * 根据Model
+     */
     @Override
-    public List<BaseVehicleAggr> queryByModelModelYearRegionDriveHandSalesVersion(String model, String modelYear, String region, String driveHand, String salesVersion) {
-        return baseVehicleConverter.convertEntityListToDoList(bomsBasicVehicleDao.queryByModelModelYearRegionDriveHandSalesVersion(model, modelYear, region, driveHand, salesVersion));
+    public List<BaseVehicleAggr> queryByModelCodeModelYearRegionDriveHandSalesVersion(String modelCode, String modelYear, String regionOptionCode, String driveHand, String salesVersion) {
+        return baseVehicleConverter.convertEntityListToDoList(bomsBasicVehicleDao.queryByModelCodeModelYearRegionOptionCodeDriveHandSalesVersion(modelCode, modelYear, regionOptionCode, driveHand, salesVersion));
     }
 
     @Override
@@ -53,9 +52,16 @@ public class BaseVehicleRepositoryImpl implements BaseVehicleRepository {
         return baseVehicleConverter.convertEntityToDo(bomsBasicVehicleDao.queryBaseVehicleByBaseVehicleId(baseVehicleId));
     }
 
+    @Override
+    public void removeById(Long id) {
+        bomsBasicVehicleDao.removeById(id);
+    }
+
 
     @Override
     public List<BaseVehicleAggr> queryByModel(String modelCode) {
         return baseVehicleConverter.convertEntityListToDoList(bomsBasicVehicleDao.queryByModel(modelCode));
     }
+
+
 }

@@ -25,29 +25,11 @@ public class BomsBasicVehicleEntity extends BaseEntity{
 
     private String modelYear;
 
-    private String region;
-
-    @TableField(value = "region_english_name")
-    private String regionEn;
-
-    @TableField(value = "region_chinese_name")
-    private String regionCn;
+    private String regionOptionCode;
 
     private String driveHand;
 
-    @TableField(value = "drive_hand_english_name")
-    private String driveHandEn;
-
-    @TableField(value = "drive_hand_chinese_name")
-    private String driveHandCn;
-
     private String salesVersion;
-
-    @TableField(value = "sales_version_english_name")
-    private String salesVersionEn;
-
-    @TableField(value = "sales_version_chinese_name")
-    private String salesVersionCn;
 
     private String maturity;
 

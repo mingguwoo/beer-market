@@ -18,8 +18,8 @@ public class AddBaseVehicleCmd implements Cmd {
     @NotBlank(message = "Model Year is blank")
     private String modelYear;
 
-    @NotBlank(message = "Region is blank")
-    private String region;
+    @NotBlank(message = "Region Option Code is blank")
+    private String regionOptionCode;
 
     @NotBlank(message = "Drive hand is blank")
     private String driveHand;
@@ -32,18 +32,6 @@ public class AddBaseVehicleCmd implements Cmd {
     private boolean copyFrom;
 
     private String copyModel;
-
-    private String regionEn;
-
-    private String regionCn;
-
-    private String driveHandEn;
-
-    private String driveHandCn;
-
-    private String salesVersionEn;
-
-    private String salesVersionCn;
 
     @NotBlank(message = "Create User is blank")
     private String createUser;

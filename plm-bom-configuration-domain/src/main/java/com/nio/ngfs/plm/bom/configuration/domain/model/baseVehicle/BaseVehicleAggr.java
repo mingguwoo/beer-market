@@ -31,23 +31,11 @@ public class BaseVehicleAggr extends AbstractDo implements AggrRoot<String>, Clo
 
     private String modelYear;
 
-    private String region;
-
-    private String regionEn;
-
-    private String regionCn;
+    private String regionOptionCode;
 
     private String driveHand;
 
-    private String driveHandEn;
-
-    private String driveHandCn;
-
     private String salesVersion;
-
-    private String salesVersionEn;
-
-    private String salesVersionCn;
 
     private String maturity;
 
@@ -81,7 +69,7 @@ public class BaseVehicleAggr extends AbstractDo implements AggrRoot<String>, Clo
         checkModelAndModelYear(cmd);
         //赋值
         changeMaturity(cmd);
-        setRegion(cmd.getRegion());
+        setRegionOptionCode(cmd.getRegionOptionCode());
         setDriveHand(cmd.getDriveHand());
         setSalesVersion(cmd.getSalesVersion());
         setUpdateUser(cmd.getUpdateUser());

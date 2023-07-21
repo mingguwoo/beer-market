@@ -7,7 +7,6 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsF
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author xiaozhou.tu

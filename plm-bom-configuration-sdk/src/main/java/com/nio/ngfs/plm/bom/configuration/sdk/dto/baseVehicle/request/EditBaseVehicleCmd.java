@@ -21,8 +21,8 @@ public class EditBaseVehicleCmd implements Cmd {
     @NotBlank(message = "Model Year is blank")
     private String modelYear;
 
-    @NotBlank(message = "Region is blank")
-    private String region;
+    @NotBlank(message = "Region Option Code is blank")
+    private String regionOptionCode;
 
     @NotBlank(message = "Drive hand is blank")
     private String driveHand;

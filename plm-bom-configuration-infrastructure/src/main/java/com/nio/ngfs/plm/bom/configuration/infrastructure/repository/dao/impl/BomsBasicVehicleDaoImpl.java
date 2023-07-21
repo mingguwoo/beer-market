@@ -18,11 +18,11 @@ import java.util.List;
 @Slf4j
 public class BomsBasicVehicleDaoImpl extends AbstractDao<BomsBasicVehicleMapper, BomsBasicVehicleEntity, WherePageRequest<BomsBasicVehicleEntity>> implements BomsBasicVehicleDao{
     @Override
-    public List<BomsBasicVehicleEntity> queryByModelModelYearRegionDriveHandSalesVersion(String model, String modelYear, String region, String driveHand, String salesVersion) {
+    public List<BomsBasicVehicleEntity> queryByModelModelYearRegionDriveHandSalesVersion(String model, String modelYear, String regionOptionCode, String driveHand, String salesVersion) {
         LambdaQueryWrapper<BomsBasicVehicleEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(BomsBasicVehicleEntity::getModelCode, model);
         lambdaQueryWrapper.eq(BomsBasicVehicleEntity::getModelYear, modelYear);
-        lambdaQueryWrapper.eq(BomsBasicVehicleEntity::getRegion, region);
+        lambdaQueryWrapper.eq(BomsBasicVehicleEntity::getRegionOptionCode, regionOptionCode);
         lambdaQueryWrapper.eq(BomsBasicVehicleEntity::getDriveHand, driveHand);
         lambdaQueryWrapper.eq(BomsBasicVehicleEntity::getSalesVersion, salesVersion);
         return getBaseMapper().selectList(lambdaQueryWrapper);

@@ -13,15 +13,9 @@ public class BaseVehicleFactory {
         return BaseVehicleAggr.builder()
                 .modelCode(cmd.getModelCode())
                 .modelYear(cmd.getModelYear())
-                .region(cmd.getRegion())
-                .regionEn(cmd.getRegionEn())
-                .regionCn(cmd.getRegionCn())
+                .regionOptionCode(cmd.getRegionOptionCode())
                 .driveHand(cmd.getDriveHand())
-                .driveHandEn(cmd.getDriveHandEn())
-                .driveHandCn(cmd.getDriveHandCn())
                 .salesVersion(cmd.getSalesVersion())
-                .salesVersionEn(cmd.getSalesVersionEn())
-                .salesVersionCn(cmd.getSalesVersionCn())
                 .createUser(cmd.getCreateUser())
                 .build();
     }

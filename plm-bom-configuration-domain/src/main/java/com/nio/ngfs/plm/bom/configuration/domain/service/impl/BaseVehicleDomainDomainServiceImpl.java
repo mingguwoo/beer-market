@@ -27,7 +27,7 @@ public class BaseVehicleDomainDomainServiceImpl implements BaseVehicleDomainServ
     @Override
     public void checkBaseVehicleUnique(BaseVehicleAggr baseVehicleAggr) {
         List<BaseVehicleAggr> existedBaseVehicleAggrList = baseVehicleRepository.queryByModelModelYearRegionDriveHandSalesVersion(baseVehicleAggr.getModelCode(), baseVehicleAggr.getModelYear(),
-                baseVehicleAggr.getRegion(), baseVehicleAggr.getDriveHand(), baseVehicleAggr.getSalesVersion());
+                baseVehicleAggr.getRegionOptionCode(), baseVehicleAggr.getDriveHand(), baseVehicleAggr.getSalesVersion());
         if (CollectionUtils.isNotEmpty(existedBaseVehicleAggrList)){
             //如果是edit且是自身记录，不报错，直接跳过
             if (checkEditMaturity(existedBaseVehicleAggrList,baseVehicleAggr)){

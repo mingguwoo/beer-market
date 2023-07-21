@@ -18,10 +18,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.function.Function;
+import java.util.*;
 
 /**
  * 查询Feature Library列表
@@ -52,30 +49,61 @@ public class QueryFeatureLibraryQuery extends AbstractQuery<QueryFeatureLibraryQ
         List<BomsFeatureLibraryEntity> entityList = bomsFeatureLibraryDao.queryAll();
         // 组装为树形结构
         List<BomsFeatureLibraryEntity> featureLibraryTree = FeatureLibraryQueryUtil.buildFeatureLibraryTree(entityList);
-        // 过滤Group、Catalog、Status、搜索词
-        List<BomsFeatureLibraryEntity> filteredTree = filter(featureLibraryTree, qry);
-        // 排序
-        List<BomsFeatureLibraryEntity> sortedTree = FeatureLibraryQueryUtil.sortFeatureLibraryTree(filteredTree);
         // 组装为DTO
-        List<QueryFeatureLibraryDto> dtoList = LambdaUtil.map(sortedTree, FeatureLibraryAssembler::assemble);
+        List<QueryFeatureLibraryDto> featureLibraryDtoTree = LambdaUtil.map(featureLibraryTree, FeatureLibraryAssembler::assemble);
+        // 过滤Group、Catalog、Status、搜索词
+        List<QueryFeatureLibraryDto> filteredTree = filter(featureLibraryDtoTree, qry);
+        // 排序
+        List<QueryFeatureLibraryDto> sortedTree = sortFeatureLibraryTree(filteredTree);
         // 处理RelatedModel
-        handleRelatedModel(dtoList);
-        return dtoList;
+        handleRelatedModel(sortedTree);
+        return sortedTree;
     }
 
-    private List<BomsFeatureLibraryEntity> filter(List<BomsFeatureLibraryEntity> featureLibraryTree, QueryFeatureLibraryQry qry) {
+    private List<QueryFeatureLibraryDto> filter(List<QueryFeatureLibraryDto> featureLibraryDtoTree, QueryFeatureLibraryQry qry) {
         // 过滤Group
         if (CollectionUtils.isNotEmpty(qry.getGroupCodeList())) {
             Set<String> groupCodeSet = Sets.newHashSet(qry.getGroupCodeList());
-            featureLibraryTree = featureLibraryTree.stream().filter(group -> groupCodeSet.contains(group.getFeatureCode())).toList();
+            featureLibraryDtoTree = featureLibraryDtoTree.stream().filter(group -> groupCodeSet.contains(group.getFeatureCode())).toList();
         }
         // 过滤Catalog
         if (StringUtils.isNotBlank(qry.getCatalog())) {
-            featureLibraryTree.forEach(group ->
-                    group.setChildren(LambdaUtil.map(group.getChildren(), feature -> Objects.equals(qry.getCatalog(), feature.getCatalog()), Function.identity()))
-            );
+            featureLibraryDtoTree.forEach(group -> {
+                group.setChildren(group.getChildren().stream().filter(feature -> Objects.equals(qry.getCatalog(), feature.getCatalog())).toList());
+                group.checkChildrenEmpty();
+            });
         }
-        return featureLibraryTree;
+        // 过滤Status
+        if (StringUtils.isNotBlank(qry.getStatus())) {
+            featureLibraryDtoTree.forEach(group -> {
+                group.getChildren().forEach(feature -> {
+                    feature.setChildren(feature.getChildren().stream().filter(option -> Objects.equals(qry.getStatus(), option.getStatus())).toList());
+                    feature.checkChildrenEmpty();
+                });
+                group.checkChildrenEmpty();
+            });
+        }
+        // 模糊搜索，Feature Code、Display Name、Chinese Name
+        if (StringUtils.isNotBlank(qry.getSearch())) {
+            featureLibraryDtoTree.forEach(group -> group.selectSearchMatch(qry.getSearch().trim(), false));
+        }
+        // 结果筛选
+        featureLibraryDtoTree = featureLibraryDtoTree.stream().filter(QueryFeatureLibraryDto::isMatchResult).toList();
+        featureLibraryDtoTree.forEach(group -> {
+            group.setChildren(group.getChildren().stream().filter(QueryFeatureLibraryDto::isMatchResult).toList());
+            group.getChildren().forEach(feature ->
+                    feature.setChildren(feature.getChildren().stream().filter(QueryFeatureLibraryDto::isMatchResult).toList())
+            );
+        });
+        return featureLibraryDtoTree;
+    }
+
+    private static List<QueryFeatureLibraryDto> sortFeatureLibraryTree(List<QueryFeatureLibraryDto> entityList) {
+        if (CollectionUtils.isEmpty(entityList)) {
+            return Collections.emptyList();
+        }
+        entityList.forEach(entity -> entity.setChildren(sortFeatureLibraryTree(entity.getChildren())));
+        return entityList.stream().sorted(Comparator.comparing(QueryFeatureLibraryDto::getFeatureCode)).toList();
     }
 
     private void handleRelatedModel(List<QueryFeatureLibraryDto> dtoList) {

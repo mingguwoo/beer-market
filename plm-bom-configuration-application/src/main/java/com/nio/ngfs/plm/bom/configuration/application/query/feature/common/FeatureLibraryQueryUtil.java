@@ -37,11 +37,11 @@ public class FeatureLibraryQueryUtil {
             }
         });
         groupList.forEach(group -> {
-            group.setChildren(featureListByGroup.get(group.getFeatureCode()));
+            group.setChildren(featureListByGroup.getOrDefault(group.getFeatureCode(), Lists.newArrayList()));
             if (CollectionUtils.isNotEmpty(group.getChildren())) {
                 group.getChildren().forEach(feature -> {
                     feature.setGroup(group.getFeatureCode());
-                    feature.setChildren(optionListByFeature.get(feature.getFeatureCode()));
+                    feature.setChildren(optionListByFeature.getOrDefault(feature.getFeatureCode(), Lists.newArrayList()));
                     if (CollectionUtils.isNotEmpty(feature.getChildren())) {
                         feature.getChildren().forEach(option -> option.setGroup(group.getFeatureCode()));
                     }

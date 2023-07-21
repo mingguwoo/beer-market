@@ -7,7 +7,6 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.BaseVehicleAg
 import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.BaseVehicleFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.BaseVehicleRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureId;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.service.BaseVehicleDomainService;

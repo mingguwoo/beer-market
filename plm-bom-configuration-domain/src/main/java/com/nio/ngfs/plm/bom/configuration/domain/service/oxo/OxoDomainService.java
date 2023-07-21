@@ -1,7 +1,10 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service.oxo;
 
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.PageData;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.*;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoAddCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoBaseCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoCompareCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoSnapshotCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoChangeLogRespDto;
 
 import javax.servlet.http.HttpServletResponse;

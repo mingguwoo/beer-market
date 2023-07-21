@@ -46,6 +46,9 @@ public class BaseVehicleAggr extends AbstractDo implements AggrRoot<String>, Clo
         return baseVehicleId;
     }
 
+    /**
+     * 新增Base Vehicle
+     */
     public void addBaseVehicle(AddBaseVehicleCmd cmd){
         //校验maturity并赋值
         checkAndSetMaturity(cmd.getMaturity());
@@ -53,20 +56,12 @@ public class BaseVehicleAggr extends AbstractDo implements AggrRoot<String>, Clo
         setStatus(StatusEnum.ACTIVE.getStatus());
     }
 
-    private void checkAndSetMaturity(String maturity){
-        //maturity为空默认赋值U
-        if (maturity == null) {
-            maturity = BaseVehicleMaturityEnum.U.getMaturity();
-        }
-        if (BaseVehicleMaturityEnum.getByMaturity(maturity) == null){
-            throw new BusinessException(ConfigErrorCode.BASE_VEHICLE_MATURITY_INVALID);
-        }
-        setMaturity(maturity);
-    }
-
+    /**
+     * 编辑Base Vehicle
+     */
     public void editBaseVehicle(EditBaseVehicleCmd cmd){
         //校验model，model year是否被改了
-        checkModelAndModelYear(cmd);
+        checkModelCodeAndModelYear(cmd);
         //赋值
         changeMaturity(cmd);
         setRegionOptionCode(cmd.getRegionOptionCode());
@@ -75,12 +70,19 @@ public class BaseVehicleAggr extends AbstractDo implements AggrRoot<String>, Clo
         setUpdateUser(cmd.getUpdateUser());
     }
 
-    private void checkModelAndModelYear(EditBaseVehicleCmd cmd) {
+    /**
+     * 校验Model Code和Model Year是否更改
+     */
+    private void checkModelCodeAndModelYear(EditBaseVehicleCmd cmd) {
         if (!modelCode.equals(cmd.getModelCode()) || !modelYear.equals(cmd.getModelYear())){
             throw new BusinessException(ConfigErrorCode.BASE_VEHICLE_MODEL_CODE_MODEL_YEAR_INVALID);
         }
     }
 
+
+    /**
+     * 校验Maturity修改是否符合规范并修改
+     */
     private void changeMaturity(EditBaseVehicleCmd cmd) {
         BaseVehicleMaturityEnum oldMaturity = BaseVehicleMaturityEnum.getByMaturity(maturity);
         BaseVehicleMaturityEnum newMaturity = BaseVehicleMaturityEnum.getByMaturity(cmd.getMaturity());
@@ -92,6 +94,20 @@ public class BaseVehicleAggr extends AbstractDo implements AggrRoot<String>, Clo
             throw new BusinessException(ConfigErrorCode.BASE_VEHICLE_MATURITY_CHANGE_INVALID);
         }
         setMaturity(cmd.getMaturity());
+    }
+
+    /**
+     * 校验BaseVehicle的Maturity是否符合规范并赋值
+     */
+    private void checkAndSetMaturity(String maturity){
+        //maturity为空默认赋值U
+        if (maturity == null) {
+            maturity = BaseVehicleMaturityEnum.U.getMaturity();
+        }
+        if (BaseVehicleMaturityEnum.getByMaturity(maturity) == null){
+            throw new BusinessException(ConfigErrorCode.BASE_VEHICLE_MATURITY_INVALID);
+        }
+        setMaturity(maturity);
     }
 
 }

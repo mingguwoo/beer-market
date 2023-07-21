@@ -39,14 +39,29 @@ public class BaseVehicleRepositoryImpl implements BaseVehicleRepository {
     public BaseVehicleAggr find(String s) {
         return null;
     }
-
+    /**
+     * 根据Model
+     */
     @Override
-    public List<BaseVehicleAggr> queryByModelModelYearRegionDriveHandSalesVersion(String model, String modelYear, String region, String driveHand, String salesVersion) {
-        return baseVehicleConverter.convertEntityListToDoList(bomsBasicVehicleDao.queryByModelModelYearRegionDriveHandSalesVersion(model, modelYear, region, driveHand, salesVersion));
+    public List<BaseVehicleAggr> queryByModelCodeModelYearRegionDriveHandSalesVersion(String modelCode, String modelYear, String regionOptionCode, String driveHand, String salesVersion) {
+        return baseVehicleConverter.convertEntityListToDoList(bomsBasicVehicleDao.queryByModelCodeModelYearRegionOptionCodeDriveHandSalesVersion(modelCode, modelYear, regionOptionCode, driveHand, salesVersion));
     }
 
     @Override
     public BaseVehicleAggr queryBaseVehicleByBaseVehicleId(String baseVehicleId) {
         return baseVehicleConverter.convertEntityToDo(bomsBasicVehicleDao.queryBaseVehicleByBaseVehicleId(baseVehicleId));
     }
+
+    @Override
+    public void removeById(Long id) {
+        bomsBasicVehicleDao.removeById(id);
+    }
+
+
+    @Override
+    public List<BaseVehicleAggr> queryByModel(String modelCode) {
+        return baseVehicleConverter.convertEntityListToDoList(bomsBasicVehicleDao.queryByModel(modelCode));
+    }
+
+
 }

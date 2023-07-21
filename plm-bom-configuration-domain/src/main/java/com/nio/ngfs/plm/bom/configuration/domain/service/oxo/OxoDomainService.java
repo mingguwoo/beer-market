@@ -1,9 +1,11 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service.oxo;
 
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.PageData;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.*;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoAddCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoBaseCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoCompareCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoSnapshotCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoChangeLogRespDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListsRespDto;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -20,12 +22,7 @@ public interface OxoDomainService {
      */
     List<String> queryVersion(OxoBaseCmd cmd);
 
-    /**
-     * 查询oxo列表
-     * @param cmd
-     * @return
-     */
-    OxoListsRespDto queryList(OxoListCmd cmd);
+
 
     /**
      * 分页查询 发布历史
@@ -46,15 +43,15 @@ public interface OxoDomainService {
      * @param cmd
      * @param response
      */
-    void export(OxoListCmd cmd, HttpServletResponse response);
+    //void export(OxoListCmd cmd, HttpServletResponse response);
 
 
     /**
      * 版本对比
-     * @param compareCmd
+     * @param comp areCmd
      * @return
      */
-    OxoListsRespDto compare(OxoCompareCmd compareCmd);
+    //OxoListsRes compare(OxoCompareCmd compareCmd);
 
 
     /**

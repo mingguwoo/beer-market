@@ -14,14 +14,14 @@ public interface BomsBasicVehicleDao extends IService<BomsBasicVehicleEntity> {
     /**
      * 根据Model,Model Year, Region, Drive Hand,Sales Version查找
      *
-     * @param model
+     * @param modelCode
      * @param modelYear
-     * @param region
+     * @param regionOptionCode
      * @param driveHand
      * @param salesVersion
      * @return BaseVehicleAggr列表
      */
-    List<BomsBasicVehicleEntity> queryByModelModelYearRegionDriveHandSalesVersion(String model, String modelYear, String region, String driveHand, String salesVersion);
+    List<BomsBasicVehicleEntity> queryByModelCodeModelYearRegionOptionCodeDriveHandSalesVersion(String modelCode, String modelYear, String regionOptionCode, String driveHand, String salesVersion);
 
     /**
      * 获取最新BaseVehicle记录
@@ -31,4 +31,8 @@ public interface BomsBasicVehicleDao extends IService<BomsBasicVehicleEntity> {
     BomsBasicVehicleEntity getLastestBaseVehicle();
 
     BomsBasicVehicleEntity queryBaseVehicleByBaseVehicleId(String baseVehicleId);
+
+
+
+    List<BomsBasicVehicleEntity> queryByModel(String modelCode);
 }

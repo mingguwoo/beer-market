@@ -11,16 +11,37 @@ import java.util.List;
 public interface BaseVehicleRepository extends Repository<BaseVehicleAggr,String> {
 
     /**
-     * 根据Model,Model Year, Region, Drive Hand,Sales Version查找
+     * 根据Model,Model Year, Region, Drive Hand,Sales Version查找 Base Vehicle
      *
-     * @param model
+     * @param modelCode
      * @param modelYear
-     * @param region
+     * @param regionOptionCode
      * @param driveHand
      * @param salesVersion
      * @return BaseVehicleAggr列表
      */
-    List<BaseVehicleAggr> queryByModelModelYearRegionDriveHandSalesVersion(String model, String modelYear, String region, String driveHand, String salesVersion);
+    List<BaseVehicleAggr> queryByModelCodeModelYearRegionDriveHandSalesVersion(String modelCode, String modelYear, String regionOptionCode, String driveHand, String salesVersion);
 
+
+    /**
+     * 根据车型
+     * @param modelCode
+     * @return
+     */
+    List<BaseVehicleAggr> queryByModel(String modelCode);
+
+    /**
+     * 根据Base Vehicle Id 查找 Base Vehicle
+     *
+     * @param baseVehicleId
+     * @return BaseVehicleAggr
+     */
     BaseVehicleAggr queryBaseVehicleByBaseVehicleId(String baseVehicleId);
+
+    /**
+     * 根据 Id 删除 Base Vehicle
+     *
+     * @param id
+     */
+    void removeById(Long id);
 }

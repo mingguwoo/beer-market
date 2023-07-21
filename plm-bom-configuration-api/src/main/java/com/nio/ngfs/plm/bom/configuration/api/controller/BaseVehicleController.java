@@ -4,14 +4,12 @@ import com.nio.bom.share.annotation.NeedAuthorization;
 import com.nio.bom.share.annotation.NotLogResult;
 import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.AddBaseVehicleCommand;
+import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.CheckBaseVehicleStatusCommand;
+import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.DeleteBaseVehicleCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.EditBaseVehicleCommand;
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmBaseVehicleClient;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.AddBaseVehicleCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.EditBaseVehicleCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.ListBaseVehicleQry;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.AddBaseVehicleRespDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.BaseVehicleDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.EditBaseVehicleRespDto;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.*;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,12 +30,15 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
 
     private final AddBaseVehicleCommand addBaseVehicleCommand;
     private final EditBaseVehicleCommand editBaseVehicleCommand;
+    private final CheckBaseVehicleStatusCommand checkBaseVehicleStatusCommand;
+    private final DeleteBaseVehicleCommand deleteBaseVehicleCommand;
 
 
     @Override
     @NeedAuthorization
     @NotLogResult
     public ResultInfo<List<BaseVehicleDto>> listBaseVehicle(@Valid @RequestBody ListBaseVehicleQry qry) {
+
         return null;
     }
 
@@ -55,5 +56,17 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
         return ResultInfo.success(editBaseVehicleCommand.execute(cmd));
     }
 
+    @Override
+    @NeedAuthorization
+    @NotLogResult
+    public ResultInfo<CheckBaseVehicleStatusRespDto> checkBaseVehicleStatus(@Valid @RequestBody CheckBaseVehicleStatusCmd cmd) {
+        return ResultInfo.success(checkBaseVehicleStatusCommand.execute(cmd));
+    }
 
+    @Override
+    @NeedAuthorization
+    @NotLogResult
+    public ResultInfo<DeleteBaseVehicleRespDto> deleteBaseVehicle(@Valid @RequestBody DeleteBaseVehicleCmd cmd) {
+        return ResultInfo.success(deleteBaseVehicleCommand.execute(cmd));
+    }
 }

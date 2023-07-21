@@ -12,6 +12,6 @@ CREATE TABLE `boms_basic_vehicle` (
    `create_user` varchar(32) NOT NULL DEFAULT '' COMMENT '创建人',
    `update_user` varchar(32) NOT NULL DEFAULT '' COMMENT '修改人',
    `maturity` varchar(16) NOT NULL DEFAULT 'U' COMMENT '定义Model/Model Year的成熟度(U代表Under Study,P代表Production)',
-   `del_flag` smallint NOT NULL DEFAULT '0' COMMENT '1删除 0未删除',
+   `del_flag` tinyint NOT NULL DEFAULT '0' COMMENT '1删除 0未删除',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  COMMENT='BaseVehicle整车基础配置表';

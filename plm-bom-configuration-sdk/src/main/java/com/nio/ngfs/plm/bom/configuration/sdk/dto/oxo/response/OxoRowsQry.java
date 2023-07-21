@@ -1,6 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response;
 
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.Dto;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.Qry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoEditCmd;
 import lombok.Data;
 
@@ -10,7 +10,7 @@ import java.util.List;
  * @author wangchao.wang
  */
 @Data
-public class OxoRowsRespDto implements Dto {
+public class OxoRowsQry implements Qry {
 
         private String featureCode;
 
@@ -31,7 +31,7 @@ public class OxoRowsRespDto implements Dto {
         /**
          * featureCode下面 optionCode
          */
-        private List<OxoRowsRespDto> options;
+        private List<OxoRowsQry> options;
 
         /**
          * 打点信息

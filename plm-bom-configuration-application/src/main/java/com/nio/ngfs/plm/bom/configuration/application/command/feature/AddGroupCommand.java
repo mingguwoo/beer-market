@@ -6,6 +6,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.event.EventPublisher;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.service.FeatureDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.AddGroupCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.AddGroupRespDto;
@@ -43,6 +44,7 @@ public class AddGroupCommand extends AbstractLockCommand<AddGroupCmd, AddGroupRe
         featureDomainService.checkGroupCodeExistInGroupLibrary(featureAggr.getFeatureId().getFeatureCode(), true);
         // Repository保存聚合根
         featureRepository.save(featureAggr);
+        eventPublisher.publish(new FeatureChangeEvent(featureAggr));
         return new AddGroupRespDto();
     }
 

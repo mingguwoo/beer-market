@@ -9,6 +9,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.event.EventPublisher;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.common.FeatureAggrThreadLocal;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.GroupCodeChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.service.FeatureDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.EditGroupCmd;
@@ -53,6 +54,7 @@ public class EditGroupCommand extends AbstractLockCommand<EditGroupCmd, EditGrou
         featureDomainService.checkGroupCodeExistInGroupLibrary(featureAggr.getFeatureId().getFeatureCode(), false);
         // Repository保存聚合根
         featureRepository.save(featureAggr);
+        eventPublisher.publish(new FeatureChangeEvent(featureAggr));
         // 发布GroupCode变更事件
         publishGroupCodeChangeEvent(featureAggr, oldGroupCode);
         return new EditGroupRespDto();

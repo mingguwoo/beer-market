@@ -91,7 +91,7 @@ public class BaseVehicleDomainDomainServiceImpl implements BaseVehicleDomainServ
         // 获取中英文名称
         List<String> optionCodes = BaseVehicleFactory.convertOptionCodes(baseVehicleAggrs);
 
-        List<FeatureAggr> featureAggrs = featureRepository.queryByFeatureCode(optionCodes);
+        List<FeatureAggr> featureAggrs = featureRepository.queryByFeatureOptionCodeList(optionCodes);
 
         if (CollectionUtils.isEmpty(featureAggrs)) {
             return headQry;

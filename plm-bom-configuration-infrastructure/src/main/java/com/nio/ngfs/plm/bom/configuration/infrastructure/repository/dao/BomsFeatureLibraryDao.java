@@ -57,10 +57,10 @@ public interface BomsFeatureLibraryDao extends IService<BomsFeatureLibraryEntity
     /**
      * 根据FeatureCode查询
      *
-     * @param featureCodes FeatureCode
+     * @param featureCode FeatureCode
      * @return BomsFeatureLibraryEntity列表
      */
-    List<BomsFeatureLibraryEntity> queryByFeatureCode(List<String> featureCodes);
+    List<BomsFeatureLibraryEntity> queryByFeatureCode(String featureCode);
 
     /**
      * 根据Display Name、Catalog、Type查询
@@ -79,13 +79,12 @@ public interface BomsFeatureLibraryDao extends IService<BomsFeatureLibraryEntity
      */
     List<BomsFeatureLibraryEntity> getGroupList();
 
-
     /**
-     * 查询 没有选中oxo行的 feature_library
-     * @param modelCode
-     * @return
+     * 根据Feature/Option Code列表批量查询
+     *
+     * @param featureOptionCodeList Feature/Option Code列表
+     * @return BomsFeatureLibraryEntity列表
      */
-    List<BomsFeatureLibraryEntity> queryFeatureOptionLists(String modelCode);
-
+    List<BomsFeatureLibraryEntity> queryByFeatureOptionCodeList(List<String> featureOptionCodeList);
 
 }

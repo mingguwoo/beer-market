@@ -107,7 +107,7 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
 
     @Override
     public void checkFeatureOptionCodeUnique(FeatureAggr featureAggr) {
-        List<FeatureAggr> existedFeatureAggrList = featureRepository.queryByFeatureCode(Lists.newArrayList(featureAggr.getFeatureId().getFeatureCode()));
+        List<FeatureAggr> existedFeatureAggrList = featureRepository.queryByFeatureCode(featureAggr.getFeatureId().getFeatureCode());
         if (CollectionUtils.isEmpty(existedFeatureAggrList)) {
             return;
         }

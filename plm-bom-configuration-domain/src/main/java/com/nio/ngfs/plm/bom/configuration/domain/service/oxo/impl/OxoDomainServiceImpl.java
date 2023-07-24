@@ -125,7 +125,7 @@ public class OxoDomainServiceImpl implements OxoDomainService {
     public OxoAddCmd queryFeatureList(OxoBaseCmd cmd) {
 
 
-        List<FeatureAggr> featureAggrs = featureRepository.queryFeatureOptionLists(cmd.getModelCode());
+        List<FeatureAggr> featureAggrs = null;
 
         if (CollectionUtils.isEmpty(featureAggrs)) {
             return null;

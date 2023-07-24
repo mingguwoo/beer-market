@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.google.common.collect.Lists;
 import com.nio.ngfs.common.model.page.WherePageRequest;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsFeatureLibraryDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureLibraryEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsFeatureLibraryMapper;
@@ -24,6 +25,8 @@ import java.util.concurrent.Future;
 @Repository
 @Slf4j
 public class BomsFeatureLibraryDaoImpl extends AbstractDao<BomsFeatureLibraryMapper, BomsFeatureLibraryEntity, WherePageRequest<BomsFeatureLibraryEntity>> implements BomsFeatureLibraryDao {
+
+    private static final List<String> FEATURE_OPTION_TYPE_LIST = Lists.newArrayList(FeatureTypeEnum.FEATURE.getType(), FeatureTypeEnum.OPTION.getType());
 
     @Resource
     private DtpExecutor ioThreadPool;
@@ -78,9 +81,9 @@ public class BomsFeatureLibraryDaoImpl extends AbstractDao<BomsFeatureLibraryMap
     }
 
     @Override
-    public List<BomsFeatureLibraryEntity> queryByFeatureCode(List<String> featureCodes) {
+    public List<BomsFeatureLibraryEntity> queryByFeatureCode(String featureCode) {
         LambdaQueryWrapper<BomsFeatureLibraryEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.in(BomsFeatureLibraryEntity::getFeatureCode, featureCodes);
+        lambdaQueryWrapper.eq(BomsFeatureLibraryEntity::getFeatureCode, featureCode);
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 
@@ -100,14 +103,12 @@ public class BomsFeatureLibraryDaoImpl extends AbstractDao<BomsFeatureLibraryMap
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 
-    /**
-     * 查询 没有选中oxo行的 feature_library
-     * @param modelCode
-     * @return
-     */
     @Override
-    public List<BomsFeatureLibraryEntity> queryFeatureOptionLists(String modelCode) {
-        return getBaseMapper().queryFeatureOptionLists(modelCode);
+    public List<BomsFeatureLibraryEntity> queryByFeatureOptionCodeList(List<String> featureOptionCodeList) {
+        LambdaQueryWrapper<BomsFeatureLibraryEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.in(BomsFeatureLibraryEntity::getFeatureCode, featureOptionCodeList);
+        lambdaQueryWrapper.in(BomsFeatureLibraryEntity::getType, FEATURE_OPTION_TYPE_LIST);
+        return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 
     /**
@@ -122,11 +123,5 @@ public class BomsFeatureLibraryDaoImpl extends AbstractDao<BomsFeatureLibraryMap
         }
         return Lists.newArrayList();
     }
-
-
-
-
-
-
 
 }

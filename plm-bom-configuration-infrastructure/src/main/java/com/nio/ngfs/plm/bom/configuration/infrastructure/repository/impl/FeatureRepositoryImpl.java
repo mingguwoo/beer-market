@@ -100,8 +100,8 @@ public class FeatureRepositoryImpl implements FeatureRepository {
     }
 
     @Override
-    public List<FeatureAggr> queryByFeatureCode(List<String> featureCodes) {
-        return featureConverter.convertEntityListToDoList(bomsFeatureLibraryDao.queryByFeatureCode(featureCodes));
+    public List<FeatureAggr> queryByFeatureCode(String featureCode) {
+        return featureConverter.convertEntityListToDoList(bomsFeatureLibraryDao.queryByFeatureCode(featureCode));
     }
 
     @Override
@@ -118,8 +118,8 @@ public class FeatureRepositoryImpl implements FeatureRepository {
     }
 
     @Override
-    public List<FeatureAggr> queryFeatureOptionLists(String modelCode) {
-        return featureConverter.convertEntityListToDoList(bomsFeatureLibraryDao.queryFeatureOptionLists(modelCode));
+    public List<FeatureAggr> queryByFeatureOptionCodeList(List<String> featureOptionCodeList) {
+        return featureConverter.convertEntityListToDoList(bomsFeatureLibraryDao.queryByFeatureOptionCodeList(featureOptionCodeList));
     }
 
 }

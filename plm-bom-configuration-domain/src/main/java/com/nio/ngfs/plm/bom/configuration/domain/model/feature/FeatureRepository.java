@@ -52,7 +52,7 @@ public interface FeatureRepository extends Repository<FeatureAggr, FeatureId> {
      * @param featureCode FeatureCode
      * @return FeatureAggr列表
      */
-    List<FeatureAggr> queryByFeatureCode(List<String> featureCodes);
+    List<FeatureAggr> queryByFeatureCode(String featureCode);
 
     /**
      * 根据Display Name、Catalog、Type查询
@@ -71,12 +71,12 @@ public interface FeatureRepository extends Repository<FeatureAggr, FeatureId> {
      */
     void batchSaveFeatureChangeLog(List<FeatureChangeLogDo> featureChangeLogDoList);
 
-
     /**
-     *  查询 没有选中oxo行的 feature_library
-     * @param modelCode
-     * @return
+     * 根据Feature/Option Code列表批量聚合根
+     *
+     * @param featureOptionCodeList Feature/Option Code列表
+     * @return FeatureAggr列表
      */
-    List<FeatureAggr>  queryFeatureOptionLists(String modelCode);
+    List<FeatureAggr> queryByFeatureOptionCodeList(List<String> featureOptionCodeList);
 
 }

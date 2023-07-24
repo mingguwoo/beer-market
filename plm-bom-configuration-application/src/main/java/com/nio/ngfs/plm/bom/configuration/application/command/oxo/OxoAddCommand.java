@@ -40,7 +40,9 @@ public class OxoAddCommand extends AbstractLockCommand<OxoAddCmd, Boolean> {
         oxoRepository.insertOxoRows(OxoRowInfoAggr.buildOxoRowInfoAggrs(cmd));
 
 
-        //查询列数据
+        //进行打点
+
+
 
 
         //插入打点数据

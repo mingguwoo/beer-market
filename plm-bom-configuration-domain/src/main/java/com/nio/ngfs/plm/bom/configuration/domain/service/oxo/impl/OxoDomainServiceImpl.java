@@ -5,22 +5,16 @@ import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.domain.model.common.CommonRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.common.MatrixRuleQueryDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.OxoPackageInfoAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.repository.OxoRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoDomainService;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.PageData;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoAddCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoBaseCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoCompareCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoSnapshotCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoChangeLogRespDto;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-
-import javax.servlet.http.HttpServletResponse;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -33,31 +27,18 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OxoDomainServiceImpl implements OxoDomainService {
 
-    private final FeatureRepository featureRepository;
+    private final OxoRepository oxoRepository;
     private final CommonRepository commonRepository;
 
 
-
+    /**
+     * 插入 修改打点信息
+     * @param packageInfoAggrs
+     */
     @Override
-    public PageData<OxoChangeLogRespDto> queryChangeLog(OxoBaseCmd oxoBaseCmd) {
-        return null;
+    public void insertOxoOptionPackageInfos(List<OxoPackageInfoAggr> packageInfoAggrs) {
+        oxoRepository.insertOxoOptionPackageInfo(packageInfoAggrs);
     }
-
-    @Override
-    public void compareExport(OxoCompareCmd compareCmd, HttpServletResponse response) {
-
-    }
-
-//    @Override
-//    public void export(OxoListCmd cmd, HttpServletResponse response) {
-//
-//    }
-//
-//    @Override
-//    public OxoListsRespDto compare(OxoCompareCmd compareCmd) {
-//        return null;
-//    }
-
 
     /**
      * @return
@@ -118,15 +99,5 @@ public class OxoDomainServiceImpl implements OxoDomainService {
             list.add(x);
         });
         return list.stream().distinct().toList();
-    }
-
-    @Override
-    public void renewSort(OxoSnapshotCmd cmd) {
-
-    }
-
-    @Override
-    public Object querySortFeatureList(OxoSnapshotCmd cmd) {
-        return null;
     }
 }

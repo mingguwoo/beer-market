@@ -31,12 +31,7 @@ public interface OxoRepository {
     List<OxoVersionSnapshotAggr>  queryOxoVersionSnapshotLists(String modelCode);
 
 
-    /**
-     * 根据modelCode查询oxo
-     * @param modelCode
-     * @return
-     */
-    List<OxoInfoDo>  queryFeatureListsByModel(String modelCode);
+
 
 
 

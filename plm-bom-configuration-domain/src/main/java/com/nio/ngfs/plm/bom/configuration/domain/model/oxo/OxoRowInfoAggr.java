@@ -1,6 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.oxo;
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.RuleCheckEnum;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoAddCmd;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -73,7 +74,7 @@ public class OxoRowInfoAggr extends AbstractDo {
             rowInfoAggr.setModelCode(modelCode);
             rowInfoAggr.setCreateUser(userName);
             rowInfoAggr.setUpdateUser(userName);
-            rowInfoAggr.setRuleCheck("Y");
+            rowInfoAggr.setRuleCheck(RuleCheckEnum.Y.getCode());
             rowInfoAggr.setIsHead(1);
             rowInfoAggr.setFeatureCode(featureOption.getFeatureCode());
             oxoRowInfoAggrs.add(rowInfoAggr);
@@ -84,7 +85,7 @@ public class OxoRowInfoAggr extends AbstractDo {
                 optionRowInfo.setModelCode(modelCode);
                 optionRowInfo.setCreateUser(userName);
                 optionRowInfo.setUpdateUser(userName);
-                optionRowInfo.setRuleCheck("Y");
+                optionRowInfo.setRuleCheck(RuleCheckEnum.Y.getCode());
                 optionRowInfo.setIsHead(2);
                 optionRowInfo.setFeatureCode(optionCode);
                 oxoRowInfoAggrs.add(optionRowInfo);

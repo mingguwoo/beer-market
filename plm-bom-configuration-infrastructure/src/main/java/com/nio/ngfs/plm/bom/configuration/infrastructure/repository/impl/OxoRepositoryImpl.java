@@ -54,15 +54,4 @@ public class OxoRepositoryImpl implements OxoRepository {
     }
 
 
-    /**
-     * 根据modelCode查询oxo
-     * @param modelCode
-     * @return
-     */
-    @Override
-    public List<OxoInfoDo>  queryFeatureListsByModel(String modelCode) {
-      return bomsOxoRowInfoDao.queryFeatureListsByModel(modelCode);
-    }
-
-
 }

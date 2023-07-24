@@ -130,7 +130,7 @@ public class OxoController {
      */
     @PostMapping("/renewSort")
     public ResultInfo renewSort(@Valid @RequestBody OxoSnapshotCmd cmd) {
-        oxoDomainService.renewSort(cmd);
+       // oxoDomainService.renewSort(cmd);
         return ResultInfo.success(true);
     }
 
@@ -141,7 +141,8 @@ public class OxoController {
      */
     @PostMapping("/querySortFeatureList")
     public ResultInfo querySortFeatureList(@Valid @RequestBody OxoSnapshotCmd cmd) {
-        return ResultInfo.success( oxoDomainService.querySortFeatureList(cmd));
+        //oxoDomainService.querySortFeatureList(cmd)
+        return ResultInfo.success(true);
     }
 
 //    /**
@@ -171,7 +172,7 @@ public class OxoController {
      */
     @PostMapping("/compareExport")
     public void compareExport(@Valid @RequestBody OxoCompareCmd compareCmd,HttpServletResponse response) {
-        oxoDomainService.compareExport(compareCmd,response);
+        //oxoDomainService.compareExport(compareCmd,response);
     }
 
     /**
@@ -181,6 +182,7 @@ public class OxoController {
      */
     @PostMapping("/queryChangeLog")
     public ResultInfo<PageData<OxoChangeLogRespDto>> queryChangeLog(@Valid @RequestBody OxoBaseCmd oxoBaseCmd) {
-        return ResultInfo.success(oxoDomainService.queryChangeLog(oxoBaseCmd));
+        //return ResultInfo.success(oxoDomainService.queryChangeLog(oxoBaseCmd));
+        return null;
     }
 }

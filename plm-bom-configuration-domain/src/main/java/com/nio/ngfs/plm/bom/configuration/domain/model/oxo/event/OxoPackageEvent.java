@@ -1,30 +1,31 @@
-package com.nio.ngfs.plm.bom.configuration.domain.model.oxo;
+package com.nio.ngfs.plm.bom.configuration.domain.model.oxo.event;
 
 
-import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
+import com.nio.ngfs.plm.bom.configuration.domain.event.DomainEvent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
-import lombok.extern.slf4j.Slf4j;
+
 
 /**
  * @author wangchao.wang
  */
-@Slf4j
 @Data
-@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OxoPackageInfoAggr extends AbstractDo {
+public class OxoPackageEvent extends DomainEvent {
+
 
 
 
     private Long rowId;
 
+
     private Long baseVehicleId;
 
+
     private String packageCode;
+
 
     private String description;
 

@@ -16,7 +16,7 @@ public class FeatureLibraryAssembler {
     public static QueryFeatureLibraryDto assemble(BomsFeatureLibraryEntity entity) {
         QueryFeatureLibraryDto dto = new QueryFeatureLibraryDto();
         BeanUtils.copyProperties(entity, dto);
-        dto.setCreateTime(DateUtils.dateTimeStr(entity.getUpdateTime()));
+        dto.setCreateTime(DateUtils.dateTimeStr(entity.getCreateTime()));
         dto.setUpdateTime(DateUtils.dateTimeStr(entity.getUpdateTime()));
         if (CollectionUtils.isNotEmpty(entity.getChildren())) {
             dto.setChildren(LambdaUtil.map(entity.getChildren(), FeatureLibraryAssembler::assemble));

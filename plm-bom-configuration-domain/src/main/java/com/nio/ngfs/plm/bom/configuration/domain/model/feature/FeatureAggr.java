@@ -118,6 +118,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
     public FeatureId getUniqId() {
         return featureId;
     }
+
     @Override
     public FeatureAggr clone() {
         try {

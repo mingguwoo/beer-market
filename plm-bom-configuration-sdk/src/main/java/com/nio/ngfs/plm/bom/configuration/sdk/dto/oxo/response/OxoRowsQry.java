@@ -22,11 +22,13 @@ public class OxoRowsQry implements Qry {
 
         private String comments;
 
-        private Long id;
+        private Long headId;
 
         private String ruleCheck;
 
         private String catalog;
+
+        private Integer isSortDelete;
 
         /**
          * featureCode下面 optionCode

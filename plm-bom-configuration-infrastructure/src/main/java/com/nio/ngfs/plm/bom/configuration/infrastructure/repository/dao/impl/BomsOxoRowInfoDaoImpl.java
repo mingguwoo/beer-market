@@ -30,7 +30,7 @@ public class BomsOxoRowInfoDaoImpl  extends AbstractDao<BomsOxoRowInfoMapper,
 
     }
 
-
+    @Override
     public  List<OxoInfoDo> queryFeatureListsByModel(String modelCode) {
         return getBaseMapper().queryFeatureListsByModel(modelCode);
     }

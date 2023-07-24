@@ -3,6 +3,7 @@ package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.nio.ngfs.common.model.page.WherePageRequest;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoOptionPackageInfoDao;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureLibraryEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsOxoOptionPackageInfoEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsOxoOptionPackageInfoMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -27,5 +28,12 @@ public class BomsOxoOptionPackageInfoDaoImpl extends AbstractDao<BomsOxoOptionPa
     @Override
     public void insertOxoOptionPackageInfos(List<BomsOxoOptionPackageInfoEntity> oxoOptionPackageInfos) {
         getBaseMapper().insertOxoOptionPackageInfos(oxoOptionPackageInfos);
+    }
+
+    @Override
+    public List<BomsOxoOptionPackageInfoEntity> queryOxoOptionPackageByHeadIds(List<Long> rowIds) {
+        LambdaQueryWrapper<BomsOxoOptionPackageInfoEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(BomsOxoOptionPackageInfoEntity::getRowId, rowIds);
+        return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 }

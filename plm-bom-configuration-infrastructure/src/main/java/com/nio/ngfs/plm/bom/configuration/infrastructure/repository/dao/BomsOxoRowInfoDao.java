@@ -15,6 +15,10 @@ public interface BomsOxoRowInfoDao extends IService<BomsOxoRowInfoEntity> {
     void insertOxoRows(List<BomsOxoRowInfoEntity> bomsOxoRowInfoEntityList);
 
 
-
+    /**
+     * 根据车型查询行信息
+     * @param modelCode
+     * @return
+     */
     List<OxoInfoDo> queryFeatureListsByModel(String modelCode);
 }

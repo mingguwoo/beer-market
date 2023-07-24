@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Component
 @RequiredArgsConstructor
-public class OxoAddCommand extends AbstractLockCommand<OxoAddCmd, Object> {
+public class OxoAddCommand extends AbstractLockCommand<OxoAddCmd, Boolean> {
 
 
     private final OxoRepository oxoRepository;
@@ -34,7 +34,7 @@ public class OxoAddCommand extends AbstractLockCommand<OxoAddCmd, Object> {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    protected Object executeWithLock(OxoAddCmd cmd) {
+    protected Boolean executeWithLock(OxoAddCmd cmd) {
 
         //插入行数据
         oxoRepository.insertOxoRows(OxoRowInfoAggr.buildOxoRowInfoAggrs(cmd));
@@ -50,6 +50,6 @@ public class OxoAddCommand extends AbstractLockCommand<OxoAddCmd, Object> {
 
 
 
-        return new Object();
+        return true;
     }
 }

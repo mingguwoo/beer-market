@@ -53,13 +53,14 @@
         a.comments,
         a.sort,
         a.sort_delete soreDelete,
+        b.type,
         b.parent_feature_code parentFeatureCode,
         b.display_name displayName,
         b.chinese_name chineseName,
         b.catalog
         from boms_oxo_row_info
         a inner join boms_feature_library b on a.feature_code=b.feature_code
-        where a.model_code=#{modelCode} and a.del_flag=0 and b.type in('Feature','Option') and b.status
+        where a.model_code=#{modelCode} and a.del_flag=0 and b.status
          ='Active' and b.del_flag=0
     </select>
 </mapper>

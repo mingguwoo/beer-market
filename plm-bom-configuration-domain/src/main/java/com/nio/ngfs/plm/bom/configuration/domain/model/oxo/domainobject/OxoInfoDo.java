@@ -18,7 +18,7 @@ public class OxoInfoDo extends AbstractDo {
 
     private String featureCode;
 
-    private Integer ruleCheck;
+    private String ruleCheck;
 
     private Integer isHead;
 
@@ -36,6 +36,9 @@ public class OxoInfoDo extends AbstractDo {
     private String chineseName;
 
     private String catalog;
+
+
+    private String type;
 
 
 

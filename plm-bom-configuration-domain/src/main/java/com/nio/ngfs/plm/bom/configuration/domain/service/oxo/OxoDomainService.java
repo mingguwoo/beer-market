@@ -16,15 +16,6 @@ import java.util.List;
 public interface OxoDomainService {
 
     /**
-     * 根据车型查询所有的版本
-     * @param cmd
-     * @return
-     */
-    List<String> queryVersion(OxoBaseCmd cmd);
-
-
-
-    /**
      * 分页查询 发布历史
      * @param oxoBaseCmd
      * @return

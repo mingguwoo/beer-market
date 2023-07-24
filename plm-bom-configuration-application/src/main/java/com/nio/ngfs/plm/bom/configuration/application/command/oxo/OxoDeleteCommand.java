@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class OxoDeleteCommand extends AbstractLockCommand<OxoDeleteCmd, Object> {
+public class OxoDeleteCommand extends AbstractLockCommand<OxoDeleteCmd, Boolean> {
 
 
     @Override
@@ -20,20 +20,23 @@ public class OxoDeleteCommand extends AbstractLockCommand<OxoDeleteCmd, Object> 
     }
 
     @Override
-    protected Object executeWithLock(OxoDeleteCmd cmd) {
+    protected Boolean executeWithLock(OxoDeleteCmd cmd) {
 
-        return new Object();
+
+
+
+        return true;
     }
 
 
 
 
-    public void delete(OxoDeleteCmd cmd) {
+    public Boolean delete(OxoDeleteCmd cmd) {
 
 
 
 
 
-
+        return true;
     }
 }

@@ -1,7 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service.oxo.impl;
 
+import com.nio.bom.share.enums.BrandEnum;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
-import com.nio.ngfs.plm.bom.configuration.common.enums.BrandEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.AdministratorDetailFacade;
 import com.nio.ngfs.plm.bom.configuration.domain.model.common.CommonRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.common.MatrixRuleQueryDo;

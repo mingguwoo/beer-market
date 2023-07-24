@@ -20,10 +20,9 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class RedisClient {
 
-    private static final String LOCK_TITLE = "PS_REDIS_LOCK:";
+    private static final String LOCK_TITLE = "CONFIG_REDIS_LOCK:";
     @Autowired
     private StringRedisTemplate redisTemplate;
-
     @Autowired
     private RedissonClient redisClient;
 

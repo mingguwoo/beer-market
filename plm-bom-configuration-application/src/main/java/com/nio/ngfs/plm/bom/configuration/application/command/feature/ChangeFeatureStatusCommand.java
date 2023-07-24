@@ -1,8 +1,8 @@
 package com.nio.ngfs.plm.bom.configuration.application.command.feature;
 
+import com.nio.bom.share.enums.FeatureStatusChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockCommand;
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
-import com.nio.ngfs.plm.bom.configuration.common.enums.StatusChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.common.FeatureAggrThreadLocal;
@@ -34,8 +34,8 @@ public class ChangeFeatureStatusCommand extends AbstractLockCommand<ChangeFeatur
     @Override
     protected ChangeFeatureStatusRespDto executeWithLock(ChangeFeatureStatusCmd cmd) {
         FeatureAggr featureAggr = featureDomainService.getAndCheckFeatureAggr(cmd.getFeatureCode(), FeatureTypeEnum.FEATURE);
-        StatusChangeTypeEnum changeTypeEnum = featureAggr.changeFeatureStatus(cmd);
-        if (changeTypeEnum != StatusChangeTypeEnum.NO_CHANGE) {
+        FeatureStatusChangeTypeEnum changeTypeEnum = featureAggr.changeFeatureStatus(cmd);
+        if (changeTypeEnum != FeatureStatusChangeTypeEnum.NO_CHANGE) {
             // Status变更，保存到数据库
             featureRepository.save(featureAggr);
         }

@@ -1,12 +1,12 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service.impl;
 
 import com.google.common.collect.Lists;
+import com.nio.bom.share.enums.FeatureStatusChangeTypeEnum;
 import com.nio.bom.share.enums.StatusEnum;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
-import com.nio.ngfs.plm.bom.configuration.common.enums.StatusChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.event.EventPublisher;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.FeatureFacade;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
@@ -80,15 +80,15 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
     }
 
     @Override
-    public void changeGroupFeatureOptionStatusByGroup(FeatureAggr featureAggr, StatusChangeTypeEnum changeTypeEnum, String updateUser) {
-        if (changeTypeEnum == StatusChangeTypeEnum.NO_CHANGE) {
+    public void changeGroupFeatureOptionStatusByGroup(FeatureAggr featureAggr, FeatureStatusChangeTypeEnum changeTypeEnum, String updateUser) {
+        if (changeTypeEnum == FeatureStatusChangeTypeEnum.NO_CHANGE) {
             return;
         }
         if (!featureAggr.isType(FeatureTypeEnum.GROUP)) {
             return;
         }
         // Group的状态由Active变为Inactive
-        if (changeTypeEnum == StatusChangeTypeEnum.ACTIVE_TO_INACTIVE) {
+        if (changeTypeEnum == FeatureStatusChangeTypeEnum.ACTIVE_TO_INACTIVE) {
             featureRepository.save(featureAggr);
             return;
         }

@@ -1,13 +1,13 @@
 package com.nio.ngfs.plm.bom.configuration.application.query.feature;
 
 import com.google.common.collect.Sets;
+import com.nio.bom.share.enums.FeatureCatalogEnum;
 import com.nio.bom.share.enums.StatusEnum;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.application.query.AbstractQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.feature.assemble.FeatureLibraryAssembler;
 import com.nio.ngfs.plm.bom.configuration.application.query.feature.common.FeatureLibraryQueryUtil;
-import com.nio.ngfs.plm.bom.configuration.common.enums.CatalogEnum;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsFeatureLibraryDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureLibraryEntity;
@@ -35,7 +35,7 @@ public class QueryFeatureLibraryQuery extends AbstractQuery<QueryFeatureLibraryQ
     @Override
     protected void validate(QueryFeatureLibraryQry qry) {
         // 校验参数
-        if (qry.getCatalog() != null && CatalogEnum.getByCatalog(qry.getCatalog()) == null) {
+        if (qry.getCatalog() != null && FeatureCatalogEnum.getByCatalog(qry.getCatalog()) == null) {
             throw new BusinessException(ConfigErrorCode.FEATURE_CATALOG_INVALID);
         }
         if (qry.getStatus() != null && StatusEnum.getByStatus(qry.getStatus()) == null) {

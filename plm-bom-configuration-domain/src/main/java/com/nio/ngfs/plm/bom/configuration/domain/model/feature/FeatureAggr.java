@@ -2,13 +2,13 @@ package com.nio.ngfs.plm.bom.configuration.domain.model.feature;
 
 import com.nio.bom.share.constants.CommonConstants;
 import com.nio.bom.share.domain.model.AggrRoot;
+import com.nio.bom.share.enums.BrandEnum;
+import com.nio.bom.share.enums.FeatureCatalogEnum;
+import com.nio.bom.share.enums.FeatureStatusChangeTypeEnum;
 import com.nio.bom.share.enums.StatusEnum;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
-import com.nio.ngfs.plm.bom.configuration.common.enums.BrandEnum;
-import com.nio.ngfs.plm.bom.configuration.common.enums.CatalogEnum;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
-import com.nio.ngfs.plm.bom.configuration.common.enums.StatusChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.common.util.RegexUtil;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
@@ -164,7 +164,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
     /**
      * 改变Group状态
      */
-    public StatusChangeTypeEnum changeGroupStatus(ChangeGroupStatusCmd cmd) {
+    public FeatureStatusChangeTypeEnum changeGroupStatus(ChangeGroupStatusCmd cmd) {
         checkType(FeatureTypeEnum.GROUP);
         // status校验
         String newStatus = cmd.getStatus();
@@ -174,7 +174,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
             throw new BusinessException(ConfigErrorCode.FEATURE_STATUS_INVALID);
         }
         if (oldStatusEnum == StatusEnum.INACTIVE && newStatusEnum == StatusEnum.ACTIVE) {
-            return StatusChangeTypeEnum.INACTIVE_TO_ACTIVE;
+            return FeatureStatusChangeTypeEnum.INACTIVE_TO_ACTIVE;
         } else if (oldStatusEnum == StatusEnum.ACTIVE && newStatusEnum == StatusEnum.INACTIVE) {
             childrenList.forEach(children -> {
                 if (children.isActive()) {
@@ -183,9 +183,9 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
             });
             setStatus(newStatus);
             setUpdateUser(cmd.getUpdateUser());
-            return StatusChangeTypeEnum.ACTIVE_TO_INACTIVE;
+            return FeatureStatusChangeTypeEnum.ACTIVE_TO_INACTIVE;
         }
-        return StatusChangeTypeEnum.NO_CHANGE;
+        return FeatureStatusChangeTypeEnum.NO_CHANGE;
     }
 
     /**
@@ -229,7 +229,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
     /**
      * 改变Feature状态
      */
-    public StatusChangeTypeEnum changeFeatureStatus(ChangeFeatureStatusCmd cmd) {
+    public FeatureStatusChangeTypeEnum changeFeatureStatus(ChangeFeatureStatusCmd cmd) {
         checkType(FeatureTypeEnum.FEATURE);
         // status校验
         String newStatus = cmd.getStatus();
@@ -239,7 +239,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
             throw new BusinessException(ConfigErrorCode.FEATURE_STATUS_INVALID);
         }
         if (oldStatusEnum == newStatusEnum) {
-            return StatusChangeTypeEnum.NO_CHANGE;
+            return FeatureStatusChangeTypeEnum.NO_CHANGE;
         }
         // Feature状态变更
         setStatus(newStatusEnum.getStatus());
@@ -248,10 +248,10 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
         changeChildrenListStatus(newStatusEnum, cmd.getUpdateUser());
         if (oldStatusEnum == StatusEnum.INACTIVE && newStatusEnum == StatusEnum.ACTIVE) {
             // 状态由Inactive变为Active
-            return StatusChangeTypeEnum.INACTIVE_TO_ACTIVE;
+            return FeatureStatusChangeTypeEnum.INACTIVE_TO_ACTIVE;
         }
         // 状态由Active变为Inactive
-        return StatusChangeTypeEnum.ACTIVE_TO_INACTIVE;
+        return FeatureStatusChangeTypeEnum.ACTIVE_TO_INACTIVE;
     }
 
     /**
@@ -337,7 +337,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
      * 校验Catalog
      */
     private void checkCatalog(String catalog) {
-        if (CatalogEnum.getByCatalog(catalog) == null) {
+        if (FeatureCatalogEnum.getByCatalog(catalog) == null) {
             throw new BusinessException(ConfigErrorCode.FEATURE_CATALOG_INVALID);
         }
     }

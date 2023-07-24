@@ -2,6 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.domain.model.feature.event;
 
 import com.nio.ngfs.plm.bom.configuration.domain.event.DomainEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureChangeTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,5 +22,7 @@ public class FeatureChangeEvent extends DomainEvent {
      * 变更的Feature
      */
     private FeatureAggr changedFeatureAggr;
+
+    private FeatureChangeTypeEnum changeType;
 
 }

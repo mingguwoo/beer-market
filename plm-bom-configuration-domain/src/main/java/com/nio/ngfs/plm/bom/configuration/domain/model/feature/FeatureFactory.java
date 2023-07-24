@@ -27,6 +27,7 @@ public class FeatureFactory {
                 .chineseName(cmd.getChineseName())
                 .description(cmd.getDescription())
                 .createUser(cmd.getCreateUser())
+                .updateUser(cmd.getCreateUser())
                 .build();
     }
 
@@ -40,6 +41,7 @@ public class FeatureFactory {
                 .catalog(cmd.getCatalog())
                 .requestor(cmd.getRequestor())
                 .createUser(cmd.getCreateUser())
+                .updateUser(cmd.getCreateUser())
                 .build();
     }
 
@@ -52,6 +54,7 @@ public class FeatureFactory {
                 .description(cmd.getDescription())
                 .requestor(cmd.getRequestor())
                 .createUser(cmd.getCreateUser())
+                .updateUser(cmd.getCreateUser())
                 .build();
     }
 

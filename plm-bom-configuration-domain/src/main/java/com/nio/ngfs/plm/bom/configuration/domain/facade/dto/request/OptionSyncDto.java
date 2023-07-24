@@ -8,4 +8,15 @@ import lombok.Data;
  */
 @Data
 public class OptionSyncDto {
+
+    private FeatureOptionSyncReqDto.FeatureSyncType type;
+
+    private String optionCode;
+
+    private String displayName;
+
+    private String chineseName;
+
+    private String description;
+
 }

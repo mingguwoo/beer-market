@@ -78,6 +78,20 @@
             <groupId>com.nio.ps</groupId>
             <artifactId>sugar-third-party</artifactId>
             <version>${sugar-third-party.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-starter-openfeign</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.alibaba</groupId>
+                    <artifactId>fastjson</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>cn.hutool</groupId>
+                    <artifactId>hutool-all</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 

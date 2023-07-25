@@ -2,7 +2,6 @@ package com.nio.ngfs.plm.bom.configuration.application.event.oxo;
 
 import com.nio.ngfs.plm.bom.configuration.application.event.EventHandler;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.event.OxoPackageEvent;
-import com.nio.ngfs.plm.bom.configuration.domain.service.FeatureDomainService;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoDomainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;

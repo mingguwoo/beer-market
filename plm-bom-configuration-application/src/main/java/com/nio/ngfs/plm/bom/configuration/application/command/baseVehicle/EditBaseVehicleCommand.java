@@ -25,8 +25,6 @@ public class EditBaseVehicleCommand {
         baseVehicleAggr.editBaseVehicle(cmd);
         baseVehicleDomainService.checkBaseVehicleUnique(baseVehicleAggr);
         baseVehicleRepository.save(baseVehicleAggr);
-        //更新oxo表并打点
-
         return new EditBaseVehicleRespDto();
     }
 }

@@ -7,7 +7,6 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.OxoVersionSnapshotAgg
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.enums.OxoSnapshotEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.repository.OxoRepository;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoBaseCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.compress.utils.Lists;

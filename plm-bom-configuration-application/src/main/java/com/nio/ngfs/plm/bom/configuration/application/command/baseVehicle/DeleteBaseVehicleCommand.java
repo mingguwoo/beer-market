@@ -23,8 +23,6 @@ public class DeleteBaseVehicleCommand {
         BaseVehicleAggr baseVehicleAggr = baseVehicleDomainService.getBaseVehicleByBaseVehicleId(cmd.getBaseVehicleId());
         baseVehicleDomainService.checkBaseVehicleExist(baseVehicleAggr);
         baseVehicleRepository.removeById(baseVehicleAggr.getId());
-        //删除oxo中对应打点信息
-
         return new DeleteBaseVehicleRespDto();
     }
 }

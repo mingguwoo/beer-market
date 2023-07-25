@@ -4,7 +4,6 @@ import com.nio.ngfs.common.utils.BeanConvertUtils;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.OxoPackageInfoAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.OxoRowInfoAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.OxoVersionSnapshotAggr;
-import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.domainobject.OxoInfoDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.repository.OxoRepository;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoOptionPackageInfoDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoRowInfoDao;

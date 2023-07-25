@@ -45,4 +45,10 @@ public interface ConfigConstants {
 
     String BASE_VEHICLE_ID_PREFIX = "BV";
 
+    String BASE_VEHICLE_REGION_FEATURE = "AD00";
+
+    String BASE_VEHICLE_DRIVE_HAND_FEATURE = "AN00";
+
+    String BASE_VEHICLE_SALES_VERSION_FEATURE = "19AA";
+
 }

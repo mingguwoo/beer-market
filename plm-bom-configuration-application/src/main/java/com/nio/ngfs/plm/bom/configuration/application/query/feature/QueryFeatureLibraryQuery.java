@@ -88,11 +88,11 @@ public class QueryFeatureLibraryQuery extends AbstractQuery<QueryFeatureLibraryQ
             featureLibraryDtoTree.forEach(group -> group.selectSearchMatch(qry.getSearch().trim(), false));
         }
         // 结果筛选
-        featureLibraryDtoTree = featureLibraryDtoTree.stream().filter(QueryFeatureLibraryDto::isMatchResult).toList();
+        featureLibraryDtoTree = featureLibraryDtoTree.stream().filter(QueryFeatureLibraryDto::matchResult).toList();
         featureLibraryDtoTree.forEach(group -> {
-            group.setChildren(group.getChildren().stream().filter(QueryFeatureLibraryDto::isMatchResult).toList());
+            group.setChildren(group.getChildren().stream().filter(QueryFeatureLibraryDto::matchResult).toList());
             group.getChildren().forEach(feature ->
-                    feature.setChildren(feature.getChildren().stream().filter(QueryFeatureLibraryDto::isMatchResult).toList())
+                    feature.setChildren(feature.getChildren().stream().filter(QueryFeatureLibraryDto::matchResult).toList())
             );
         });
         return featureLibraryDtoTree;

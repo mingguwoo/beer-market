@@ -1,7 +1,9 @@
 package com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response;
 
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.Dto;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Collections;
@@ -47,14 +49,16 @@ public class QueryFeatureLibraryDto implements Dto {
     /**
      * 子节点列表是否为空
      */
+    @Getter(value = AccessLevel.NONE)
     private transient boolean childrenEmpty = false;
 
     /**
      * 是否搜索匹配
      */
+    @Getter(value = AccessLevel.NONE)
     private transient boolean searchMatch = true;
 
-    public boolean isMatchResult() {
+    public boolean matchResult() {
         return !childrenEmpty && searchMatch;
     }
 
@@ -62,7 +66,7 @@ public class QueryFeatureLibraryDto implements Dto {
         if (CollectionUtils.isEmpty(children)) {
             this.childrenEmpty = true;
         } else {
-            this.childrenEmpty = children.stream().allMatch(QueryFeatureLibraryDto::isChildrenEmpty);
+            this.childrenEmpty = children.stream().allMatch(i -> i.childrenEmpty);
         }
     }
 

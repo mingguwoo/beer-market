@@ -2,15 +2,16 @@ package com.nio.ngfs.plm.bom.configuration.application.query.feature;
 
 import com.nio.bom.share.enums.StatusEnum;
 import com.nio.bom.share.exception.BusinessException;
-import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.application.query.AbstractQuery;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsFeatureLibraryDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureLibraryEntity;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.GetGroupCodeListQry;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -37,8 +38,14 @@ public class GetGroupCodeListQuery extends AbstractQuery<GetGroupCodeListQry, Li
     @Override
     public List<String> executeQuery(GetGroupCodeListQry qry) {
         List<BomsFeatureLibraryEntity> groupList = bomsFeatureLibraryDao.getGroupList();
-        return LambdaUtil.map(groupList, i -> qry.getStatus() == null || Objects.equals(qry.getStatus(), i.getStatus()),
-                BomsFeatureLibraryEntity::getFeatureCode);
+        if (CollectionUtils.isEmpty(groupList)) {
+            return Collections.emptyList();
+        }
+        // 过滤和排序
+        return groupList.stream().filter(i -> qry.getStatus() == null || Objects.equals(qry.getStatus(), i.getStatus()))
+                .map(BomsFeatureLibraryEntity::getFeatureCode)
+                .sorted(String::compareTo)
+                .toList();
     }
 
 }

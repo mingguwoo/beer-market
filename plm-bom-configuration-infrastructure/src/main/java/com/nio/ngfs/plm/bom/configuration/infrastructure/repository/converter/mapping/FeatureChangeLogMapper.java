@@ -1,6 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.mapping;
 
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.domainobject.FeatureChangeLogDo;
+import com.nio.ngfs.plm.bom.configuration.domain.model.featurechangelog.FeatureChangeLogAggr;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureChangeLogEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -10,7 +10,7 @@ import org.mapstruct.factory.Mappers;
  * @date 2023/7/18
  */
 @Mapper
-public interface FeatureChangeLogMapper extends MapstructMapper<FeatureChangeLogDo, BomsFeatureChangeLogEntity> {
+public interface FeatureChangeLogMapper extends MapstructMapper<FeatureChangeLogAggr, BomsFeatureChangeLogEntity> {
 
     FeatureChangeLogMapper INSTANCE = Mappers.getMapper(FeatureChangeLogMapper.class);
 

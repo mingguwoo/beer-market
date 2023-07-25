@@ -1,7 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.feature;
 
 import com.nio.bom.share.domain.repository.Repository;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.domainobject.FeatureChangeLogDo;
 
 import java.util.List;
 
@@ -63,13 +62,6 @@ public interface FeatureRepository extends Repository<FeatureAggr, FeatureId> {
      * @return FeatureAggr列表
      */
     List<FeatureAggr> queryByDisplayNameCatalogAndType(String displayName, String catalog, String type);
-
-    /**
-     * 批量保存Feature变更记录
-     *
-     * @param featureChangeLogDoList Feature变更记录列表
-     */
-    void batchSaveFeatureChangeLog(List<FeatureChangeLogDo> featureChangeLogDoList);
 
     /**
      * 根据Feature/Option Code列表批量聚合根

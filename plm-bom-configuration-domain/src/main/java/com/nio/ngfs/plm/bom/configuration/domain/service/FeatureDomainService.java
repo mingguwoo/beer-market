@@ -2,13 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.domain.service;
 
 import com.nio.bom.share.enums.FeatureStatusChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.domainobject.FeatureChangeLogDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureAttributeChangeEvent;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureStatusChangeEvent;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.GroupCodeChangeEvent;
-
-import java.util.List;
 
 /**
  * Feature领域服务
@@ -64,31 +58,6 @@ public interface FeatureDomainService {
      * @param newGroupCode 新的Group Code
      */
     void changeFeatureGroupCode(FeatureAggr featureAggr, String newGroupCode);
-
-    /**
-     * 构建Option的Group变更记录
-     *
-     * @param event      GroupCode变更事件
-     * @param optionList Option列表
-     * @return FeatureChangeLogDo列表
-     */
-    List<FeatureChangeLogDo> buildGroupChangeLogByOption(GroupCodeChangeEvent event, List<FeatureAggr> optionList);
-
-    /**
-     * 构建Group/Feature/Option的Status变更记录
-     *
-     * @param event event
-     * @return FeatureChangeLogDo列表
-     */
-    List<FeatureChangeLogDo> buildStatusChangeLogByGroupFeatureAndOption(FeatureStatusChangeEvent event);
-
-    /**
-     * 构建Feature属性变更记录
-     *
-     * @param event Feature属性变更事件
-     * @return FeatureChangeLogDo列表
-     */
-    List<FeatureChangeLogDo> buildFeatureAttributeChangeLog(FeatureAttributeChangeEvent event);
 
     /**
      * 校验Group Code

@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums;
+package com.nio.ngfs.plm.bom.configuration.domain.model.featurechangelog.enums;
 
 /**
  * @author xiaozhou.tu

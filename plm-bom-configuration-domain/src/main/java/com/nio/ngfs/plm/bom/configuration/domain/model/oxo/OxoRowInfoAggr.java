@@ -1,7 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.oxo;
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.RuleCheckEnum;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.enums.RuleCheckEnum;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoAddCmd;
 import lombok.AllArgsConstructor;
 import lombok.Data;

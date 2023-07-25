@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums;
+package com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.enums;
 
 import com.nio.bom.share.utils.EnumUtils;
 

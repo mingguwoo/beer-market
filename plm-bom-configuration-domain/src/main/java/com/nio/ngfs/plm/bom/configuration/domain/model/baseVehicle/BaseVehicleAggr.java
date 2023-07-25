@@ -5,7 +5,7 @@ import com.nio.bom.share.enums.StatusEnum;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.BaseVehicleMaturityEnum;
+import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.enums.BaseVehicleMaturityEnum;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.AddBaseVehicleCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.EditBaseVehicleCmd;
 import lombok.AllArgsConstructor;

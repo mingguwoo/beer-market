@@ -13,14 +13,17 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsFeat
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsBasicVehicleEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureLibraryEntity;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.QueryBaseVehicleQry;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.BaseVehicleRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.QueryBaseVehicleRespDto;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -31,7 +34,7 @@ import java.util.stream.Stream;
  */
 @Component
 @RequiredArgsConstructor
-public class QueryBaseVehicleQuery extends AbstractQuery<QueryBaseVehicleQry, List<QueryBaseVehicleRespDto>> {
+public class QueryBaseVehicleQuery extends AbstractQuery<QueryBaseVehicleQry, QueryBaseVehicleRespDto> {
 
     private final BomsBasicVehicleDao bomsBasicVehicleDao;
     private final BomsFeatureLibraryDao bomsFeatureLibraryDao;
@@ -44,46 +47,53 @@ public class QueryBaseVehicleQuery extends AbstractQuery<QueryBaseVehicleQry, Li
     }
 
     @Override
-    public List<QueryBaseVehicleRespDto> executeQuery(QueryBaseVehicleQry qry) {
+    public QueryBaseVehicleRespDto executeQuery(QueryBaseVehicleQry qry) {
+        QueryBaseVehicleRespDto res = new QueryBaseVehicleRespDto();
         List<BomsBasicVehicleEntity> entityList = bomsBasicVehicleDao.queryAll();
-        List<QueryBaseVehicleRespDto> dtoList = LambdaUtil.map(entityList, BaseVehicleAssembler::assemble);
-        List<QueryBaseVehicleRespDto> filteredDto = filter(dtoList, qry);
-        //调取featureDomainDao查询region,drive hand, sales version所有选项,再根据查询条件去筛选
-        List<String> codeList = Stream.of(ConfigConstants.BASE_VEHICLE_SALES_VERSION_FEATURE,ConfigConstants.BASE_VEHICLE_REGION_FEATURE,ConfigConstants.BASE_VEHICLE_DRIVE_HAND_FEATURE).collect(Collectors.toList());
-        List<BomsFeatureLibraryEntity> featureList = bomsFeatureLibraryDao.queryByParentFeatureCodeListAndType(codeList, FeatureTypeEnum.FEATURE.getType());
-        Map<String,BomsFeatureLibraryEntity> codeMap = featureList.stream().collect(Collectors.toMap(BomsFeatureLibraryEntity::getFeatureCode, Function.identity()));
-        List<QueryBaseVehicleRespDto> res = filteredDto.stream().map(dto->{
-            dto.setRegionCn(codeMap.get(dto.getRegionOptionCode()).getChineseName());
-            dto.setRegionEn(codeMap.get(dto.getRegionOptionCode()).getDisplayName());
-            dto.setDriveCn(codeMap.get(dto.getDriveHand()).getChineseName());
-            dto.setDriveEn(codeMap.get(dto.getDriveHand()).getDisplayName());
-            dto.setSalesVersionCn(codeMap.get(dto.getSalesVersion()).getChineseName());
-            dto.setSalesVersionEn(codeMap.get(dto.getSalesVersion()).getDisplayName());
-            return dto;
-        }).collect(Collectors.toList());
+        List<BaseVehicleRespDto> dtoList = LambdaUtil.map(entityList, BaseVehicleAssembler::assemble);
+        List<BaseVehicleRespDto> filteredDto = filter(dtoList, qry);
+        //调取featureDomainDao查询region,drive hand, sales version所有选项,再根据featureCode去筛选
+        res.setBaseVehicleRespDtoList(completeBaseVehicle(filteredDto));
+        res.setCount(filteredDto.size());
         return res;
     }
 
-    private List<QueryBaseVehicleRespDto> filter(List<QueryBaseVehicleRespDto> dtoList, QueryBaseVehicleQry qry){
+    private List<BaseVehicleRespDto> filter(List<BaseVehicleRespDto> dtoList, QueryBaseVehicleQry qry){
         if (StringUtils.isNotBlank(qry.getModelCode())){
-            dtoList.stream().filter(dto-> Objects.equals(qry.getModelCode(),dto.getModelCode())).toList();
+            dtoList = dtoList.stream().filter(dto-> Objects.equals(qry.getModelCode(),dto.getModelCode())).toList();
         }
-        if (StringUtils.isNotBlank(qry.getModelYear())){
-            dtoList.stream().filter(dto-> Objects.equals(qry.getModelYear(),dto.getModelYear())).toList();
+        if (CollectionUtils.isNotEmpty(qry.getModelYear())){
+            dtoList = dtoList.stream().filter(dto-> qry.getModelYear().contains(dto.getModelYear())).collect(Collectors.toList());
         }
         if (StringUtils.isNotBlank(qry.getStatus())){
-            dtoList.stream().filter(dto-> Objects.equals(qry.getStatus(),dto.getStatus())).toList();
+            dtoList = dtoList.stream().filter(dto-> Objects.equals(qry.getStatus(),dto.getStatus())).toList();
         }
         if (StringUtils.isNotBlank(qry.getSalesVersion())){
-            dtoList.stream().filter(dto-> Objects.equals(qry.getSalesVersion(),dto.getSalesVersion())).toList();
+            dtoList = dtoList.stream().filter(dto-> Objects.equals(qry.getSalesVersion(),dto.getSalesVersion())).toList();
         }
         if (StringUtils.isNotBlank(qry.getRegionOptionCode())){
-            dtoList.stream().filter(dto-> Objects.equals(qry.getRegionOptionCode(),dto.getRegionOptionCode())).toList();
+            dtoList = dtoList.stream().filter(dto-> Objects.equals(qry.getRegionOptionCode(),dto.getRegionOptionCode())).toList();
         }
         if (StringUtils.isNotBlank(qry.getDriveHand())){
-            dtoList.stream().filter(dto-> Objects.equals(qry.getDriveHand(),dto.getDriveHand())).toList();
+            dtoList = dtoList.stream().filter(dto-> Objects.equals(qry.getDriveHand(),dto.getDriveHand())).toList();
         }
         return dtoList;
+    }
+    private List<BaseVehicleRespDto> completeBaseVehicle(List<BaseVehicleRespDto> filteredDto){
+        List<String> codeList = Stream.of(ConfigConstants.BASE_VEHICLE_SALES_VERSION_FEATURE,ConfigConstants.BASE_VEHICLE_REGION_FEATURE,ConfigConstants.BASE_VEHICLE_DRIVE_HAND_FEATURE).collect(Collectors.toList());
+        List<BomsFeatureLibraryEntity> featureList = bomsFeatureLibraryDao.queryByParentFeatureCodeListAndType(codeList, FeatureTypeEnum.FEATURE.getType());
+        Map<String,BomsFeatureLibraryEntity> codeMap = featureList.stream().collect(Collectors.toMap(BomsFeatureLibraryEntity::getFeatureCode, Function.identity()));
+        List<BaseVehicleRespDto> res = filteredDto.stream().map(dto->{
+            BaseVehicleRespDto responseDto = new BaseVehicleRespDto();
+            responseDto.setRegionCn(codeMap.get(dto.getRegionOptionCode()).getChineseName());
+            responseDto.setRegionEn(codeMap.get(dto.getRegionOptionCode()).getDisplayName());
+            responseDto.setDriveCn(codeMap.get(dto.getDriveHand()).getChineseName());
+            responseDto.setDriveEn(codeMap.get(dto.getDriveHand()).getDisplayName());
+            responseDto.setSalesVersionCn(codeMap.get(dto.getSalesVersion()).getChineseName());
+            responseDto.setSalesVersionEn(codeMap.get(dto.getSalesVersion()).getDisplayName());
+            return responseDto;
+        }).collect(Collectors.toList());
+        return res;
     }
 
 }

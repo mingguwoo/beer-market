@@ -13,5 +13,4 @@ public interface BomsOxoOptionPackageInfoDao  extends IService<BomsOxoOptionPack
 
     List<BomsOxoOptionPackageInfoEntity>  queryOxoOptionPackageByHeadIds(List<Long> headIds);
 
-
 }

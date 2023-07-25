@@ -19,6 +19,12 @@ public interface BomsOxoVersionSnapShotDao extends IService<BomsOxoVersionSnapsh
      */
     List<BomsOxoVersionSnapshotEntity> queryOxoVersionSnapshotLists(String modelCode);
 
+    /**
+     *  校验BaseVehicle是否已发布
+     * @param modelCode
+     */
+    boolean checkBaseVehicleStatus(String modelCode);
+
 
 
 

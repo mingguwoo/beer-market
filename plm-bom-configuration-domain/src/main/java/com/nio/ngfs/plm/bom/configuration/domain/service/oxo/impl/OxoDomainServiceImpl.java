@@ -101,4 +101,10 @@ public class OxoDomainServiceImpl implements OxoDomainService {
         });
         return list.stream().distinct().toList();
     }
+
+    @Override
+    public boolean checkBaseVehicleStatus(String modelCode) {
+        return oxoRepository.checkBaseVehicleStatusCommand(modelCode);
+    }
+
 }

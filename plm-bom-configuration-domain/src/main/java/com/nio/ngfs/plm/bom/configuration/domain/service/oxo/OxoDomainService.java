@@ -31,4 +31,10 @@ public interface OxoDomainService {
      * @return
      */
     List<String> queryEmailGroup();
+
+    /**
+     *  校验BaseVehicle是否已发布
+     * @param modelCode
+     */
+    boolean checkBaseVehicleStatus(String modelCode);
 }

@@ -1,6 +1,5 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service.impl;
 
-import com.nio.bom.share.enums.FeatureStatusChangeTypeEnum;
 import com.nio.bom.share.enums.StatusEnum;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.LambdaUtil;
@@ -10,6 +9,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.facade.FeatureFacade;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureId;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureStatusChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.service.FeatureDomainService;

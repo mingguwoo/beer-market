@@ -15,8 +15,8 @@ import java.util.List;
 @FeignClient(name = "plm-bom-configuration")
 public interface PlmBaseVehicleClient {
 
-    @PostMapping("/baseVehicle/listBaseVehicle")
-    ResultInfo<List<BaseVehicleDto>> listBaseVehicle(ListBaseVehicleQry qry);
+    @PostMapping("/baseVehicle/queryBaseVehicle")
+    ResultInfo<List<QueryBaseVehicleRespDto>>queryBaseVehicle(QueryBaseVehicleQry qry);
 
     @PostMapping("/baseVehicle/addBaseVehicle")
     ResultInfo<AddBaseVehicleRespDto> addBaseVehicle(AddBaseVehicleCmd cmd);
@@ -29,4 +29,5 @@ public interface PlmBaseVehicleClient {
 
     @PostMapping("baseVehicle/deleteBaseVehicle")
     ResultInfo<DeleteBaseVehicleRespDto> deleteBaseVehicle(DeleteBaseVehicleCmd cmd);
+
 }

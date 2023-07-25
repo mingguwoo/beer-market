@@ -6,7 +6,6 @@ import com.nio.ngfs.plm.bom.configuration.domain.event.EventPublisher;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.common.FeatureAggrThreadLocal;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.service.FeatureDomainService;
@@ -41,7 +40,7 @@ public class EditFeatureCommand extends AbstractLockCommand<EditFeatureCmd, Edit
         featureDomainService.changeFeatureGroupCode(featureAggr, cmd.getGroupCode());
         featureDomainService.checkDisplayNameUnique(featureAggr);
         featureRepository.save(featureAggr);
-        eventPublisher.publish(new FeatureChangeEvent(featureAggr, FeatureChangeTypeEnum.FEATURE_EDIT));
+        eventPublisher.publish(new FeatureChangeEvent(featureAggr));
         return new EditFeatureCmdRespDto();
     }
 

@@ -6,7 +6,6 @@ import com.nio.ngfs.plm.bom.configuration.domain.event.EventPublisher;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.service.FeatureDomainService;
@@ -44,7 +43,7 @@ public class AddOptionCommand extends AbstractLockCommand<AddOptionCmd, AddOptio
         featureDomainService.checkFeatureOptionCodeUnique(featureAggr);
         featureDomainService.checkDisplayNameUnique(featureAggr);
         featureRepository.save(featureAggr);
-        eventPublisher.publish(new FeatureChangeEvent(featureAggr, FeatureChangeTypeEnum.OPTION_ADD));
+        eventPublisher.publish(new FeatureChangeEvent(featureAggr));
         return new AddOptionRespDto();
     }
 

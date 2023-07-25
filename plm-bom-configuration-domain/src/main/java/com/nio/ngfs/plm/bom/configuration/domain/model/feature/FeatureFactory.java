@@ -67,10 +67,10 @@ public class FeatureFactory {
         featureChangeLogDo.setFeatureId(featureId);
         featureChangeLogDo.setChangeAttribute(ConfigConstants.FEATURE_ATTRIBUTE_GROUP);
         featureChangeLogDo.setOldValue(event.getOldGroupCode());
-        featureChangeLogDo.setNewValue(event.getNewGroupCode());
+        featureChangeLogDo.setNewValue(event.getGroup().getFeatureId().getFeatureCode());
         featureChangeLogDo.setType(FeatureChangeLogTypeEnum.AUTO.name());
-        featureChangeLogDo.setCreateUser(event.getUpdateUser());
-        featureChangeLogDo.setUpdateUser(event.getUpdateUser());
+        featureChangeLogDo.setCreateUser(event.getGroup().getUpdateUser());
+        featureChangeLogDo.setUpdateUser(event.getGroup().getUpdateUser());
         return featureChangeLogDo;
     }
 

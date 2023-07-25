@@ -1,11 +1,10 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.feature.event;
 
 import com.nio.ngfs.plm.bom.configuration.domain.event.DomainEvent;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 /**
  * GroupCode变更事件
@@ -18,14 +17,14 @@ import java.util.List;
 @AllArgsConstructor
 public class GroupCodeChangeEvent extends DomainEvent {
 
-    private Long groupId;
+    /**
+     * Group
+     */
+    private FeatureAggr group;
 
+    /**
+     * 老的Group Code
+     */
     private String oldGroupCode;
-
-    private String newGroupCode;
-
-    private List<String> featureCodeList;
-
-    private String updateUser;
 
 }

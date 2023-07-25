@@ -10,10 +10,10 @@ public enum FeatureChangeTypeEnum {
      * Feature变更类型
      */
     GROUP_ADD,
-    GROUP_EDIT,
+    GROUP_UPDATE,
     FEATURE_ADD,
-    FEATURE_EDIT,
+    FEATURE_UPDATE,
     OPTION_ADD,
-    OPTION_EDIT
+    OPTION_UPDATE
 
 }

@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.application.event.feature;
 
+import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.application.event.EventHandler;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
@@ -31,7 +32,8 @@ public class GroupCodeChangeEventHandler implements EventHandler<GroupCodeChange
     @Async("commonThreadPool")
     public void onApplicationEvent(@NotNull GroupCodeChangeEvent event) {
         // 查询Feature下面的Option列表
-        List<FeatureAggr> optionList = featureRepository.queryByParentFeatureCodeListAndType(event.getFeatureCodeList(), FeatureTypeEnum.OPTION.getType());
+        List<String> featureCodeList = LambdaUtil.map(event.getGroup().getChildrenList(), i -> i.getFeatureId().getFeatureCode());
+        List<FeatureAggr> optionList = featureRepository.queryByParentFeatureCodeListAndType(featureCodeList, FeatureTypeEnum.OPTION.getType());
         List<FeatureChangeLogDo> featureChangeLogDoList = featureDomainService.buildGroupChangeLogByOption(event, optionList);
         featureRepository.batchSaveFeatureChangeLog(featureChangeLogDoList);
     }

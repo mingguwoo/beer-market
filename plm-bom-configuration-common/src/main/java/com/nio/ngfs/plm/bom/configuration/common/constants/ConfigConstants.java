@@ -25,6 +25,10 @@ public interface ConfigConstants {
     String FEATURE_ATTRIBUTE_REQUESTOR = "Requestor";
     String FEATURE_ATTRIBUTE_STATUS = "Status";
 
+    String FEATURE_OPTION_SYNC_ADD = "add";
+    String FEATURE_OPTION_SYNC_UPDATE = "update";
+    String FEATURE_OPTION_SYNC_CHANGE_OLD_DATA = "changeOldData";
+
     String FEATURE_CODE_AF00 = "AF00";
 
     String CONFIG_ADMIN = "config_admin";

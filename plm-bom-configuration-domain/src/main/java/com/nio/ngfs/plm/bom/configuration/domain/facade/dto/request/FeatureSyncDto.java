@@ -11,8 +11,6 @@ import java.util.List;
 @Data
 public class FeatureSyncDto {
 
-    private FeatureOptionSyncReqDto.FeatureSyncType type;
-
     private String groupCode;
 
     private String featureCode;
@@ -26,6 +24,8 @@ public class FeatureSyncDto {
     private String selectionType;
 
     private String catalog;
+
+    private FeatureOptionSyncReqDto.FeatureSyncType type;
 
     private List<OptionSyncDto> optionList;
 

@@ -1,7 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.application.command.feature;
 
 import com.nio.bom.share.exception.BusinessException;
-import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockCommand;
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
@@ -9,7 +8,6 @@ import com.nio.ngfs.plm.bom.configuration.domain.event.EventPublisher;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.common.FeatureAggrThreadLocal;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.GroupCodeChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.service.FeatureDomainService;
@@ -55,7 +53,7 @@ public class EditGroupCommand extends AbstractLockCommand<EditGroupCmd, EditGrou
         featureDomainService.checkGroupCodeExistInGroupLibrary(featureAggr.getFeatureId().getFeatureCode(), false);
         // Repository保存聚合根
         featureRepository.save(featureAggr);
-        eventPublisher.publish(new FeatureChangeEvent(featureAggr, FeatureChangeTypeEnum.GROUP_EDIT));
+        eventPublisher.publish(new FeatureChangeEvent(featureAggr));
         // 发布GroupCode变更事件
         publishGroupCodeChangeEvent(featureAggr, oldGroupCode);
         return new EditGroupRespDto();
@@ -69,11 +67,8 @@ public class EditGroupCommand extends AbstractLockCommand<EditGroupCmd, EditGrou
             return;
         }
         GroupCodeChangeEvent groupCodeChangeEvent = new GroupCodeChangeEvent();
-        groupCodeChangeEvent.setGroupId(featureAggr.getId());
+        groupCodeChangeEvent.setGroup(featureAggr);
         groupCodeChangeEvent.setOldGroupCode(oldGroupCode);
-        groupCodeChangeEvent.setNewGroupCode(featureAggr.getFeatureId().getFeatureCode());
-        groupCodeChangeEvent.setFeatureCodeList(LambdaUtil.map(featureAggr.getChildrenList(), i -> i.getFeatureId().getFeatureCode()));
-        groupCodeChangeEvent.setUpdateUser(featureAggr.getUpdateUser());
         eventPublisher.publish(groupCodeChangeEvent);
     }
 

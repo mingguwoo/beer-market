@@ -14,6 +14,8 @@ import java.util.List;
 @Data
 public class QueryFeatureLibraryDto implements Dto {
 
+    private Long id;
+
     private String featureCode;
 
     private String type;

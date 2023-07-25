@@ -4,6 +4,7 @@ import com.nio.bom.share.annotation.NeedAuthorization;
 import com.nio.bom.share.annotation.NotLogResult;
 import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.application.command.feature.*;
+import com.nio.ngfs.plm.bom.configuration.application.query.feature.ExportFeatureLibraryQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.feature.GetChangeLogListQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.feature.GetGroupCodeListQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.feature.QueryFeatureLibraryQuery;
@@ -12,9 +13,11 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -39,6 +42,7 @@ public class FeatureController implements PlmFeatureClient {
     private final GetChangeLogListQuery getChangeLogListQuery;
     private final GetGroupCodeListQuery getGroupCodeListQuery;
     private final QueryFeatureLibraryQuery queryFeatureLibraryQuery;
+    private final ExportFeatureLibraryQuery exportFeatureLibraryQuery;
 
     @Override
     @NotLogResult
@@ -113,6 +117,11 @@ public class FeatureController implements PlmFeatureClient {
     @NotLogResult
     public ResultInfo<List<QueryFeatureLibraryDto>> queryFeatureLibrary(@Valid @RequestBody QueryFeatureLibraryQry qry) {
         return ResultInfo.success(queryFeatureLibraryQuery.execute(qry));
+    }
+
+    @GetMapping("/feature/exportFeatureLibrary")
+    public void exportFeatureLibrary(ExportFeatureLibraryQry qry, HttpServletResponse response) {
+        exportFeatureLibraryQuery.execute(qry, response);
     }
 
 }

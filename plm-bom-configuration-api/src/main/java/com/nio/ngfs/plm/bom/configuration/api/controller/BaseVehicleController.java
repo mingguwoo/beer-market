@@ -7,6 +7,7 @@ import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.AddBas
 import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.CheckBaseVehicleStatusCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.DeleteBaseVehicleCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.EditBaseVehicleCommand;
+import com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.QueryBaseVehicleQuery;
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmBaseVehicleClient;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.*;
@@ -32,14 +33,14 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
     private final EditBaseVehicleCommand editBaseVehicleCommand;
     private final CheckBaseVehicleStatusCommand checkBaseVehicleStatusCommand;
     private final DeleteBaseVehicleCommand deleteBaseVehicleCommand;
+    private final QueryBaseVehicleQuery queryBaseVehicleQuery;
 
 
     @Override
     @NeedAuthorization
     @NotLogResult
-    public ResultInfo<List<BaseVehicleDto>> listBaseVehicle(@Valid @RequestBody ListBaseVehicleQry qry) {
-
-        return null;
+    public ResultInfo<List<QueryBaseVehicleRespDto>> queryBaseVehicle(@Valid @RequestBody QueryBaseVehicleQry qry) {
+        return ResultInfo.success(queryBaseVehicleQuery.executeQuery(qry));
     }
 
     @Override
@@ -69,4 +70,5 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
     public ResultInfo<DeleteBaseVehicleRespDto> deleteBaseVehicle(@Valid @RequestBody DeleteBaseVehicleCmd cmd) {
         return ResultInfo.success(deleteBaseVehicleCommand.execute(cmd));
     }
+    
 }

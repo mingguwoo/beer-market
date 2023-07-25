@@ -44,6 +44,11 @@ public class BomsBasicVehicleDaoImpl extends AbstractDao<BomsBasicVehicleMapper,
     }
 
     @Override
+    public List<BomsBasicVehicleEntity> queryAll() {
+        return getBaseMapper().selectList(new LambdaQueryWrapper<>());
+    }
+
+    @Override
     public List<BomsBasicVehicleEntity> queryByModel(String modelCode) {
         LambdaQueryWrapper<BomsBasicVehicleEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(BomsBasicVehicleEntity::getModelCode, modelCode);

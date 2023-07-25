@@ -46,7 +46,8 @@ public enum ConfigErrorCode implements ErrorCode {
     BASE_VEHICLE_NOT_EXISTS(80023,"Base Vehicle Not Existed!"),
     BASE_VEHICLE_MODEL_CODE_MODEL_YEAR_INVALID(80024, "Base Vehicle Can Not Change Model Code Or Model Year!"),
     BASE_VEHICLE_MATURITY_CHANGE_INVALID(80025, "Base Vehicle Can Not Revert Its Maturity From P To U!"),
-    FEATURE_TYPE_INVALID(80026, "Type Is Invalid!"),
+    BASE_VEHICLE_STATUS_INVALID(80026, "Base Vehicle Status Is Invalid!"),
+    FEATURE_TYPE_INVALID(80027, "Type Is Invalid!"),
     ;
 
     /**

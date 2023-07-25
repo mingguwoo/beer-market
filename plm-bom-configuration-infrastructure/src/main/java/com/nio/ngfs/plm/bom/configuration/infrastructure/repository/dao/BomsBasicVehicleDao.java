@@ -30,9 +30,19 @@ public interface BomsBasicVehicleDao extends IService<BomsBasicVehicleEntity> {
      */
     BomsBasicVehicleEntity getLastestBaseVehicle();
 
+    /**
+     * 根据Base Vehicle ID 获取 Base Vehicle
+     *
+     * @return BomsBasicVehicleEntity
+     */
     BomsBasicVehicleEntity queryBaseVehicleByBaseVehicleId(String baseVehicleId);
 
-
+    /**
+     * 获取全量Base Vehicle
+     *
+     * @return List<BomsBasicVehicleEntity>
+     */
+    List<BomsBasicVehicleEntity> queryAll();
 
     List<BomsBasicVehicleEntity> queryByModel(String modelCode);
 }

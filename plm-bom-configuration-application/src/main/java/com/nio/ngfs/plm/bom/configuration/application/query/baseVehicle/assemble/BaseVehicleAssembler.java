@@ -2,7 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.assembl
 
 import com.nio.bom.share.utils.DateUtils;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsBasicVehicleEntity;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.QueryBaseVehicleRespDto;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.BaseVehicleRespDto;
 import org.springframework.beans.BeanUtils;
 
 /**
@@ -11,8 +11,8 @@ import org.springframework.beans.BeanUtils;
  */
 public class BaseVehicleAssembler {
 
-    public static QueryBaseVehicleRespDto assemble (BomsBasicVehicleEntity entity) {
-        QueryBaseVehicleRespDto dto = new QueryBaseVehicleRespDto();
+    public static BaseVehicleRespDto assemble (BomsBasicVehicleEntity entity) {
+        BaseVehicleRespDto dto = new BaseVehicleRespDto();
         BeanUtils.copyProperties(entity,dto);
         dto.setCreateTime(DateUtils.dateTimeStr(entity.getCreateTime()));
         dto.setUpdateTime(DateUtils.dateTimeStr(entity.getUpdateTime()));

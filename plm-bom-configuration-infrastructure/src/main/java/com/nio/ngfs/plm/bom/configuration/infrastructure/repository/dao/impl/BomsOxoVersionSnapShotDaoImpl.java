@@ -6,6 +6,7 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoV
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsOxoVersionSnapshotEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsOxoVersionSnapshotMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -35,5 +36,12 @@ public class BomsOxoVersionSnapShotDaoImpl extends AbstractDao<BomsOxoVersionSna
         LambdaQueryWrapper<BomsOxoVersionSnapshotEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(BomsOxoVersionSnapshotEntity::getModelCode, modelCode);
         return getBaseMapper().selectList(lambdaQueryWrapper);
+    }
+
+    @Override
+    public boolean checkBaseVehicleStatus(String modelCode) {
+        LambdaQueryWrapper<BomsOxoVersionSnapshotEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(BomsOxoVersionSnapshotEntity::getModelCode,modelCode);
+        return CollectionUtils.isNotEmpty(getBaseMapper().selectList(lambdaQueryWrapper));
     }
 }

@@ -12,6 +12,6 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class CheckBaseVehicleStatusCmd implements Cmd {
 
-    @NotBlank(message = "Base Vehicle Id is blank")
-    private String baseVehicleId;
+    @NotBlank(message = "Model Code is blank")
+    private String modelCode;
 }

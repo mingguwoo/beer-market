@@ -15,12 +15,14 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CheckBaseVehicleStatusCommand {
 
-    private OxoDomainService oxoDomainService;
+    private final OxoDomainService oxoDomainService;
 
     public CheckBaseVehicleStatusRespDto execute(CheckBaseVehicleStatusCmd cmd) {
 
         //查询oxo中该版本是否已发布
-
-        return new CheckBaseVehicleStatusRespDto();
+        CheckBaseVehicleStatusRespDto checkBaseVehicleStatusRespDto = new CheckBaseVehicleStatusRespDto();
+        //1是发布，0是没发布
+        checkBaseVehicleStatusRespDto.setReleased(oxoDomainService.checkBaseVehicleStatus(cmd.getModelCode()));
+        return checkBaseVehicleStatusRespDto;
     }
 }

@@ -29,7 +29,11 @@ public interface OxoRepository {
 
     List<OxoVersionSnapshotAggr>  queryOxoVersionSnapshotLists(String modelCode);
 
-
+    /**
+     *  校验BaseVehicle是否已发布
+     * @param modelCode
+     */
+    boolean checkBaseVehicleStatusCommand (String modelCode);
 
 
 

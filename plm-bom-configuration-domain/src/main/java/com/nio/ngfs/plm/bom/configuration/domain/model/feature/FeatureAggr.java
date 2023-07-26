@@ -263,7 +263,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
         checkFeatureAndOptionCode();
         checkOptionCodeAndFeatureCodeTwoDigits();
         checkRequestor(requestor);
-        checkOptionChineseNameUnique();
+        checkOptionChineseNameUnique(chineseName);
         // 字段赋值
         setCatalog(parent.getCatalog());
         setVersion(ConfigConstants.VERSION_A);
@@ -277,7 +277,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
         //参数校验
         checkType(FeatureTypeEnum.OPTION);
         checkRequestor(cmd.getRequestor());
-        checkOptionChineseNameUnique();
+        checkOptionChineseNameUnique(cmd.getChineseName());
         //字段赋值
         setDisplayName(cmd.getDisplayName());
         setChineseName(cmd.getChineseName());
@@ -289,18 +289,20 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
     /**
      * 改变Option状态
      */
-    public void changeOptionStatus(String newStatus, String updateUser) {
+    public FeatureStatusChangeTypeEnum changeOptionStatus(ChangeOptionStatusCmd cmd) {
         checkType(FeatureTypeEnum.OPTION);
         // status校验
         StatusEnum oldStatusEnum = StatusEnum.getByStatus(status);
-        StatusEnum newStatusEnum = StatusEnum.getByStatus(newStatus);
+        StatusEnum newStatusEnum = StatusEnum.getByStatus(cmd.getStatus());
         if (oldStatusEnum == null || newStatusEnum == null) {
             throw new BusinessException(ConfigErrorCode.FEATURE_STATUS_INVALID);
         }
-        if (!(oldStatusEnum.getStatus().equals(newStatusEnum.getStatus()))) {
-            setStatus(newStatusEnum.getStatus());
-            setUpdateUser(updateUser);
+        if (oldStatusEnum == newStatusEnum) {
+            return FeatureStatusChangeTypeEnum.NO_CHANGE;
         }
+        setStatus(newStatusEnum.getStatus());
+        setUpdateUser(cmd.getUpdateUser());
+        return FeatureStatusChangeTypeEnum.CHANGED;
     }
 
     /**
@@ -325,11 +327,17 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
      * 校验Feature/Option Code，只允许字母、数字和空格
      */
     private void checkFeatureAndOptionCode() {
-        if (!RegexUtil.isMatchAlphabetAndNumber(featureId.getFeatureCode())) {
+        String featureCode = featureId.getFeatureCode();
+        // Feature/Option Code最小长度4位
+        if (featureCode.length() < CommonConstants.INT_FOUR) {
+            throw new BusinessException(isType(FeatureTypeEnum.FEATURE) ?
+                    ConfigErrorCode.FEATURE_FEATURE_CODE_TOO_SHORT : ConfigErrorCode.FEATURE_OPTION_CODE_TOO_SHORT);
+        }
+        if (!RegexUtil.isMatchAlphabetAndNumber(featureCode)) {
             throw new BusinessException(isType(FeatureTypeEnum.FEATURE) ?
                     ConfigErrorCode.FEATURE_FEATURE_CODE_FORMAT_ERROR : ConfigErrorCode.FEATURE_OPTION_CODE_FORMAT_ERROR);
         }
-        if (ConfigConstants.GROUP_PARENT_FEATURE_CODE.equals(featureId.getFeatureCode())) {
+        if (ConfigConstants.GROUP_PARENT_FEATURE_CODE.equals(featureCode)) {
             throw new BusinessException(ConfigErrorCode.FEATURE_GROUP_ROOT_IS_INTERNAL);
         }
     }
@@ -416,14 +424,19 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
     /**
      * Chinese Name在同一feature下是否唯一
      */
-    private void checkOptionChineseNameUnique() {
+    private void checkOptionChineseNameUnique(String chineseName) {
         // 如果没有同父级的子Option，直接返回
         if (CollectionUtils.isEmpty(parent.getChildrenList())) {
             return;
         }
-        Set<String> chineseNameSet = parent.getChildrenList().stream().map(FeatureAggr::getChineseName).collect(Collectors.toSet());
-        if (chineseNameSet.contains(chineseName)) {
-            throw new BusinessException(ConfigErrorCode.FEATURE_OPTION_CHINESE_NAME_REPEAT);
+        for (FeatureAggr child : parent.getChildrenList()) {
+            if (Objects.equals(chineseName, child.getChineseName())) {
+                if (Objects.equals(this.getId(), child.getId())) {
+                    // id相同，代表同一条记录，忽略
+                    return;
+                }
+                throw new BusinessException(ConfigErrorCode.FEATURE_OPTION_CHINESE_NAME_REPEAT);
+            }
         }
     }
 

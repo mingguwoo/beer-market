@@ -22,10 +22,10 @@ public class FeatureFactory {
                 .build();
     }
 
-    public static FeatureAggr createFeature(AddFeatureCmd cmd) {
+    public static FeatureAggr createFeature(AddFeatureCmd cmd, FeatureAggr parentFeatureAggr) {
         return FeatureAggr.builder()
                 .featureId(new FeatureId(convertFeatureAndOptionCode(cmd.getFeatureCode()), FeatureTypeEnum.FEATURE))
-                .parentFeatureCode(cmd.getGroupCode())
+                .parentFeatureCode(parentFeatureAggr.getFeatureId().getFeatureCode())
                 .displayName(cmd.getDisplayName())
                 .chineseName(cmd.getChineseName())
                 .description(cmd.getDescription())
@@ -33,19 +33,21 @@ public class FeatureFactory {
                 .requestor(cmd.getRequestor())
                 .createUser(cmd.getCreateUser())
                 .updateUser(cmd.getCreateUser())
+                .parent(parentFeatureAggr)
                 .build();
     }
 
-    public static FeatureAggr createOption(AddOptionCmd cmd) {
+    public static FeatureAggr createOption(AddOptionCmd cmd, FeatureAggr parentFeatureAggr) {
         return FeatureAggr.builder()
                 .featureId(new FeatureId(convertFeatureAndOptionCode(cmd.getOptionCode()).trim(), FeatureTypeEnum.OPTION.getType()))
-                .parentFeatureCode(cmd.getFeatureCode())
+                .parentFeatureCode(parentFeatureAggr.getFeatureId().getFeatureCode())
                 .displayName(cmd.getDisplayName())
                 .chineseName(cmd.getChineseName())
                 .description(cmd.getDescription())
                 .requestor(cmd.getRequestor())
                 .createUser(cmd.getCreateUser())
                 .updateUser(cmd.getCreateUser())
+                .parent(parentFeatureAggr)
                 .build();
     }
 

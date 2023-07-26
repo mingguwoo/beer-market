@@ -12,5 +12,6 @@ public enum FeatureStatusChangeTypeEnum {
     ACTIVE_TO_INACTIVE,
     INACTIVE_TO_ACTIVE,
     NO_CHANGE,
+    CHANGED,
 
 }

@@ -42,13 +42,15 @@ public enum ConfigErrorCode implements ErrorCode {
     FEATURE_GROUP_ROOT_IS_INTERNAL(80018, "GROUP_ROOT Is Used For Internal!"),
     FEATURE_ADD_GROUP_IN_3DE_FIRST(80019, "Please Add This Group In 3DE Group Library First!"),
     FEATURE_UPDATE_GROUP_IN_3DE_FIRST(80020, "Please Update This Group In 3DE Group Library First!"),
-    BASE_VEHICLE_MATURITY_INVALID(80021,"Maturity Is Invalid!"),
+    BASE_VEHICLE_MATURITY_INVALID(80021, "Maturity Is Invalid!"),
     BASE_VEHICLE_REPEAT(80022, "This Base Vehicle already exists, can not be created repeatedly!"),
-    BASE_VEHICLE_NOT_EXISTS(80023,"Base Vehicle Not Existed!"),
+    BASE_VEHICLE_NOT_EXISTS(80023, "Base Vehicle Not Existed!"),
     BASE_VEHICLE_MODEL_CODE_MODEL_YEAR_INVALID(80024, "Base Vehicle Can Not Change Model Code Or Model Year!"),
     BASE_VEHICLE_MATURITY_CHANGE_INVALID(80025, "Base Vehicle Can Not Revert Its Maturity From P To U!"),
     BASE_VEHICLE_STATUS_INVALID(80026, "Base Vehicle Status Is Invalid!"),
     FEATURE_TYPE_INVALID(80027, "Type Is Invalid!"),
+    FEATURE_FEATURE_CODE_TOO_SHORT(80028, "Feature Code Min Length Is 4!"),
+    FEATURE_OPTION_CODE_TOO_SHORT(80028, "Option Code Min Length Is 4!"),
     ;
 
     /**

@@ -52,10 +52,5 @@ public class OxoRepositoryImpl implements OxoRepository {
         return BeanConvertUtils.convertListTo(entities, OxoVersionSnapshotAggr::new);
     }
 
-    @Override
-    public boolean checkBaseVehicleStatusCommand(String modelCode) {
-        return bomsOxoVersionSnapShotDao.checkBaseVehicleStatus(modelCode);
-    }
-
 
 }

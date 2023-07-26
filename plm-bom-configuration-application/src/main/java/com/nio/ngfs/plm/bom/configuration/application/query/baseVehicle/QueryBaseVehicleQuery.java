@@ -23,7 +23,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -59,38 +58,33 @@ public class QueryBaseVehicleQuery extends AbstractQuery<QueryBaseVehicleQry, Qu
     }
 
     private List<BaseVehicleRespDto> filter(List<BaseVehicleRespDto> dtoList, QueryBaseVehicleQry qry){
-        if (StringUtils.isNotBlank(qry.getModelCode())){
-            dtoList = dtoList.stream().filter(dto-> Objects.equals(qry.getModelCode(),dto.getModelCode())).toList();
-        }
-        if (CollectionUtils.isNotEmpty(qry.getModelYear())){
-            dtoList = dtoList.stream().filter(dto-> qry.getModelYear().contains(dto.getModelYear())).collect(Collectors.toList());
-        }
-        if (StringUtils.isNotBlank(qry.getStatus())){
-            dtoList = dtoList.stream().filter(dto-> Objects.equals(qry.getStatus(),dto.getStatus())).toList();
-        }
-        if (StringUtils.isNotBlank(qry.getSalesVersion())){
-            dtoList = dtoList.stream().filter(dto-> Objects.equals(qry.getSalesVersion(),dto.getSalesVersion())).toList();
-        }
-        if (StringUtils.isNotBlank(qry.getRegionOptionCode())){
-            dtoList = dtoList.stream().filter(dto-> Objects.equals(qry.getRegionOptionCode(),dto.getRegionOptionCode())).toList();
-        }
-        if (StringUtils.isNotBlank(qry.getDriveHand())){
-            dtoList = dtoList.stream().filter(dto-> Objects.equals(qry.getDriveHand(),dto.getDriveHand())).toList();
-        }
+        dtoList = dtoList.stream()
+                .filter(dto-> StringUtils.isBlank(qry.getModelCode()) || Objects.equals(qry.getModelCode(),dto.getModelCode()))
+                .filter(dto->CollectionUtils.isNotEmpty(qry.getModelYear()) || qry.getModelYear().contains(dto.getModelYear()))
+                .filter(dto-> StringUtils.isBlank(qry.getStatus()) || Objects.equals(qry.getStatus(),dto.getStatus()))
+                .filter(dto-> StringUtils.isBlank(qry.getSalesVersion()) || Objects.equals(qry.getSalesVersion(),dto.getSalesVersion()))
+                .filter(dto-> StringUtils.isBlank(qry.getRegionOptionCode()) || Objects.equals(qry.getRegionOptionCode(),dto.getRegionOptionCode()))
+                .filter(dto-> StringUtils.isBlank(qry.getDriveHand()) || Objects.equals(qry.getDriveHand(),dto.getDriveHand())).toList();
         return dtoList;
     }
     private List<BaseVehicleRespDto> completeBaseVehicle(List<BaseVehicleRespDto> filteredDto){
         List<String> codeList = Stream.of(ConfigConstants.BASE_VEHICLE_SALES_VERSION_FEATURE,ConfigConstants.BASE_VEHICLE_REGION_FEATURE,ConfigConstants.BASE_VEHICLE_DRIVE_HAND_FEATURE).collect(Collectors.toList());
-        List<BomsFeatureLibraryEntity> featureList = bomsFeatureLibraryDao.queryByParentFeatureCodeListAndType(codeList, FeatureTypeEnum.FEATURE.getType());
+        List<BomsFeatureLibraryEntity> featureList = bomsFeatureLibraryDao.queryByParentFeatureCodeListAndType(codeList, FeatureTypeEnum.OPTION.getType());
         Map<String,BomsFeatureLibraryEntity> codeMap = featureList.stream().collect(Collectors.toMap(BomsFeatureLibraryEntity::getFeatureCode, Function.identity()));
-        List<BaseVehicleRespDto> res = filteredDto.stream().map(dto->{
+        List<BaseVehicleRespDto> res = filteredDto.stream().map(dto-> {
             BaseVehicleRespDto responseDto = new BaseVehicleRespDto();
-            responseDto.setRegionCn(codeMap.get(dto.getRegionOptionCode()).getChineseName());
-            responseDto.setRegionEn(codeMap.get(dto.getRegionOptionCode()).getDisplayName());
-            responseDto.setDriveCn(codeMap.get(dto.getDriveHand()).getChineseName());
-            responseDto.setDriveEn(codeMap.get(dto.getDriveHand()).getDisplayName());
+            if (!Objects.isNull(codeMap.get(dto.getRegionOptionCode()))) {
+                responseDto.setRegionCn(codeMap.get(dto.getRegionOptionCode()).getChineseName());
+                responseDto.setRegionEn(codeMap.get(dto.getRegionOptionCode()).getDisplayName());
+            }
+            if (!Objects.isNull(codeMap.get(dto.getDriveHand()))) {
+                responseDto.setDriveCn(codeMap.get(dto.getDriveHand()).getChineseName());
+                responseDto.setDriveEn(codeMap.get(dto.getDriveHand()).getDisplayName());
+            }
+            if (!Objects.isNull(codeMap.get(dto.getSalesVersion()))) {
             responseDto.setSalesVersionCn(codeMap.get(dto.getSalesVersion()).getChineseName());
             responseDto.setSalesVersionEn(codeMap.get(dto.getSalesVersion()).getDisplayName());
+            }
             return responseDto;
         }).collect(Collectors.toList());
         return res;

@@ -1,6 +1,6 @@
-package com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle;
+package com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle;
 
-import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoDomainService;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoVersionSnapShotDao;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.CheckBaseVehicleStatusCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.CheckBaseVehicleStatusRespDto;
 import lombok.RequiredArgsConstructor;
@@ -13,16 +13,16 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class CheckBaseVehicleStatusCommand {
+public class CheckBaseVehicleStatusQuery {
 
-    private final OxoDomainService oxoDomainService;
+    private final BomsOxoVersionSnapShotDao oxoVersionSnapShotDao;
 
     public CheckBaseVehicleStatusRespDto execute(CheckBaseVehicleStatusCmd cmd) {
 
         //查询oxo中该版本是否已发布
         CheckBaseVehicleStatusRespDto checkBaseVehicleStatusRespDto = new CheckBaseVehicleStatusRespDto();
         //1是发布，0是没发布
-        checkBaseVehicleStatusRespDto.setReleased(oxoDomainService.checkBaseVehicleStatus(cmd.getModelCode()));
+        checkBaseVehicleStatusRespDto.setReleased(oxoVersionSnapShotDao.checkBaseVehicleStatus(cmd.getModelCode()));
         return checkBaseVehicleStatusRespDto;
     }
 }

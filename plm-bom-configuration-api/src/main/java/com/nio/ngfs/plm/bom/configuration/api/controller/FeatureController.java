@@ -13,7 +13,7 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -122,8 +122,8 @@ public class FeatureController implements PlmFeatureClient {
     /**
      * 导出Feature Library到Excel
      */
-    @GetMapping("/feature/exportFeatureLibrary")
-    public void exportFeatureLibrary(ExportFeatureLibraryQry qry, HttpServletResponse response) {
+    @PostMapping("/feature/exportFeatureLibrary")
+    public void exportFeatureLibrary(@Valid @RequestBody ExportFeatureLibraryQry qry, HttpServletResponse response) {
         exportFeatureLibraryQuery.execute(qry, response);
     }
 

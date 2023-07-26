@@ -51,4 +51,7 @@ public interface ConfigConstants {
 
     String BASE_VEHICLE_SALES_VERSION_FEATURE = "19AA";
 
+    String HEADER_ACCESS_CONTROL_EXPOSE_HEADERS = "Access-Control-Expose-Headers";
+    String HEADER_CONTENT_DISPOSITION = "Content-Disposition";
+
 }

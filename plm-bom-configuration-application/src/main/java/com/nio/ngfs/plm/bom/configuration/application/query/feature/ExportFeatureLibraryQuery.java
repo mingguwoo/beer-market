@@ -3,6 +3,7 @@ package com.nio.ngfs.plm.bom.configuration.application.query.feature;
 import com.google.common.collect.Lists;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.DateUtils;
+import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.ExportFeatureLibraryQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.QueryFeatureLibraryDto;
@@ -54,7 +55,8 @@ public class ExportFeatureLibraryQuery {
              OutputStream output = response.getOutputStream()) {
             String fileName = "Feature Library-" + DateUtils.dateTimeNow("yyyyMMddHHmm") + ".xlsx";
             response.reset();
-            response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+            response.setHeader(ConfigConstants.HEADER_CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"");
+            response.setHeader(ConfigConstants.HEADER_ACCESS_CONTROL_EXPOSE_HEADERS, ConfigConstants.HEADER_CONTENT_DISPOSITION);
             response.setContentType("application/octet-stream;charset=UTF-8");
             exportFeatureLibrary(qry, featureLibraryDtoList, workbook);
             workbook.write(output);

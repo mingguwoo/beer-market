@@ -2,9 +2,9 @@ package com.nio.ngfs.plm.bom.configuration.domain.model.featurechangelog;
 
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
-import com.nio.ngfs.plm.bom.configuration.domain.model.featurechangelog.enums.FeatureChangeLogTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureStatusChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.GroupCodeChangeEvent;
+import com.nio.ngfs.plm.bom.configuration.domain.model.featurechangelog.enums.FeatureChangeLogTypeEnum;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Objects;

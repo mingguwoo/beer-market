@@ -4,9 +4,9 @@ import com.nio.bom.share.annotation.NeedAuthorization;
 import com.nio.bom.share.annotation.NotLogResult;
 import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.AddBaseVehicleCommand;
-import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.CheckBaseVehicleStatusCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.DeleteBaseVehicleCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.EditBaseVehicleCommand;
+import com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.CheckBaseVehicleStatusQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.QueryBaseVehicleQuery;
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmBaseVehicleClient;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.*;
@@ -30,7 +30,7 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
 
     private final AddBaseVehicleCommand addBaseVehicleCommand;
     private final EditBaseVehicleCommand editBaseVehicleCommand;
-    private final CheckBaseVehicleStatusCommand checkBaseVehicleStatusCommand;
+    private final CheckBaseVehicleStatusQuery checkBaseVehicleStatusQuery;
     private final DeleteBaseVehicleCommand deleteBaseVehicleCommand;
     private final QueryBaseVehicleQuery queryBaseVehicleQuery;
 
@@ -57,10 +57,10 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
     }
 
     @Override
-//    @NeedAuthorization
+    @NeedAuthorization
     @NotLogResult
     public ResultInfo<CheckBaseVehicleStatusRespDto> checkBaseVehicleStatus(@Valid @RequestBody CheckBaseVehicleStatusCmd cmd) {
-        return ResultInfo.success(checkBaseVehicleStatusCommand.execute(cmd));
+        return ResultInfo.success(checkBaseVehicleStatusQuery.execute(cmd));
     }
 
     @Override
@@ -69,5 +69,5 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
     public ResultInfo<DeleteBaseVehicleRespDto> deleteBaseVehicle(@Valid @RequestBody DeleteBaseVehicleCmd cmd) {
         return ResultInfo.success(deleteBaseVehicleCommand.execute(cmd));
     }
-    
+
 }

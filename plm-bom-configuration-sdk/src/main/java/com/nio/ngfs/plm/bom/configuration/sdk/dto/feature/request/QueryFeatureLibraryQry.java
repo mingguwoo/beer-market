@@ -20,6 +20,6 @@ public class QueryFeatureLibraryQry implements Qry {
 
     private String search;
 
-    private boolean relatedModel;
+    private boolean relatedModel = false;
 
 }

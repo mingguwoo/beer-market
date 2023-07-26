@@ -44,6 +44,8 @@ public class QueryFeatureLibraryDto implements Dto {
 
     private String updateTime;
 
+    private String modelYear;
+
     private List<QueryFeatureLibraryDto> children = Collections.emptyList();
 
     /**

@@ -14,8 +14,9 @@ public enum ConfigErrorCode implements ErrorCode {
      * 错误码
      */
     LOCK_FAILED(50000, "The Operation Failed. Please Try Again Later!"),
-    DATA_NOT_EXISTS(70000, "Data Not Existed!"),
-    CLONE_ERROR(70001, "Clone Error!"),
+    DATA_NOT_EXISTS(50001, "Data Not Existed!"),
+    CLONE_ERROR(50002, "Clone Error!"),
+    EXCEL_DOWNLOAD_ERROR(50003, "Excel Download Error!"),
 
     /**
      * Feature Library

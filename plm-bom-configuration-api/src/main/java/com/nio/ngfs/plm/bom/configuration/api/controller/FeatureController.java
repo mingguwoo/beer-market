@@ -119,6 +119,9 @@ public class FeatureController implements PlmFeatureClient {
         return ResultInfo.success(queryFeatureLibraryQuery.execute(qry));
     }
 
+    /**
+     * 导出Feature Library到Excel
+     */
     @GetMapping("/feature/exportFeatureLibrary")
     public void exportFeatureLibrary(ExportFeatureLibraryQry qry, HttpServletResponse response) {
         exportFeatureLibraryQuery.execute(qry, response);

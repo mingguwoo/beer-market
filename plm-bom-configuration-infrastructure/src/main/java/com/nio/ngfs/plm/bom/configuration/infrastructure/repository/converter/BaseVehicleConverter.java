@@ -19,16 +19,4 @@ public class BaseVehicleConverter implements MapStructDataConverter<BaseVehicleA
         return BaseVehicleMapper.INSTANCE;
     }
 
-
-    @Override
-    public void convertDoToEntityCallback(BaseVehicleAggr domainObject, BomsBasicVehicleEntity entity) {
-        MapStructDataConverter.super.convertDoToEntityCallback(domainObject, entity);
-    }
-
-    @Override
-    public void convertEntityToDoCallback(BomsBasicVehicleEntity entity, BaseVehicleAggr domainObject) {
-        MapStructDataConverter.super.convertEntityToDoCallback(entity, domainObject);
-    }
-
-
 }

@@ -11,7 +11,7 @@ public enum FeatureCatalogEnum {
     /**
      * 分类
      */
-    MARKETING("Marketing"),
+    SALES("Sales"),
     ENGINEERING("Engineering");
 
     private final String catalog;

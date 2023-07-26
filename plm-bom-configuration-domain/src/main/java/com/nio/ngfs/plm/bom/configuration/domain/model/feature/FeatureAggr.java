@@ -443,7 +443,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
      * 校验OptionCode前两位与所属Feature是否一致
      */
     private void checkOptionCodeAndFeatureCodeTwoDigits() {
-        if (!featureId.getFeatureCode().substring(0, CommonConstants.INT_THREE).equals(parentFeatureCode.substring(0, CommonConstants.INT_THREE))) {
+        if (!featureId.getFeatureCode().substring(0, CommonConstants.INT_TWO).equals(parentFeatureCode.substring(0, CommonConstants.INT_TWO))) {
             throw new BusinessException(ConfigErrorCode.FEATURE_OPTION_CODE_DIFF_FROM_FEATURE_CODE);
         }
     }

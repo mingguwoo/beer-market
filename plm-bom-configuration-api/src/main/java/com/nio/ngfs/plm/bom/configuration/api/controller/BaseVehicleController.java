@@ -4,6 +4,7 @@ import com.nio.bom.share.annotation.NeedAuthorization;
 import com.nio.bom.share.annotation.NotLogResult;
 import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.AddBaseVehicleCommand;
+import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.ChangeBaseVehicleStatusCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.DeleteBaseVehicleCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.EditBaseVehicleCommand;
 import com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.CheckBaseVehicleStatusQuery;
@@ -33,6 +34,7 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
     private final CheckBaseVehicleStatusQuery checkBaseVehicleStatusQuery;
     private final DeleteBaseVehicleCommand deleteBaseVehicleCommand;
     private final QueryBaseVehicleQuery queryBaseVehicleQuery;
+    private final ChangeBaseVehicleStatusCommand changeBaseVehicleStatusCommand;
 
 
     @Override
@@ -70,4 +72,10 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
         return ResultInfo.success(deleteBaseVehicleCommand.execute(cmd));
     }
 
+    @Override
+    @NeedAuthorization
+    @NotLogResult
+    public ResultInfo<ChangeBaseVehicleStatusRespDto> changeBaseVehicleStatus(@Valid @RequestBody ChangeBaseVehicleStatusCmd cmd) {
+        return ResultInfo.success(changeBaseVehicleStatusCommand.execute(cmd));
+    }
 }

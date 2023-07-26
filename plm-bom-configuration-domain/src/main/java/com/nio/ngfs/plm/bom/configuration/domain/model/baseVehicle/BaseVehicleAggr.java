@@ -7,12 +7,15 @@ import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.enums.BaseVehicleMaturityEnum;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.AddBaseVehicleCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.ChangeBaseVehicleStatusCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.EditBaseVehicleCmd;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Objects;
 
 /**
  * @author luke.zhu
@@ -71,6 +74,14 @@ public class BaseVehicleAggr extends AbstractDo implements AggrRoot<String>, Clo
     }
 
     /**
+     * 校验BaseVehicle要修改的Status是否符合规范
+     */
+    public void changeBaseVehicleStatus(ChangeBaseVehicleStatusCmd cmd){
+        checkStatus(cmd);
+        setStatus(cmd.getStatus());
+    }
+
+    /**
      * 校验Model Code和Model Year是否更改
      */
     private void checkModelCodeAndModelYear(EditBaseVehicleCmd cmd) {
@@ -110,4 +121,12 @@ public class BaseVehicleAggr extends AbstractDo implements AggrRoot<String>, Clo
         setMaturity(maturity);
     }
 
+    /**
+     * 校验BaseVehicle要修改的Status是否符合规范
+     */
+    private void checkStatus(ChangeBaseVehicleStatusCmd cmd){
+        if (Objects.isNull(StatusEnum.getByStatus(cmd.getStatus()))){
+            throw new BusinessException(ConfigErrorCode.BASE_VEHICLE_STATUS_INVALID);
+        }
+    }
 }

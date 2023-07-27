@@ -2,7 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.nio.ngfs.common.model.page.WherePageRequest;
-import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.OxoVersionSnapshotDao;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoVersionSnapshotDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsOxoVersionSnapshotEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsOxoVersionSnapshotMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 @Slf4j
-public class OxoVersionSnapshotDaoImpl extends AbstractDao<BomsOxoVersionSnapshotMapper, BomsOxoVersionSnapshotEntity, WherePageRequest<BomsOxoVersionSnapshotEntity>> implements OxoVersionSnapshotDao {
+public class BomsOxoVersionSnapshotDaoImpl extends AbstractDao<BomsOxoVersionSnapshotMapper, BomsOxoVersionSnapshotEntity, WherePageRequest<BomsOxoVersionSnapshotEntity>> implements BomsOxoVersionSnapshotDao {
 
     @Override
     protected void fuzzyConditions(WherePageRequest<BomsOxoVersionSnapshotEntity> bomsOxoVersionSnapshotEntityWherePageRequest, LambdaQueryWrapper<BomsOxoVersionSnapshotEntity> queryWrapper) {

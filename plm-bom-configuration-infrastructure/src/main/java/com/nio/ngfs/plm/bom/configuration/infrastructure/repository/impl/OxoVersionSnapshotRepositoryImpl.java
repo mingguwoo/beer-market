@@ -3,7 +3,7 @@ package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.impl;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotRepository;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.OxoVersionSnapshotConverter;
-import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.OxoVersionSnapshotDao;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoVersionSnapshotDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.common.DaoSupport;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -16,17 +16,17 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class OxoVersionSnapshotRepositoryImpl implements OxoVersionSnapshotRepository {
 
-    private final OxoVersionSnapshotDao oxoVersionSnapshotDao;
+    private final BomsOxoVersionSnapshotDao bomsOxoVersionSnapshotDao;
     private final OxoVersionSnapshotConverter oxoVersionSnapshotConverter;
 
     @Override
     public void save(OxoVersionSnapshotAggr aggr) {
-        DaoSupport.saveOrUpdate(oxoVersionSnapshotDao, oxoVersionSnapshotConverter.convertDoToEntity(aggr));
+        DaoSupport.saveOrUpdate(bomsOxoVersionSnapshotDao, oxoVersionSnapshotConverter.convertDoToEntity(aggr));
     }
 
     @Override
     public OxoVersionSnapshotAggr find(Long id) {
-        return oxoVersionSnapshotConverter.convertEntityToDo(oxoVersionSnapshotDao.getById(id));
+        return oxoVersionSnapshotConverter.convertEntityToDo(bomsOxoVersionSnapshotDao.getById(id));
     }
 
 }

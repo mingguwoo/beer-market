@@ -12,6 +12,7 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.PageData;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoChangeLogRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.RenewSortFeatureOptionRespDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -122,14 +123,14 @@ public class OxoController {
     }
 
     /**
-     * todo 排序
-     * @param cmd
-     * @return
+     * Renew Sort
+     *
+     * @param cmd 命令
+     * @return 结果
      */
-    @PostMapping("/renewSort")
-    public ResultInfo renewSort(@Valid @RequestBody OxoSnapshotCmd cmd) {
-       // oxoDomainService.renewSort(cmd);
-        return ResultInfo.success(true);
+    @PostMapping("/renewSortFeatureOption")
+    public ResultInfo<RenewSortFeatureOptionRespDto> renewSortFeatureOption(@Valid @RequestBody RenewSortFeatureOptionCmd cmd) {
+        return ResultInfo.success(null);
     }
 
     /**

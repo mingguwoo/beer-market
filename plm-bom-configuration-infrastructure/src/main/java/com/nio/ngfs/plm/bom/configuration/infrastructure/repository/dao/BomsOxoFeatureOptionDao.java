@@ -7,5 +7,5 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsO
  * @author xiaozhou.tu
  * @date 2023/7/27
  */
-public interface OxoFeatureOptionDao extends IService<BomsOxoFeatureOptionEntity> {
+public interface BomsOxoFeatureOptionDao extends IService<BomsOxoFeatureOptionEntity> {
 }

@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class OxoAddCommand extends AbstractLockCommand<OxoAddCmd, Boolean> {
 
 
-    private final OxoRepository oxoRepository;
+    private OxoRepository oxoRepository;
 
 
     @Override

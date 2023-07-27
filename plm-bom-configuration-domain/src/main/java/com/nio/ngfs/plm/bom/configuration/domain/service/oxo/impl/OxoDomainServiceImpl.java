@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OxoDomainServiceImpl implements OxoDomainService {
 
-    private final OxoRepository oxoRepository;
+    private OxoRepository oxoRepository;
     private final CommonRepository commonRepository;
 
 

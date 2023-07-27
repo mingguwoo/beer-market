@@ -25,7 +25,7 @@ public class OxoVersionQuery implements Query<OxoBaseCmd, List<String>> {
 
     private final AdministratorDetailFacade administratorDetailFacade;
 
-    private final OxoRepository oxoRepository;
+    private OxoRepository oxoRepository;
 
     @Override
     public List<String> execute(OxoBaseCmd oxoBaseCmd) {

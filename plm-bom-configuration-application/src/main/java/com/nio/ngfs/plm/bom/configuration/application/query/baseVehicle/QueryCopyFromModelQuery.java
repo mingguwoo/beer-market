@@ -1,7 +1,5 @@
 package com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle;
 
-import com.nio.bom.share.utils.LambdaUtil;
-import com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.assemble.BaseVehicleAssembler;
 import com.nio.ngfs.plm.bom.configuration.application.query.feature.common.BaseVehicleQueryUtil;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsBasicVehicleDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsBasicVehicleEntity;

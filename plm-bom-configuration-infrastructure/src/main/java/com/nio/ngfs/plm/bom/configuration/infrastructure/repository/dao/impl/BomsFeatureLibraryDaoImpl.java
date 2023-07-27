@@ -2,6 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.google.common.collect.Lists;
+import com.nio.bom.share.enums.StatusEnum;
 import com.nio.ngfs.common.model.page.WherePageRequest;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
@@ -84,6 +85,14 @@ public class BomsFeatureLibraryDaoImpl extends AbstractDao<BomsFeatureLibraryMap
     public List<BomsFeatureLibraryEntity> queryByFeatureCode(String featureCode) {
         LambdaQueryWrapper<BomsFeatureLibraryEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(BomsFeatureLibraryEntity::getFeatureCode, featureCode);
+        return getBaseMapper().selectList(lambdaQueryWrapper);
+    }
+
+    @Override
+    public List<BomsFeatureLibraryEntity> queryByFeatureCodes(List<String> featureCodes) {
+        LambdaQueryWrapper<BomsFeatureLibraryEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.in(BomsFeatureLibraryEntity::getFeatureCode, featureCodes);
+        lambdaQueryWrapper.eq(BomsFeatureLibraryEntity::getStatus, StatusEnum.ACTIVE.getStatus());
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 

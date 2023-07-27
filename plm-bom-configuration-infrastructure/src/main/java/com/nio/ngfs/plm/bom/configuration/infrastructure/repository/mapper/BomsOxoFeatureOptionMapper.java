@@ -2,6 +2,9 @@ package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsOxoFeatureOptionEntity;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,9 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsO
  * @since 2023-07-27
  */
 public interface BomsOxoFeatureOptionMapper extends BaseMapper<BomsOxoFeatureOptionEntity> {
+
+
+
+    void insertOxoRows(@Param("bomsOxoRowInfoEntitys") List<BomsOxoFeatureOptionEntity> entityList);
 
 }

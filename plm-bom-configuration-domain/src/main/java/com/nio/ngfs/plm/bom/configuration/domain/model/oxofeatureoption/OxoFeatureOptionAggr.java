@@ -48,10 +48,20 @@ public class OxoFeatureOptionAggr extends AbstractDo implements AggrRoot<Long>, 
      */
     private Integer sort;
 
+
     /**
      * 软删除 1删除 0未删除
      */
-    private Short softDelete;
+    private Integer sortDelete;
+
+    private String parentFeatureCode;
+
+
+    private String displayName;
+
+    private String chineseName;
+
+    private String catalog;
 
     @Override
     public Long getUniqId() {

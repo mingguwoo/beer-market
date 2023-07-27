@@ -2,6 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.application.query.oxo.assemble;
 
 import com.google.common.collect.Lists;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.domainobject.OxoInfoDo;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsOxoOptionPackageEntity;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoEditCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoHeadQry;
@@ -16,7 +17,7 @@ import java.util.Objects;
 public class OxoInfoAssembler {
 
 
-    public static OxoRowsQry assembleOxoQry(OxoInfoDo infoDo, String group) {
+    public static OxoRowsQry assembleOxoQry(OxoFeatureOptionAggr infoDo, String group) {
         OxoRowsQry qry = new OxoRowsQry();
         qry.setCatalog(infoDo.getCatalog());
         qry.setHeadId(infoDo.getId());
@@ -25,13 +26,13 @@ public class OxoInfoAssembler {
         qry.setRuleCheck(infoDo.getRuleCheck());
         qry.setFeatureCode(infoDo.getFeatureCode());
         qry.setGroup(group);
-        qry.setComments(infoDo.getComments());
+        qry.setComments(infoDo.getComment());
         qry.setIsSortDelete(infoDo.getSortDelete());
         return qry;
     }
 
 
-    public static List<OxoEditCmd> buildOxoEditCmd(List<BomsOxoOptionPackageEntity> entities, OxoInfoDo oxoInfoDo, List<OxoHeadQry> oxoLists) {
+    public static List<OxoEditCmd> buildOxoEditCmd(List<BomsOxoOptionPackageEntity> entities, OxoFeatureOptionAggr oxoInfoDo, List<OxoHeadQry> oxoLists) {
 
 
         List<BomsOxoOptionPackageEntity> rowEntities =

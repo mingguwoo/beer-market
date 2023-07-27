@@ -2,6 +2,8 @@ package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.nio.ngfs.common.model.page.WherePageRequest;
+import com.nio.ngfs.common.utils.BeanConvertUtils;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.OxoRowInfoAggr;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoFeatureOptionDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsOxoFeatureOptionEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsOxoFeatureOptionMapper;
@@ -28,6 +30,18 @@ public class BomsOxoFeatureOptionDaoImpl extends AbstractDao<BomsOxoFeatureOptio
         lambdaQueryWrapper.in(BomsOxoFeatureOptionEntity::getFeatureCode,featureList);
         lambdaQueryWrapper.in(BomsOxoFeatureOptionEntity::getModelCode,modelCode);
         return getBaseMapper().selectList(lambdaQueryWrapper);
+    }
+
+    @Override
+    public List<BomsOxoFeatureOptionEntity> queryOxoFeatureOptionByModel(String modelCode) {
+        LambdaQueryWrapper<BomsOxoFeatureOptionEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.in(BomsOxoFeatureOptionEntity::getModelCode,modelCode);
+        return getBaseMapper().selectList(lambdaQueryWrapper);
+    }
+
+    @Override
+    public void insertOxoFeatureOptions(List<OxoRowInfoAggr> oxoRowInfoAggrs) {
+        getBaseMapper().insertOxoRows(BeanConvertUtils.convertListTo(oxoRowInfoAggrs,BomsOxoFeatureOptionEntity::new));
     }
 
     @Override

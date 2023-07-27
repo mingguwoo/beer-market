@@ -26,4 +26,12 @@ public interface OxoFeatureOptionRepository extends Repository<OxoFeatureOptionA
      */
     void batchSave(List<OxoFeatureOptionAggr> aggrList);
 
+
+
+
+    List<OxoFeatureOptionAggr> queryFeatureListsByModel(String modelCode);
+
+
+
+
 }

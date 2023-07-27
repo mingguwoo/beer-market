@@ -1,6 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.OxoRowInfoAggr;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsOxoFeatureOptionEntity;
 
 import java.util.List;
@@ -30,4 +31,17 @@ public interface BomsOxoFeatureOptionDao extends IService<BomsOxoFeatureOptionEn
      */
     List<BomsOxoFeatureOptionEntity> queryByModelAndFeatureCodeList(String model, List<String> featureCodeList);
 
+
+    /**
+     * 根据车型 查询oxo 行
+     * @param modelCode
+     * @return
+     */
+    List<BomsOxoFeatureOptionEntity> queryOxoFeatureOptionByModel(String modelCode);
+
+    /**
+     *
+     * @param oxoRowInfoAggrs
+     */
+    void insertOxoFeatureOptions(List<OxoRowInfoAggr> oxoRowInfoAggrs);
 }

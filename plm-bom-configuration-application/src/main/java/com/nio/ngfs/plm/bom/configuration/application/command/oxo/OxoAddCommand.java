@@ -3,8 +3,10 @@ package com.nio.ngfs.plm.bom.configuration.application.command.oxo;
 
 import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockCommand;
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
-import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.OxoRowInfoAggr;
-import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.repository.OxoRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.OxoFactory;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.service.BaseVehicleDomainService;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoFeatureOptionDao;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoAddCmd;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -18,7 +20,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class OxoAddCommand extends AbstractLockCommand<OxoAddCmd, Boolean> {
 
 
-    private OxoRepository oxoRepository;
+
+    private final BaseVehicleDomainService baseVehicleDomainService;
+
+    private final BomsOxoFeatureOptionDao featureOptionDao;
+
+
 
 
     @Override
@@ -29,7 +36,7 @@ public class OxoAddCommand extends AbstractLockCommand<OxoAddCmd, Boolean> {
 
     /**
      * 添加 optionCode FeatureCode至OXO
-     * @param cmd c
+     * @param cmd
      * @return
      */
     @Override
@@ -37,11 +44,12 @@ public class OxoAddCommand extends AbstractLockCommand<OxoAddCmd, Boolean> {
     protected Boolean executeWithLock(OxoAddCmd cmd) {
 
         //插入行数据
-        oxoRepository.insertOxoRows(OxoRowInfoAggr.buildOxoRowInfoAggrs(cmd));
+        featureOptionDao.insertOxoFeatureOptions(OxoFactory.buildOxoRowInfoAggrs(cmd));
 
 
-        //进行打点
 
+        //查询表头数据
+        //oxoRepository.
 
 
 

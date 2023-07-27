@@ -6,19 +6,28 @@ import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.application.query.AbstractQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.assemble.BaseVehicleAssembler;
 import com.nio.ngfs.plm.bom.configuration.application.query.feature.common.BaseVehicleQueryUtil;
+import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsBasicVehicleDao;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsFeatureLibraryDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsBasicVehicleEntity;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureLibraryEntity;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.QueryBaseVehicleQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.BaseVehicleRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.QueryBaseVehicleRespDto;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author bill.wang
@@ -29,6 +38,7 @@ import java.util.Objects;
 public class QueryBaseVehicleQuery extends AbstractQuery<QueryBaseVehicleQry, QueryBaseVehicleRespDto> {
 
     private final BomsBasicVehicleDao bomsBasicVehicleDao;
+    private final BaseVehicleQueryUtil baseVehicleQueryUtil;
 
     @Override
     protected void validate(QueryBaseVehicleQry queryBaseVehicleQry) {
@@ -44,7 +54,7 @@ public class QueryBaseVehicleQuery extends AbstractQuery<QueryBaseVehicleQry, Qu
         List<BaseVehicleRespDto> dtoList = LambdaUtil.map(entityList, BaseVehicleAssembler::assemble);
         List<BaseVehicleRespDto> filteredDto = filter(dtoList, qry);
         //调取featureDomainDao查询region,drive hand, sales version所有选项,再根据featureCode去筛选
-        res.setBaseVehicleRespDtoList(BaseVehicleQueryUtil.completeBaseVehicle(filteredDto));
+        res.setBaseVehicleRespDtoList(baseVehicleQueryUtil.completeBaseVehicle(filteredDto));
         res.setCount(filteredDto.size());
         return res;
     }
@@ -52,13 +62,13 @@ public class QueryBaseVehicleQuery extends AbstractQuery<QueryBaseVehicleQry, Qu
     private List<BaseVehicleRespDto> filter(List<BaseVehicleRespDto> dtoList, QueryBaseVehicleQry qry){
         dtoList = dtoList.stream()
                 .filter(dto-> StringUtils.isBlank(qry.getModelCode()) || Objects.equals(qry.getModelCode(),dto.getModelCode()))
-                .filter(dto->CollectionUtils.isNotEmpty(qry.getModelYear()) || qry.getModelYear().contains(dto.getModelYear()))
+                .filter(dto-> CollectionUtils.isEmpty(qry.getModelYear()) || qry.getModelYear().contains(dto.getModelYear()))
                 .filter(dto-> StringUtils.isBlank(qry.getStatus()) || Objects.equals(qry.getStatus(),dto.getStatus()))
                 .filter(dto-> StringUtils.isBlank(qry.getSalesVersion()) || Objects.equals(qry.getSalesVersion(),dto.getSalesVersion()))
                 .filter(dto-> StringUtils.isBlank(qry.getRegionOptionCode()) || Objects.equals(qry.getRegionOptionCode(),dto.getRegionOptionCode()))
-                .filter(dto-> StringUtils.isBlank(qry.getDriveHand()) || Objects.equals(qry.getDriveHand(),dto.getDriveHand())).toList();
+                .filter(dto-> StringUtils.isBlank(qry.getDriveHand()) || Objects.equals(qry.getDriveHand(),dto.getDriveHand()))
+                .toList();
         return dtoList;
     }
-
 
 }

@@ -88,14 +88,14 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
     @Override
     @NeedAuthorization
     @NotLogResult
-    public ResultInfo<GetBaseVehicleOptionsRespDto> getBaseVehicleOptions(GetBaseVehicleOptionsQry qry) {
+    public ResultInfo<GetBaseVehicleOptionsRespDto> getBaseVehicleOptions(@Valid @RequestBody GetBaseVehicleOptionsQry qry) {
         return ResultInfo.success(getbaseVehicleOptionsQuery.execute(qry));
     }
 
     @Override
     @NeedAuthorization
     @NotLogResult
-    public ResultInfo<QueryCopyFromModelRespDto> queryCopyFromModel(QueryCopyFromModelsQry qry) {
+    public ResultInfo<QueryCopyFromModelRespDto> queryCopyFromModel(@Valid @RequestBody QueryCopyFromModelsQry qry) {
         return ResultInfo.success(queryCopyFromModelQuery.execute(qry));
     }
 

@@ -27,8 +27,8 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class GetBaseVehicleOptionsQuery {
 
-    private BomsOxoFeatureOptionDao bomsOxoFeatureOptionDao;
-    private BomsFeatureLibraryDao bomsFeatureLibraryDao;
+    private final BomsOxoFeatureOptionDao bomsOxoFeatureOptionDao;
+    private final BomsFeatureLibraryDao bomsFeatureLibraryDao;
 
     public GetBaseVehicleOptionsRespDto execute(GetBaseVehicleOptionsQry qry) {
         //  获取全部region，drive hand， sales version
@@ -36,8 +36,8 @@ public class GetBaseVehicleOptionsQuery {
         List<BomsFeatureLibraryEntity> allFeatures = bomsFeatureLibraryDao.queryByParentFeatureCodeListAndType(codeList, FeatureTypeEnum.OPTION.getType());
         List<String> featureList = allFeatures.stream().map(feature->feature.getFeatureCode()).collect(Collectors.toList());
         //加上modelCode去oxoFeatureOptionDao进行批量查询，看有哪些存在
-        List<BomsOxoFeatureOptionEntity> filteredList = bomsOxoFeatureOptionDao.getBaseVehicleOptions(featureList,qry);
-        return buildResponse(filteredList);
+        List<BomsOxoFeatureOptionEntity> resList = bomsOxoFeatureOptionDao.getBaseVehicleOptions(featureList,qry.getModelCode());
+        return buildResponse(resList);
     }
 
     private GetBaseVehicleOptionsRespDto buildResponse (List<BomsOxoFeatureOptionEntity> filteredList){
@@ -47,10 +47,10 @@ public class GetBaseVehicleOptionsQuery {
         Set<String> salesVersion = new HashSet<>();
         filteredList.forEach(entity->{
             //根据开头两个字母进行分类,只有三种：salesVersion/driveHand/regionOptionCode
-            if (entity.getFeatureCode().substring(CommonConstants.INT_ZERO).equals(ConfigConstants.BASE_VEHICLE_SALES_VERSION_FEATURE.substring(CommonConstants.INT_ZERO))){
+            if (entity.getFeatureCode().substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO).equals(ConfigConstants.BASE_VEHICLE_SALES_VERSION_FEATURE.substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO))){
                 salesVersion.add(entity.getFeatureCode());
             }
-            else if (entity.getFeatureCode().substring(CommonConstants.INT_ZERO).equals(ConfigConstants.BASE_VEHICLE_DRIVE_HAND_FEATURE.substring(CommonConstants.INT_ZERO))){
+            else if (entity.getFeatureCode().substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO).equals(ConfigConstants.BASE_VEHICLE_DRIVE_HAND_FEATURE.substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO))){
                 driveHand.add(entity.getFeatureCode());
             }
             else {

@@ -10,6 +10,7 @@ import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.EditBa
 import com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.CheckBaseVehicleStatusQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.GetBaseVehicleOptionsQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.QueryBaseVehicleQuery;
+import com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.QueryCopyFromModelQuery;
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmBaseVehicleClient;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.*;
@@ -37,6 +38,7 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
     private final QueryBaseVehicleQuery queryBaseVehicleQuery;
     private final ChangeBaseVehicleStatusCommand changeBaseVehicleStatusCommand;
     private final GetBaseVehicleOptionsQuery getbaseVehicleOptionsQuery;
+    private final QueryCopyFromModelQuery queryCopyFromModelQuery;
 
 
     @Override
@@ -85,7 +87,11 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
     @NeedAuthorization
     @NotLogResult
     public ResultInfo<GetBaseVehicleOptionsRespDto> getBaseVehicleOptions(GetBaseVehicleOptionsQry qry) {
-
         return ResultInfo.success(getbaseVehicleOptionsQuery.execute(qry));
+    }
+
+    @Override
+    public ResultInfo<QueryCopyFromModelRespDto> queryCopyFromModel(QueryCopyFromModelsQry qry) {
+        return ResultInfo.success(queryCopyFromModelQuery.execute(qry));
     }
 }

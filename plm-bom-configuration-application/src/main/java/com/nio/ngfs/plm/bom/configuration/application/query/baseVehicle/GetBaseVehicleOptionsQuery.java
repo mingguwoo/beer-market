@@ -44,7 +44,7 @@ public class GetBaseVehicleOptionsQuery {
         Set<String> driveHand = new HashSet<>();
         Set<String> salesVersion = new HashSet<>();
         filteredList.forEach(entity->{
-            //根据开头两个字母进行分类
+            //根据开头两个字母进行分类,只有三种：salesVersion/driveHand/regionOptionCode
             if (entity.getFeatureCode().substring(CommonConstants.INT_ZERO).equals(ConfigConstants.BASE_VEHICLE_SALES_VERSION_FEATURE.substring(CommonConstants.INT_ZERO))){
                 salesVersion.add(entity.getFeatureCode());
             }

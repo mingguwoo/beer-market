@@ -33,4 +33,7 @@ public interface PlmBaseVehicleClient {
 
     @PostMapping("baseVehicle/getBaseVehicleOptions")
     ResultInfo<GetBaseVehicleOptionsRespDto> getBaseVehicleOptions(GetBaseVehicleOptionsQry qry);
+
+    @PostMapping("baseVehicle/queryCopyFromModel")
+    ResultInfo<QueryCopyFromModelRespDto> queryCopyFromModel(QueryCopyFromModelsQry qry);
 }

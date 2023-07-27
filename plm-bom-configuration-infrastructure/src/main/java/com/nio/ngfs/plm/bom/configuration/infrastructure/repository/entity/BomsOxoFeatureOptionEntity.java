@@ -8,7 +8,7 @@ import lombok.experimental.SuperBuilder;
 
 /**
  * <p>
- * oxo快照表
+ * oxo Feature/Option行信息表
  * </p>
  *
  * @author xiaozhou.tu
@@ -18,8 +18,8 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("boms_oxo_version_snapshot")
-public class BomsOxoVersionSnapshotEntity extends BaseEntity {
+@TableName("boms_oxo_feature_option")
+public class BomsOxoFeatureOptionEntity extends BaseEntity {
 
     /**
      * 车型
@@ -27,52 +27,43 @@ public class BomsOxoVersionSnapshotEntity extends BaseEntity {
     private String modelCode;
 
     /**
-     * 版本号
+     * 配置code
      */
-    private String version;
+    private String featureCode;
+
+    private String ruleCheck;
 
     /**
-     * oxo快照信息
-     */
-    private String oxoSnapshot;
-
-    /**
-     * Formal/Informal
+     * 类型，Feature、Option
      */
     private String type;
 
     /**
-     * 品牌
+     * 评论
      */
-    private String brand;
+    private String comment;
 
     /**
-     * 发版标题
+     * 排序id
      */
-    private String title;
+    private Integer sort;
 
     /**
-     * 发布内容
+     * 软删除 1删除 0未删除
      */
-    private String changeContent;
-
-    /**
-     * 邮件组
-     */
-    private String emailGroup;
+    private Short softDelete;
 
     @Override
     public String toString() {
-        return "BomsOxoVersionSnapshot{" +
+        return "BomsOxoFeatureOption{" +
             "id = " + getId() +
             ", modelCode = " + modelCode +
-            ", version = " + version +
-            ", oxoSnapshot = " + oxoSnapshot +
+            ", featureCode = " + featureCode +
+            ", ruleCheck = " + ruleCheck +
             ", type = " + type +
-            ", brand = " + brand +
-            ", title = " + title +
-            ", changeContent = " + changeContent +
-            ", emailGroup = " + emailGroup +
+            ", comment = " + comment +
+            ", sort = " + sort +
+            ", softDelete = " + softDelete +
             ", createTime = " + getCreateTime() +
             ", updateTime = " + getUpdateTime() +
             ", createUser = " + getCreateUser() +

@@ -8,7 +8,7 @@ import lombok.experimental.SuperBuilder;
 
 /**
  * <p>
- * oxo快照表
+ * oxo 打点信息表
  * </p>
  *
  * @author xiaozhou.tu
@@ -18,61 +18,43 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("boms_oxo_version_snapshot")
-public class BomsOxoVersionSnapshotEntity extends BaseEntity {
+@TableName("boms_oxo_option_package")
+public class BomsOxoOptionPackageEntity extends BaseEntity {
 
     /**
-     * 车型
+     * oxo行id
      */
-    private String modelCode;
+    private Long featureOptionId;
 
     /**
-     * 版本号
+     * oxo列id
      */
-    private String version;
+    private Long baseVehicleId;
 
     /**
-     * oxo快照信息
+     * Default ●  Unavailable - Available ○
      */
-    private String oxoSnapshot;
+    private String packageCode;
 
     /**
-     * Formal/Informal
+     * 描述
      */
-    private String type;
+    private String description;
 
     /**
      * 品牌
      */
     private String brand;
 
-    /**
-     * 发版标题
-     */
-    private String title;
-
-    /**
-     * 发布内容
-     */
-    private String changeContent;
-
-    /**
-     * 邮件组
-     */
-    private String emailGroup;
-
     @Override
     public String toString() {
-        return "BomsOxoVersionSnapshot{" +
+        return "BomsOxoOptionPackage{" +
             "id = " + getId() +
-            ", modelCode = " + modelCode +
-            ", version = " + version +
-            ", oxoSnapshot = " + oxoSnapshot +
-            ", type = " + type +
+            ", featureOptionId = " + featureOptionId +
+            ", baseVehicleId = " + baseVehicleId +
+            ", packageCode = " + packageCode +
+            ", description = " + description +
             ", brand = " + brand +
-            ", title = " + title +
-            ", changeContent = " + changeContent +
-            ", emailGroup = " + emailGroup +
             ", createTime = " + getCreateTime() +
             ", updateTime = " + getUpdateTime() +
             ", createUser = " + getCreateUser() +

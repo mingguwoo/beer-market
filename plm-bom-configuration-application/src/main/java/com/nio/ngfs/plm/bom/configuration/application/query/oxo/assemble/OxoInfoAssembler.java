@@ -2,7 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.application.query.oxo.assemble;
 
 import com.google.common.collect.Lists;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.domainobject.OxoInfoDo;
-import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsOxoOptionPackageInfoEntity;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsOxoOptionPackageEntity;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoEditCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoHeadQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoRowsQry;
@@ -31,11 +31,11 @@ public class OxoInfoAssembler {
     }
 
 
-    public static List<OxoEditCmd> buildOxoEditCmd(List<BomsOxoOptionPackageInfoEntity> entities, OxoInfoDo oxoInfoDo, List<OxoHeadQry> oxoLists) {
+    public static List<OxoEditCmd> buildOxoEditCmd(List<BomsOxoOptionPackageEntity> entities, OxoInfoDo oxoInfoDo, List<OxoHeadQry> oxoLists) {
 
 
-        List<BomsOxoOptionPackageInfoEntity> rowEntities =
-                entities.stream().filter(y -> Objects.equals(y.getRowId(), oxoInfoDo.getId())).toList();
+        List<BomsOxoOptionPackageEntity> rowEntities =
+                entities.stream().filter(y -> Objects.equals(y.getFeatureOptionId(), oxoInfoDo.getId())).toList();
 
         List<OxoEditCmd> oxoEditCmds = Lists.newArrayList();
 
@@ -44,7 +44,7 @@ public class OxoInfoAssembler {
                 regionInfos.getDriveHands().forEach(driveHandInfos -> {
                     driveHandInfos.getSalesVersionInfos().forEach(driveHand -> {
 
-                        BomsOxoOptionPackageInfoEntity entity = rowEntities.stream().filter(head ->
+                        BomsOxoOptionPackageEntity entity = rowEntities.stream().filter(head ->
                                 Objects.equals(head.getBaseVehicleId(), driveHand.getHeadId())).findFirst().orElse(null);
 
                         if (Objects.nonNull(entity)) {
@@ -62,9 +62,9 @@ public class OxoInfoAssembler {
     }
 
 
-    public static OxoEditCmd convertPackageInfoEntity(BomsOxoOptionPackageInfoEntity entity) {
+    public static OxoEditCmd convertPackageInfoEntity(BomsOxoOptionPackageEntity entity) {
         OxoEditCmd cmd = new OxoEditCmd();
-        cmd.setRowId(entity.getRowId());
+        cmd.setRowId(entity.getFeatureOptionId());
         cmd.setHeadId(entity.getBaseVehicleId());
         cmd.setPackageCode(entity.getPackageCode());
         return cmd;

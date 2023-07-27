@@ -6,7 +6,6 @@ import com.nio.ngfs.plm.bom.configuration.application.command.oxo.OxoAddCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.oxo.OxoDeleteCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.oxo.OxoEditCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.oxo.OxoSnapshootCommand;
-import com.nio.ngfs.plm.bom.configuration.application.query.oxo.OxoInfoQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.oxo.OxoVersionQuery;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.PageData;
@@ -39,7 +38,6 @@ public class OxoController {
     private final OxoAddCommand oxoAddCommand;
     private final OxoEditCommand oxoEditCommand;
 
-    private final OxoInfoQuery oxoInfoQuery;
     private final OxoVersionQuery oxoVersionQuery;
 
     /**
@@ -60,7 +58,7 @@ public class OxoController {
      */
     @PostMapping("/queryList")
     public ResultInfo<OxoListQry> queryList(@Valid @RequestBody OxoBaseCmd cmd) {
-        return ResultInfo.success(oxoInfoQuery.execute(cmd));
+        return ResultInfo.success(null);
     }
 
     /**

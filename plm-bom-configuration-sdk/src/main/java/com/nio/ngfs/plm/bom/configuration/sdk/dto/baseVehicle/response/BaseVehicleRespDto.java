@@ -43,4 +43,6 @@ public class BaseVehicleRespDto implements Dto {
     private String updateTime;
 
     private String status;
+
+    private String maturity;
 }

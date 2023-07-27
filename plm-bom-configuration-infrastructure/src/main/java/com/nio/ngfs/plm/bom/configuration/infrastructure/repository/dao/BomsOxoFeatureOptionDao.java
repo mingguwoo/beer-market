@@ -12,6 +12,16 @@ import java.util.List;
 public interface BomsOxoFeatureOptionDao extends IService<BomsOxoFeatureOptionEntity> {
 
     /**
+     * 根据Model Code 和 Feature Code去批量查询
+     *
+     * @param featureList
+     * @param qry
+     * @return BomsOxoFeatureOptionEntity列表
+     */
+    List<BomsOxoFeatureOptionEntity> getBaseVehicleOptions(List<String> featureList, String modelCode);
+
+
+    /**
      * 根据车型和Feature Code列表查询
      *
      * @param model           车型

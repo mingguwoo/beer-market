@@ -23,6 +23,14 @@ public class BomsOxoFeatureOptionDaoImpl extends AbstractDao<BomsOxoFeatureOptio
     }
 
     @Override
+    public List<BomsOxoFeatureOptionEntity> getBaseVehicleOptions(List<String> featureList, String modelCode) {
+        LambdaQueryWrapper<BomsOxoFeatureOptionEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.in(BomsOxoFeatureOptionEntity::getFeatureCode,featureList);
+        lambdaQueryWrapper.in(BomsOxoFeatureOptionEntity::getModelCode,modelCode);
+        return getBaseMapper().selectList(lambdaQueryWrapper);
+    }
+
+    @Override
     public List<BomsOxoFeatureOptionEntity> queryByModelAndFeatureCodeList(String model, List<String> featureCodeList) {
         LambdaQueryWrapper<BomsOxoFeatureOptionEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(BomsOxoFeatureOptionEntity::getModelCode, model);

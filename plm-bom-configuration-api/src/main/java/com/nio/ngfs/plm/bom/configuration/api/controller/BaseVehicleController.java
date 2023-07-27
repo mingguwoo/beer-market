@@ -8,15 +8,19 @@ import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.Change
 import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.DeleteBaseVehicleCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.EditBaseVehicleCommand;
 import com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.CheckBaseVehicleStatusQuery;
+import com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.GetBaseVehicleOptionsQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.QueryBaseVehicleQuery;
+import com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.QueryCopyFromModelQuery;
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmBaseVehicleClient;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 /**
@@ -35,6 +39,8 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
     private final DeleteBaseVehicleCommand deleteBaseVehicleCommand;
     private final QueryBaseVehicleQuery queryBaseVehicleQuery;
     private final ChangeBaseVehicleStatusCommand changeBaseVehicleStatusCommand;
+    private final GetBaseVehicleOptionsQuery getbaseVehicleOptionsQuery;
+    private final QueryCopyFromModelQuery queryCopyFromModelQuery;
 
 
     @Override
@@ -77,5 +83,25 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
     @NotLogResult
     public ResultInfo<ChangeBaseVehicleStatusRespDto> changeBaseVehicleStatus(@Valid @RequestBody ChangeBaseVehicleStatusCmd cmd) {
         return ResultInfo.success(changeBaseVehicleStatusCommand.execute(cmd));
+    }
+
+    @Override
+    @NeedAuthorization
+    @NotLogResult
+    public ResultInfo<GetBaseVehicleOptionsRespDto> getBaseVehicleOptions(@Valid @RequestBody GetBaseVehicleOptionsQry qry) {
+        return ResultInfo.success(getbaseVehicleOptionsQuery.execute(qry));
+    }
+
+    @Override
+    @NeedAuthorization
+    @NotLogResult
+    public ResultInfo<QueryCopyFromModelRespDto> queryCopyFromModel(@Valid @RequestBody QueryCopyFromModelsQry qry) {
+        return ResultInfo.success(queryCopyFromModelQuery.execute(qry));
+    }
+
+    @NeedAuthorization
+    @NotLogResult
+    @PostMapping("/baseVerhicle/exportBaseVehicle")
+    public void exportBaseVehicle(HttpServletResponse response) {
     }
 }

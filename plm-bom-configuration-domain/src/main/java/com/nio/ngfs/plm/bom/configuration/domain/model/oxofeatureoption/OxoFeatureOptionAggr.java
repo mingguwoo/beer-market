@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Comparator;
+
 /**
  * @author xiaozhou.tu
  * @date 2023/7/27
@@ -17,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OxoFeatureOptionAggr extends AbstractDo implements AggrRoot<Long> {
+public class OxoFeatureOptionAggr extends AbstractDo implements AggrRoot<Long>, Comparable<OxoFeatureOptionAggr> {
 
     /**
      * 车型
@@ -54,6 +56,20 @@ public class OxoFeatureOptionAggr extends AbstractDo implements AggrRoot<Long> {
     @Override
     public Long getUniqId() {
         return id;
+    }
+
+    @Override
+    public int compareTo(OxoFeatureOptionAggr other) {
+        Comparator<OxoFeatureOptionAggr> c1 = Comparator.comparing(OxoFeatureOptionAggr::getSort);
+        Comparator<OxoFeatureOptionAggr> c2 = Comparator.comparing(OxoFeatureOptionAggr::getFeatureCode);
+        return c1.thenComparing(c2).compare(this, other);
+    }
+
+    /**
+     * 重新排序
+     */
+    public void renewSort(int sort) {
+        setSort(sort);
     }
 
 }

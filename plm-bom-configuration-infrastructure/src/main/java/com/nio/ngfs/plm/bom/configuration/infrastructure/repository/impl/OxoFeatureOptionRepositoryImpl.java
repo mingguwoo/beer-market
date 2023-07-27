@@ -8,6 +8,8 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.common.D
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author xiaozhou.tu
  * @date 2023/7/27
@@ -27,6 +29,16 @@ public class OxoFeatureOptionRepositoryImpl implements OxoFeatureOptionRepositor
     @Override
     public OxoFeatureOptionAggr find(Long id) {
         return oxoFeatureOptionConverter.convertEntityToDo(bomsOxoFeatureOptionDao.getById(id));
+    }
+
+    @Override
+    public List<OxoFeatureOptionAggr> queryByModelAndFeatureCodeList(String model, List<String> featureCodeList) {
+        return oxoFeatureOptionConverter.convertEntityListToDoList(bomsOxoFeatureOptionDao.queryByModelAndFeatureCodeList(model, featureCodeList));
+    }
+
+    @Override
+    public void batchSave(List<OxoFeatureOptionAggr> aggrList) {
+        bomsOxoFeatureOptionDao.updateBatchById(oxoFeatureOptionConverter.convertDoListToEntityList(aggrList));
     }
 
 }

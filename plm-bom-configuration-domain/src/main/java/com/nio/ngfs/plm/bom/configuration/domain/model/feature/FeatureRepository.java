@@ -71,4 +71,12 @@ public interface FeatureRepository extends Repository<FeatureAggr, FeatureId> {
      */
     List<FeatureAggr> queryByFeatureOptionCodeList(List<String> featureOptionCodeList);
 
+    /**
+     * 根据Feature或Option Code查询
+     *
+     * @param featureOptionCode Feature/Option Code
+     * @return FeatureAggr
+     */
+    FeatureAggr getByFeatureOrOptionCode(String featureOptionCode);
+
 }

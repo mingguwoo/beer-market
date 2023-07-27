@@ -109,4 +109,9 @@ public class FeatureRepositoryImpl implements FeatureRepository {
         return featureConverter.convertEntityListToDoList(bomsFeatureLibraryDao.queryByFeatureOptionCodeList(featureOptionCodeList));
     }
 
+    @Override
+    public FeatureAggr getByFeatureOrOptionCode(String featureOptionCode) {
+        return featureConverter.convertEntityToDo(bomsFeatureLibraryDao.getByFeatureOrOptionCode(featureOptionCode));
+    }
+
 }

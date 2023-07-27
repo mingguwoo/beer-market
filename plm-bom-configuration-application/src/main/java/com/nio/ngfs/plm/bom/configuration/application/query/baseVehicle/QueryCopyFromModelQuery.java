@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 public class QueryCopyFromModelQuery {
 
     private final BomsBasicVehicleDao bomsBasicVehicleDao;
-    private final BaseVehicleQueryUtil baseVehicleQueryUtil;
 
     public QueryCopyFromModelRespDto execute (QueryCopyFromModelsQry qry){
         QueryCopyFromModelRespDto res = new QueryCopyFromModelRespDto();
@@ -34,7 +33,7 @@ public class QueryCopyFromModelQuery {
             return dto;
         }).collect(Collectors.toList());
         //补全中英文信息并返回结果
-        res.setBaseVehicleList(baseVehicleQueryUtil.completeBaseVehicle(dtoList));
+        res.setBaseVehicleList(BaseVehicleQueryUtil.completeBaseVehicle(dtoList));
         return res;
     }
 }

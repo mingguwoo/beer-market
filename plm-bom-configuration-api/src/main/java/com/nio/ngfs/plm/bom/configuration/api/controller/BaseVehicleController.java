@@ -16,9 +16,11 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 /**
@@ -95,5 +97,11 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
     @NotLogResult
     public ResultInfo<QueryCopyFromModelRespDto> queryCopyFromModel(QueryCopyFromModelsQry qry) {
         return ResultInfo.success(queryCopyFromModelQuery.execute(qry));
+    }
+
+    @NeedAuthorization
+    @NotLogResult
+    @PostMapping("/baseVerhicle/exportBaseVehicle")
+    public void exportBaseVehicle(HttpServletResponse response) {
     }
 }

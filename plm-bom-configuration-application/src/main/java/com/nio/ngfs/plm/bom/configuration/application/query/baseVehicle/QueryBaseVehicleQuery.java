@@ -29,7 +29,6 @@ import java.util.Objects;
 public class QueryBaseVehicleQuery extends AbstractQuery<QueryBaseVehicleQry, QueryBaseVehicleRespDto> {
 
     private final BomsBasicVehicleDao bomsBasicVehicleDao;
-    private final BaseVehicleQueryUtil baseVehicleQueryUtil;
 
     @Override
     protected void validate(QueryBaseVehicleQry queryBaseVehicleQry) {
@@ -45,7 +44,7 @@ public class QueryBaseVehicleQuery extends AbstractQuery<QueryBaseVehicleQry, Qu
         List<BaseVehicleRespDto> dtoList = LambdaUtil.map(entityList, BaseVehicleAssembler::assemble);
         List<BaseVehicleRespDto> filteredDto = filter(dtoList, qry);
         //调取featureDomainDao查询region,drive hand, sales version所有选项,再根据featureCode去筛选
-        res.setBaseVehicleRespDtoList(baseVehicleQueryUtil.completeBaseVehicle(filteredDto));
+        res.setBaseVehicleRespDtoList(BaseVehicleQueryUtil.completeBaseVehicle(filteredDto));
         res.setCount(filteredDto.size());
         return res;
     }

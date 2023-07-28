@@ -1,6 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.application.command.oxo;
 
 import com.nio.ngfs.plm.bom.configuration.application.command.AbstractCommand;
+import com.nio.ngfs.plm.bom.configuration.application.service.OxoFeatureOptionApplicationService;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.service.OxoFeatureOptionDomainService;
@@ -23,11 +24,12 @@ public class RenewSortFeatureOptionCommand extends AbstractCommand<RenewSortFeat
 
     private final OxoFeatureOptionDomainService oxoFeatureOptionDomainService;
     private final OxoFeatureOptionRepository oxoFeatureOptionRepository;
+    private final OxoFeatureOptionApplicationService oxoFeatureOptionApplicationService;
 
     @Override
     protected RenewSortFeatureOptionRespDto executeCommand(RenewSortFeatureOptionCmd cmd) {
         // 查询同一排序分组的Feature/Option
-        List<OxoFeatureOptionAggr> oxoFeatureOptionAggrList = oxoFeatureOptionDomainService.querySameSortGroupFeatureOption(cmd.getModelCode(), cmd.getTargetFeatureCode());
+        List<OxoFeatureOptionAggr> oxoFeatureOptionAggrList = oxoFeatureOptionApplicationService.querySameSortGroupFeatureOption(cmd.getModelCode(), cmd.getTargetFeatureCode());
         // 重新排序Feature/Option
         oxoFeatureOptionDomainService.renewSortFeatureOption(oxoFeatureOptionAggrList, cmd.getTargetFeatureCode(), cmd.getMoveFeatureCodeList());
         // 批量保存

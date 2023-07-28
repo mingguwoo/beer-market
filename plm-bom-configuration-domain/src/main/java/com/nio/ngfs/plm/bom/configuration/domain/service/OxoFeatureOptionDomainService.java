@@ -11,15 +11,6 @@ import java.util.List;
 public interface OxoFeatureOptionDomainService {
 
     /**
-     * 查询同一排序分组的Feature/Option
-     *
-     * @param model             车型
-     * @param featureOptionCode Feature/Option Code
-     * @return OxoFeatureOptionAggr列表
-     */
-    List<OxoFeatureOptionAggr> querySameSortGroupFeatureOption(String model, String featureOptionCode);
-
-    /**
      * 重新排序Feature/Option
      *
      * @param oxoFeatureOptionAggrList OxoFeatureOptionAggr列表

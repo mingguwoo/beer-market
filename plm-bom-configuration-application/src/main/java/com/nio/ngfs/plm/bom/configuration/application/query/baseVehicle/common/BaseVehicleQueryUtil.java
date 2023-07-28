@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.application.query.feature.common;
+package com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.common;
 
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;

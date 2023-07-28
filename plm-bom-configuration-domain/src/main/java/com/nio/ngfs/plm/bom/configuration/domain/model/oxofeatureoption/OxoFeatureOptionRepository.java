@@ -39,6 +39,4 @@ public interface OxoFeatureOptionRepository extends Repository<OxoFeatureOptionA
     List<OxoFeatureOptionAggr> queryFeatureListsByModel(String modelCode);
 
 
-
-
 }

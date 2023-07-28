@@ -9,13 +9,17 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.service.OxoFeatureOptionDomainService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -58,6 +62,12 @@ public class OxoFeatureOptionDomainServiceImpl implements OxoFeatureOptionDomain
         for (int i = 0; i < newSortFeatureCodeList.size(); i++) {
             oxoFeatureOptionAggrMap.get(newSortFeatureCodeList.get(i)).renewSort(i);
         }
+    }
+
+    @Override
+    public List<OxoOptionPackageAggr> filter(List<OxoOptionPackageAggr> points, List<OxoFeatureOptionAggr> driveHandRegionSalesVersionRows) {
+        List<Long> repeatRows = driveHandRegionSalesVersionRows.stream().map(row-> row.getId()).collect(Collectors.toList());
+        return points.stream().filter(point-> repeatRows.contains(point.getFeatureOptionId())).toList();
     }
 
 }

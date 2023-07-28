@@ -17,7 +17,7 @@ public interface BomsOxoFeatureOptionDao extends IService<BomsOxoFeatureOptionEn
      * 根据Model Code 和 Feature Code去批量查询
      *
      * @param featureList
-     * @param qry
+     * @param modelCode
      * @return BomsOxoFeatureOptionEntity列表
      */
     List<BomsOxoFeatureOptionEntity> getBaseVehicleOptions(List<String> featureList, String modelCode);

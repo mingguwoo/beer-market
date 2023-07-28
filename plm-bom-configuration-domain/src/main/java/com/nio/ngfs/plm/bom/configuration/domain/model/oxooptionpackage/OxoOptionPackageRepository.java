@@ -1,7 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage;
 
 import com.nio.bom.share.domain.repository.Repository;
-import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.OxoPackageInfoAggr;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ public interface OxoOptionPackageRepository extends Repository<OxoOptionPackageA
      *
      * @param oxoPackages 列表
      */
-    void insertOxoOptionPackages(List<OxoPackageInfoAggr> oxoPackages);
+    void insertOxoOptionPackages(List<OxoOptionPackageAggr> oxoPackages);
 
     /**
      * 根据basevehicle获取它所有的点
@@ -29,5 +28,5 @@ public interface OxoOptionPackageRepository extends Repository<OxoOptionPackageA
     /**
      * 批量新增oxo点
      */
-    void inserOxoOptionPackagesByModelCodeAndOxoOptionPackages(List<OxoOptionPackageAggr> oxoOptionPackageAggrs);
+    void inserOxoOptionPackagesByOxoOptionPackages(List<OxoOptionPackageAggr> oxoOptionPackageAggrs);
 }

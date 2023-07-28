@@ -1,6 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.OxoPackageInfoAggr;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsOxoOptionPackageEntity;
 
 import java.util.List;
@@ -14,4 +15,8 @@ public interface BomsOxoOptionPackageDao extends IService<BomsOxoOptionPackageEn
 
 
     List<BomsOxoOptionPackageEntity> queryOxoOptionPackageByRowIds(List<Long> rowIds);
+
+
+
+    void insertOxoOptionPackages(List<OxoPackageInfoAggr> oxoPackages);
 }

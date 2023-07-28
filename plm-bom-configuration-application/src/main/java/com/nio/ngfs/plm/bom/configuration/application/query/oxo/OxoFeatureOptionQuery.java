@@ -1,18 +1,15 @@
-package com.nio.ngfs.plm.bom.configuration.domain.service.oxo.impl;
+package com.nio.ngfs.plm.bom.configuration.application.query.oxo;
 
-import com.nio.bom.share.enums.BrandEnum;
-import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
-import com.nio.ngfs.plm.bom.configuration.domain.model.common.CommonRepository;
-import com.nio.ngfs.plm.bom.configuration.domain.model.common.MatrixRuleQueryDo;
+
+import com.nio.ngfs.plm.bom.configuration.application.query.Query;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
-import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoDomainService;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionRepository;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoAddCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoBaseCmd;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.compress.utils.Lists;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -22,20 +19,15 @@ import java.util.stream.Collectors;
 /**
  * @author wangchao.wang
  */
-@Service
+@Component
 @RequiredArgsConstructor
-public class OxoDomainServiceImpl implements OxoDomainService {
-
-    private final CommonRepository commonRepository;
+public class OxoFeatureOptionQuery implements Query<OxoBaseCmd, OxoAddCmd> {
 
 
-    /**
-     * @return
-     */
+    private final OxoFeatureOptionRepository oxoFeatureOptionRepository;
+
     @Override
-    public OxoAddCmd queryFeatureList(OxoBaseCmd cmd) {
-
-
+    public OxoAddCmd execute(OxoBaseCmd cmd) {
         List<FeatureAggr> featureAggrs = null;
 
         if (CollectionUtils.isEmpty(featureAggrs)) {
@@ -64,31 +56,4 @@ public class OxoDomainServiceImpl implements OxoDomainService {
         addCmd.setUserName(cmd.getUserName());
         return addCmd;
     }
-
-
-    /**
-     * 获取email 收件人
-     * @return
-     */
-    @Override
-    public List<String> queryEmailGroup() {
-
-        String brandName = ConfigConstants.brandName.get();
-
-        String name = ConfigConstants.OXO_EMAIL_GROUP;
-        if (StringUtils.equals(brandName, BrandEnum.ALPS.name())) {
-            name = ConfigConstants.OXO_EMAIL_GROUP_ALPS;
-        }
-
-        Map<String, String> map = commonRepository.queryMatrixRuleValuesByAbscissaOrOrdinate(new MatrixRuleQueryDo
-                (name, "matrix", null, "oxo.email", "PLM.EBOM.PartNumRequest"));
-
-        List<String> list = new LinkedList<>();
-        map.forEach((x, y) -> {
-            list.add(x);
-        });
-        return list.stream().distinct().toList();
-    }
-
-
 }

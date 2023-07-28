@@ -1,7 +1,8 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.OxoRowInfoAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageAggr;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsOxoFeatureOptionEntity;
 
 import java.util.List;
@@ -43,5 +44,6 @@ public interface BomsOxoFeatureOptionDao extends IService<BomsOxoFeatureOptionEn
      *
      * @param oxoRowInfoAggrs
      */
-    void insertOxoFeatureOptions(List<OxoRowInfoAggr> oxoRowInfoAggrs);
+    void insertOxoFeatureOptions(List<OxoFeatureOptionAggr> oxoRowInfoAggrs);
+
 }

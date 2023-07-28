@@ -8,6 +8,7 @@
         model_code,
         feature_code,
         rule_check,
+        type,
         comment,
         sort,
         sort_delete,
@@ -16,7 +17,7 @@
         )
         VALUES
         <foreach collection="bomsOxoRowInfoEntitys" item="entity" index="index" separator=",">
-            (#{entity.modelCode},#{entity.featureCode},#{entity.ruleCheck},#{entity.comment}
+            (#{entity.modelCode},#{entity.featureCode},#{entity.ruleCheck},#{entity.type},#{entity.comment}
             ,#{entity.sort}
             ,#{entity.sortDelete},#{entity.createUser},#{entity.updateUser})
         </foreach>

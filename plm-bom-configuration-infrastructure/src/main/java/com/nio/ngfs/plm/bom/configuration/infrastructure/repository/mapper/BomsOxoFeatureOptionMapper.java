@@ -18,6 +18,6 @@ public interface BomsOxoFeatureOptionMapper extends BaseMapper<BomsOxoFeatureOpt
 
 
 
-    void insertOxoRows(@Param("bomsOxoRowInfoEntitys") List<BomsOxoFeatureOptionEntity> entityList);
+    void insertOxoRows(List<BomsOxoFeatureOptionEntity> bomsOxoRowInfoEntitys);
 
 }

@@ -28,7 +28,14 @@ public interface OxoFeatureOptionRepository extends Repository<OxoFeatureOptionA
 
 
 
+    List<OxoFeatureOptionAggr> queryFeaturesByModel(String model);
 
+
+    /**
+     * 根据modelCode查询未查询的 featureCode
+     * @param modelCode
+     * @return
+     */
     List<OxoFeatureOptionAggr> queryFeatureListsByModel(String modelCode);
 
 

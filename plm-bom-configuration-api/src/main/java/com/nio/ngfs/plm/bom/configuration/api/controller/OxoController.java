@@ -6,6 +6,7 @@ import com.nio.ngfs.plm.bom.configuration.application.command.oxo.OxoAddCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.oxo.OxoDeleteCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.oxo.OxoEditCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.oxo.OxoSnapshootCommand;
+import com.nio.ngfs.plm.bom.configuration.application.query.oxo.OxoInfoQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.oxo.OxoVersionQuery;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.PageData;
@@ -41,6 +42,8 @@ public class OxoController {
 
     private final OxoVersionQuery oxoVersionQuery;
 
+    private final OxoInfoQuery oxoInfoQuery;
+
     /**
      * 根据车型查询快照版本
      * @param cmd
@@ -59,7 +62,7 @@ public class OxoController {
      */
     @PostMapping("/queryList")
     public ResultInfo<OxoListQry> queryList(@Valid @RequestBody OxoBaseCmd cmd) {
-        return ResultInfo.success(null);
+        return ResultInfo.success(oxoInfoQuery.execute(cmd));
     }
 
     /**
@@ -98,8 +101,7 @@ public class OxoController {
      */
     @PostMapping("/edit")
     public ResultInfo edit(@Valid @RequestBody OxoEditInfoCmd cmd) {
-        oxoEditCommand.edit(cmd);
-        return ResultInfo.success(true);
+        return ResultInfo.success(     oxoEditCommand.execute(cmd));
     }
 
     /**

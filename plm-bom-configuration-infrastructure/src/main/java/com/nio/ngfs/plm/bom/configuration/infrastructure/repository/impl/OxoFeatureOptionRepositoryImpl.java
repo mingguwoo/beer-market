@@ -51,6 +51,20 @@ public class OxoFeatureOptionRepositoryImpl implements OxoFeatureOptionRepositor
         bomsOxoFeatureOptionDao.updateBatchById(oxoFeatureOptionConverter.convertDoListToEntityList(aggrList));
     }
 
+    @Override
+    public List<OxoFeatureOptionAggr> queryFeaturesByModel(String model) {
+        List<BomsOxoFeatureOptionEntity> featureOptionEntities=
+                bomsOxoFeatureOptionDao.queryByModelAndFeatureCodeList(model,Lists.newArrayList());
+
+
+        if(CollectionUtils.isNotEmpty(featureOptionEntities)){
+
+        }
+
+        //bomsFeatureLibraryDao.queryByFeatureCode()
+        return null;
+    }
+
 
     @Override
     public List<OxoFeatureOptionAggr> queryFeatureListsByModel(String modelCode) {

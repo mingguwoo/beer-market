@@ -320,6 +320,10 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
         if (ConfigConstants.GROUP_PARENT_FEATURE_CODE.equals(groupCode)) {
             throw new BusinessException(ConfigErrorCode.FEATURE_GROUP_ROOT_IS_INTERNAL);
         }
+        // 校验Group Code格式
+        if (!RegexUtil.isMatchFeatureGroupCode(groupCode)) {
+            throw new BusinessException(ConfigErrorCode.FEATURE_GROUP_CODE_FORMAT_ERROR);
+        }
     }
 
     /**

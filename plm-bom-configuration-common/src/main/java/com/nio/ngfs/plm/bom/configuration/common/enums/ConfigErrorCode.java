@@ -22,7 +22,7 @@ public enum ConfigErrorCode implements ErrorCode {
      * Feature Library
      */
     FEATURE_GROUP_CODE_REPEAT(80000, "The Group Is Already Existed，Please Input A New One!"),
-    FEATURE_GROUP_CODE_FORMAT_ERROR(80001, "Group Code Must Only Contains Alphabet Number And Blank!"),
+    FEATURE_GROUP_CODE_FORMAT_ERROR(80001, "Group Code Must Only Contains Alphabet Number Blank And -!"),
     FEATURE_GROUP_NOT_EXISTS(80002, "Group Not Existed!"),
     FEATURE_TYPE_NOT_MATCH(80003, "Type Not Match!"),
     FEATURE_STATUS_INVALID(80004, "Status Is Invalid!"),

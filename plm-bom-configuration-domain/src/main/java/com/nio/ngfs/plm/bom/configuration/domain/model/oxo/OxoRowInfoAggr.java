@@ -1,16 +1,11 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.oxo;
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
-import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.enums.RuleCheckEnum;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoAddCmd;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.compress.utils.Lists;
-
-import java.util.List;
 
 /**
  * @author wangchao.wang

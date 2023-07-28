@@ -36,4 +36,11 @@ public class BomsOxoOptionPackageDaoImpl extends AbstractDao<BomsOxoOptionPackag
     public void insertOxoOptionPackages(List<OxoPackageInfoAggr> oxoPackages) {
         getBaseMapper().insertOxoOptionPackages(BeanConvertUtils.convertTo(oxoPackages,BomsOxoOptionPackageEntity::new));
     }
+
+    @Override
+    public List<BomsOxoOptionPackageEntity> queryOxoListByBaseVehicle(Long baseVehicleId) {
+        LambdaQueryWrapper<BomsOxoOptionPackageEntity> lambdaQueryWrapper= new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(BomsOxoOptionPackageEntity::getBaseVehicleId,baseVehicleId);
+        return getBaseMapper().selectList(lambdaQueryWrapper);
+    }
 }

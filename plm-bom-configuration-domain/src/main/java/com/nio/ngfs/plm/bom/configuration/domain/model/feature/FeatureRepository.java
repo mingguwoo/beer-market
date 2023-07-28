@@ -79,4 +79,8 @@ public interface FeatureRepository extends Repository<FeatureAggr, FeatureId> {
      */
     FeatureAggr getByFeatureOrOptionCode(String featureOptionCode);
 
+    /**
+     * 筛选copyModel时Oxo中与region,salesVersion,driveHand有关的打点信息
+     */
+    List<String> filterFeatureList(List<String> featureList);
 }

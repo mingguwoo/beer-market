@@ -5,4 +5,6 @@ package com.nio.ngfs.plm.bom.configuration.domain.service;
  * @date 2023/7/27
  */
 public interface OxoOptionPackageDomainService {
+
+
 }

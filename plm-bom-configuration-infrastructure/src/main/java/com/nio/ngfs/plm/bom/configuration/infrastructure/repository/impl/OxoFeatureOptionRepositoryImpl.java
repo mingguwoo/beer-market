@@ -15,8 +15,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -95,4 +93,5 @@ public class OxoFeatureOptionRepositoryImpl implements OxoFeatureOptionRepositor
 
         }).toList();
     }
+
 }

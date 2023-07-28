@@ -31,7 +31,7 @@ public class AddBaseVehicleCmd implements Cmd {
 
     private boolean copyFrom;
 
-    private String copyModel;
+    private Long copyModelId;
 
     @NotBlank(message = "Create User is blank")
     private String createUser;

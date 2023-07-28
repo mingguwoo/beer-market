@@ -10,6 +10,8 @@ import lombok.Data;
 @Data
 public class BaseVehicleRespDto implements Dto {
 
+    private Long id;
+
     private String baseVehicleId;
 
     private String modelCode;

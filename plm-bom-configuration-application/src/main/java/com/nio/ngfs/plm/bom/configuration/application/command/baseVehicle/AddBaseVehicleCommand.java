@@ -7,7 +7,6 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.BaseVehicleRe
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
-import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.OxoPackageInfoAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageAggr;
@@ -20,10 +19,8 @@ import com.nio.ngfs.plm.bom.configuration.domain.service.OxoOptionPackageDomainS
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.AddBaseVehicleCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.AddBaseVehicleRespDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -54,7 +51,7 @@ public class AddBaseVehicleCommand {
         //获取oxo行id(region,driveHand,salesVersion三个点)
         List<OxoFeatureOptionAggr> oxoFeatureOptionAggrList = oxoFeatureOptionRepository.queryByModelAndFeatureCodeList(baseVehicleAggr.getModelCode(),baseVehicleAggr.buildCodeList());
         //构建打点用的聚合根
-        List<OxoPackageInfoAggr> oxoPackageInfoAggrs = OxoOptionPackageFactory.createOxoOptionPackageAggrList(oxoFeatureOptionAggrList,baseVehicleAggr);
+        List<OxoOptionPackageAggr> oxoPackageInfoAggrs = OxoOptionPackageFactory.createOxoOptionPackageAggrList(oxoFeatureOptionAggrList,baseVehicleAggr);
         //oxo打点
         oxoOptionPackageRepository.insertOxoOptionPackages(oxoPackageInfoAggrs);
         //copyFrom
@@ -68,7 +65,7 @@ public class AddBaseVehicleCommand {
             //筛选掉重复的打点信息(region,salesVersion,driveHand)
             List<OxoOptionPackageAggr> filteredAggrs = oxoFeatureOptionDomainService.filter(oxoOptionPackageAggrs,driveHandRegionSalesVersionRows);
             //oxo打点
-            oxoOptionPackageRepository.inserOxoOptionPackagesByModelCodeAndOxoOptionPackages(filteredAggrs.stream().map(aggr->{
+            oxoOptionPackageRepository.inserOxoOptionPackagesByOxoOptionPackages(filteredAggrs.stream().map(aggr->{
                 aggr.setBaseVehicleId(baseVehicleAggr.getId());
                 return aggr;
             }).toList());

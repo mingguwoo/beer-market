@@ -1,6 +1,5 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.impl;
 
-import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.OxoPackageInfoAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageRepository;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.OxoOptionPackageConverter;
@@ -33,7 +32,7 @@ public class OxoOptionPackageRepositoryImpl implements OxoOptionPackageRepositor
     }
 
     @Override
-    public void insertOxoOptionPackages(List<OxoPackageInfoAggr> oxoPackages) {
+    public void insertOxoOptionPackages(List<OxoOptionPackageAggr> oxoPackages) {
         bomsOxoOptionPackageDao.insertOxoOptionPackages(oxoPackages);
     }
 
@@ -43,7 +42,7 @@ public class OxoOptionPackageRepositoryImpl implements OxoOptionPackageRepositor
     }
 
     @Override
-    public void inserOxoOptionPackagesByModelCodeAndOxoOptionPackages(List<OxoOptionPackageAggr> oxoOptionPackageAggrs) {
+    public void inserOxoOptionPackagesByOxoOptionPackages(List<OxoOptionPackageAggr> oxoOptionPackageAggrs) {
         bomsOxoOptionPackageDao.saveBatch(oxoOptionPackageConverter.convertDoListToEntityList(oxoOptionPackageAggrs));
     }
 }

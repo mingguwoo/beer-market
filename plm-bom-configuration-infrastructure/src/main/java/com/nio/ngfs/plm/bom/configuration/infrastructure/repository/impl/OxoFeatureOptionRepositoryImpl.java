@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.impl;
 
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionRepository;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.OxoFeatureOptionConverter;
@@ -49,18 +50,36 @@ public class OxoFeatureOptionRepositoryImpl implements OxoFeatureOptionRepositor
         bomsOxoFeatureOptionDao.updateBatchById(oxoFeatureOptionConverter.convertDoListToEntityList(aggrList));
     }
 
+
+    /**
+     * 根据 model 查询没有选中的featureCode
+     *
+     * @param model
+     * @return
+     */
     @Override
     public List<OxoFeatureOptionAggr> queryFeaturesByModel(String model) {
-        List<BomsOxoFeatureOptionEntity> featureOptionEntities=
-                bomsOxoFeatureOptionDao.queryByModelAndFeatureCodeList(model,Lists.newArrayList());
+        List<BomsOxoFeatureOptionEntity> featureOptionEntities =
+                bomsOxoFeatureOptionDao.queryByModelAndFeatureCodeList(model, Lists.newArrayList());
+
+        List<String> featureCodes = Lists.newArrayList();
 
 
-        if(CollectionUtils.isNotEmpty(featureOptionEntities)){
-
+        if (CollectionUtils.isNotEmpty(featureOptionEntities)) {
+            featureCodes.addAll(featureOptionEntities.stream().filter(x -> StringUtils.equals(x.getType(), FeatureTypeEnum.OPTION.getType()))
+                    .map(BomsOxoFeatureOptionEntity::getFeatureCode).distinct().toList());
         }
 
-        //bomsFeatureLibraryDao.queryByFeatureCode()
-        return null;
+        List<BomsFeatureLibraryEntity> entities =
+                bomsFeatureLibraryDao.findFeatureLibraryNotFeatureCodes(featureCodes);
+
+
+        if (CollectionUtils.isEmpty(entities)) {
+            return Lists.newArrayList();
+        }
+
+
+        return oxoFeatureOptionConverter.convertFeatureEntityListToDoList(entities);
     }
 
 

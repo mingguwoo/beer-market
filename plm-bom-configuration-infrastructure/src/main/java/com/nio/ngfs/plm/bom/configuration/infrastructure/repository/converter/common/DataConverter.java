@@ -2,7 +2,9 @@ package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.c
 
 import com.nio.bom.share.utils.ConverterUtil;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BaseEntity;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureLibraryEntity;
 
 import java.util.List;
 
@@ -64,6 +66,21 @@ public interface DataConverter<DO extends AbstractDo, Entity extends BaseEntity>
      */
     default List<DO> convertEntityListToDoList(List<Entity> entityList) {
         return ConverterUtil.convertList(entityList, this::convertEntityToDo);
+    }
+
+
+
+    default List<OxoFeatureOptionAggr> convertFeatureEntityListToDoList(List<BomsFeatureLibraryEntity> entities) {
+        return entities.stream().map(x->{
+            OxoFeatureOptionAggr featureOptionAggr=new OxoFeatureOptionAggr();
+            featureOptionAggr.setType(x.getType());
+            featureOptionAggr.setFeatureCode(x.getFeatureCode());
+            featureOptionAggr.setDisplayName(x.getDisplayName());
+            featureOptionAggr.setChineseName(x.getChineseName());
+            featureOptionAggr.setParentFeatureCode(x.getParentFeatureCode());
+            featureOptionAggr.setCatalog(x.getCatalog());
+            return featureOptionAggr;
+        }).toList();
     }
 
 }

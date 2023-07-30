@@ -88,6 +88,15 @@ public interface BomsFeatureLibraryDao extends IService<BomsFeatureLibraryEntity
      */
     List<BomsFeatureLibraryEntity> getGroupList();
 
+
+    /**
+     *
+     * @param modelCode
+     * @return
+     */
+    List<BomsFeatureLibraryEntity> findFeatureLibraryNotFeatureCodes(List<String> featureCodes);
+
+
     /**
      * 根据Feature/Option Code列表批量查询
      *

@@ -2,7 +2,6 @@ package com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage;
 
 
 import com.google.common.collect.Lists;
-import com.nio.bom.share.constants.CommonConstants;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.BaseVehicleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
@@ -57,7 +56,7 @@ public class OxoOptionPackageFactory {
                 oxoFeatureOptionAggrList.stream().map(oxoFeatureOptionAggr -> {
                     OxoOptionPackageAggr oxoPackageInfoAggr = new OxoOptionPackageAggr();
             oxoPackageInfoAggr.setFeatureOptionId(oxoFeatureOptionAggr.getId());
-            oxoPackageInfoAggr.setBaseVehicleId(Long.valueOf(baseVehicleAggr.getBaseVehicleId().substring(CommonConstants.INT_TWO,baseVehicleAggr.getBaseVehicleId().length())));
+            oxoPackageInfoAggr.setBaseVehicleId(baseVehicleAggr.getId());
             oxoPackageInfoAggr.setPackageCode("Default");
             oxoPackageInfoAggr.setBrand(ConfigConstants.brandName.get());
             oxoPackageInfoAggr.setCreateUser(baseVehicleAggr.getCreateUser());

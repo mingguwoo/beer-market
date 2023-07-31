@@ -1,4 +1,4 @@
-CREATE TABLE `boms_basic_vehicle` (
+CREATE TABLE `boms_base_vehicle` (
    `id` bigint NOT NULL AUTO_INCREMENT,
    `base_vehicle_id` varchar(11) NOT NULL COMMENT '流水号',
    `model_code` varchar(50) NOT NULL DEFAULT '' COMMENT '车型',

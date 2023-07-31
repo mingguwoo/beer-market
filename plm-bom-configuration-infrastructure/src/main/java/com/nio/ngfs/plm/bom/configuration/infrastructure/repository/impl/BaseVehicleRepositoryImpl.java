@@ -5,8 +5,9 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.BaseVehicleAg
 import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.BaseVehicleRepository;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.generator.BaseVehicleIdGenerator;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.BaseVehicleConverter;
-import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsBasicVehicleDao;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsBaseVehicleDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.common.DaoSupport;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsBaseVehicleEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BaseVehicleRepositoryImpl implements BaseVehicleRepository {
 
-    private final BomsBasicVehicleDao bomsBasicVehicleDao;
+    private final BomsBaseVehicleDao bomsBaseVehicleDao;
     private final BaseVehicleConverter baseVehicleConverter;
     private final BaseVehicleIdGenerator baseVehicleIdGenerator;
 
@@ -32,7 +33,9 @@ public class BaseVehicleRepositoryImpl implements BaseVehicleRepository {
         if (baseVehicleAggr.getId() == null){
             baseVehicleAggr.setBaseVehicleId(baseVehicleIdGenerator.createBaseVehicleId(RedisKeyConstant.BASE_VEHICLE_ID_KEY));
         }
-        DaoSupport.saveOrUpdate(bomsBasicVehicleDao,baseVehicleConverter.convertDoToEntity(baseVehicleAggr));
+        BomsBaseVehicleEntity bomsBaseVehicleEntity = baseVehicleConverter.convertDoToEntity(baseVehicleAggr);
+        DaoSupport.saveOrUpdate(bomsBaseVehicleDao, bomsBaseVehicleEntity);
+        baseVehicleAggr.setId(bomsBaseVehicleEntity.getId());
     }
 
     @Override
@@ -44,23 +47,23 @@ public class BaseVehicleRepositoryImpl implements BaseVehicleRepository {
      */
     @Override
     public List<BaseVehicleAggr> queryByModelCodeModelYearRegionDriveHandSalesVersion(String modelCode, String modelYear, String regionOptionCode, String driveHand, String salesVersion) {
-        return baseVehicleConverter.convertEntityListToDoList(bomsBasicVehicleDao.queryByModelCodeModelYearRegionOptionCodeDriveHandSalesVersion(modelCode, modelYear, regionOptionCode, driveHand, salesVersion));
+        return baseVehicleConverter.convertEntityListToDoList(bomsBaseVehicleDao.queryByModelCodeModelYearRegionOptionCodeDriveHandSalesVersion(modelCode, modelYear, regionOptionCode, driveHand, salesVersion));
     }
 
     @Override
     public BaseVehicleAggr queryBaseVehicleByBaseVehicleId(String baseVehicleId) {
-        return baseVehicleConverter.convertEntityToDo(bomsBasicVehicleDao.queryBaseVehicleByBaseVehicleId(baseVehicleId));
+        return baseVehicleConverter.convertEntityToDo(bomsBaseVehicleDao.queryBaseVehicleByBaseVehicleId(baseVehicleId));
     }
 
     @Override
     public void removeById(Long id) {
-        bomsBasicVehicleDao.removeById(id);
+        bomsBaseVehicleDao.removeById(id);
     }
 
 
     @Override
     public List<BaseVehicleAggr> queryByModel(String modelCode) {
-        return baseVehicleConverter.convertEntityListToDoList(bomsBasicVehicleDao.queryByModel(modelCode));
+        return baseVehicleConverter.convertEntityListToDoList(bomsBaseVehicleDao.queryByModel(modelCode));
     }
 
 

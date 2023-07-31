@@ -2,8 +2,8 @@ package com.nio.ngfs.plm.bom.configuration.infrastructure.generator;
 
 import com.nio.bom.share.constants.CommonConstants;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
-import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsBasicVehicleDao;
-import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsBasicVehicleEntity;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsBaseVehicleDao;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsBaseVehicleEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
@@ -24,7 +24,7 @@ public class BaseVehicleIdGenerator {
 
     private final StringRedisTemplate redisTemplate;
 
-    private final BomsBasicVehicleDao bomsBasicVehicleDao;
+    private final BomsBaseVehicleDao bomsBaseVehicleDao;
 
     public String createBaseVehicleId(String redisKey) {
         Long sequence = null;
@@ -56,11 +56,11 @@ public class BaseVehicleIdGenerator {
 
     private long getSequenceFromDb(){
         Long sequence = 1L;
-        BomsBasicVehicleEntity bomsBasicVehicleEntity = bomsBasicVehicleDao.getLastestBaseVehicle();
-        if (ObjectUtils.isEmpty(bomsBasicVehicleEntity)) {
+        BomsBaseVehicleEntity bomsBaseVehicleEntity = bomsBaseVehicleDao.getLastestBaseVehicle();
+        if (ObjectUtils.isEmpty(bomsBaseVehicleEntity)) {
             log.info( "base vehicle表为空, 设置base vehicle id 为1");
             return sequence;
         }
-        return bomsBasicVehicleEntity.getId() + 1;
+        return bomsBaseVehicleEntity.getId() + 1;
     }
 }

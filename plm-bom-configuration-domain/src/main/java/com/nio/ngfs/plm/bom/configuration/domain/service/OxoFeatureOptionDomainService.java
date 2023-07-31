@@ -21,6 +21,13 @@ public interface OxoFeatureOptionDomainService {
     void renewSortFeatureOption(List<OxoFeatureOptionAggr> oxoFeatureOptionAggrList, String targetFeatureCode, List<String> moveFeatureCodeList);
 
     /**
+     * 检查Feature/Option是否可删除
+     *
+     * @param featureOptionAggrList featureOptionAggr列表
+     */
+    void checkFeatureOptionDelete(List<OxoFeatureOptionAggr> featureOptionAggrList);
+
+    /**
      * 筛选掉重复/有冲突的无需打的点
      */
     List<OxoOptionPackageAggr> filter(List<OxoOptionPackageAggr> points, List<OxoFeatureOptionAggr> driveHandRegionSalesVersionRows);

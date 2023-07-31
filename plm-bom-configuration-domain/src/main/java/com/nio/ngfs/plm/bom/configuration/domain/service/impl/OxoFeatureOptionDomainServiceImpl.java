@@ -63,6 +63,15 @@ public class OxoFeatureOptionDomainServiceImpl implements OxoFeatureOptionDomain
     }
 
     @Override
+    public void checkFeatureOptionDelete(List<OxoFeatureOptionAggr> featureOptionAggrList) {
+        featureOptionAggrList.forEach(featureOptionAggr -> {
+            if (!featureOptionAggr.canDelete()) {
+                throw new BusinessException(ConfigErrorCode.OXO_FEATURE_OPTION_CAN_NOT_DELETE);
+            }
+        });
+    }
+
+    @Override
     public List<OxoOptionPackageAggr> filter(List<OxoOptionPackageAggr> points, List<OxoFeatureOptionAggr> driveHandRegionSalesVersionRows) {
         List<Long> repeatRows = driveHandRegionSalesVersionRows.stream().map(row-> row.getId()).collect(Collectors.toList());
         return points.stream().filter(point-> !repeatRows.contains(point.getFeatureOptionId())).toList();

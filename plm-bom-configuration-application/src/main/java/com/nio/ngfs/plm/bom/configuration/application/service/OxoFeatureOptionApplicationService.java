@@ -1,8 +1,11 @@
 package com.nio.ngfs.plm.bom.configuration.application.service;
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageAggr;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author xiaozhou.tu
@@ -18,5 +21,28 @@ public interface OxoFeatureOptionApplicationService {
      * @return OxoFeatureOptionAggr列表
      */
     List<OxoFeatureOptionAggr> querySameSortGroupFeatureOption(String model, String featureOptionCode);
+
+    /**
+     * 在最新Release版本OXO中查询存在的Feature/Option
+     *
+     * @param featureOptionAggrList OxoFeatureOptionAggr列表
+     * @return Feature/Option Code集合
+     */
+    Set<String> queryExistFeatureOptionInLastedReleaseSnapshot(List<OxoFeatureOptionAggr> featureOptionAggrList);
+
+    /**
+     * 构建Feature/Option行的子节点列表
+     *
+     * @param featureOptionAggrList OxoFeatureOptionAggr列表
+     */
+    void buildFeatureOptionWithChildren(List<OxoFeatureOptionAggr> featureOptionAggrList);
+
+    /**
+     * 校验并删除打点
+     *
+     * @param featureOptionAggrList OxoFeatureOptionAggr列表
+     * @return OxoOptionPackageAggr列表
+     */
+    Pair<List<OxoOptionPackageAggr>, List<String>> checkAndDeleteOptionPackage(List<OxoFeatureOptionAggr> featureOptionAggrList);
 
 }

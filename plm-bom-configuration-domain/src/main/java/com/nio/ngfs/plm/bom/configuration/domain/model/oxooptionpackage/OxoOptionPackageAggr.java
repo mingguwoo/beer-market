@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Objects;
+
 /**
  * @author xiaozhou.tu
  * @date 2023/7/27
@@ -47,6 +49,21 @@ public class OxoOptionPackageAggr extends AbstractDo implements AggrRoot<Long> {
     @Override
     public Long getUniqId() {
         return id;
+    }
+
+    /**
+     * 删除打点信息
+     */
+    public boolean deleteOptionPackage() {
+        if (isPackageUnavailable()) {
+            return false;
+        }
+        setPackageCode("Unavailable");
+        return true;
+    }
+
+    public boolean isPackageUnavailable() {
+        return Objects.equals(packageCode, "Unavailable");
     }
 
 }

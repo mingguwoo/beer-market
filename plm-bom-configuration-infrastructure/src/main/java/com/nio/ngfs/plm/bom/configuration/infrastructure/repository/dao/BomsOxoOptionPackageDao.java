@@ -20,7 +20,13 @@ public interface BomsOxoOptionPackageDao extends IService<BomsOxoOptionPackageEn
 
     void insertOxoOptionPackages(List<OxoOptionPackageAggr> oxoPackages);
 
-
+    /**
+     * 根据featureOptionId列表查询
+     *
+     * @param featureOptionIdList featureOptionId列表
+     * @return BomsOxoOptionPackageEntity列表
+     */
+    List<BomsOxoOptionPackageEntity> queryByFeatureOptionIdList(List<Long> featureOptionIdList);
 
     /**
      * 根据basevehicle获取它所有的点

@@ -28,4 +28,6 @@ public interface RedisKeyConstant {
      */
     String BASE_VEHICLE_ID_KEY = CONFIGURATION_PREFIX + "baseVehicle:id";
 
+    String OXO_FEATURE_OPTION_DELETE_LOCK_KEY_PREFIX = CONFIGURATION_PREFIX + "oxo:featureOption:delete:lock:";
+
 }

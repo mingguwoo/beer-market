@@ -11,6 +11,13 @@ import java.util.List;
 public interface OxoOptionPackageRepository extends Repository<OxoOptionPackageAggr, Long> {
 
     /**
+     * 批量保存
+     *
+     * @param aggrList 聚合根列表
+     */
+    void batchSave(List<OxoOptionPackageAggr> aggrList);
+
+    /**
      * oxo打点
      *
      * @param oxoPackages 列表
@@ -24,6 +31,14 @@ public interface OxoOptionPackageRepository extends Repository<OxoOptionPackageA
      * @return OxoPackageInfoAggr 列表
      */
     List<OxoOptionPackageAggr> queryByBaseVehicleId(Long baseVehicleId);
+
+    /**
+     * 根据featureOptionId列表查询
+     *
+     * @param featureOptionIdList featureOptionId列表
+     * @return OxoOptionPackageAggr列表
+     */
+    List<OxoOptionPackageAggr> queryByFeatureOptionIdList(List<Long> featureOptionIdList);
 
     /**
      * 批量新增oxo点

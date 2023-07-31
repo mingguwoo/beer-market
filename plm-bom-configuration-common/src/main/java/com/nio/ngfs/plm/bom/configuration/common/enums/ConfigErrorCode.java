@@ -50,7 +50,8 @@ public enum ConfigErrorCode implements ErrorCode {
     BASE_VEHICLE_STATUS_INVALID(80026, "Base Vehicle Status Is Invalid!"),
     FEATURE_TYPE_INVALID(80027, "Type Is Invalid!"),
     FEATURE_FEATURE_CODE_TOO_SHORT(80028, "Feature Code Min Length Is 4!"),
-    FEATURE_OPTION_CODE_TOO_SHORT(80028, "Option Code Min Length Is 4!"),
+    FEATURE_OPTION_CODE_TOO_SHORT(80029, "Option Code Min Length Is 4!"),
+    OXO_FEATURE_OPTION_CAN_NOT_DELETE(80030, "The Feature/Option Can Not Delete!"),
     ;
 
     /**

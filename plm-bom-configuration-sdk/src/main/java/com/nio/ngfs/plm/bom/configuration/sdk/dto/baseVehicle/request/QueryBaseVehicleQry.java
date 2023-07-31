@@ -3,7 +3,7 @@ package com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.Qry;
 import lombok.Data;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * @author bill.wang
@@ -14,7 +14,7 @@ public class QueryBaseVehicleQry implements Qry {
 
     private String modelCode;
 
-    private Set<String> modelYear;
+    private List<String> modelYear;
 
     private String regionOptionCode;
 

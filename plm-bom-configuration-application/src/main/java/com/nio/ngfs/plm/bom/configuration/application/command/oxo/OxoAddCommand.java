@@ -18,8 +18,8 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoHeadQry;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author wangchao.wang

@@ -23,6 +23,11 @@ public interface RedisKeyConstant {
 
     String MODEL_FEATURE_LOCK_KEY_PREFIX = CONFIGURATION_PREFIX + "modelCode:feature:lock:";
 
+
+    String MODEL_OXO_FEATURE_EDIT_PREFIX = CONFIGURATION_PREFIX + "modelCode:oxo:feature:edit:lock:";
+
+
+
     /**
      * Base Vehicle的流水号
      */

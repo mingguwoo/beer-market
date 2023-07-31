@@ -28,7 +28,7 @@ public interface OxoFeatureOptionRepository extends Repository<OxoFeatureOptionA
 
 
 
-    List<OxoFeatureOptionAggr> queryFeaturesByModel(String model);
+    List<OxoFeatureOptionAggr> queryFeaturesByModel(String modelCode);
 
 
     /**
@@ -37,6 +37,14 @@ public interface OxoFeatureOptionRepository extends Repository<OxoFeatureOptionA
      * @return
      */
     List<OxoFeatureOptionAggr> queryFeatureListsByModel(String modelCode);
+
+
+    /**
+     * 根据 车型 过滤 软删除的行
+     * @param modelCode
+     * @return
+     */
+    List<OxoFeatureOptionAggr>  queryFeatureListsByModelAndSortDelete(String modelCode);
 
 
 }

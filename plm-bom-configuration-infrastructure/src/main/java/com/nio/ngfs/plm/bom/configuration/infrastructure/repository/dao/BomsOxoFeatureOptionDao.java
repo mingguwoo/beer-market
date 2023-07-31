@@ -34,15 +34,28 @@ public interface BomsOxoFeatureOptionDao extends IService<BomsOxoFeatureOptionEn
 
     /**
      * 根据车型 查询oxo 行
+     * true
      * @param modelCode
      * @return
      */
-    List<BomsOxoFeatureOptionEntity> queryOxoFeatureOptionByModel(String modelCode);
+    List<BomsOxoFeatureOptionEntity> queryOxoFeatureOptionByModel(String modelCode, Boolean sortDelete);
 
     /**
      *
      * @param oxoRowInfoAggrs
      */
     void insertOxoFeatureOptions(List<OxoFeatureOptionAggr> oxoRowInfoAggrs);
+
+
+    /**
+     * 批量更新
+     * @param oxoRowInfoAggrs
+     */
+    void updateOxoFeatureOptions(List<OxoFeatureOptionAggr> oxoRowInfoAggrs);
+
+
+
+
+
 
 }

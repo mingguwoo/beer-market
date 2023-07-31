@@ -1,5 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.impl;
 
+import com.nio.bom.share.utils.ConverterUtil;
+import com.nio.ngfs.common.utils.BeanConvertUtils;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionRepository;
@@ -13,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -54,13 +57,13 @@ public class OxoFeatureOptionRepositoryImpl implements OxoFeatureOptionRepositor
     /**
      * 根据 model 查询没有选中的featureCode
      *
-     * @param model
+     * @param modelCode
      * @return
      */
     @Override
-    public List<OxoFeatureOptionAggr> queryFeaturesByModel(String model) {
+    public List<OxoFeatureOptionAggr> queryFeaturesByModel(String modelCode) {
         List<BomsOxoFeatureOptionEntity> featureOptionEntities =
-                bomsOxoFeatureOptionDao.queryByModelAndFeatureCodeList(model, Lists.newArrayList());
+                bomsOxoFeatureOptionDao.queryByModelAndFeatureCodeList(modelCode, Lists.newArrayList());
 
         List<String> featureCodes = Lists.newArrayList();
 
@@ -87,7 +90,7 @@ public class OxoFeatureOptionRepositoryImpl implements OxoFeatureOptionRepositor
     public List<OxoFeatureOptionAggr> queryFeatureListsByModel(String modelCode) {
 
         List<BomsOxoFeatureOptionEntity> bomsOxoFeatureOptionEntities =
-                bomsOxoFeatureOptionDao.queryOxoFeatureOptionByModel(modelCode);
+                bomsOxoFeatureOptionDao.queryOxoFeatureOptionByModel(modelCode,false);
 
         if (CollectionUtils.isEmpty(bomsOxoFeatureOptionEntities)) {
             return Lists.newArrayList();
@@ -126,5 +129,16 @@ public class OxoFeatureOptionRepositoryImpl implements OxoFeatureOptionRepositor
 
         }).toList();
     }
+
+    @Override
+    public List<OxoFeatureOptionAggr> queryFeatureListsByModelAndSortDelete(String modelCode) {
+
+
+        List<BomsOxoFeatureOptionEntity> entities =
+                bomsOxoFeatureOptionDao.queryOxoFeatureOptionByModel(modelCode,true);
+
+        return BeanConvertUtils.convertListTo(entities,OxoFeatureOptionAggr::new);
+    }
+
 
 }

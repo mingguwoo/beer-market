@@ -99,7 +99,7 @@ public class OxoController {
      */
     @PostMapping("/edit")
     public ResultInfo edit(@Valid @RequestBody OxoEditInfoCmd cmd) {
-        return ResultInfo.success(     oxoEditCommand.execute(cmd));
+        return ResultInfo.success(oxoEditCommand.execute(cmd));
     }
 
     /**

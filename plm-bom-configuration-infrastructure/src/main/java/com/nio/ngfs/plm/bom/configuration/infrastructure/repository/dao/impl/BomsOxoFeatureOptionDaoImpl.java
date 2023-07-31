@@ -9,6 +9,7 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsO
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsOxoFeatureOptionMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -34,15 +35,36 @@ public class BomsOxoFeatureOptionDaoImpl extends AbstractDao<BomsOxoFeatureOptio
     }
 
     @Override
-    public List<BomsOxoFeatureOptionEntity> queryOxoFeatureOptionByModel(String modelCode) {
+    public List<BomsOxoFeatureOptionEntity> queryOxoFeatureOptionByModel(String modelCode,Boolean sortDelete) {
         LambdaQueryWrapper<BomsOxoFeatureOptionEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.in(BomsOxoFeatureOptionEntity::getModelCode,modelCode);
+        if(sortDelete){
+            lambdaQueryWrapper.eq(BomsOxoFeatureOptionEntity::getSoftDelete,0);
+        }
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 
     @Override
     public void insertOxoFeatureOptions(List<OxoFeatureOptionAggr> oxoRowInfoAggrs) {
         getBaseMapper().insertOxoRows(BeanConvertUtils.convertListTo(oxoRowInfoAggrs,BomsOxoFeatureOptionEntity::new));
+    }
+
+    @Override
+    public void updateOxoFeatureOptions(List<OxoFeatureOptionAggr> oxoRowInfoAggrs) {
+        oxoRowInfoAggrs.forEach(oxoFeatureOptionAggr -> {
+            BomsOxoFeatureOptionEntity entity=new BomsOxoFeatureOptionEntity();
+            if(StringUtils.isNotBlank(oxoFeatureOptionAggr.getComment())) {
+                entity.setComment(oxoFeatureOptionAggr.getComment());
+            }
+
+            if(StringUtils.isNotBlank(oxoFeatureOptionAggr.getRuleCheck())) {
+                entity.setRuleCheck(oxoFeatureOptionAggr.getRuleCheck());
+            }
+            entity.setId(oxoFeatureOptionAggr.getId());
+            entity.setUpdateUser(oxoFeatureOptionAggr.getUpdateUser());
+            //更新 oxo row
+            getBaseMapper().updateById(entity);
+        });
     }
 
     @Override

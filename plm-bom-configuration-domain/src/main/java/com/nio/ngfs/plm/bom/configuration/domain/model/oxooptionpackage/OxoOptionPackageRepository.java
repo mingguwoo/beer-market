@@ -45,4 +45,13 @@ public interface OxoOptionPackageRepository extends Repository<OxoOptionPackageA
      */
     void inserOxoOptionPackagesByOxoOptionPackages(List<OxoOptionPackageAggr> oxoOptionPackageAggrs);
 
+
+    /**
+     * 根据 行id 查询打点信息
+     * @param rowIds
+     * @return
+     */
+    List<OxoOptionPackageAggr> queryByBaseVehicleIds(List<Long> rowIds);
+
+
 }

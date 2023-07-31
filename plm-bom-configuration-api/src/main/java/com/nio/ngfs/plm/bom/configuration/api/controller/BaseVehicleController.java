@@ -3,10 +3,7 @@ package com.nio.ngfs.plm.bom.configuration.api.controller;
 import com.nio.bom.share.annotation.NeedAuthorization;
 import com.nio.bom.share.annotation.NotLogResult;
 import com.nio.bom.share.result.ResultInfo;
-import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.AddBaseVehicleCommand;
-import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.ChangeBaseVehicleStatusCommand;
-import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.DeleteBaseVehicleCommand;
-import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.EditBaseVehicleCommand;
+import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.*;
 import com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.CheckBaseVehicleStatusQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.GetBaseVehicleOptionsQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.QueryBaseVehicleQuery;
@@ -42,6 +39,7 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
     private final ChangeBaseVehicleStatusCommand changeBaseVehicleStatusCommand;
     private final GetBaseVehicleOptionsQuery getbaseVehicleOptionsQuery;
     private final QueryCopyFromModelQuery queryCopyFromModelQuery;
+    private final ChangeBaseVehicleMaturityCommand changeBaseVehicleMaturityCommand;
 
 
     @Override
@@ -52,7 +50,7 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
     }
 
     @Override
-    @NeedAuthorization
+//    @NeedAuthorization
     @NotLogResult
     public ResultInfo<AddBaseVehicleRespDto> addBaseVehicle(@Valid @RequestBody AddBaseVehicleCmd cmd) {
         return ResultInfo.success(addBaseVehicleCommand.execute(cmd));
@@ -87,7 +85,7 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
     }
 
     @Override
-    @NeedAuthorization
+//    @NeedAuthorization
     @NotLogResult
     public ResultInfo<GetBaseVehicleOptionsRespDto> getBaseVehicleOptions(@Valid @RequestBody GetBaseVehicleOptionsQry qry) {
         return ResultInfo.success(getbaseVehicleOptionsQuery.execute(qry));
@@ -98,6 +96,13 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
     @NotLogResult
     public ResultInfo<List<BaseVehicleRespDto>> queryCopyFromModel(@Valid @RequestBody QueryCopyFromModelsQry qry) {
         return ResultInfo.success(queryCopyFromModelQuery.execute(qry));
+    }
+
+    @Override
+//    @NeedAuthorization
+    @NotLogResult
+    public ResultInfo<ChangeBaseVehicleMaturityRespDto> changeBaseVehicleMaturity(@Valid @RequestBody ChangeBaseVehicleMaturityCmd cmd) {
+        return ResultInfo.success(changeBaseVehicleMaturityCommand.execute(cmd));
     }
 
     @NeedAuthorization

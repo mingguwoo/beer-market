@@ -7,6 +7,7 @@ import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.enums.BaseVehicleMaturityEnum;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.AddBaseVehicleCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.ChangeBaseVehicleMaturityCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.ChangeBaseVehicleStatusCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.EditBaseVehicleCmd;
 import lombok.AllArgsConstructor;
@@ -68,7 +69,6 @@ public class BaseVehicleAggr extends AbstractDo implements AggrRoot<String>, Clo
         //校验model，model year是否被改了
         checkModelCodeAndModelYear(cmd);
         //赋值
-        changeMaturity(cmd);
         setRegionOptionCode(cmd.getRegionOptionCode());
         setDriveHand(cmd.getDriveHand());
         setSalesVersion(cmd.getSalesVersion());
@@ -96,7 +96,7 @@ public class BaseVehicleAggr extends AbstractDo implements AggrRoot<String>, Clo
     /**
      * 校验Maturity修改是否符合规范并修改
      */
-    private void changeMaturity(EditBaseVehicleCmd cmd) {
+    public void changeMaturity(ChangeBaseVehicleMaturityCmd cmd) {
         BaseVehicleMaturityEnum oldMaturity = BaseVehicleMaturityEnum.getByMaturity(maturity);
         BaseVehicleMaturityEnum newMaturity = BaseVehicleMaturityEnum.getByMaturity(cmd.getMaturity());
         if (oldMaturity == null || newMaturity == null) {

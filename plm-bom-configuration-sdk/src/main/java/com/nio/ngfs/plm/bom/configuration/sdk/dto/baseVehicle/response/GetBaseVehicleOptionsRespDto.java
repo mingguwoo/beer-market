@@ -17,5 +17,8 @@ public class GetBaseVehicleOptionsRespDto implements Dto {
     private List<String> driveHand;
 
     private List<String> salesVersion;
+
+    private List<String> regionOptionEn;
+
 }
 

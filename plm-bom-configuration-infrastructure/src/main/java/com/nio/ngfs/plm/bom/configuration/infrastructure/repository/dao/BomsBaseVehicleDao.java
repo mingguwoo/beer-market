@@ -52,4 +52,6 @@ public interface BomsBaseVehicleDao extends IService<BomsBaseVehicleEntity> {
      * @return List<BomsBasicVehicleEntity>
      */
     List<BomsBaseVehicleEntity> queryCopyFromModel(String modelCode);
+
+    List<BomsBaseVehicleEntity> queryByModelCodeAndModelYear(String modelCode, String modelYear);
 }

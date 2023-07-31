@@ -60,6 +60,16 @@ public class BaseVehicleRepositoryImpl implements BaseVehicleRepository {
         bomsBaseVehicleDao.removeById(id);
     }
 
+    @Override
+    public List<BaseVehicleAggr> queryByModelCodeAndModelYear(String modelCode, String modelYear) {
+        return baseVehicleConverter.convertEntityListToDoList(bomsBaseVehicleDao.queryByModelCodeAndModelYear(modelCode,modelYear));
+    }
+
+    @Override
+    public void batchSave(List<BaseVehicleAggr> baseVehicleList) {
+        bomsBaseVehicleDao.saveOrUpdateBatch(baseVehicleConverter.convertDoListToEntityList(baseVehicleList));
+    }
+
 
     @Override
     public List<BaseVehicleAggr> queryByModel(String modelCode) {

@@ -65,6 +65,14 @@ public class BomsBaseVehicleDaoImpl extends AbstractDao<BomsBaseVehicleMapper, B
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 
+    @Override
+    public List<BomsBaseVehicleEntity> queryByModelCodeAndModelYear(String modelCode, String modelYear) {
+        LambdaQueryWrapper<BomsBaseVehicleEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(BomsBaseVehicleEntity::getModelCode, modelCode);
+        lambdaQueryWrapper.eq(BomsBaseVehicleEntity::getModelYear, modelYear);
+        return getBaseMapper().selectList(lambdaQueryWrapper);
+    }
+
 
     @Override
     protected void fuzzyConditions(WherePageRequest<BomsBaseVehicleEntity> bomsBasicVehicleEntityWherePageRequest, LambdaQueryWrapper<BomsBaseVehicleEntity> queryWrapper) {

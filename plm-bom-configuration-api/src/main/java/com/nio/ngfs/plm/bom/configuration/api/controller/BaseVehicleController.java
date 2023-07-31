@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author bill.wang
@@ -46,7 +47,7 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
     @Override
     @NeedAuthorization
     @NotLogResult
-    public ResultInfo<QueryBaseVehicleRespDto> queryBaseVehicle(@Valid @RequestBody QueryBaseVehicleQry qry) {
+    public ResultInfo<List<BaseVehicleRespDto>> queryBaseVehicle(@Valid @RequestBody QueryBaseVehicleQry qry) {
         return ResultInfo.success(queryBaseVehicleQuery.executeQuery(qry));
     }
 

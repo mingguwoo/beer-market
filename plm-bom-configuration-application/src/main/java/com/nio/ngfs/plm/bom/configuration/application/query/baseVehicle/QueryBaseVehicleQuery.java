@@ -11,7 +11,6 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsBasi
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsBasicVehicleEntity;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.QueryBaseVehicleQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.BaseVehicleRespDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.QueryBaseVehicleRespDto;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +25,7 @@ import java.util.Objects;
  */
 @Component
 @RequiredArgsConstructor
-public class QueryBaseVehicleQuery extends AbstractQuery<QueryBaseVehicleQry, QueryBaseVehicleRespDto> {
+public class QueryBaseVehicleQuery extends AbstractQuery<QueryBaseVehicleQry, List<BaseVehicleRespDto>> {
 
     private final BomsBasicVehicleDao bomsBasicVehicleDao;
     private final BaseVehicleQueryUtil baseVehicleQueryUtil;
@@ -39,15 +38,12 @@ public class QueryBaseVehicleQuery extends AbstractQuery<QueryBaseVehicleQry, Qu
     }
 
     @Override
-    public QueryBaseVehicleRespDto executeQuery(QueryBaseVehicleQry qry) {
-        QueryBaseVehicleRespDto res = new QueryBaseVehicleRespDto();
+    public List<BaseVehicleRespDto> executeQuery(QueryBaseVehicleQry qry) {
         List<BomsBasicVehicleEntity> entityList = bomsBasicVehicleDao.queryAll();
         List<BaseVehicleRespDto> dtoList = LambdaUtil.map(entityList, BaseVehicleAssembler::assemble);
         List<BaseVehicleRespDto> filteredDto = filter(dtoList, qry);
         //调取featureDomainDao查询region,drive hand, sales version所有选项,再根据featureCode去筛选
-        res.setBaseVehicleRespDtoList(baseVehicleQueryUtil.completeBaseVehicle(filteredDto));
-        res.setCount(filteredDto.size());
-        return res;
+        return baseVehicleQueryUtil.completeBaseVehicle(filteredDto);
     }
 
     private List<BaseVehicleRespDto> filter(List<BaseVehicleRespDto> dtoList, QueryBaseVehicleQry qry){

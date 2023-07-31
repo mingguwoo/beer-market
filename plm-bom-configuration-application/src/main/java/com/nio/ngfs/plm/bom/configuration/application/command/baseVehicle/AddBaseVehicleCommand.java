@@ -68,9 +68,8 @@ public class AddBaseVehicleCommand {
             //oxo打点
             oxoOptionPackageRepository.inserOxoOptionPackagesByOxoOptionPackages(filteredAggrs.stream().map(aggr->{
                 aggr.setBaseVehicleId(Long.valueOf(baseVehicleAggr.getBaseVehicleId().substring(CommonConstants.INT_TWO,baseVehicleAggr.getBaseVehicleId().length())));
-                aggr.setBrand("NIO");
                 //将原先id清除
-//                aggr.setId(null);
+                aggr.setId(null);
                 aggr.setBrand(ConfigConstants.brandName.get());
                 return aggr;
             }).toList());

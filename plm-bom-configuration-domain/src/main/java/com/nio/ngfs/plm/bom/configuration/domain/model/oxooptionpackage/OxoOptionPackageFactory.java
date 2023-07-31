@@ -62,7 +62,6 @@ public class OxoOptionPackageFactory {
             oxoPackageInfoAggr.setBrand(ConfigConstants.brandName.get());
             oxoPackageInfoAggr.setCreateUser(baseVehicleAggr.getCreateUser());
             oxoPackageInfoAggr.setBrand(ConfigConstants.brandName.get());
-//            oxoPackageInfoAggr.setBrand("NIO");
             return oxoPackageInfoAggr;
         }).toList();
         return resList;

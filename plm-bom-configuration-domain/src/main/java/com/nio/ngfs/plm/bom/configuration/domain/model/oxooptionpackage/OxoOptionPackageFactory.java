@@ -57,7 +57,7 @@ public class OxoOptionPackageFactory {
                 oxoFeatureOptionAggrList.stream().map(oxoFeatureOptionAggr -> {
                     OxoOptionPackageAggr oxoPackageInfoAggr = new OxoOptionPackageAggr();
             oxoPackageInfoAggr.setFeatureOptionId(oxoFeatureOptionAggr.getId());
-            oxoPackageInfoAggr.setBaseVehicleId(Long.valueOf(baseVehicleAggr.getBaseVehicleId().substring(CommonConstants.INT_TWO,baseVehicleAggr.getBaseVehicleId().length())));
+            oxoPackageInfoAggr.setBaseVehicleId(baseVehicleAggr.getId());
             oxoPackageInfoAggr.setPackageCode("Default");
             oxoPackageInfoAggr.setBrand(ConfigConstants.brandName.get());
             oxoPackageInfoAggr.setCreateUser(baseVehicleAggr.getCreateUser());

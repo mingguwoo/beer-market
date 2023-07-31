@@ -21,6 +21,7 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.AddBaseVeh
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.AddBaseVehicleRespDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,6 +45,7 @@ public class AddBaseVehicleCommand {
     private final OxoFeatureOptionRepository oxoFeatureOptionRepository;
 
 
+    @Transactional( rollbackFor = Exception.class)
     public AddBaseVehicleRespDto execute(AddBaseVehicleCmd cmd){
         BaseVehicleAggr baseVehicleAggr = BaseVehicleFactory.createBaseVehicle(cmd);
         baseVehicleDomainService.checkBaseVehicleUnique(baseVehicleAggr);
@@ -67,7 +69,7 @@ public class AddBaseVehicleCommand {
             List<OxoOptionPackageAggr> filteredAggrs = oxoFeatureOptionDomainService.filter(oxoOptionPackageAggrs,driveHandRegionSalesVersionRows);
             //oxo打点
             oxoOptionPackageRepository.inserOxoOptionPackagesByOxoOptionPackages(filteredAggrs.stream().map(aggr->{
-                aggr.setBaseVehicleId(Long.valueOf(baseVehicleAggr.getBaseVehicleId().substring(CommonConstants.INT_TWO,baseVehicleAggr.getBaseVehicleId().length())));
+                aggr.setBaseVehicleId(baseVehicleAggr.getId());
                 //将原先id清除
                 aggr.setId(null);
                 aggr.setBrand(ConfigConstants.brandName.get());

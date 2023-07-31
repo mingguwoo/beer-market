@@ -7,6 +7,7 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.generator.BaseVehicleId
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.BaseVehicleConverter;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsBasicVehicleDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.common.DaoSupport;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsBasicVehicleEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +33,9 @@ public class BaseVehicleRepositoryImpl implements BaseVehicleRepository {
         if (baseVehicleAggr.getId() == null){
             baseVehicleAggr.setBaseVehicleId(baseVehicleIdGenerator.createBaseVehicleId(RedisKeyConstant.BASE_VEHICLE_ID_KEY));
         }
-        DaoSupport.saveOrUpdate(bomsBasicVehicleDao,baseVehicleConverter.convertDoToEntity(baseVehicleAggr));
+        BomsBasicVehicleEntity bomsBasicVehicleEntity = baseVehicleConverter.convertDoToEntity(baseVehicleAggr);
+        DaoSupport.saveOrUpdate(bomsBasicVehicleDao, bomsBasicVehicleEntity);
+        baseVehicleAggr.setId(bomsBasicVehicleEntity.getId());
     }
 
     @Override

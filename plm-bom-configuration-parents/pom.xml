@@ -27,15 +27,6 @@
         </dependency>
         <dependency>
             <groupId>com.nio.ngfs</groupId>
-            <artifactId>ngfs-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>commons-collections</groupId>
-            <artifactId>commons-collections</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.nio.ngfs</groupId>
             <artifactId>plm-bom-share</artifactId>
             <version>${plm-bom-share.version}</version>
         </dependency>

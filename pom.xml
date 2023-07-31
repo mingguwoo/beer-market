@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.nio.ngfs</groupId>
         <artifactId>ngfs-starter-parent</artifactId>
-        <version>1.1.0</version>
+        <version>1.3.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>plm-bom-configuration</artifactId>
@@ -34,7 +34,7 @@
         <dynamicTp.starter.version>1.0.2</dynamicTp.starter.version>
         <easyexcel.version>3.0.5</easyexcel.version>
         <spring.cloud.version>3.1.5</spring.cloud.version>
-        <ngfs.version>1.1.0</ngfs.version>
+        <ngfs-starter-test.version>1.1.0</ngfs-starter-test.version>
         <springdoc.version>1.6.6</springdoc.version>
 
         <plm-bom-share.version>1.0.2-SNAPSHOT</plm-bom-share.version>

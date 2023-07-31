@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle;
 
+import com.nio.bom.share.constants.CommonConstants;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.BaseVehicleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.BaseVehicleFactory;
@@ -51,9 +52,9 @@ public class AddBaseVehicleCommand {
         //获取oxo行id(region,driveHand,salesVersion三个点)
         List<OxoFeatureOptionAggr> oxoFeatureOptionAggrList = oxoFeatureOptionRepository.queryByModelAndFeatureCodeList(baseVehicleAggr.getModelCode(),baseVehicleAggr.buildCodeList());
         //构建打点用的聚合根
-        List<OxoOptionPackageAggr> oxoPackageInfoAggrs = OxoOptionPackageFactory.createOxoOptionPackageAggrList(oxoFeatureOptionAggrList,baseVehicleAggr);
+        List<OxoOptionPackageAggr> packages = OxoOptionPackageFactory.createOxoOptionPackageAggrList(oxoFeatureOptionAggrList,baseVehicleAggr);
         //oxo打点
-        oxoOptionPackageRepository.insertOxoOptionPackages(oxoPackageInfoAggrs);
+        oxoOptionPackageRepository.inserOxoOptionPackagesByOxoOptionPackages(packages);
         //copyFrom
         if (cmd.isCopyFrom()){
             //获取要Copy的Model的所有打点信息,要注意这里的baseVehicleId对应的是BasieVehicle表里的id字段，不是baseVehicleId字段
@@ -66,7 +67,11 @@ public class AddBaseVehicleCommand {
             List<OxoOptionPackageAggr> filteredAggrs = oxoFeatureOptionDomainService.filter(oxoOptionPackageAggrs,driveHandRegionSalesVersionRows);
             //oxo打点
             oxoOptionPackageRepository.inserOxoOptionPackagesByOxoOptionPackages(filteredAggrs.stream().map(aggr->{
-                aggr.setBaseVehicleId(baseVehicleAggr.getId());
+                aggr.setBaseVehicleId(Long.valueOf(baseVehicleAggr.getBaseVehicleId().substring(CommonConstants.INT_TWO,baseVehicleAggr.getBaseVehicleId().length())));
+                aggr.setBrand("NIO");
+                //将原先id清除
+//                aggr.setId(null);
+                aggr.setBrand(ConfigConstants.brandName.get());
                 return aggr;
             }).toList());
         }

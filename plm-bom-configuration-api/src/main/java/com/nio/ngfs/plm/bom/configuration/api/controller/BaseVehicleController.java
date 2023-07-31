@@ -93,7 +93,7 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
     }
 
     @Override
-//    @NeedAuthorization
+    @NeedAuthorization
     @NotLogResult
     public ResultInfo<QueryCopyFromModelRespDto> queryCopyFromModel(@Valid @RequestBody QueryCopyFromModelsQry qry) {
         return ResultInfo.success(queryCopyFromModelQuery.execute(qry));

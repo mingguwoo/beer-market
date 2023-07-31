@@ -29,4 +29,5 @@ public interface OxoOptionPackageRepository extends Repository<OxoOptionPackageA
      * 批量新增oxo点
      */
     void inserOxoOptionPackagesByOxoOptionPackages(List<OxoOptionPackageAggr> oxoOptionPackageAggrs);
+
 }

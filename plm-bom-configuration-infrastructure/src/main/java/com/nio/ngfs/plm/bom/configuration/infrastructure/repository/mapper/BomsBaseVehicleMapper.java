@@ -6,5 +6,5 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsB
  * @author bill.wang
  * @date 2023/7/18
  */
-public interface BomsBasicVehicleMapper extends BaseMapper<BomsBaseVehicleEntity> {
+public interface BomsBaseVehicleMapper extends BaseMapper<BomsBaseVehicleEntity> {
 }

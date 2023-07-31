@@ -45,7 +45,7 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
 
 
     @Override
-    @NeedAuthorization
+//    @NeedAuthorization
     @NotLogResult
     public ResultInfo<List<BaseVehicleRespDto>> queryBaseVehicle(@Valid @RequestBody QueryBaseVehicleQry qry) {
         return ResultInfo.success(queryBaseVehicleQuery.executeQuery(qry));

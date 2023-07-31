@@ -5,7 +5,7 @@ import com.nio.bom.share.enums.StatusEnum;
 import com.nio.ngfs.common.model.page.WherePageRequest;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsBaseVehicleDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsBaseVehicleEntity;
-import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsBasicVehicleMapper;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsBaseVehicleMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Repository
 @Slf4j
-public class BomsBaseVehicleDaoImpl extends AbstractDao<BomsBasicVehicleMapper, BomsBaseVehicleEntity, WherePageRequest<BomsBaseVehicleEntity>> implements BomsBaseVehicleDao {
+public class BomsBaseVehicleDaoImpl extends AbstractDao<BomsBaseVehicleMapper, BomsBaseVehicleEntity, WherePageRequest<BomsBaseVehicleEntity>> implements BomsBaseVehicleDao {
     @Override
     public List<BomsBaseVehicleEntity> queryByModelCodeModelYearRegionOptionCodeDriveHandSalesVersion(String model, String modelYear, String regionOptionCode, String driveHand, String salesVersion) {
         LambdaQueryWrapper<BomsBaseVehicleEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();

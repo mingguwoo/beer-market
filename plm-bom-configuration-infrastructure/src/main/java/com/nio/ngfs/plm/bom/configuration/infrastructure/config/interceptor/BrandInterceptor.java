@@ -26,13 +26,11 @@ public class BrandInterceptor implements HandlerInterceptor {
             brand = ConfigConstants.NIO;
         }
         ConfigConstants.brandName.set(brand);
-        log.info("step1");
         return true;
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        log.info("step2");
         ConfigConstants.brandName.remove();
     }
 }

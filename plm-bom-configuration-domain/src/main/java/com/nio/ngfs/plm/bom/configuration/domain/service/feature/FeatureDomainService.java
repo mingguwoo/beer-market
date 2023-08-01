@@ -3,6 +3,9 @@ package com.nio.ngfs.plm.bom.configuration.domain.service.feature;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.GetBaseVehicleOptionsRespDto;
+
+import java.util.List;
 
 /**
  * Feature领域服务
@@ -67,4 +70,8 @@ public interface FeatureDomainService {
      */
     void checkGroupCodeExistInGroupLibrary(String groupCode, boolean isAdd);
 
+    /**
+     * 将Option Code List分类成Region Option Code, Sales Version, Drive Hand三类
+     */
+    GetBaseVehicleOptionsRespDto sortBaseVehicleOptions(List<FeatureAggr> featureAggrList);
 }

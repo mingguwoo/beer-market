@@ -11,6 +11,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoFeatureOptionDom
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.DeleteFeatureOptionCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.DeleteFeatureOptionRespDto;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Component;
@@ -41,6 +42,7 @@ public class DeleteFeatureOptionCommand extends AbstractLockCommand<DeleteFeatur
 
     @Override
     protected DeleteFeatureOptionRespDto executeWithLock(DeleteFeatureOptionCmd cmd) {
+        // 查询删除的Feature/Option行
         List<OxoFeatureOptionAggr> featureOptionAggrList = featureOptionRepository.queryByModelAndFeatureCodeList(cmd.getModelCode(), cmd.getFeatureCodeList());
         // 检查Feature/Option是否可删除
         featureOptionDomainService.checkFeatureOptionDelete(featureOptionAggrList);
@@ -55,9 +57,12 @@ public class DeleteFeatureOptionCommand extends AbstractLockCommand<DeleteFeatur
         List<OxoFeatureOptionAggr> softDeleteList = featureOptionAggrList.stream().filter(i -> existFeatureOptionCodeSet.contains(i.getFeatureCode())).toList();
         softDeleteList.forEach(OxoFeatureOptionAggr::softDelete);
         // 校验并删除打点
-        Pair<List<OxoOptionPackageAggr>, List<String>> result = featureOptionApplicationService.checkAndDeleteOptionPackage(featureOptionAggrList);
+        Pair<List<OxoOptionPackageAggr>, List<String>> result = featureOptionApplicationService.checkAndDeleteOptionPackage(softDeleteList);
+        // 待更新的Feature/Option行
+        List<OxoFeatureOptionAggr> updateFeatureOptionAggrList = Lists.newArrayList(featureOptionAggrList.iterator());
+        featureOptionAggrList.forEach(i -> updateFeatureOptionAggrList.addAll(i.getChildren()));
         // 事务保存到数据库
-        ((DeleteFeatureOptionCommand) AopContext.currentProxy()).saveFeatureOptionAndOptionPackage(null, result.getLeft());
+        ((DeleteFeatureOptionCommand) AopContext.currentProxy()).saveFeatureOptionAndOptionPackage(updateFeatureOptionAggrList, result.getLeft());
         return new DeleteFeatureOptionRespDto(result.getRight());
     }
 

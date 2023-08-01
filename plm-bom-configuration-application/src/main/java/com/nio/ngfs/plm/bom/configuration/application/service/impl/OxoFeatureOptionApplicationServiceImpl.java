@@ -1,6 +1,5 @@
 package com.nio.ngfs.plm.bom.configuration.application.service.impl;
 
-import com.google.common.collect.Maps;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.application.service.OxoFeatureOptionApplicationService;
@@ -80,40 +79,46 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
             if (!featureOptionAggr.isFeature()) {
                 return;
             }
-            featureOptionAggr.setChildren(optionAggrByFeatureMap.get(featureOptionAggr.getFeatureCode()));
+            featureOptionAggr.setChildren(optionAggrByFeatureMap.getOrDefault(featureOptionAggr.getFeatureCode(), Lists.newArrayList()));
+            featureOptionAggr.getChildren().forEach(option -> option.setParent(featureOptionAggr));
         });
     }
 
     @Override
     public Pair<List<OxoOptionPackageAggr>, List<String>> checkAndDeleteOptionPackage(List<OxoFeatureOptionAggr> featureOptionAggrList) {
         // 查询所有Option的打点信息
-        Map<Long, OxoFeatureOptionAggr> parentFeatureMap = Maps.newHashMap();
         List<OxoFeatureOptionAggr> optionAggrList = LambdaUtil.map(featureOptionAggrList, OxoFeatureOptionAggr::isOption, Function.identity());
-        optionAggrList.forEach(i -> parentFeatureMap.put(i.getId(), i));
-        featureOptionAggrList.stream().filter(OxoFeatureOptionAggr::isFeature).forEach(featureAggr -> {
-            if (featureAggr.isFeature() && CollectionUtils.isNotEmpty(featureAggr.getChildren())) {
-                optionAggrList.addAll(featureAggr.getChildren());
-                featureAggr.getChildren().forEach(i -> parentFeatureMap.put(i.getId(), featureAggr));
-            }
-        });
+        featureOptionAggrList.stream().filter(OxoFeatureOptionAggr::isFeature).forEach(featureAggr ->
+                optionAggrList.addAll(featureAggr.getChildren())
+        );
         List<Long> featureOptionIdList = LambdaUtil.map(optionAggrList, OxoFeatureOptionAggr::getId);
         List<OxoOptionPackageAggr> optionPackageAggrList = oxoOptionPackageRepository.queryByFeatureOptionIdList(featureOptionIdList);
-        optionPackageAggrList = optionPackageAggrList.stream().filter(OxoOptionPackageAggr::deleteOptionPackage).toList();
-        List<String> messageList = checkDeleteOptionPackage(optionPackageAggrList, parentFeatureMap);
-        return Pair.of(optionPackageAggrList, messageList);
+        // Option的打点置为-
+        List<OxoOptionPackageAggr> updateOptionPackageAggrList = optionPackageAggrList.stream().filter(OxoOptionPackageAggr::deleteOptionPackage).toList();
+        Map<Long, OxoFeatureOptionAggr> featureOptionMapById = LambdaUtil.toKeyMap(optionAggrList, OxoFeatureOptionAggr::getId);
+        List<String> messageList = checkDeleteOptionPackage(optionPackageAggrList, featureOptionMapById);
+        return Pair.of(updateOptionPackageAggrList, messageList);
     }
 
-    private List<String> checkDeleteOptionPackage(List<OxoOptionPackageAggr> optionPackageAggrList, Map<Long, OxoFeatureOptionAggr> parentFeatureMap) {
+    private List<String> checkDeleteOptionPackage(List<OxoOptionPackageAggr> optionPackageAggrList, Map<Long, OxoFeatureOptionAggr> featureOptionMapById) {
         List<String> messageList = Lists.newArrayList();
+        Set<String> messageCodeSet = Sets.newHashSet();
         Map<Long, List<OxoOptionPackageAggr>> optionPackageAggrMap = LambdaUtil.groupBy(optionPackageAggrList, OxoOptionPackageAggr::getFeatureOptionId);
         optionPackageAggrMap.forEach((featureOptionId, aggrList) -> {
-            if (!aggrList.stream().allMatch(OxoOptionPackageAggr::isPackageUnavailable)) {
-                OxoFeatureOptionAggr parentFeature = parentFeatureMap.get(featureOptionId);
-                if (parentFeature.isFeature()) {
-                    messageList.add("The Options In Feature " + parentFeature.getFeatureCode() + " Has Valid Assignment(Not \"-\")!");
-                } else {
-                    messageList.add("Option " + parentFeature.getFeatureCode() + " Has Valid Assignment(Not \"-\")!");
-                }
+            // Option的打点全为-，跳过
+            if (aggrList.stream().allMatch(OxoOptionPackageAggr::isPackageUnavailable)) {
+                return;
+            }
+            // todo: 最新Formal版本OXO判断
+            OxoFeatureOptionAggr featureOptionAggr = featureOptionMapById.get(featureOptionId);
+            OxoFeatureOptionAggr parent = featureOptionAggr.getParent();
+            if (parent != null && !messageCodeSet.contains(parent.getFeatureCode())) {
+                // 勾选Feature的提示
+                messageCodeSet.add(parent.getFeatureCode());
+                messageList.add("The Options In Feature " + parent.getFeatureCode() + " Has Valid Assignment(Not \"-\")!");
+            } else {
+                // 勾选Option的提示
+                messageList.add("Option " + featureOptionAggr.getFeatureCode() + " Has Valid Assignment(Not \"-\")!");
             }
         });
         return messageList;

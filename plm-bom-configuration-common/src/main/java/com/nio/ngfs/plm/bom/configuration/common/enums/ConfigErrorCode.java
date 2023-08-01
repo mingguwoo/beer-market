@@ -52,6 +52,8 @@ public enum ConfigErrorCode implements ErrorCode {
     FEATURE_FEATURE_CODE_TOO_SHORT(80028, "Feature Code Min Length Is 4!"),
     FEATURE_OPTION_CODE_TOO_SHORT(80029, "Option Code Min Length Is 4!"),
     OXO_FEATURE_OPTION_CAN_NOT_DELETE(80030, "The Feature/Option Can Not Delete!"),
+    FEATURE_STATUS_NOT_ACTIVE_CAN_NOT_EDIT(80031, "The Feature Status Is Inactive, Can Not Edit!"),
+    FEATURE_FEATURE_IS_NOT_ACTIVE(80032, "Feature Is Not Active!"),
     ;
 
     /**

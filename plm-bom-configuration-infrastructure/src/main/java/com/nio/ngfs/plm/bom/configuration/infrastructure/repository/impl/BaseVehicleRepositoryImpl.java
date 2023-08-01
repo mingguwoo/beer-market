@@ -1,8 +1,8 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.impl;
 
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
-import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.BaseVehicleAggr;
-import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.BaseVehicleRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleRepository;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.generator.BaseVehicleIdGenerator;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.BaseVehicleConverter;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsBaseVehicleDao;

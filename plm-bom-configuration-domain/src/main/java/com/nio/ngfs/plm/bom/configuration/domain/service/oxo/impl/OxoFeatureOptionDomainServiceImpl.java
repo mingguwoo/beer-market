@@ -96,15 +96,9 @@ public class OxoFeatureOptionDomainServiceImpl implements OxoFeatureOptionDomain
        // 获取打点信息
         List<OxoOptionPackageAggr> optionPackages = oxoOptionPackageRepository.queryByBaseVehicleIds(rowIds);
 
-
-
         optionPackages.forEach(x->{
 
-
         });
-
-
-
 
         return null;
     }

@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle;
+package com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle;
 
 import com.nio.bom.share.domain.repository.Repository;
 

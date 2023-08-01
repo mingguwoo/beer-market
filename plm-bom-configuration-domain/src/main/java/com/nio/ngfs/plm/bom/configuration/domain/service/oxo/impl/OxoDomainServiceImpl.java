@@ -28,7 +28,6 @@ public class OxoDomainServiceImpl implements OxoDomainService {
 
     private final CommonRepository commonRepository;
 
-
     /**
      * @return
      */
@@ -89,6 +88,4 @@ public class OxoDomainServiceImpl implements OxoDomainService {
         });
         return list.stream().distinct().toList();
     }
-
-
 }

@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.api.controller;
 
+import com.nio.bom.share.annotation.NeedAuthorization;
 import com.nio.bom.share.annotation.NotLogResult;
 import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.application.command.oxo.*;
@@ -47,6 +48,7 @@ public class OxoController {
      * @param cmd
      * @return
      */
+    @NeedAuthorization
     @NotLogResult
     @PostMapping("/queryVersion")
     public ResultInfo<List<String>> queryVersion(@Valid @RequestBody OxoBaseCmd cmd) {
@@ -58,6 +60,8 @@ public class OxoController {
      * @param cmd
      * @return
      */
+    @NeedAuthorization
+    @NotLogResult
     @PostMapping("/queryList")
     public ResultInfo<OxoListQry> queryList(@Valid @RequestBody OxoBaseCmd cmd) {
         return ResultInfo.success(oxoInfoQuery.execute(cmd));
@@ -68,6 +72,8 @@ public class OxoController {
      * @param cmd 命令
      * @return 结果
      */
+    @NeedAuthorization
+    @NotLogResult
     @PostMapping("/deleteFeatureOption")
     public ResultInfo<DeleteFeatureOptionRespDto> deleteFeatureOption(@Valid @RequestBody DeleteFeatureOptionCmd cmd) {
         return ResultInfo.success(deleteFeatureOptionCommand.execute(cmd));
@@ -78,6 +84,8 @@ public class OxoController {
      * @param cmd
      * @return
      */
+    @NeedAuthorization
+    @NotLogResult
     @PostMapping("/add")
     public ResultInfo add(@Valid @RequestBody OxoAddCmd cmd) {
         return ResultInfo.success(oxoAddCommand.execute(cmd));
@@ -87,6 +95,8 @@ public class OxoController {
      * 添加oxo 下拉code列表
      * @return
      */
+    @NeedAuthorization
+    @NotLogResult
     @PostMapping("/queryFeatureList")
     public ResultInfo<OxoAddCmd> queryFeatureList(@Valid @RequestBody OxoBaseCmd cmd) {
         return ResultInfo.success(oxoDomainService.queryFeatureList(cmd));
@@ -97,6 +107,8 @@ public class OxoController {
      * @param cmd
      * @return
      */
+    @NeedAuthorization
+    @NotLogResult
     @PostMapping("/edit")
     public ResultInfo edit(@Valid @RequestBody OxoEditInfoCmd cmd) {
         return ResultInfo.success(oxoEditCommand.execute(cmd));
@@ -106,6 +118,8 @@ public class OxoController {
      * 查询邮件group
      * @return
      */
+    @NeedAuthorization
+    @NotLogResult
     @PostMapping("/queryEmailGroup")
     public ResultInfo<List<String>> queryEmailGroup() {
         return ResultInfo.success(oxoDomainService.queryEmailGroup());
@@ -116,6 +130,8 @@ public class OxoController {
      * @param cmd
      * @return
      */
+    @NeedAuthorization
+    @NotLogResult
     @PostMapping("/saveSnapshot")
     public ResultInfo saveSnapshot(@Valid @RequestBody OxoSnapshotCmd cmd) {
         oxoSnapshootCommand.saveSnapshot(cmd);
@@ -128,6 +144,8 @@ public class OxoController {
      * @param cmd 命令
      * @return 结果
      */
+    @NeedAuthorization
+    @NotLogResult
     @PostMapping("/renewSortFeatureOption")
     public ResultInfo<RenewSortFeatureOptionRespDto> renewSortFeatureOption(@Valid @RequestBody RenewSortFeatureOptionCmd cmd) {
         return ResultInfo.success(renewSortFeatureOptionCommand.execute(cmd));
@@ -138,6 +156,8 @@ public class OxoController {
      * @param cmd
      * @return
      */
+    @NeedAuthorization
+    @NotLogResult
     @PostMapping("/querySortFeatureList")
     public ResultInfo querySortFeatureList(@Valid @RequestBody OxoSnapshotCmd cmd) {
         //oxoDomainService.querySortFeatureList(cmd)
@@ -169,6 +189,8 @@ public class OxoController {
      * @param compareCmd
      * @return
      */
+    @NeedAuthorization
+    @NotLogResult
     @PostMapping("/compareExport")
     public void compareExport(@Valid @RequestBody OxoCompareCmd compareCmd,HttpServletResponse response) {
         //oxoDomainService.compareExport(compareCmd,response);
@@ -179,6 +201,8 @@ public class OxoController {
      * @param oxoBaseCmd
      * @return
      */
+    @NeedAuthorization
+    @NotLogResult
     @PostMapping("/queryChangeLog")
     public ResultInfo<PageData<OxoChangeLogRespDto>> queryChangeLog(@Valid @RequestBody OxoBaseCmd oxoBaseCmd) {
         //return ResultInfo.success(oxoDomainService.queryChangeLog(oxoBaseCmd));

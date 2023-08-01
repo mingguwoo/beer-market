@@ -21,9 +21,7 @@ import java.util.Map;
 @Slf4j
 public class CommonRepositoryImpl implements CommonRepository {
 
-
     private final CommonClientFeign commonClientFeign;
-
 
     @Override
     public Map queryMatrixRuleValuesByAbscissaOrOrdinate(MatrixRuleQueryDo param) {

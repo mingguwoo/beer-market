@@ -10,7 +10,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.GroupCodeCh
 import com.nio.ngfs.plm.bom.configuration.domain.model.featurechangelog.FeatureChangeLogAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.featurechangelog.FeatureChangeLogFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.featurechangelog.FeatureChangeLogRepository;
-import com.nio.ngfs.plm.bom.configuration.domain.service.FeatureChangeLogDomainService;
+import com.nio.ngfs.plm.bom.configuration.domain.service.feature.FeatureChangeLogDomainService;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.event.EventListener;

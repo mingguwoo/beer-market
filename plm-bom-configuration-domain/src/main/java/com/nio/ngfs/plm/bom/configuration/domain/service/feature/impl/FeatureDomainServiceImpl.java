@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.domain.service.impl;
+package com.nio.ngfs.plm.bom.configuration.domain.service.feature.impl;
 
 import com.nio.bom.share.enums.StatusEnum;
 import com.nio.bom.share.exception.BusinessException;
@@ -12,7 +12,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureStatusChangeEvent;
-import com.nio.ngfs.plm.bom.configuration.domain.service.FeatureDomainService;
+import com.nio.ngfs.plm.bom.configuration.domain.service.feature.FeatureDomainService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;

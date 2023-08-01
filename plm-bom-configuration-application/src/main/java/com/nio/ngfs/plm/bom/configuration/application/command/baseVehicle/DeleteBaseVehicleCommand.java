@@ -2,7 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle;
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.BaseVehicleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.BaseVehicleRepository;
-import com.nio.ngfs.plm.bom.configuration.domain.service.BaseVehicleDomainService;
+import com.nio.ngfs.plm.bom.configuration.domain.service.basevehicle.BaseVehicleDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.DeleteBaseVehicleCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.DeleteBaseVehicleRespDto;
 import lombok.RequiredArgsConstructor;

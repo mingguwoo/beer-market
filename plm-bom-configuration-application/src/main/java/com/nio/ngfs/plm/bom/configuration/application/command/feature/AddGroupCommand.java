@@ -7,7 +7,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureChangeEvent;
-import com.nio.ngfs.plm.bom.configuration.domain.service.FeatureDomainService;
+import com.nio.ngfs.plm.bom.configuration.domain.service.feature.FeatureDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.AddGroupCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.AddGroupRespDto;
 import lombok.RequiredArgsConstructor;

@@ -4,7 +4,7 @@ import com.nio.ngfs.plm.bom.configuration.application.command.AbstractCommand;
 import com.nio.ngfs.plm.bom.configuration.application.service.OxoFeatureOptionApplicationService;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionRepository;
-import com.nio.ngfs.plm.bom.configuration.domain.service.OxoFeatureOptionDomainService;
+import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoFeatureOptionDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.RenewSortFeatureOptionCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.RenewSortFeatureOptionRespDto;
 import lombok.RequiredArgsConstructor;

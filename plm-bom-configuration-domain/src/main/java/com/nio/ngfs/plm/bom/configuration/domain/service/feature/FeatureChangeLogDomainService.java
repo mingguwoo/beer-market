@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.domain.service;
+package com.nio.ngfs.plm.bom.configuration.domain.service.feature;
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureAttributeChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureStatusChangeEvent;

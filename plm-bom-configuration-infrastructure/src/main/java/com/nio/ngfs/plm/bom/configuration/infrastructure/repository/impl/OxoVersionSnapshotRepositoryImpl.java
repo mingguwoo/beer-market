@@ -5,8 +5,12 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVer
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.OxoVersionSnapshotConverter;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoVersionSnapshotDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.common.DaoSupport;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsOxoVersionSnapshotEntity;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @author xiaozhou.tu
@@ -29,4 +33,19 @@ public class OxoVersionSnapshotRepositoryImpl implements OxoVersionSnapshotRepos
         return oxoVersionSnapshotConverter.convertEntityToDo(bomsOxoVersionSnapshotDao.getById(id));
     }
 
+    @Override
+    public List<OxoVersionSnapshotAggr> queryOxoVersionSnapshotByModelCode(String modelCode) {
+        List<OxoVersionSnapshotAggr> snapshotAggrs=
+                oxoVersionSnapshotConverter.convertEntityListToDoList(bomsOxoVersionSnapshotDao.queryBomsOxoVersionSnapshotsByModel(modelCode));
+
+
+        if(CollectionUtils.isNotEmpty(snapshotAggrs)){
+
+            snapshotAggrs.forEach(snapshot->{
+                snapshot.setOxoSnapshot(snapshot.findOxoSnapshot());
+            });
+        }
+
+        return snapshotAggrs;
+    }
 }

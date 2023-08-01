@@ -140,8 +140,7 @@ public class OxoController {
     @NotLogResult
     @PostMapping("/saveSnapshot")
     public ResultInfo saveSnapshot(@Valid @RequestBody OxoSnapshotCmd cmd) {
-        oxoSnapshootCommand.saveSnapshot(cmd);
-        return ResultInfo.success(true);
+        return ResultInfo.success(oxoSnapshootCommand.execute(cmd));
     }
 
     /**

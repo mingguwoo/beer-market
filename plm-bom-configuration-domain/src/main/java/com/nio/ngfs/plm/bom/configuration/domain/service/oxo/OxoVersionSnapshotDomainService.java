@@ -5,4 +5,12 @@ package com.nio.ngfs.plm.bom.configuration.domain.service.oxo;
  * @date 2023/7/27
  */
 public interface OxoVersionSnapshotDomainService {
+
+
+
+
+      String  queryVersionByModelCode(String modelCode,String type);
+
+
+
 }

@@ -1,6 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot;
 
 import com.nio.bom.share.domain.model.AggrRoot;
+import com.nio.ngfs.plm.bom.configuration.common.util.GZIPUtils;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -62,6 +63,13 @@ public class OxoVersionSnapshotAggr extends AbstractDo implements AggrRoot<Long>
     @Override
     public Long getUniqId() {
         return id;
+    }
+
+
+
+
+    public String findOxoSnapshot(){
+        return GZIPUtils.uncompress(this.oxoSnapshot);
     }
 
 }

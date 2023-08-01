@@ -117,13 +117,4 @@ public class FeatureRepositoryImpl implements FeatureRepository {
         return featureConverter.convertEntityToDo(bomsFeatureLibraryDao.getByFeatureOrOptionCode(featureOptionCode));
     }
 
-    @Override
-    public List<String> filterFeatureList(List<String> featureList) {
-        List<String> codeList = Stream.of(ConfigConstants.BASE_VEHICLE_SALES_VERSION_FEATURE,ConfigConstants.BASE_VEHICLE_REGION_FEATURE,ConfigConstants.BASE_VEHICLE_DRIVE_HAND_FEATURE).collect(Collectors.toList());
-        List<BomsFeatureLibraryEntity> bomsFeatureLibraryEntities= bomsFeatureLibraryDao.queryByParentFeatureCodeListAndType(codeList,FeatureTypeEnum.OPTION.getType());
-        List<FeatureAggr> featureAggrs = featureConverter.convertEntityListToDoList(bomsFeatureLibraryEntities);
-        List<String> allFeatureList = featureAggrs.stream().map(feature->feature.getFeatureId().getFeatureCode()).toList();
-        return featureList.stream().filter(feature->allFeatureList.contains(feature)).toList();
-    }
-
 }

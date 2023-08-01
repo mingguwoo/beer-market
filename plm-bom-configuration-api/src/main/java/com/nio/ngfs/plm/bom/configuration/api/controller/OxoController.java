@@ -4,9 +4,10 @@ import com.nio.bom.share.annotation.NeedAuthorization;
 import com.nio.bom.share.annotation.NotLogResult;
 import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.application.command.oxo.*;
+import com.nio.ngfs.plm.bom.configuration.application.query.oxo.OxoFeatureOptionQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.oxo.OxoInfoQuery;
+import com.nio.ngfs.plm.bom.configuration.application.query.oxo.OxoQueryGroupQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.oxo.OxoVersionQuery;
-import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.PageData;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.DeleteFeatureOptionRespDto;
@@ -33,7 +34,6 @@ import java.util.List;
 @RequestMapping("/oxo")
 public class OxoController {
 
-    private final OxoDomainService oxoDomainService;
     private final OxoSnapshootCommand oxoSnapshootCommand;
     private final DeleteFeatureOptionCommand deleteFeatureOptionCommand;
     private final OxoAddCommand oxoAddCommand;
@@ -42,6 +42,12 @@ public class OxoController {
     private final OxoVersionQuery oxoVersionQuery;
 
     private final OxoInfoQuery oxoInfoQuery;
+
+    private final OxoFeatureOptionQuery oxoFeatureOptionQuery;
+
+
+    private final OxoQueryGroupQuery oxoQueryGroupQuery;
+
 
     /**
      * 根据车型查询快照版本
@@ -99,7 +105,7 @@ public class OxoController {
     @NotLogResult
     @PostMapping("/queryFeatureList")
     public ResultInfo<OxoAddCmd> queryFeatureList(@Valid @RequestBody OxoBaseCmd cmd) {
-        return ResultInfo.success(oxoDomainService.queryFeatureList(cmd));
+        return ResultInfo.success(oxoFeatureOptionQuery.execute(cmd));
     }
 
     /**
@@ -122,7 +128,7 @@ public class OxoController {
     @NotLogResult
     @PostMapping("/queryEmailGroup")
     public ResultInfo<List<String>> queryEmailGroup() {
-        return ResultInfo.success(oxoDomainService.queryEmailGroup());
+        return ResultInfo.success(oxoQueryGroupQuery.execute(new OxoBaseCmd()));
     }
 
     /**
@@ -151,18 +157,6 @@ public class OxoController {
         return ResultInfo.success(renewSortFeatureOptionCommand.execute(cmd));
     }
 
-    /**
-     * todo 排序 查询
-     * @param cmd
-     * @return
-     */
-    @NeedAuthorization
-    @NotLogResult
-    @PostMapping("/querySortFeatureList")
-    public ResultInfo querySortFeatureList(@Valid @RequestBody OxoSnapshotCmd cmd) {
-        //oxoDomainService.querySortFeatureList(cmd)
-        return ResultInfo.success(true);
-    }
 
 //    /**
 //     * 版本对比

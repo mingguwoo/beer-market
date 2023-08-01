@@ -1,6 +1,6 @@
-package com.nio.ngfs.plm.bom.configuration.domain.service.impl;
+package com.nio.ngfs.plm.bom.configuration.domain.service.oxo.impl;
 
-import com.nio.ngfs.plm.bom.configuration.domain.service.OxoOptionPackageDomainService;
+import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoOptionPackageDomainService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

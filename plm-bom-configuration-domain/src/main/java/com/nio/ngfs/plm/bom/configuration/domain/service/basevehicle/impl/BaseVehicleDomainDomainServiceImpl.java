@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.domain.service.impl;
+package com.nio.ngfs.plm.bom.configuration.domain.service.basevehicle.impl;
 
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
@@ -9,7 +9,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.BaseVehicleRe
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
-import com.nio.ngfs.plm.bom.configuration.domain.service.BaseVehicleDomainService;
+import com.nio.ngfs.plm.bom.configuration.domain.service.basevehicle.BaseVehicleDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoHeadQry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

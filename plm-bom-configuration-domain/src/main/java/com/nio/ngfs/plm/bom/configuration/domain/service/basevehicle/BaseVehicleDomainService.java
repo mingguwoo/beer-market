@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.domain.service;
+package com.nio.ngfs.plm.bom.configuration.domain.service.basevehicle;
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.BaseVehicleAggr;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoHeadQry;

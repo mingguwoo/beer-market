@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.domain.service.impl;
+package com.nio.ngfs.plm.bom.configuration.domain.service.oxo.impl;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -9,7 +9,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatu
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageRepository;
-import com.nio.ngfs.plm.bom.configuration.domain.service.OxoFeatureOptionDomainService;
+import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoFeatureOptionDomainService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;

@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.domain.service.impl;
+package com.nio.ngfs.plm.bom.configuration.domain.service.feature.impl;
 
 import com.google.common.collect.Lists;
 import com.nio.bom.share.utils.LambdaUtil;
@@ -9,7 +9,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureStat
 import com.nio.ngfs.plm.bom.configuration.domain.model.featurechangelog.FeatureChangeLogAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.featurechangelog.FeatureChangeLogFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.featurechangelog.enums.FeatureChangeLogTypeEnum;
-import com.nio.ngfs.plm.bom.configuration.domain.service.FeatureChangeLogDomainService;
+import com.nio.ngfs.plm.bom.configuration.domain.service.feature.FeatureChangeLogDomainService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;

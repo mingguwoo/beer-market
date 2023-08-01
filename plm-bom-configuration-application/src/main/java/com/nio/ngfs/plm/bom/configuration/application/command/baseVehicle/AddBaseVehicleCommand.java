@@ -12,10 +12,10 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatu
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageRepository;
-import com.nio.ngfs.plm.bom.configuration.domain.service.BaseVehicleDomainService;
-import com.nio.ngfs.plm.bom.configuration.domain.service.FeatureDomainService;
-import com.nio.ngfs.plm.bom.configuration.domain.service.OxoFeatureOptionDomainService;
-import com.nio.ngfs.plm.bom.configuration.domain.service.OxoOptionPackageDomainService;
+import com.nio.ngfs.plm.bom.configuration.domain.service.basevehicle.BaseVehicleDomainService;
+import com.nio.ngfs.plm.bom.configuration.domain.service.feature.FeatureDomainService;
+import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoFeatureOptionDomainService;
+import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoOptionPackageDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.AddBaseVehicleCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.AddBaseVehicleRespDto;
 import lombok.RequiredArgsConstructor;

@@ -10,7 +10,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.common.FeatureAggrThreadLocal;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.GroupCodeChangeEvent;
-import com.nio.ngfs.plm.bom.configuration.domain.service.FeatureDomainService;
+import com.nio.ngfs.plm.bom.configuration.domain.service.feature.FeatureDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.EditGroupCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.EditGroupRespDto;
 import lombok.RequiredArgsConstructor;

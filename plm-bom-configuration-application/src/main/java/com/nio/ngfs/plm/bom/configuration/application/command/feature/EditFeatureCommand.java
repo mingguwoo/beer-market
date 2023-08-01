@@ -8,7 +8,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.common.FeatureAggrThreadLocal;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureChangeEvent;
-import com.nio.ngfs.plm.bom.configuration.domain.service.FeatureDomainService;
+import com.nio.ngfs.plm.bom.configuration.domain.service.feature.FeatureDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.EditFeatureCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.EditFeatureCmdRespDto;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.domain.service;
+package com.nio.ngfs.plm.bom.configuration.domain.service.oxo;
 
 /**
  * @author xiaozhou.tu

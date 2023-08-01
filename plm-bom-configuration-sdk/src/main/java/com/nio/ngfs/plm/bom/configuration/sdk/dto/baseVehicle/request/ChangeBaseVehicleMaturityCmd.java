@@ -19,8 +19,8 @@ public class ChangeBaseVehicleMaturityCmd implements Cmd {
     private String modelYear;
 
     @NotBlank(message = "Base Vehicle Id is blank")
-    private String BaseVehicleId;
+    private String baseVehicleId;
 
     @NotBlank(message = "Maturity is blank")
-    private String Maturity;
+    private String maturity;
 }

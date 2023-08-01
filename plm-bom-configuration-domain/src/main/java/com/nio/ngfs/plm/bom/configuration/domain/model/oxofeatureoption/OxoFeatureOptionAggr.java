@@ -11,6 +11,7 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -69,9 +70,14 @@ public class OxoFeatureOptionAggr extends AbstractDo implements AggrRoot<Long>, 
     private String catalog;
 
     /**
-     * 子节点列表
+     * 父节点（type=Option时，父节点为Feature）
      */
-    private transient List<OxoFeatureOptionAggr> children;
+    private transient OxoFeatureOptionAggr parent;
+
+    /**
+     * 子节点列表（type=Feature时，子节点列表为Feature下的Option列表）
+     */
+    private transient List<OxoFeatureOptionAggr> children = Collections.emptyList();
 
     @Override
     public Long getUniqId() {

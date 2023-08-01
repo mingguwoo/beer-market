@@ -18,7 +18,9 @@ import org.springframework.context.annotation.PropertySource;
 @Slf4j
 public class AppMybatisConfig {
 
-    // mybatis 全局设置
+    /**
+     * mybatis 全局设置
+     */
     @Bean
     @ConditionalOnMissingBean
     public ConfigurationCustomizer mybatisConfigurationCustomizer() {

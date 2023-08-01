@@ -84,9 +84,7 @@ public class OxoEditCommand extends AbstractLockCommand<OxoEditInfoCmd, List<Str
          * OXO中是否存在
          * 在所有Base Vehicle下打点都为“-”的Option（通过Delete Code删除的Option排除在外）
          */
-        featureOptionDomainService.checkOxoBasicVehicleOptions(modelCode);
-
-
+        List<String> optionCodes = featureOptionDomainService.checkOxoBasicVehicleOptions(modelCode);
 
 
         /**
@@ -94,6 +92,7 @@ public class OxoEditCommand extends AbstractLockCommand<OxoEditInfoCmd, List<Str
          * 1.该Option是否应用于Status为Working的Configuration Rule中
          * 2.该Option是否在Product Configuration有勾选
          */
+
 
 
         return messages;

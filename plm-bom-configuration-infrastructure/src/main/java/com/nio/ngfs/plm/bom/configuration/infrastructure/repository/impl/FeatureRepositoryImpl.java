@@ -1,6 +1,5 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.impl;
 
-import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureId;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
@@ -9,7 +8,6 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureType
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.FeatureConverter;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsFeatureLibraryDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.common.DaoSupport;
-import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureLibraryEntity;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -18,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author xiaozhou.tu
@@ -115,15 +112,6 @@ public class FeatureRepositoryImpl implements FeatureRepository {
     @Override
     public FeatureAggr getByFeatureOrOptionCode(String featureOptionCode) {
         return featureConverter.convertEntityToDo(bomsFeatureLibraryDao.getByFeatureOrOptionCode(featureOptionCode));
-    }
-
-    @Override
-    public List<String> filterFeatureList(List<String> featureList) {
-        List<String> codeList = Stream.of(ConfigConstants.BASE_VEHICLE_SALES_VERSION_FEATURE,ConfigConstants.BASE_VEHICLE_REGION_FEATURE,ConfigConstants.BASE_VEHICLE_DRIVE_HAND_FEATURE).collect(Collectors.toList());
-        List<BomsFeatureLibraryEntity> bomsFeatureLibraryEntities= bomsFeatureLibraryDao.queryByParentFeatureCodeListAndType(codeList,FeatureTypeEnum.OPTION.getType());
-        List<FeatureAggr> featureAggrs = featureConverter.convertEntityListToDoList(bomsFeatureLibraryEntities);
-        List<String> allFeatureList = featureAggrs.stream().map(feature->feature.getFeatureId().getFeatureCode()).toList();
-        return featureList.stream().filter(feature->allFeatureList.contains(feature)).toList();
     }
 
 }

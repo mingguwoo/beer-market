@@ -45,36 +45,42 @@ public class FeatureController implements PlmFeatureClient {
     private final ExportFeatureLibraryQuery exportFeatureLibraryQuery;
 
     @Override
+    @NeedAuthorization
     @NotLogResult
     public ResultInfo<AddGroupRespDto> addGroup(@Valid @RequestBody AddGroupCmd cmd) {
         return ResultInfo.success(addGroupCommand.execute(cmd));
     }
 
     @Override
+    @NeedAuthorization
     @NotLogResult
     public ResultInfo<EditGroupRespDto> editGroup(@Valid @RequestBody EditGroupCmd cmd) {
         return ResultInfo.success(editGroupCommand.execute(cmd));
     }
 
     @Override
+    @NeedAuthorization
     @NotLogResult
     public ResultInfo<ChangeGroupStatusRespDto> changeGroupStatus(@Valid @RequestBody ChangeGroupStatusCmd cmd) {
         return ResultInfo.success(changeGroupStatusCommand.execute(cmd));
     }
 
     @Override
+    @NeedAuthorization
     @NotLogResult
     public ResultInfo<AddFeatureRespDto> addFeature(@Valid @RequestBody AddFeatureCmd cmd) {
         return ResultInfo.success(addFeatureCommand.execute(cmd));
     }
 
     @Override
+    @NeedAuthorization
     @NotLogResult
     public ResultInfo<EditFeatureCmdRespDto> editFeature(@Valid @RequestBody EditFeatureCmd cmd) {
         return ResultInfo.success(editFeatureCommand.execute(cmd));
     }
 
     @Override
+    @NeedAuthorization
     @NotLogResult
     public ResultInfo<ChangeFeatureStatusRespDto> changeFeatureStatus(@Valid @RequestBody ChangeFeatureStatusCmd cmd) {
         return ResultInfo.success(changeFeatureStatusCommand.execute(cmd));
@@ -102,18 +108,21 @@ public class FeatureController implements PlmFeatureClient {
     }
 
     @Override
+    @NeedAuthorization
     @NotLogResult
     public ResultInfo<List<GetChangeLogListDto>> getChangeLogList(@Valid @RequestBody GetChangeLogListQry qry) {
         return ResultInfo.success(getChangeLogListQuery.execute(qry));
     }
 
     @Override
+    @NeedAuthorization
     @NotLogResult
     public ResultInfo<List<String>> getGroupCodeList(@Valid @RequestBody GetGroupCodeListQry qry) {
         return ResultInfo.success(getGroupCodeListQuery.execute(qry));
     }
 
     @Override
+    @NeedAuthorization
     @NotLogResult
     public ResultInfo<List<QueryFeatureLibraryDto>> queryFeatureLibrary(@Valid @RequestBody QueryFeatureLibraryQry qry) {
         return ResultInfo.success(queryFeatureLibraryQuery.execute(qry));
@@ -122,6 +131,8 @@ public class FeatureController implements PlmFeatureClient {
     /**
      * 导出Feature Library到Excel
      */
+    @NeedAuthorization
+    @NotLogResult
     @PostMapping("/feature/exportFeatureLibrary")
     public void exportFeatureLibrary(@Valid @RequestBody ExportFeatureLibraryQry qry, HttpServletResponse response) {
         exportFeatureLibraryQuery.execute(qry, response);

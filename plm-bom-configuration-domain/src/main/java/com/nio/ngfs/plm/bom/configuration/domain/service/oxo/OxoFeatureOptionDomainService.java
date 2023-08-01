@@ -33,5 +33,5 @@ public interface OxoFeatureOptionDomainService {
     List<OxoOptionPackageAggr> filter(List<OxoOptionPackageAggr> points, List<OxoFeatureOptionAggr> driveHandRegionSalesVersionRows);
 
 
-    List<String> checkOxoBasicVehicleOptions(String modelCode);
+    List<String>  checkOxoBasicVehicleOptions(String modelCode);
 }

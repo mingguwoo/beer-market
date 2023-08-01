@@ -31,15 +31,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OxoInfoQuery implements Query<OxoBaseCmd, OxoListQry> {
 
-
-
-
-
     private final BomsOxoOptionPackageDao bomsOxoOptionPackageInfoDao;
-
-
     private final BaseVehicleDomainService baseVehicleDomainService;
-
 
     private final OxoFeatureOptionRepository featureOptionRepository;
 
@@ -49,22 +42,18 @@ public class OxoInfoQuery implements Query<OxoBaseCmd, OxoListQry> {
 
         String modelCode = oxoListQry.getModelCode();
 
-
         // 查询行数据
         List<OxoFeatureOptionAggr> oxoFeatureOptions = featureOptionRepository.queryFeatureListsByModel(modelCode);
 
         //获取所有的行节点
         List<Long> rowIds = oxoFeatureOptions.stream().map(OxoFeatureOptionAggr::getId).distinct().toList();
 
-
         // 获取打点信息
         List<BomsOxoOptionPackageEntity> entities =
                 bomsOxoOptionPackageInfoDao.queryOxoOptionPackageByRowIds(rowIds);
 
-
         //查询表头信息
         List<OxoHeadQry> oxoLists = baseVehicleDomainService.queryByModel(modelCode);
-
 
         /**
          * 系统默认排序
@@ -82,10 +71,8 @@ public class OxoInfoQuery implements Query<OxoBaseCmd, OxoListQry> {
                         .sorted(Comparator.comparing(OxoFeatureOptionAggr::getCatalog).thenComparing(OxoFeatureOptionAggr::getParentFeatureCode))
                         .collect(Collectors.groupingBy(OxoFeatureOptionAggr::getParentFeatureCode));
 
-
         OxoListQry qry=new OxoListQry();
         qry.setOxoHeadResps(oxoLists);
-
 
         List<OxoRowsQry> rowsQries=Lists.newArrayList();
         oxoInfoDoMaps.forEach((k, features) -> {
@@ -102,7 +89,6 @@ public class OxoInfoQuery implements Query<OxoBaseCmd, OxoListQry> {
                         sorted(Comparator.comparing(OxoFeatureOptionAggr::getSort).thenComparing(OxoFeatureOptionAggr::getFeatureCode)).toList();
 
                 List<OxoRowsQry> optionQrys = Lists.newArrayList();
-
 
                 if (CollectionUtils.isNotEmpty(options)) {
                     options.forEach(option -> {

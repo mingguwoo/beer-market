@@ -43,14 +43,14 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
 
 
     @Override
-//    @NeedAuthorization
+    @NeedAuthorization
     @NotLogResult
     public ResultInfo<List<BaseVehicleRespDto>> queryBaseVehicle(@Valid @RequestBody QueryBaseVehicleQry qry) {
         return ResultInfo.success(queryBaseVehicleQuery.executeQuery(qry));
     }
 
     @Override
-//    @NeedAuthorization
+    @NeedAuthorization
     @NotLogResult
     public ResultInfo<AddBaseVehicleRespDto> addBaseVehicle(@Valid @RequestBody AddBaseVehicleCmd cmd) {
         return ResultInfo.success(addBaseVehicleCommand.execute(cmd));
@@ -85,7 +85,7 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
     }
 
     @Override
-//    @NeedAuthorization
+    @NeedAuthorization
     @NotLogResult
     public ResultInfo<GetBaseVehicleOptionsRespDto> getBaseVehicleOptions(@Valid @RequestBody GetBaseVehicleOptionsQry qry) {
         return ResultInfo.success(getbaseVehicleOptionsQuery.execute(qry));
@@ -99,7 +99,7 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
     }
 
     @Override
-//    @NeedAuthorization
+    @NeedAuthorization
     @NotLogResult
     public ResultInfo<ChangeBaseVehicleMaturityRespDto> changeBaseVehicleMaturity(@Valid @RequestBody ChangeBaseVehicleMaturityCmd cmd) {
         return ResultInfo.success(changeBaseVehicleMaturityCommand.execute(cmd));

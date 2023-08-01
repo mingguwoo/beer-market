@@ -12,13 +12,11 @@ import java.util.List;
 @Data
 public class GetBaseVehicleOptionsRespDto implements Dto {
 
-    private List<String> regionOptionCode;
+    private List<BaseVehicleOptionsRespDto> regionOptionCodeList;
 
-    private List<String> driveHand;
+    private List<BaseVehicleOptionsRespDto> driveHandList;
 
-    private List<String> salesVersion;
-
-    private List<String> regionOptionEn;
+    private List<BaseVehicleOptionsRespDto> salesVersionList;
 
 }
 

@@ -1,11 +1,11 @@
-package com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle;
+package com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle;
 
 import com.nio.bom.share.domain.model.AggrRoot;
 import com.nio.bom.share.enums.StatusEnum;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
-import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.enums.BaseVehicleMaturityEnum;
+import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.enums.BaseVehicleMaturityEnum;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.AddBaseVehicleCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.ChangeBaseVehicleMaturityCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.ChangeBaseVehicleStatusCmd;

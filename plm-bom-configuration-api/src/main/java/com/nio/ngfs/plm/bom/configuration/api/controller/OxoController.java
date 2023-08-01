@@ -1,11 +1,13 @@
 package com.nio.ngfs.plm.bom.configuration.api.controller;
 
+import com.nio.bom.share.annotation.NeedAuthorization;
 import com.nio.bom.share.annotation.NotLogResult;
 import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.application.command.oxo.*;
+import com.nio.ngfs.plm.bom.configuration.application.query.oxo.OxoFeatureOptionQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.oxo.OxoInfoQuery;
+import com.nio.ngfs.plm.bom.configuration.application.query.oxo.OxoQueryGroupQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.oxo.OxoVersionQuery;
-import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.PageData;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.DeleteFeatureOptionRespDto;
@@ -32,7 +34,6 @@ import java.util.List;
 @RequestMapping("/oxo")
 public class OxoController {
 
-    private final OxoDomainService oxoDomainService;
     private final OxoSnapshootCommand oxoSnapshootCommand;
     private final DeleteFeatureOptionCommand deleteFeatureOptionCommand;
     private final OxoAddCommand oxoAddCommand;
@@ -42,11 +43,18 @@ public class OxoController {
 
     private final OxoInfoQuery oxoInfoQuery;
 
+    private final OxoFeatureOptionQuery oxoFeatureOptionQuery;
+
+
+    private final OxoQueryGroupQuery oxoQueryGroupQuery;
+
+
     /**
      * 根据车型查询快照版本
      * @param cmd
      * @return
      */
+    @NeedAuthorization
     @NotLogResult
     @PostMapping("/queryVersion")
     public ResultInfo<List<String>> queryVersion(@Valid @RequestBody OxoBaseCmd cmd) {
@@ -58,6 +66,8 @@ public class OxoController {
      * @param cmd
      * @return
      */
+    @NeedAuthorization
+    @NotLogResult
     @PostMapping("/queryList")
     public ResultInfo<OxoListQry> queryList(@Valid @RequestBody OxoBaseCmd cmd) {
         return ResultInfo.success(oxoInfoQuery.execute(cmd));
@@ -68,6 +78,8 @@ public class OxoController {
      * @param cmd 命令
      * @return 结果
      */
+    @NeedAuthorization
+    @NotLogResult
     @PostMapping("/deleteFeatureOption")
     public ResultInfo<DeleteFeatureOptionRespDto> deleteFeatureOption(@Valid @RequestBody DeleteFeatureOptionCmd cmd) {
         return ResultInfo.success(deleteFeatureOptionCommand.execute(cmd));
@@ -78,6 +90,8 @@ public class OxoController {
      * @param cmd
      * @return
      */
+    @NeedAuthorization
+    @NotLogResult
     @PostMapping("/add")
     public ResultInfo add(@Valid @RequestBody OxoAddCmd cmd) {
         return ResultInfo.success(oxoAddCommand.execute(cmd));
@@ -87,9 +101,11 @@ public class OxoController {
      * 添加oxo 下拉code列表
      * @return
      */
+    @NeedAuthorization
+    @NotLogResult
     @PostMapping("/queryFeatureList")
     public ResultInfo<OxoAddCmd> queryFeatureList(@Valid @RequestBody OxoBaseCmd cmd) {
-        return ResultInfo.success(oxoDomainService.queryFeatureList(cmd));
+        return ResultInfo.success(oxoFeatureOptionQuery.execute(cmd));
     }
 
     /**
@@ -97,6 +113,8 @@ public class OxoController {
      * @param cmd
      * @return
      */
+    @NeedAuthorization
+    @NotLogResult
     @PostMapping("/edit")
     public ResultInfo edit(@Valid @RequestBody OxoEditInfoCmd cmd) {
         return ResultInfo.success(oxoEditCommand.execute(cmd));
@@ -106,9 +124,11 @@ public class OxoController {
      * 查询邮件group
      * @return
      */
+    @NeedAuthorization
+    @NotLogResult
     @PostMapping("/queryEmailGroup")
     public ResultInfo<List<String>> queryEmailGroup() {
-        return ResultInfo.success(oxoDomainService.queryEmailGroup());
+        return ResultInfo.success(oxoQueryGroupQuery.execute(new OxoBaseCmd()));
     }
 
     /**
@@ -116,6 +136,8 @@ public class OxoController {
      * @param cmd
      * @return
      */
+    @NeedAuthorization
+    @NotLogResult
     @PostMapping("/saveSnapshot")
     public ResultInfo saveSnapshot(@Valid @RequestBody OxoSnapshotCmd cmd) {
         oxoSnapshootCommand.saveSnapshot(cmd);
@@ -128,21 +150,13 @@ public class OxoController {
      * @param cmd 命令
      * @return 结果
      */
+    @NeedAuthorization
+    @NotLogResult
     @PostMapping("/renewSortFeatureOption")
     public ResultInfo<RenewSortFeatureOptionRespDto> renewSortFeatureOption(@Valid @RequestBody RenewSortFeatureOptionCmd cmd) {
         return ResultInfo.success(renewSortFeatureOptionCommand.execute(cmd));
     }
 
-    /**
-     * todo 排序 查询
-     * @param cmd
-     * @return
-     */
-    @PostMapping("/querySortFeatureList")
-    public ResultInfo querySortFeatureList(@Valid @RequestBody OxoSnapshotCmd cmd) {
-        //oxoDomainService.querySortFeatureList(cmd)
-        return ResultInfo.success(true);
-    }
 
 //    /**
 //     * 版本对比
@@ -169,6 +183,8 @@ public class OxoController {
      * @param compareCmd
      * @return
      */
+    @NeedAuthorization
+    @NotLogResult
     @PostMapping("/compareExport")
     public void compareExport(@Valid @RequestBody OxoCompareCmd compareCmd,HttpServletResponse response) {
         //oxoDomainService.compareExport(compareCmd,response);
@@ -179,6 +195,8 @@ public class OxoController {
      * @param oxoBaseCmd
      * @return
      */
+    @NeedAuthorization
+    @NotLogResult
     @PostMapping("/queryChangeLog")
     public ResultInfo<PageData<OxoChangeLogRespDto>> queryChangeLog(@Valid @RequestBody OxoBaseCmd oxoBaseCmd) {
         //return ResultInfo.success(oxoDomainService.queryChangeLog(oxoBaseCmd));

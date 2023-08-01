@@ -15,7 +15,6 @@ import java.util.Objects;
  */
 public class OxoInfoAssembler {
 
-
     public static OxoRowsQry assembleOxoQry(OxoFeatureOptionAggr infoDo, String group) {
         OxoRowsQry qry = new OxoRowsQry();
         qry.setCatalog(infoDo.getCatalog());
@@ -32,7 +31,6 @@ public class OxoInfoAssembler {
 
 
     public static List<OxoEditCmd> buildOxoEditCmd(List<BomsOxoOptionPackageEntity> entities, OxoFeatureOptionAggr oxoInfoDo, List<OxoHeadQry> oxoLists) {
-
 
         List<BomsOxoOptionPackageEntity> rowEntities =
                 entities.stream().filter(y -> Objects.equals(y.getFeatureOptionId(), oxoInfoDo.getId())).toList();
@@ -53,7 +51,6 @@ public class OxoInfoAssembler {
 
                     });
                 });
-
             });
         });
 
@@ -70,6 +67,4 @@ public class OxoInfoAssembler {
         return cmd;
 
     }
-
-
 }

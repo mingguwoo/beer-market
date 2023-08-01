@@ -1,6 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter;
 
-import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.BaseVehicleAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleAggr;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.common.MapStructDataConverter;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.mapping.BaseVehicleMapper;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.mapping.MapstructMapper;

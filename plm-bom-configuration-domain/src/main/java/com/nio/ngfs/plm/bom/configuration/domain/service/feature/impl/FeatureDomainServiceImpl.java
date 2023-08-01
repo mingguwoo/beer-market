@@ -1,8 +1,10 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service.feature.impl;
 
+import com.nio.bom.share.constants.CommonConstants;
 import com.nio.bom.share.enums.StatusEnum;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.LambdaUtil;
+import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.event.EventPublisher;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.FeatureFacade;
@@ -13,10 +15,13 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStat
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureStatusChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.service.feature.FeatureDomainService;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.BaseVehicleOptionsRespDto;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.GetBaseVehicleOptionsRespDto;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -132,6 +137,41 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
             throw new BusinessException(isAdd ? ConfigErrorCode.FEATURE_ADD_GROUP_IN_3DE_FIRST :
                     ConfigErrorCode.FEATURE_UPDATE_GROUP_IN_3DE_FIRST);
         }
+    }
+
+    @Override
+    public GetBaseVehicleOptionsRespDto sortBaseVehicleOptions(List<FeatureAggr> featureAggrList) {
+        GetBaseVehicleOptionsRespDto ans = new GetBaseVehicleOptionsRespDto();
+        ans.setRegionOptionCodeList(new ArrayList<>());
+        ans.setDriveHandList(new ArrayList<>());
+        ans.setSalesVersionList(new ArrayList<>());
+        featureAggrList.forEach(aggr->{
+            //根据开头两个字母进行分类,只有三种：salesVersion/driveHand/regionOptionCode
+            if (aggr.getFeatureId().getFeatureCode().substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO).equals(ConfigConstants.BASE_VEHICLE_SALES_VERSION_FEATURE.substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO))){
+                BaseVehicleOptionsRespDto option = new BaseVehicleOptionsRespDto();
+                option.setOptionCode(aggr.getFeatureId().getFeatureCode());
+                option.setDescription(aggr.getDescription());
+                option.setChineseName(aggr.getChineseName());
+                option.setEnglishName(aggr.getDisplayName());
+                ans.getSalesVersionList().add(option);
+            }
+            else if (aggr.getFeatureId().getFeatureCode().substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO).equals(ConfigConstants.BASE_VEHICLE_DRIVE_HAND_FEATURE.substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO))){
+                BaseVehicleOptionsRespDto option = new BaseVehicleOptionsRespDto();
+                option.setOptionCode(aggr.getFeatureId().getFeatureCode());
+                option.setDescription(aggr.getDescription());
+                option.setChineseName(aggr.getChineseName());
+                option.setEnglishName(aggr.getDisplayName());
+                ans.getDriveHandList().add(option);
+            }
+            else {
+                BaseVehicleOptionsRespDto option = new BaseVehicleOptionsRespDto();
+                option.setOptionCode(aggr.getFeatureId().getFeatureCode());
+                option.setDescription(aggr.getDescription());
+                option.setChineseName(aggr.getChineseName());
+                option.setEnglishName(aggr.getDisplayName());
+                ans.getRegionOptionCodeList().add(option);            }
+        });
+        return ans;
     }
 
 }

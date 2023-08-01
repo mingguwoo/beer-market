@@ -1,6 +1,5 @@
 package com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request;
 
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.Qry;
 import lombok.Data;
 
 /**

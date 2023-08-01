@@ -1,10 +1,11 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.config;
 
+import com.nio.bom.share.constants.CommonConstants;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -18,13 +19,12 @@ import java.util.concurrent.TimeUnit;
  */
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class RedisClient {
 
     private static final String LOCK_TITLE = "CONFIG_REDIS_LOCK:";
-    @Autowired
-    private StringRedisTemplate redisTemplate;
-    @Autowired
-    private RedissonClient redisClient;
+    private final StringRedisTemplate redisTemplate;
+    private final RedissonClient redisClient;
 
     /**
      * 加锁
@@ -102,7 +102,7 @@ public class RedisClient {
      * @return
      */
     public long incrBy(String key) {
-        return redisTemplate.opsForValue().increment(key, 1);
+        return redisTemplate.opsForValue().increment(key, CommonConstants.INT_ONE);
     }
 
 }

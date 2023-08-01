@@ -11,8 +11,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @Import({
         AppMybatisConfig.class,
-        AppTypeHandlerConfig.class,
-        AutoFillInterceptor.class,
+        AppTypeHandlerConfig.class
 })
 @EnableTransactionManagement
 public class AppDomainAutoConfiguration {

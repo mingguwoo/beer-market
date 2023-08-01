@@ -93,6 +93,7 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
         );
         List<Long> featureOptionIdList = LambdaUtil.map(optionAggrList, OxoFeatureOptionAggr::getId);
         List<OxoOptionPackageAggr> optionPackageAggrList = oxoOptionPackageRepository.queryByFeatureOptionIdList(featureOptionIdList);
+        // Option的打点置为-
         List<OxoOptionPackageAggr> updateOptionPackageAggrList = optionPackageAggrList.stream().filter(OxoOptionPackageAggr::deleteOptionPackage).toList();
         Map<Long, OxoFeatureOptionAggr> featureOptionMapById = LambdaUtil.toKeyMap(optionAggrList, OxoFeatureOptionAggr::getId);
         List<String> messageList = checkDeleteOptionPackage(optionPackageAggrList, featureOptionMapById);
@@ -104,15 +105,20 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
         Set<String> messageCodeSet = Sets.newHashSet();
         Map<Long, List<OxoOptionPackageAggr>> optionPackageAggrMap = LambdaUtil.groupBy(optionPackageAggrList, OxoOptionPackageAggr::getFeatureOptionId);
         optionPackageAggrMap.forEach((featureOptionId, aggrList) -> {
+            // Option的打点全为-，跳过
+            if (aggrList.stream().allMatch(OxoOptionPackageAggr::isPackageUnavailable)) {
+                return;
+            }
+            // todo: 最新Formal版本OXO判断
             OxoFeatureOptionAggr featureOptionAggr = featureOptionMapById.get(featureOptionId);
-            if (!aggrList.stream().allMatch(OxoOptionPackageAggr::isPackageUnavailable)) {
-                OxoFeatureOptionAggr parent = featureOptionAggr.getParent();
-                if (parent != null && !messageCodeSet.contains(parent.getFeatureCode())) {
-                    messageCodeSet.add(parent.getFeatureCode());
-                    messageList.add("The Options In Feature " + parent.getFeatureCode() + " Has Valid Assignment(Not \"-\")!");
-                } else {
-                    messageList.add("Option " + featureOptionAggr.getFeatureCode() + " Has Valid Assignment(Not \"-\")!");
-                }
+            OxoFeatureOptionAggr parent = featureOptionAggr.getParent();
+            if (parent != null && !messageCodeSet.contains(parent.getFeatureCode())) {
+                // 勾选Feature的提示
+                messageCodeSet.add(parent.getFeatureCode());
+                messageList.add("The Options In Feature " + parent.getFeatureCode() + " Has Valid Assignment(Not \"-\")!");
+            } else {
+                // 勾选Option的提示
+                messageList.add("Option " + featureOptionAggr.getFeatureCode() + " Has Valid Assignment(Not \"-\")!");
             }
         });
         return messageList;

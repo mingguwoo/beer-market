@@ -15,8 +15,8 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("boms_basic_vehicle")
-public class BomsBasicVehicleEntity extends BaseEntity{
+@TableName("boms_base_vehicle")
+public class BomsBaseVehicleEntity extends BaseEntity{
 
     private String baseVehicleId;
 

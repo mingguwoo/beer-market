@@ -1,6 +1,5 @@
 package com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle;
 
-import com.nio.bom.share.constants.CommonConstants;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.BaseVehicleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.BaseVehicleFactory;

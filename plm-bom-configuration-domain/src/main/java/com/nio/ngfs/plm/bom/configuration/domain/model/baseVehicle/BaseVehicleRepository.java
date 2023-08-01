@@ -44,4 +44,16 @@ public interface BaseVehicleRepository extends Repository<BaseVehicleAggr,String
      * @param id
      */
     void removeById(Long id);
+
+    /**
+     * 根据 model和modelyear去查找
+     *
+     */
+    List<BaseVehicleAggr> queryByModelCodeAndModelYear(String modelCode, String modelYear);
+
+    /**
+     * 批量存储
+     *
+     */
+    void batchSave(List<BaseVehicleAggr>baseVehicleList);
 }

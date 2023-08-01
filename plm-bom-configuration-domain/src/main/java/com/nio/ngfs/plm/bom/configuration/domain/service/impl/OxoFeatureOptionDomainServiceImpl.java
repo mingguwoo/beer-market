@@ -8,6 +8,7 @@ import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.service.OxoFeatureOptionDomainService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,8 @@ import java.util.stream.Collectors;
 public class OxoFeatureOptionDomainServiceImpl implements OxoFeatureOptionDomainService {
 
     private final OxoFeatureOptionRepository oxoFeatureOptionRepository;
+
+    private final OxoOptionPackageRepository oxoOptionPackageRepository;
 
     @Override
     public void renewSortFeatureOption(List<OxoFeatureOptionAggr> oxoFeatureOptionAggrList, String targetFeatureCode, List<String> moveFeatureCodeList) {
@@ -63,9 +66,47 @@ public class OxoFeatureOptionDomainServiceImpl implements OxoFeatureOptionDomain
     }
 
     @Override
+    public void checkFeatureOptionDelete(List<OxoFeatureOptionAggr> featureOptionAggrList) {
+        featureOptionAggrList.forEach(featureOptionAggr -> {
+            if (!featureOptionAggr.canDelete()) {
+                throw new BusinessException(ConfigErrorCode.OXO_FEATURE_OPTION_CAN_NOT_DELETE);
+            }
+        });
+    }
+
+    @Override
     public List<OxoOptionPackageAggr> filter(List<OxoOptionPackageAggr> points, List<OxoFeatureOptionAggr> driveHandRegionSalesVersionRows) {
         List<Long> repeatRows = driveHandRegionSalesVersionRows.stream().map(row-> row.getId()).collect(Collectors.toList());
         return points.stream().filter(point-> !repeatRows.contains(point.getFeatureOptionId())).toList();
+    }
+
+    @Override
+    public List<String> checkOxoBasicVehicleOptions(String modelCode) {
+
+        List<OxoFeatureOptionAggr> oxoFeatureOptionAggrs=
+                oxoFeatureOptionRepository.queryFeatureListsByModelAndSortDelete(modelCode);
+
+        if(CollectionUtils.isEmpty(oxoFeatureOptionAggrs)){
+            return Lists.newArrayList();
+        }
+
+        //行信息
+        List<Long> rowIds =oxoFeatureOptionAggrs.stream().map(OxoFeatureOptionAggr::getId).distinct().toList();
+
+       // 获取打点信息
+        List<OxoOptionPackageAggr> optionPackages = oxoOptionPackageRepository.queryByBaseVehicleIds(rowIds);
+
+
+
+        optionPackages.forEach(x->{
+
+
+        });
+
+
+
+
+        return null;
     }
 
 }

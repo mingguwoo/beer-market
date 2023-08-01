@@ -32,6 +32,11 @@ public class OxoOptionPackageRepositoryImpl implements OxoOptionPackageRepositor
     }
 
     @Override
+    public void batchSave(List<OxoOptionPackageAggr> aggrList) {
+        bomsOxoOptionPackageDao.saveBatch(oxoOptionPackageConverter.convertDoListToEntityList(aggrList));
+    }
+
+    @Override
     public void insertOxoOptionPackages(List<OxoOptionPackageAggr> oxoPackages) {
         bomsOxoOptionPackageDao.insertOxoOptionPackages(oxoPackages);
     }
@@ -42,7 +47,17 @@ public class OxoOptionPackageRepositoryImpl implements OxoOptionPackageRepositor
     }
 
     @Override
+    public List<OxoOptionPackageAggr> queryByFeatureOptionIdList(List<Long> featureOptionIdList) {
+        return oxoOptionPackageConverter.convertEntityListToDoList(bomsOxoOptionPackageDao.queryByFeatureOptionIdList(featureOptionIdList));
+    }
+
+    @Override
     public void inserOxoOptionPackagesByOxoOptionPackages(List<OxoOptionPackageAggr> oxoOptionPackageAggrs) {
         bomsOxoOptionPackageDao.saveBatch(oxoOptionPackageConverter.convertDoListToEntityList(oxoOptionPackageAggrs));
+    }
+
+    @Override
+    public List<OxoOptionPackageAggr> queryByBaseVehicleIds(List<Long> rowIds) {
+        return  oxoOptionPackageConverter.convertEntityListToDoList(bomsOxoOptionPackageDao.queryOxoOptionPackageByRowIds(rowIds));
     }
 }

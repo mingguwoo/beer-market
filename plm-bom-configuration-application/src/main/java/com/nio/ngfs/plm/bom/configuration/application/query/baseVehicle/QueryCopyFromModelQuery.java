@@ -1,11 +1,10 @@
 package com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle;
 
 import com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.common.BaseVehicleQueryUtil;
-import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsBasicVehicleDao;
-import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsBasicVehicleEntity;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsBaseVehicleDao;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsBaseVehicleEntity;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.QueryCopyFromModelsQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.BaseVehicleRespDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.QueryCopyFromModelRespDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
@@ -21,12 +20,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class QueryCopyFromModelQuery {
 
-    private final BomsBasicVehicleDao bomsBasicVehicleDao;
+    private final BomsBaseVehicleDao bomsBaseVehicleDao;
     private final BaseVehicleQueryUtil baseVehicleQueryUtil;
 
-    public QueryCopyFromModelRespDto execute (QueryCopyFromModelsQry qry){
-        QueryCopyFromModelRespDto res = new QueryCopyFromModelRespDto();
-        List<BomsBasicVehicleEntity> entityList =  bomsBasicVehicleDao.queryCopyFromModel(qry.getModelCode());
+    public List<BaseVehicleRespDto> execute (QueryCopyFromModelsQry qry){
+        List<BomsBaseVehicleEntity> entityList =  bomsBaseVehicleDao.queryCopyFromModel(qry.getModelCode());
         //转换为Dto
         List<BaseVehicleRespDto> dtoList = entityList.stream().map(entity->{
             BaseVehicleRespDto dto = new BaseVehicleRespDto();
@@ -34,7 +32,6 @@ public class QueryCopyFromModelQuery {
             return dto;
         }).collect(Collectors.toList());
         //补全中英文信息并返回结果
-        res.setBaseVehicleList(baseVehicleQueryUtil.completeBaseVehicle(dtoList));
-        return res;
+        return baseVehicleQueryUtil.completeBaseVehicle(dtoList);
     }
 }

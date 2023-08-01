@@ -1,7 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.mapping;
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.BaseVehicleAggr;
-import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsBasicVehicleEntity;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsBaseVehicleEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -11,7 +11,7 @@ import org.mapstruct.factory.Mappers;
  */
 
 @Mapper
-public interface BaseVehicleMapper extends MapstructMapper<BaseVehicleAggr, BomsBasicVehicleEntity> {
+public interface BaseVehicleMapper extends MapstructMapper<BaseVehicleAggr, BomsBaseVehicleEntity> {
 
     BaseVehicleMapper INSTANCE = Mappers.getMapper(BaseVehicleMapper.class);
 

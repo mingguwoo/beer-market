@@ -2,15 +2,13 @@ package com.nio.ngfs.plm.bom.configuration.api.controller;
 
 import com.nio.bom.share.annotation.NotLogResult;
 import com.nio.bom.share.result.ResultInfo;
-import com.nio.ngfs.plm.bom.configuration.application.command.oxo.OxoAddCommand;
-import com.nio.ngfs.plm.bom.configuration.application.command.oxo.OxoDeleteCommand;
-import com.nio.ngfs.plm.bom.configuration.application.command.oxo.OxoEditCommand;
-import com.nio.ngfs.plm.bom.configuration.application.command.oxo.OxoSnapshootCommand;
+import com.nio.ngfs.plm.bom.configuration.application.command.oxo.*;
 import com.nio.ngfs.plm.bom.configuration.application.query.oxo.OxoInfoQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.oxo.OxoVersionQuery;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.PageData;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.*;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.DeleteFeatureOptionRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoChangeLogRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.RenewSortFeatureOptionRespDto;
@@ -36,10 +34,10 @@ public class OxoController {
 
     private final OxoDomainService oxoDomainService;
     private final OxoSnapshootCommand oxoSnapshootCommand;
-    private final OxoDeleteCommand oxoDeleteCommand;
+    private final DeleteFeatureOptionCommand deleteFeatureOptionCommand;
     private final OxoAddCommand oxoAddCommand;
     private final OxoEditCommand oxoEditCommand;
-
+    private final RenewSortFeatureOptionCommand renewSortFeatureOptionCommand;
     private final OxoVersionQuery oxoVersionQuery;
 
     private final OxoInfoQuery oxoInfoQuery;
@@ -66,13 +64,13 @@ public class OxoController {
     }
 
     /**
-     * 批量删除oxo
-     * @param cmd
-     * @return
+     * 删除Feature/Option行
+     * @param cmd 命令
+     * @return 结果
      */
-    @PostMapping("/delete")
-    public ResultInfo delete(@Valid @RequestBody OxoDeleteCmd cmd) {
-        return  ResultInfo.success(oxoDeleteCommand.execute(cmd));
+    @PostMapping("/deleteFeatureOption")
+    public ResultInfo<DeleteFeatureOptionRespDto> deleteFeatureOption(@Valid @RequestBody DeleteFeatureOptionCmd cmd) {
+        return ResultInfo.success(deleteFeatureOptionCommand.execute(cmd));
     }
 
     /**
@@ -101,7 +99,7 @@ public class OxoController {
      */
     @PostMapping("/edit")
     public ResultInfo edit(@Valid @RequestBody OxoEditInfoCmd cmd) {
-        return ResultInfo.success(     oxoEditCommand.execute(cmd));
+        return ResultInfo.success(oxoEditCommand.execute(cmd));
     }
 
     /**
@@ -132,7 +130,7 @@ public class OxoController {
      */
     @PostMapping("/renewSortFeatureOption")
     public ResultInfo<RenewSortFeatureOptionRespDto> renewSortFeatureOption(@Valid @RequestBody RenewSortFeatureOptionCmd cmd) {
-        return ResultInfo.success(null);
+        return ResultInfo.success(renewSortFeatureOptionCommand.execute(cmd));
     }
 
     /**

@@ -2,11 +2,12 @@ package com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage;
 
 
 import com.google.common.collect.Lists;
-import com.nio.bom.share.constants.CommonConstants;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.domain.model.baseVehicle.BaseVehicleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoEditCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoHeadQry;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -17,12 +18,11 @@ import java.util.List;
 public class OxoOptionPackageFactory {
 
 
-
-    public  static List<OxoOptionPackageAggr> buildOptionPackages(List<OxoHeadQry> oxoHeads,
-                                                          List<Long> rowIds,
-                                                          String packageCode,
-                                                          String brandName,
-                                                          String userName) {
+    public static List<OxoOptionPackageAggr> buildOptionPackages(List<OxoHeadQry> oxoHeads,
+                                                                 List<Long> rowIds,
+                                                                 String packageCode,
+                                                                 String brandName,
+                                                                 String userName) {
 
 
         List<Long> headIds = Lists.newArrayList();
@@ -36,10 +36,10 @@ public class OxoOptionPackageFactory {
             });
         });
 
-        List<OxoOptionPackageAggr> optionPackageAggrs=Lists.newArrayList();
+        List<OxoOptionPackageAggr> optionPackageAggrs = Lists.newArrayList();
         headIds.forEach(headId -> {
             rowIds.forEach(rowId -> {
-                OxoOptionPackageAggr oxoOptionPackageAggr=new OxoOptionPackageAggr();
+                OxoOptionPackageAggr oxoOptionPackageAggr = new OxoOptionPackageAggr();
                 oxoOptionPackageAggr.setPackageCode(packageCode);
                 oxoOptionPackageAggr.setFeatureOptionId(rowId);
                 oxoOptionPackageAggr.setBaseVehicleId(headId);
@@ -66,4 +66,26 @@ public class OxoOptionPackageFactory {
         }).toList();
         return resList;
     }
+
+
+    public static List<OxoOptionPackageAggr> createOxoOptionPackageAggrList(List<OxoEditCmd> cmdLists, String userName) {
+
+        String brand = ConfigConstants.brandName.get();
+        return cmdLists.stream().filter(x -> StringUtils.isNotBlank(x.getPackageCode())).map(x -> {
+
+            OxoOptionPackageAggr packageAggr = new OxoOptionPackageAggr();
+            packageAggr.setFeatureOptionId(x.getRowId());
+            packageAggr.setBaseVehicleId(x.getHeadId());
+            packageAggr.setPackageCode(x.getPackageCode());
+            packageAggr.setBrand(brand);
+            packageAggr.setCreateUser(userName);
+            packageAggr.setDescription(x.getDescription());
+            packageAggr.setUpdateUser(userName);
+            return packageAggr;
+
+        }).toList();
+
+
+    }
+
 }

@@ -8,6 +8,8 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoO
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsOxoOptionPackageEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsOxoOptionPackageMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.compress.utils.Lists;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -35,6 +37,16 @@ public class BomsOxoOptionPackageDaoImpl extends AbstractDao<BomsOxoOptionPackag
     @Override
     public void insertOxoOptionPackages(List<OxoOptionPackageAggr> oxoPackages) {
         getBaseMapper().insertOxoOptionPackages(BeanConvertUtils.convertTo(oxoPackages,BomsOxoOptionPackageEntity::new));
+    }
+
+    @Override
+    public List<BomsOxoOptionPackageEntity> queryByFeatureOptionIdList(List<Long> featureOptionIdList) {
+        if (CollectionUtils.isEmpty(featureOptionIdList)) {
+            return Lists.newArrayList();
+        }
+        LambdaQueryWrapper<BomsOxoOptionPackageEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.in(BomsOxoOptionPackageEntity::getFeatureOptionId, featureOptionIdList);
+        return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 
     @Override

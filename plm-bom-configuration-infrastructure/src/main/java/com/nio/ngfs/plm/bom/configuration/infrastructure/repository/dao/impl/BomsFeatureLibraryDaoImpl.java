@@ -90,6 +90,9 @@ public class BomsFeatureLibraryDaoImpl extends AbstractDao<BomsFeatureLibraryMap
 
     @Override
     public List<BomsFeatureLibraryEntity> queryByFeatureCodes(List<String> featureCodes) {
+        if (CollectionUtils.isEmpty(featureCodes)) {
+            return Lists.newArrayList();
+        }
         LambdaQueryWrapper<BomsFeatureLibraryEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.in(BomsFeatureLibraryEntity::getFeatureCode, featureCodes);
         lambdaQueryWrapper.eq(BomsFeatureLibraryEntity::getStatus, StatusEnum.ACTIVE.getStatus());
@@ -114,16 +117,21 @@ public class BomsFeatureLibraryDaoImpl extends AbstractDao<BomsFeatureLibraryMap
 
     @Override
     public List<BomsFeatureLibraryEntity> findFeatureLibraryNotFeatureCodes(List<String> featureCodes) {
+        if (CollectionUtils.isEmpty(featureCodes)) {
+            return Lists.newArrayList();
+        }
         LambdaQueryWrapper<BomsFeatureLibraryEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.notIn(BomsFeatureLibraryEntity::getFeatureCode, featureCodes);
-        lambdaQueryWrapper.eq(BomsFeatureLibraryEntity::getType,FeatureTypeEnum.OPTION.getType());
+        lambdaQueryWrapper.eq(BomsFeatureLibraryEntity::getType, FeatureTypeEnum.OPTION.getType());
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 
 
-
     @Override
     public List<BomsFeatureLibraryEntity> queryByFeatureOptionCodeList(List<String> featureOptionCodeList) {
+        if (CollectionUtils.isEmpty(featureOptionCodeList)) {
+            return Lists.newArrayList();
+        }
         LambdaQueryWrapper<BomsFeatureLibraryEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.in(BomsFeatureLibraryEntity::getFeatureCode, featureOptionCodeList);
         lambdaQueryWrapper.in(BomsFeatureLibraryEntity::getType, FEATURE_OPTION_TYPE_LIST);

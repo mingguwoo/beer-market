@@ -151,6 +151,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
      */
     public void editGroup(EditGroupCmd cmd) {
         String newGroupCode = cmd.getGroupCode().trim();
+        checkCanEdit();
         checkType(FeatureTypeEnum.GROUP);
         checkGroupCode(newGroupCode);
         // 属性更新
@@ -213,6 +214,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
      * 编辑Feature
      */
     public void editFeature(EditFeatureCmd cmd) {
+        checkCanEdit();
         checkType(FeatureTypeEnum.FEATURE);
         // 参数校验
         checkCatalog(cmd.getCatalog());
@@ -258,6 +260,11 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
      * 新增Option
      */
     public void addOption() {
+        // Feature状态校验
+        if (!parent.isActive()) {
+            throw new BusinessException(ConfigErrorCode.FEATURE_FEATURE_IS_NOT_ACTIVE);
+        }
+        // 字段校验
         checkType(FeatureTypeEnum.OPTION);
         checkFeatureAndOptionCode();
         checkOptionCodeAndFeatureCodeTwoDigits();
@@ -273,11 +280,12 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
      * 编辑Option
      */
     public void editOption(EditOptionCmd cmd) {
-        //参数校验
+        checkCanEdit();
         checkType(FeatureTypeEnum.OPTION);
+        // 参数校验
         checkRequestor(cmd.getRequestor());
         checkOptionChineseNameUnique(cmd.getChineseName());
-        //字段赋值
+        // 字段赋值
         setDisplayName(cmd.getDisplayName());
         setChineseName(cmd.getChineseName());
         setDescription(cmd.getDescription());
@@ -302,6 +310,16 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
         setStatus(newStatusEnum.getStatus());
         setUpdateUser(cmd.getUpdateUser());
         return FeatureStatusChangeTypeEnum.CHANGED;
+    }
+
+    /**
+     * 检查是否可编辑
+     */
+    private void checkCanEdit() {
+        // 状态为Active才可编辑
+        if (!isActive()) {
+            throw new BusinessException(ConfigErrorCode.FEATURE_STATUS_NOT_ACTIVE_CAN_NOT_EDIT);
+        }
     }
 
     /**

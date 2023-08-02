@@ -53,5 +53,5 @@ public interface OxoOptionPackageRepository extends Repository<OxoOptionPackageA
      */
     List<OxoOptionPackageAggr> queryByBaseVehicleIds(List<Long> rowIds);
 
-
+    void saveOrUpdatebatch(List<OxoOptionPackageAggr> oxoOptionPackageAggrs);
 }

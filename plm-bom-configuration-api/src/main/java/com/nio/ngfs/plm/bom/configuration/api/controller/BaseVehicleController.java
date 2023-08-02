@@ -36,7 +36,6 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
     private final ChangeBaseVehicleStatusCommand changeBaseVehicleStatusCommand;
     private final GetBaseVehicleOptionsQuery getbaseVehicleOptionsQuery;
     private final QueryCopyFromModelQuery queryCopyFromModelQuery;
-    private final ChangeBaseVehicleMaturityCommand changeBaseVehicleMaturityCommand;
     private final ExportBaseVehicleQuery exportBaseVehicleQuery;
 
 
@@ -94,13 +93,6 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
     @NotLogResult
     public ResultInfo<List<BaseVehicleRespDto>> queryCopyFromModel(@Valid @RequestBody QueryCopyFromModelsQry qry) {
         return ResultInfo.success(queryCopyFromModelQuery.execute(qry));
-    }
-
-    @Override
-    @NeedAuthorization
-    @NotLogResult
-    public ResultInfo<ChangeBaseVehicleMaturityRespDto> changeBaseVehicleMaturity(@Valid @RequestBody ChangeBaseVehicleMaturityCmd cmd) {
-        return ResultInfo.success(changeBaseVehicleMaturityCommand.execute(cmd));
     }
 
     @NeedAuthorization

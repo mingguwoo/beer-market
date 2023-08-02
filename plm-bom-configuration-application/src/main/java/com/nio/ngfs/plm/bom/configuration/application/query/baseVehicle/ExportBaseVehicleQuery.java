@@ -1,9 +1,9 @@
 package com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle;
 
 import com.google.common.collect.Lists;
+import com.nio.bom.share.constants.CommonConstants;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.DateUtils;
-import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.ExportBaseVehicleQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.BaseVehicleRespDto;
@@ -45,8 +45,8 @@ public class ExportBaseVehicleQuery {
              OutputStream output = response.getOutputStream()) {
             String fileName = "Base Vehicle-" + DateUtils.dateTimeNow("yyyyMMddHHmm") + ".xlsx";
             response.reset();
-            response.setHeader(ConfigConstants.HEADER_CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"");
-            response.setHeader(ConfigConstants.HEADER_ACCESS_CONTROL_EXPOSE_HEADERS, ConfigConstants.HEADER_CONTENT_DISPOSITION);
+            response.setHeader(CommonConstants.HEADER_CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"");
+            response.setHeader(CommonConstants.HEADER_ACCESS_CONTROL_EXPOSE_HEADERS, CommonConstants.HEADER_CONTENT_DISPOSITION);
             response.setContentType("application/octet-stream;charset=UTF-8");
             exportBaseVehicle(qry, baseVehicleRespDtoList, workbook);
             workbook.write(output);

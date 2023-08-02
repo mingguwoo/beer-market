@@ -8,8 +8,6 @@ package com.nio.ngfs.plm.bom.configuration.common.constants;
  */
 public interface ConfigConstants {
 
-    String NIO = "NIO";
-
     ThreadLocal<String> brandName = new ThreadLocal<>();
     String GROUP_PARENT_FEATURE_CODE = "GROUP_ROOT";
     String SINGLE = "Single";
@@ -50,8 +48,5 @@ public interface ConfigConstants {
     String BASE_VEHICLE_DRIVE_HAND_FEATURE = "AN00";
 
     String BASE_VEHICLE_SALES_VERSION_FEATURE = "19AA";
-
-    String HEADER_ACCESS_CONTROL_EXPOSE_HEADERS = "Access-Control-Expose-Headers";
-    String HEADER_CONTENT_DISPOSITION = "Content-Disposition";
 
 }

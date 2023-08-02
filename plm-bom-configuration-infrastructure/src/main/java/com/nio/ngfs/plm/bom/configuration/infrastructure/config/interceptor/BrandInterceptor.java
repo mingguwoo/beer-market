@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.config.interceptor;
 
+import com.nio.bom.share.constants.CommonConstants;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -23,7 +24,7 @@ public class BrandInterceptor implements HandlerInterceptor {
 
         String brand = request.getHeader("lesseecode");
         if(StringUtils.isBlank(brand)){
-            brand = ConfigConstants.NIO;
+            brand = CommonConstants.NIO;
         }
         ConfigConstants.brandName.set(brand);
         return true;

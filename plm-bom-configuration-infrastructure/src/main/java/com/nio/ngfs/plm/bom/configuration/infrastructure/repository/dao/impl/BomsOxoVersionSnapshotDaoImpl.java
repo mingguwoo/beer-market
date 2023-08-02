@@ -3,6 +3,7 @@ package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.nio.ngfs.common.model.page.WherePageRequest;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotAggr;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoVersionSnapshotDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsOxoVersionSnapshotEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsOxoVersionSnapshotMapper;
@@ -33,5 +34,10 @@ public class BomsOxoVersionSnapshotDaoImpl extends AbstractDao<BomsOxoVersionSna
         LambdaQueryWrapper<BomsOxoVersionSnapshotEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(BomsOxoVersionSnapshotEntity::getModelCode,modelCode);
         return getBaseMapper().selectList(lambdaQueryWrapper);
+    }
+
+    @Override
+    public void insertBomsOxoVersionSnapshot(BomsOxoVersionSnapshotEntity entity) {
+        getBaseMapper().insert(entity);
     }
 }

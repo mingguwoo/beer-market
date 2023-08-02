@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.infrastructure.config;
+package com.nio.ngfs.plm.bom.configuration.common.lock;
 
 import com.nio.bom.share.constants.CommonConstants;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +36,7 @@ public class RedisClient {
         //声明key对象
         String key = LOCK_TITLE + lockName;
         //获取锁对象
-        RLock lock = redisClient.getLock(key);
+        RLock lock = getRLock(key);
 
         try {
             //加锁，并且设置锁等待时间3秒
@@ -56,13 +56,17 @@ public class RedisClient {
     public void releaseLock(String key) {
         try {
             //获取锁对象
-            RLock lock = redisClient.getLock(key);
+            RLock lock = getRLock(key);
             if (Objects.nonNull(lock)) {
                 lock.unlock();
             }
         }catch (Exception e){
             log.info("releaseLock failed,key:{},error:{}",key, ExceptionUtils.getStackTrace(e));
         }
+    }
+
+    public RLock getRLock(String key) {
+        return redisClient.getLock(key);
     }
 
 

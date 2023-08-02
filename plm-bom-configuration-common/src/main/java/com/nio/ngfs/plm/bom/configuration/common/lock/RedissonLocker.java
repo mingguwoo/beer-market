@@ -2,12 +2,11 @@ package com.nio.ngfs.plm.bom.configuration.common.lock;
 
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
-import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
@@ -17,15 +16,15 @@ import java.util.function.Supplier;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class RedissonLocker {
 
     private static final long MAX_LOCK_WAIT_SECOND = 5;
 
-    @Resource
-    private RedissonClient redissonClient;
+    private final RedisClient redisClient;
 
     public <T> T executeWithLock(String key, Supplier<T> task) {
-        RLock lock = redissonClient.getLock(key);
+        RLock lock = redisClient.getRLock(key);
         try {
             if (lock.tryLock(MAX_LOCK_WAIT_SECOND, TimeUnit.SECONDS)) {
                 return task.get();

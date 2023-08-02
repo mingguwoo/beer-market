@@ -1,7 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.generator;
 
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
-import com.nio.ngfs.plm.bom.configuration.infrastructure.config.RedisClient;
+import com.nio.ngfs.plm.bom.configuration.common.lock.RedisClient;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsBaseVehicleDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsBaseVehicleEntity;
 import lombok.RequiredArgsConstructor;

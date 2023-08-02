@@ -2,6 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.domain.model.featurechangelog;
 
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureGroupCodeChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureStatusChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.GroupCodeChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.model.featurechangelog.enums.FeatureChangeLogTypeEnum;
@@ -25,6 +26,18 @@ public class FeatureChangeLogFactory {
         changeLogAggr.setType(FeatureChangeLogTypeEnum.AUTO.name());
         changeLogAggr.setCreateUser(event.getGroup().getUpdateUser());
         changeLogAggr.setUpdateUser(event.getGroup().getUpdateUser());
+        return changeLogAggr;
+    }
+
+    public static FeatureChangeLogAggr create(Long featureId, FeatureGroupCodeChangeEvent event) {
+        FeatureChangeLogAggr changeLogAggr = new FeatureChangeLogAggr();
+        changeLogAggr.setFeatureId(featureId);
+        changeLogAggr.setChangeAttribute(ConfigConstants.FEATURE_ATTRIBUTE_GROUP);
+        changeLogAggr.setOldValue(event.getOldGroupCode());
+        changeLogAggr.setNewValue(event.getFeature().getParentFeatureCode());
+        changeLogAggr.setType(FeatureChangeLogTypeEnum.AUTO.name());
+        changeLogAggr.setCreateUser(event.getFeature().getUpdateUser());
+        changeLogAggr.setUpdateUser(event.getFeature().getUpdateUser());
         return changeLogAggr;
     }
 

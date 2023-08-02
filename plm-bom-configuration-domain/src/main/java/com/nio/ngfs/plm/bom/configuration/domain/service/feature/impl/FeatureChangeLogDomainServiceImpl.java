@@ -28,7 +28,6 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public class FeatureChangeLogDomainServiceImpl implements FeatureChangeLogDomainService {
 
-    @SuppressWarnings("unchecked")
     private static final List<Pair<String, Function<FeatureAggr, String>>> ATTRIBUTE_VALUE_FUNCTION_PAIR_LIST = Lists.newArrayList(
             Pair.of(ConfigConstants.FEATURE_ATTRIBUTE_FEATURE_CODE, i -> i.getFeatureId().getFeatureCode()),
             Pair.of(ConfigConstants.FEATURE_ATTRIBUTE_GROUP, FeatureAggr::getParentFeatureCode),

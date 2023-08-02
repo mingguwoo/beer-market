@@ -98,6 +98,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
      */
     private String status;
 
+    // -------------------- 以下为业务字段 --------------------
     /**
      * 父节点
      */

@@ -13,6 +13,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureId;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureGroupCodeChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureStatusChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.service.feature.FeatureDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.BaseVehicleOptionsRespDto;
@@ -120,7 +121,8 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
     @Override
     public void changeFeatureGroupCode(FeatureAggr featureAggr, String newGroupCode) {
         newGroupCode = newGroupCode.trim();
-        if (Objects.equals(featureAggr.getParentFeatureCode(), newGroupCode)) {
+        String oldGroupCode = featureAggr.getParentFeatureCode();
+        if (Objects.equals(oldGroupCode, newGroupCode)) {
             // Group Code未变更
             return;
         }
@@ -129,6 +131,7 @@ public class FeatureDomainServiceImpl implements FeatureDomainService {
             throw new BusinessException(ConfigErrorCode.FEATURE_GROUP_IS_NOT_ACTIVE);
         }
         featureAggr.setParentFeatureCode(newGroupCode);
+        eventPublisher.publish(new FeatureGroupCodeChangeEvent(featureAggr, oldGroupCode));
     }
 
     @Override

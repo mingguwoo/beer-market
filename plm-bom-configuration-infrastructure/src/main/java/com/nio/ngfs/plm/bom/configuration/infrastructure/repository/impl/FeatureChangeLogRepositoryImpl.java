@@ -6,6 +6,7 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.Fe
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsFeatureChangeLogDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.common.DaoSupport;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -33,6 +34,9 @@ public class FeatureChangeLogRepositoryImpl implements FeatureChangeLogRepositor
 
     @Override
     public void batchSave(List<FeatureChangeLogAggr> changeLogAggrList) {
+        if (CollectionUtils.isEmpty(changeLogAggrList)) {
+            return;
+        }
         bomsFeatureChangeLogDao.saveBatch(featureChangeLogConverter.convertDoListToEntityList(changeLogAggrList));
     }
 

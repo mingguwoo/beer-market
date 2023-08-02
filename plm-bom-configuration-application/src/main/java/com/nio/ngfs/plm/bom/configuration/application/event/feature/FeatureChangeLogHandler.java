@@ -5,6 +5,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureAttributeChangeEvent;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureGroupCodeChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureStatusChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.GroupCodeChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.model.featurechangelog.FeatureChangeLogAggr;
@@ -54,6 +55,15 @@ public class FeatureChangeLogHandler {
         List<String> featureCodeList = LambdaUtil.map(event.getGroup().getChildrenList(), i -> i.getFeatureId().getFeatureCode());
         List<FeatureAggr> optionList = featureRepository.queryByParentFeatureCodeListAndType(featureCodeList, FeatureTypeEnum.OPTION.getType());
         List<FeatureChangeLogAggr> changeLogAggrList = LambdaUtil.map(optionList, option ->
+                FeatureChangeLogFactory.create(option.getId(), event)
+        );
+        featureChangeLogRepository.batchSave(changeLogAggrList);
+    }
+
+    @EventListener
+    @Async("commonThreadPool")
+    public void onFeatureGroupCodeChangeEvent(@NotNull FeatureGroupCodeChangeEvent event) {
+        List<FeatureChangeLogAggr> changeLogAggrList = LambdaUtil.map(event.getFeature().getChildrenList(), option ->
                 FeatureChangeLogFactory.create(option.getId(), event)
         );
         featureChangeLogRepository.batchSave(changeLogAggrList);

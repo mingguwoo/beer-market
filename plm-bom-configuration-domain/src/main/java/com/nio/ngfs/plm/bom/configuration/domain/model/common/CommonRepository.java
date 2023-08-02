@@ -10,7 +10,10 @@ import java.util.Map;
 public interface CommonRepository {
 
 
-    Map queryMatrixRuleValuesByAbscissaOrOrdinate(MatrixRuleQueryDo param);
+    public Map queryMatrixRuleValuesByAbscissaOrOrdinate(MatrixRuleQueryDo param);
 
+
+
+    void sendEmail(EmailParamDo emailParamDo);
 
 }

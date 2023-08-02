@@ -1,7 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot;
 
 import com.nio.bom.share.domain.model.AggrRoot;
-import com.nio.ngfs.plm.bom.configuration.common.util.GZIPUtils;
+import com.nio.bom.share.utils.GZIPUtils;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
 import lombok.AllArgsConstructor;
 import lombok.Data;

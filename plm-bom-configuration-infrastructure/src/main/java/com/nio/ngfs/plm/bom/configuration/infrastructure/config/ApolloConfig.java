@@ -24,7 +24,7 @@ public class ApolloConfig implements ApplicationContextAware {
 
     private ApplicationContext applicationContext;
 
-    @ApolloConfigChangeListener(interestedKeyPrefixes = {"warn.log.","common.pool.","dboption.pool.","redisson.cluster."})
+    @ApolloConfigChangeListener(interestedKeyPrefixes = {"warn.log.","redisson.cluster."})
     public void onChange(ConfigChangeEvent configChangeEvent){
         log.info("start refresh properties ");
         this.applicationContext.publishEvent(new EnvironmentChangeEvent(configChangeEvent.changedKeys()));

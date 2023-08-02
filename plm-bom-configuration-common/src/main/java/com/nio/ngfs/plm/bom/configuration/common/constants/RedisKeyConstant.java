@@ -27,12 +27,14 @@ public interface RedisKeyConstant {
     String MODEL_OXO_FEATURE_EDIT_PREFIX = CONFIGURATION_PREFIX + "modelCode:oxo:feature:edit:lock:";
 
 
-
     /**
      * Base Vehicle的流水号
      */
     String BASE_VEHICLE_ID_KEY = CONFIGURATION_PREFIX + "baseVehicle:id";
 
     String OXO_FEATURE_OPTION_DELETE_LOCK_KEY_PREFIX = CONFIGURATION_PREFIX + "oxo:featureOption:delete:lock:";
+
+
+    String OXO_SAVE_SNAPSHOT_LOCK_KEY_PREFIX = CONFIGURATION_PREFIX + "oxo:save:snapshot:lock:";
 
 }

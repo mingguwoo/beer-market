@@ -4,10 +4,7 @@ import com.nio.bom.share.annotation.NeedAuthorization;
 import com.nio.bom.share.annotation.NotLogResult;
 import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.*;
-import com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.CheckBaseVehicleStatusQuery;
-import com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.GetBaseVehicleOptionsQuery;
-import com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.QueryBaseVehicleQuery;
-import com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.QueryCopyFromModelQuery;
+import com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmBaseVehicleClient;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.*;
@@ -40,6 +37,7 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
     private final GetBaseVehicleOptionsQuery getbaseVehicleOptionsQuery;
     private final QueryCopyFromModelQuery queryCopyFromModelQuery;
     private final ChangeBaseVehicleMaturityCommand changeBaseVehicleMaturityCommand;
+    private final ExportBaseVehicleQuery exportBaseVehicleQuery;
 
 
     @Override
@@ -107,7 +105,8 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
 
     @NeedAuthorization
     @NotLogResult
-    @PostMapping("/baseVerhicle/exportBaseVehicle")
-    public void exportBaseVehicle(HttpServletResponse response) {
+    @PostMapping("/baseVehicle/exportBaseVehicle")
+    public void exportBaseVehicle(@Valid @RequestBody ExportBaseVehicleQry qry, HttpServletResponse response) {
+        exportBaseVehicleQuery.execute(qry,response);
     }
 }

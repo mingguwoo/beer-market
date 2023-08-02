@@ -224,9 +224,9 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
         setDisplayName(cmd.getDisplayName());
         setChineseName(cmd.getChineseName());
         setDescription(cmd.getDescription());
-        setCatalog(cmd.getCatalog());
         setRequestor(cmd.getRequestor());
         setUpdateUser(cmd.getUpdateUser());
+        changeFeatureCatalog(cmd.getCatalog(), cmd.getUpdateUser());
     }
 
     /**
@@ -380,6 +380,27 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
         if (BrandEnum.getByName(requestor) == null) {
             throw new BusinessException(ConfigErrorCode.FEATURE_REQUESTOR_INVALID);
         }
+    }
+
+    /**
+     * 改变Feature的Catalog
+     */
+    private void changeFeatureCatalog(String newCatalog, String updateUser) {
+        String oldCatalog = getCatalog();
+        if (Objects.equals(oldCatalog, newCatalog)) {
+            return;
+        }
+        setCatalog(newCatalog);
+        childrenList.forEach(children -> changeOptionCatalog(children, newCatalog, updateUser));
+    }
+
+    /**
+     * 改变Option的Catalog
+     */
+    private void changeOptionCatalog(FeatureAggr optionAggr, String newCatalog, String updateUser) {
+        optionAggr.setCatalog(newCatalog);
+        optionAggr.setUpdateUser(updateUser);
+        optionAggr.setChildrenChanged(true);
     }
 
     /**

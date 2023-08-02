@@ -34,7 +34,7 @@ import java.util.List;
 @RequestMapping("/oxo")
 public class OxoController {
 
-    private final OxoSnapshootCommand oxoSnapshootCommand;
+    private final OxoSnapshotCommand oxoSnapshotCommand;
     private final DeleteFeatureOptionCommand deleteFeatureOptionCommand;
     private final OxoAddCommand oxoAddCommand;
     private final OxoEditCommand oxoEditCommand;
@@ -140,7 +140,7 @@ public class OxoController {
     @NotLogResult
     @PostMapping("/saveSnapshot")
     public ResultInfo saveSnapshot(@Valid @RequestBody OxoSnapshotCmd cmd) {
-        return ResultInfo.success(oxoSnapshootCommand.execute(cmd));
+        return ResultInfo.success(oxoSnapshotCommand.execute(cmd));
     }
 
     /**

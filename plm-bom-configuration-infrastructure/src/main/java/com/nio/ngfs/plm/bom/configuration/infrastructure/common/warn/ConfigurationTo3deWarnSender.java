@@ -40,9 +40,9 @@ public class ConfigurationTo3deWarnSender {
             """;
 
     @Value("${warn.3de.env:}")
-    private final String env;
+    private String env;
     @Value("${warn.3de.feature.ats:}")
-    private final String featureAts;
+    private String featureAts;
 
     private final FeishuIntegrationClient feishuIntegrationClient;
 

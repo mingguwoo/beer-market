@@ -63,14 +63,6 @@ public interface FeatureDomainService {
     void changeFeatureGroupCode(FeatureAggr featureAggr, String newGroupCode);
 
     /**
-     * 校验Group Code
-     *
-     * @param groupCode Group Code
-     * @param isAdd     是否新增
-     */
-    void checkGroupCodeExistInGroupLibrary(String groupCode, boolean isAdd);
-
-    /**
      * 将Option Code List分类成Region Option Code, Sales Version, Drive Hand三类
      */
     GetBaseVehicleOptionsRespDto sortBaseVehicleOptions(List<FeatureAggr> featureAggrList);

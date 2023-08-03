@@ -27,11 +27,6 @@ public class FeatureFacadeImpl implements FeatureFacade {
     private final ConfigurationTo3deWarnSender configurationTo3deWarnSender;
 
     @Override
-    public boolean isGroupExistedInGroupLibrary(String groupCode) {
-        return true;
-    }
-
-    @Override
     public void syncFeatureOption(FeatureOptionSyncReqDto reqDto) {
         log.info("FeatureFacade syncFeatureOption data={}", GsonUtils.toJson(reqDto));
         PlmFeatureOptionSyncDto.Feature feature = new PlmFeatureOptionSyncDto.Feature();

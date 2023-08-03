@@ -1,10 +1,12 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.facade;
 
+import com.nio.bom.share.utils.FeignInvokeUtils;
 import com.nio.bom.share.utils.GsonUtils;
 import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.FeatureFacade;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.FeatureOptionSyncReqDto;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.common.warn.ConfigurationTo3deWarnSender;
 import com.nio.ngfs.plm.bom.configuration.remote.PlmEnoviaClient;
 import com.nio.ngfs.plm.bom.configuration.remote.dto.common.PlmEnoviaResult;
 import com.nio.ngfs.plm.bom.configuration.remote.dto.feature.PlmFeatureOptionSyncDto;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Component;
 public class FeatureFacadeImpl implements FeatureFacade {
 
     private final PlmEnoviaClient plmEnoviaClient;
+    private final ConfigurationTo3deWarnSender configurationTo3deWarnSender;
 
     @Override
     public boolean isGroupExistedInGroupLibrary(String groupCode) {
@@ -58,13 +61,16 @@ public class FeatureFacadeImpl implements FeatureFacade {
         }));
         try {
             log.info("FeatureFacade syncFeatureOption request={}", GsonUtils.toJson(syncDto));
-            PlmEnoviaResult<Object> result = plmEnoviaClient.syncFeatureOption(syncDto);
+            PlmEnoviaResult<Object> result = FeignInvokeUtils.invokeWithRetry(plmEnoviaClient::syncFeatureOption, syncDto,
+                    "PlmEnoviaClient.syncFeatureOption", PlmEnoviaResult::isSuccess);
             log.info("FeatureFacade syncFeatureOption response={}", GsonUtils.toJson(result));
             if (!result.isSuccess()) {
-                log.error("FeatureFacade syncFeatureOption error msg={}", result.getMsg());
+                log.error("FeatureFacade syncFeatureOption fail msg={}", result.getMsg());
+                configurationTo3deWarnSender.sendSyncFeatureOptionWarn(syncDto, result);
             }
         } catch (Exception e) {
             log.error("FeatureFacade syncFeatureOption error", e);
+            configurationTo3deWarnSender.sendSyncFeatureOptionWarn(syncDto, e);
         }
     }
 

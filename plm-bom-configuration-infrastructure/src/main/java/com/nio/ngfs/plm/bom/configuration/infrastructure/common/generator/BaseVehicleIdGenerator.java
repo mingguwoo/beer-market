@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.infrastructure.generator;
+package com.nio.ngfs.plm.bom.configuration.infrastructure.common.generator;
 
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.common.lock.RedisClient;

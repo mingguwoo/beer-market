@@ -34,7 +34,7 @@ public class WarnLogUtils {
             return;
         }
         try {
-            SpringContextHolder.getBean(FeishuIntegrationClient.class).sendMessageToFeishu(JSON.toJSONString(generateRequestBean(message, extMap)));
+            SpringContextHolder.getBean(FeishuIntegrationClient.class).sendMessageToLogGroup(JSON.toJSONString(generateRequestBean(message, extMap)));
         } catch (Exception e) {
             log.warn("send warn msg error,dingUrl:{}", url, e);
         }

@@ -7,15 +7,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 /**
  * @author guangjin.gao
  */
-@FeignClient(url = "${warn.log.url}", name = "feishuNotice")
+@FeignClient(url = "https://open.feishu.cn/", name = "feishuNotice")
 public interface FeishuIntegrationClient {
 
     /**
-     * 飞书消息
+     * 发送飞书消息到日志告警群
      *
      * @param message message
      */
-    @PostMapping()
-    void sendMessageToFeishu(@RequestBody String message);
+    @PostMapping("${warn.log.url}")
+    void sendMessageToLogGroup(@RequestBody String message);
+
+    /**
+     * 发送飞书消息到3DE告警群
+     *
+     * @param message message
+     */
+    @PostMapping("${warn.3de.url}")
+    void sendMessageTo3deGroup(@RequestBody String message);
 
 }

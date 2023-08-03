@@ -1,6 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle;
 
-import com.nio.ngfs.plm.bom.configuration.application.service.BaseVehicleService;
+import com.nio.ngfs.plm.bom.configuration.application.service.BaseVehicleApplicationService;
 import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleRepository;
@@ -30,7 +30,7 @@ public class AddBaseVehicleCommand {
     private final BaseVehicleDomainService baseVehicleDomainService;
     private final OxoOptionPackageRepository oxoOptionPackageRepository;
     private final OxoFeatureOptionRepository oxoFeatureOptionRepository;
-    private final BaseVehicleService baseVehicleService;
+    private final BaseVehicleApplicationService baseVehicleApplicationService;
 
 
     @Transactional( rollbackFor = Exception.class)
@@ -46,7 +46,7 @@ public class AddBaseVehicleCommand {
         //oxo打点
         oxoOptionPackageRepository.inserOxoOptionPackagesByOxoOptionPackages(packages);
         //copyFrom打点
-        baseVehicleService.addCopyFromPoints(cmd,baseVehicleAggr);
+        baseVehicleApplicationService.addCopyFromPoints(cmd,baseVehicleAggr);
         return new AddBaseVehicleRespDto();
     }
 }

@@ -1,6 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle;
 
-import com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.common.BaseVehicleQueryUtil;
+import com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.service.BaseVehicleQueryService;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsBaseVehicleDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsBaseVehicleEntity;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.QueryCopyFromModelsQry;
@@ -21,7 +21,8 @@ import java.util.stream.Collectors;
 public class QueryCopyFromModelQuery {
 
     private final BomsBaseVehicleDao bomsBaseVehicleDao;
-    private final BaseVehicleQueryUtil baseVehicleQueryUtil;
+    private final BaseVehicleQueryService baseVehicleQueryService;
+
 
     public List<BaseVehicleRespDto> execute (QueryCopyFromModelsQry qry){
         List<BomsBaseVehicleEntity> entityList =  bomsBaseVehicleDao.queryCopyFromModel(qry.getModelCode());
@@ -32,6 +33,6 @@ public class QueryCopyFromModelQuery {
             return dto;
         }).collect(Collectors.toList());
         //补全中英文信息并返回结果
-        return baseVehicleQueryUtil.completeBaseVehicle(dtoList);
+        return baseVehicleQueryService.completeBaseVehicle(dtoList);
     }
 }

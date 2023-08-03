@@ -5,7 +5,7 @@ import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.application.query.AbstractQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.assemble.BaseVehicleAssembler;
-import com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.common.BaseVehicleQueryUtil;
+import com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.service.BaseVehicleQueryService;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsBaseVehicleDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsBaseVehicleEntity;
@@ -28,7 +28,7 @@ import java.util.Objects;
 public class QueryBaseVehicleQuery extends AbstractQuery<QueryBaseVehicleQry, List<BaseVehicleRespDto>> {
 
     private final BomsBaseVehicleDao bomsBaseVehicleDao;
-    private final BaseVehicleQueryUtil baseVehicleQueryUtil;
+    private final BaseVehicleQueryService baseVehicleQueryService;
 
     @Override
     protected void validate(QueryBaseVehicleQry queryBaseVehicleQry) {
@@ -43,7 +43,7 @@ public class QueryBaseVehicleQuery extends AbstractQuery<QueryBaseVehicleQry, Li
         List<BaseVehicleRespDto> dtoList = LambdaUtil.map(entityList, BaseVehicleAssembler::assemble);
         List<BaseVehicleRespDto> filteredDto = filter(dtoList, qry);
         //调取featureDomainDao查询region,drive hand, sales version所有选项,再根据featureCode去筛选
-        return baseVehicleQueryUtil.completeBaseVehicle(filteredDto);
+        return baseVehicleQueryService.completeBaseVehicle(filteredDto);
     }
 
     private List<BaseVehicleRespDto> filter(List<BaseVehicleRespDto> dtoList, QueryBaseVehicleQry qry){

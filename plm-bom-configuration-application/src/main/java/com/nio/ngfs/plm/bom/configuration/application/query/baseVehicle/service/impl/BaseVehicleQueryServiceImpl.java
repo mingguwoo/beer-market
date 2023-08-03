@@ -1,5 +1,6 @@
-package com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.common;
+package com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.service.impl;
 
+import com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.service.BaseVehicleQueryService;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsFeatureLibraryDao;
@@ -18,15 +19,16 @@ import java.util.stream.Stream;
 
 /**
  * @author bill.wang
- * @date 2023/7/27
+ * @date 2023/8/3
  */
 @Component
 @RequiredArgsConstructor
-public class BaseVehicleQueryUtil {
+public class BaseVehicleQueryServiceImpl implements BaseVehicleQueryService {
 
     private final BomsFeatureLibraryDao bomsFeatureLibraryDao;
 
-    public List<BaseVehicleRespDto> completeBaseVehicle(List<BaseVehicleRespDto> filteredDto){
+    @Override
+    public List<BaseVehicleRespDto> completeBaseVehicle(List<BaseVehicleRespDto> filteredDto) {
         List<String> codeList = Stream.of(ConfigConstants.BASE_VEHICLE_SALES_VERSION_FEATURE,ConfigConstants.BASE_VEHICLE_REGION_FEATURE,ConfigConstants.BASE_VEHICLE_DRIVE_HAND_FEATURE).collect(Collectors.toList());
         List<BomsFeatureLibraryEntity> featureList = bomsFeatureLibraryDao.queryByParentFeatureCodeListAndType(codeList, FeatureTypeEnum.OPTION.getType());
         Map<String,BomsFeatureLibraryEntity> codeMap = featureList.stream().collect(Collectors.toMap(BomsFeatureLibraryEntity::getFeatureCode, Function.identity()));

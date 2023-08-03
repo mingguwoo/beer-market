@@ -1,7 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.application.service.impl;
 
 import com.nio.bom.share.constants.CommonConstants;
-import com.nio.ngfs.plm.bom.configuration.application.service.BaseVehicleService;
+import com.nio.ngfs.plm.bom.configuration.application.service.BaseVehicleApplicationService;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
@@ -29,7 +29,7 @@ import java.util.stream.Stream;
  */
 @Component
 @RequiredArgsConstructor
-public class BaseVehicleServieImpl implements BaseVehicleService {
+public class BaseVehicleApplicationServiceImpl implements BaseVehicleApplicationService {
 
     private final FeatureRepository featureRepository;
     private final OxoFeatureOptionRepository oxoFeatureOptionRepository;

@@ -11,11 +11,6 @@ import java.util.List;
  */
 public interface BomsOxoVersionSnapshotDao extends IService<BomsOxoVersionSnapshotEntity> {
 
-    /**
-     *  校验BaseVehicle是否已发布
-     * @param modelCode
-     */
-    boolean checkBaseVehicleStatus(String modelCode);
 
 
     /**

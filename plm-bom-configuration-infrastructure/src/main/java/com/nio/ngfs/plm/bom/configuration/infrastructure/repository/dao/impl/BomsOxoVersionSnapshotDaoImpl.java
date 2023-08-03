@@ -24,11 +24,6 @@ public class BomsOxoVersionSnapshotDaoImpl extends AbstractDao<BomsOxoVersionSna
     }
 
     @Override
-    public boolean checkBaseVehicleStatus(String modelCode) {
-        return CollectionUtils.isNotEmpty(queryBomsOxoVersionSnapshotsByModel(modelCode));
-    }
-
-    @Override
     public List<BomsOxoVersionSnapshotEntity> queryBomsOxoVersionSnapshotsByModel(String modelCode) {
         LambdaQueryWrapper<BomsOxoVersionSnapshotEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(BomsOxoVersionSnapshotEntity::getModelCode,modelCode);

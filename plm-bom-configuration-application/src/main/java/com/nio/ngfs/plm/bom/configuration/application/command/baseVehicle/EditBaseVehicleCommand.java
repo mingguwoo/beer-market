@@ -1,6 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle;
 
-import com.nio.ngfs.plm.bom.configuration.application.service.BaseVehicleService;
+import com.nio.ngfs.plm.bom.configuration.application.service.BaseVehicleApplicationService;
 import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
@@ -26,7 +26,7 @@ public class EditBaseVehicleCommand {
     private final BaseVehicleDomainService baseVehicleDomainService;
     private final BaseVehicleRepository baseVehicleRepository;
     private final OxoOptionPackageRepository oxoOptionPackageRepository;
-    private final BaseVehicleService baseVehicleService;
+    private final BaseVehicleApplicationService baseVehicleApplicationService;
 
     @Transactional(rollbackFor = Exception.class)
     public EditBaseVehicleRespDto execute(EditBaseVehicleCmd cmd) {
@@ -38,9 +38,9 @@ public class EditBaseVehicleCommand {
         //获取该baseVehicle下所有点
         List<OxoOptionPackageAggr> oxoOptionPackageAggrs = oxoOptionPackageRepository.queryByBaseVehicleId(baseVehicleAggr.getId());
         //获取和region,salesVersion,driveHand，modelCode有关的所有行信息，用于筛选
-        List<OxoFeatureOptionAggr> driveHandRegionSalesVersionRows = baseVehicleService.queryRegionSalesDrivePoints(cmd.getModelCode());
+        List<OxoFeatureOptionAggr> driveHandRegionSalesVersionRows = baseVehicleApplicationService.queryRegionSalesDrivePoints(cmd.getModelCode());
         //筛选得到相关的打点信息(region,salesVersion,driveHand)
-        List<OxoOptionPackageAggr> newPoints = baseVehicleService.EditBaseVehicleFilter(baseVehicleAggr, oxoOptionPackageAggrs,driveHandRegionSalesVersionRows);
+        List<OxoOptionPackageAggr> newPoints = baseVehicleApplicationService.EditBaseVehicleFilter(baseVehicleAggr, oxoOptionPackageAggrs,driveHandRegionSalesVersionRows);
         oxoOptionPackageRepository.saveOrUpdatebatch(newPoints);
         return new EditBaseVehicleRespDto();
     }

@@ -11,7 +11,7 @@ import java.util.List;
  * @author bill.wang
  * @date 2023/8/3
  */
-public interface BaseVehicleService {
+public interface BaseVehicleApplicationService {
 
     List<OxoOptionPackageAggr> EditBaseVehicleFilter (BaseVehicleAggr baseVehicleAggr, List<OxoOptionPackageAggr> aggrs, List<OxoFeatureOptionAggr> rows);
 

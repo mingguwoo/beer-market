@@ -3,7 +3,10 @@ package com.nio.ngfs.plm.bom.configuration.api.controller;
 import com.nio.bom.share.annotation.NeedAuthorization;
 import com.nio.bom.share.annotation.NotLogResult;
 import com.nio.bom.share.result.ResultInfo;
-import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.*;
+import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.AddBaseVehicleCommand;
+import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.ChangeBaseVehicleStatusCommand;
+import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.DeleteBaseVehicleCommand;
+import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.EditBaseVehicleCommand;
 import com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmBaseVehicleClient;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.*;
@@ -36,7 +39,6 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
     private final ChangeBaseVehicleStatusCommand changeBaseVehicleStatusCommand;
     private final GetBaseVehicleOptionsQuery getbaseVehicleOptionsQuery;
     private final QueryCopyFromModelQuery queryCopyFromModelQuery;
-    private final ChangeBaseVehicleMaturityCommand changeBaseVehicleMaturityCommand;
     private final ExportBaseVehicleQuery exportBaseVehicleQuery;
 
 
@@ -55,7 +57,7 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
     }
 
     @Override
-    @NeedAuthorization
+//    @NeedAuthorization
     @NotLogResult
     public ResultInfo<EditBaseVehicleRespDto> editBaseVehicle(@Valid @RequestBody EditBaseVehicleCmd cmd) {
         return ResultInfo.success(editBaseVehicleCommand.execute(cmd));
@@ -94,13 +96,6 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
     @NotLogResult
     public ResultInfo<List<BaseVehicleRespDto>> queryCopyFromModel(@Valid @RequestBody QueryCopyFromModelsQry qry) {
         return ResultInfo.success(queryCopyFromModelQuery.execute(qry));
-    }
-
-    @Override
-    @NeedAuthorization
-    @NotLogResult
-    public ResultInfo<ChangeBaseVehicleMaturityRespDto> changeBaseVehicleMaturity(@Valid @RequestBody ChangeBaseVehicleMaturityCmd cmd) {
-        return ResultInfo.success(changeBaseVehicleMaturityCommand.execute(cmd));
     }
 
     @NeedAuthorization

@@ -60,4 +60,9 @@ public class OxoOptionPackageRepositoryImpl implements OxoOptionPackageRepositor
     public List<OxoOptionPackageAggr> queryByBaseVehicleIds(List<Long> rowIds) {
         return  oxoOptionPackageConverter.convertEntityListToDoList(bomsOxoOptionPackageDao.queryOxoOptionPackageByRowIds(rowIds));
     }
+
+    @Override
+    public void saveOrUpdatebatch(List<OxoOptionPackageAggr> oxoOptionPackageAggrs) {
+        bomsOxoOptionPackageDao.saveOrUpdateBatch(oxoOptionPackageConverter.convertDoListToEntityList(oxoOptionPackageAggrs));
+    }
 }

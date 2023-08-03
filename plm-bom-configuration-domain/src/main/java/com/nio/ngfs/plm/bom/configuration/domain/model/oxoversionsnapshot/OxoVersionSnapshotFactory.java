@@ -1,15 +1,10 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot;
 
 import com.alibaba.fastjson.JSONObject;
-import com.nio.bom.share.enums.BrandEnum;
 import com.nio.bom.share.utils.GZIPUtils;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
-import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoAddCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoSnapshotCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
-
-import java.util.List;
 
 /**
  * @author xiaozhou.tu

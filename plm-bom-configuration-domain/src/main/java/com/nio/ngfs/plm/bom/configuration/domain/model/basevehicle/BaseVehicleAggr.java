@@ -7,7 +7,6 @@ import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.enums.BaseVehicleMaturityEnum;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.AddBaseVehicleCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.ChangeBaseVehicleMaturityCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.ChangeBaseVehicleStatusCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.EditBaseVehicleCmd;
 import lombok.AllArgsConstructor;
@@ -73,6 +72,7 @@ public class BaseVehicleAggr extends AbstractDo implements AggrRoot<String>, Clo
         setDriveHand(cmd.getDriveHand());
         setSalesVersion(cmd.getSalesVersion());
         setUpdateUser(cmd.getUpdateUser());
+        changeMaturity(cmd.getMaturity());
     }
 
     /**
@@ -96,9 +96,9 @@ public class BaseVehicleAggr extends AbstractDo implements AggrRoot<String>, Clo
     /**
      * 校验Maturity修改是否符合规范并修改
      */
-    public void changeMaturity(ChangeBaseVehicleMaturityCmd cmd) {
+    public void changeMaturity(String maturity) {
         BaseVehicleMaturityEnum oldMaturity = BaseVehicleMaturityEnum.getByMaturity(maturity);
-        BaseVehicleMaturityEnum newMaturity = BaseVehicleMaturityEnum.getByMaturity(cmd.getMaturity());
+        BaseVehicleMaturityEnum newMaturity = BaseVehicleMaturityEnum.getByMaturity(maturity);
         if (oldMaturity == null || newMaturity == null) {
             throw new BusinessException(ConfigErrorCode.BASE_VEHICLE_MATURITY_INVALID);
         }
@@ -106,7 +106,7 @@ public class BaseVehicleAggr extends AbstractDo implements AggrRoot<String>, Clo
         if ( (oldMaturity.getMaturity() == BaseVehicleMaturityEnum.P.getMaturity()) && (newMaturity.getMaturity() == BaseVehicleMaturityEnum.U.getMaturity()) ){
             throw new BusinessException(ConfigErrorCode.BASE_VEHICLE_MATURITY_CHANGE_INVALID);
         }
-        setMaturity(cmd.getMaturity());
+        setMaturity(maturity);
     }
 
     /**

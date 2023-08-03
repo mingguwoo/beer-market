@@ -1,9 +1,5 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service.oxo;
 
-import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotAggr;
-
-import java.util.List;
-
 /**
  * @author xiaozhou.tu
  * @date 2023/7/27

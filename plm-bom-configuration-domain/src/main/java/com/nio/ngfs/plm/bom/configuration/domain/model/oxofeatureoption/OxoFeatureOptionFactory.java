@@ -1,7 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption;
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
-import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.enums.RuleCheckEnum;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.enums.RuleCheckEnum;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoAddCmd;
 import org.apache.commons.compress.utils.Lists;
 

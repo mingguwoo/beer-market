@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.domain.model.oxo.enums;
+package com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.enums;
 
 
 import lombok.Getter;
@@ -6,17 +6,12 @@ import lombok.Getter;
 /**
  * @author wangchao.wang
  */
-
 @Getter
 public enum OxoSnapshotEnum {
 
     FORMAL("Formal"),
-
-
     INFORMAL("Informal"),
-
     ;
-
 
     private String code;
 
@@ -24,7 +19,4 @@ public enum OxoSnapshotEnum {
         this.code = code;
 
     }
-
-
-
 }

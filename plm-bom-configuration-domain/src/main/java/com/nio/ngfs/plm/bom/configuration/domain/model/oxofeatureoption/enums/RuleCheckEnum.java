@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.domain.model.oxo.enums;
+package com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.enums;
 
 
 import lombok.Getter;

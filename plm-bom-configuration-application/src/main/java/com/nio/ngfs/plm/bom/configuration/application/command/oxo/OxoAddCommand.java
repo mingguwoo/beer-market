@@ -5,10 +5,10 @@ import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockComman
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
-import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.enums.OxoPackageInfoEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageFactory;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.enums.OxoOptionPackageTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.service.basevehicle.BaseVehicleDomainService;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoFeatureOptionDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoOptionPackageDao;
@@ -75,7 +75,7 @@ public class OxoAddCommand extends AbstractLockCommand<OxoAddCmd, Boolean> {
         //则系统自动将Option在各个Base Vehicle下的打点赋值为实心圈
         oxoOptionPackageDao.insertOxoOptionPackages(OxoOptionPackageFactory.buildOptionPackages(oxoHeads,
                 entityList.stream().map(BomsOxoFeatureOptionEntity::getId).distinct().toList(),
-                OxoPackageInfoEnum.DEFALUT.getDesc(),brandName,cmd.getUserName()));
+                OxoOptionPackageTypeEnum.DEFALUT.getType(), brandName, cmd.getUserName()));
 
 
         return true;

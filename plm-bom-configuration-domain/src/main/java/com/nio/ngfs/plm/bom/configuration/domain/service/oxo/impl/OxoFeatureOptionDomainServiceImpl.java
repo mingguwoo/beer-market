@@ -5,11 +5,11 @@ import com.google.common.collect.Sets;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
-import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.enums.OxoPackageInfoEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.enums.OxoOptionPackageTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoFeatureOptionDomainService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -106,7 +106,7 @@ public class OxoFeatureOptionDomainServiceImpl implements OxoFeatureOptionDomain
         List<String> optionCodes = Lists.newArrayList();
 
         optionPackages.stream().collect(Collectors.groupingBy(OxoOptionPackageAggr::getFeatureOptionId)).forEach((k, v) -> {
-            if (v.stream().allMatch(x -> StringUtils.equals(x.getPackageCode(), OxoPackageInfoEnum.UNAVAILABLE.getCode()))) {
+            if (v.stream().allMatch(x -> StringUtils.equals(x.getPackageCode(), OxoOptionPackageTypeEnum.UNAVAILABLE.getCode()))) {
                 optionCodes.add(
                         oxoFeatureOptionAggrs.stream().filter(x -> Objects.equals(x.getId(), k))
                                 .findFirst().orElse(new OxoFeatureOptionAggr()).getFeatureCode());

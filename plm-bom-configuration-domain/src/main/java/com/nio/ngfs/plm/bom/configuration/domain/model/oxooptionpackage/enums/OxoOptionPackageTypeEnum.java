@@ -1,6 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.enums;
 
 import com.nio.bom.share.utils.EnumUtils;
+import lombok.Getter;
 
 /**
  * @author xiaozhou.tu
@@ -11,26 +12,23 @@ public enum OxoOptionPackageTypeEnum {
     /**
      * 打点类型
      */
-    DEFAULT("Default"),
-    AVAILABLE("Available"),
-    UNAVAILABLE("Unavailable"),
+    DEFALUT ("●", "Default"),
+    UNAVAILABLE("-", "Unavailable"),
+
+    AVAILABLE("○", "Available"),
     ;
 
-    /**
-     * 类型
-     */
+    @Getter
+    private final String code;
+    @Getter
     private final String type;
 
-    OxoOptionPackageTypeEnum(String type) {
+    OxoOptionPackageTypeEnum(String code, String type) {
+        this.code = code;
         this.type = type;
-    }
-
-    public String getType() {
-        return type;
     }
 
     public static OxoOptionPackageTypeEnum getByType(String type) {
         return EnumUtils.getEnum(OxoOptionPackageTypeEnum.class, OxoOptionPackageTypeEnum::getType, type);
     }
-
 }

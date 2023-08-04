@@ -17,6 +17,7 @@ public enum ConfigErrorCode implements ErrorCode {
     DATA_NOT_EXISTS(50001, "Data Not Existed!"),
     CLONE_ERROR(50002, "Clone Error!"),
     EXCEL_DOWNLOAD_ERROR(50003, "Excel Download Error!"),
+    EXCEL_UPLOAD_ERROR(50004, "Excel Upload Error!"),
 
     /**
      * Feature Library

@@ -8,14 +8,14 @@ import com.nio.ngfs.plm.bom.configuration.application.query.feature.ExportFeatur
 import com.nio.ngfs.plm.bom.configuration.application.query.feature.GetChangeLogListQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.feature.GetGroupCodeListQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.feature.QueryFeatureLibraryQuery;
+import com.nio.ngfs.plm.bom.configuration.application.task.feature.ImportFeatureLibraryTask;
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmFeatureClient;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -43,6 +43,7 @@ public class FeatureController implements PlmFeatureClient {
     private final GetGroupCodeListQuery getGroupCodeListQuery;
     private final QueryFeatureLibraryQuery queryFeatureLibraryQuery;
     private final ExportFeatureLibraryQuery exportFeatureLibraryQuery;
+    private final ImportFeatureLibraryTask importFeatureLibraryTask;
 
     @Override
     @NeedAuthorization
@@ -136,6 +137,15 @@ public class FeatureController implements PlmFeatureClient {
     @PostMapping("/feature/exportFeatureLibrary")
     public void exportFeatureLibrary(@Valid @RequestBody ExportFeatureLibraryQry qry, HttpServletResponse response) {
         exportFeatureLibraryQuery.execute(qry, response);
+    }
+
+    /**
+     * 导入Feature Library历史数据
+     */
+    @NotLogResult
+    @PostMapping("/feature/importFeatureLibrary")
+    public void importFeatureLibrary(@RequestPart("file") MultipartFile file) {
+        importFeatureLibraryTask.execute(file);
     }
 
 }

@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.domain.model.common;
+package com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,10 +12,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class MatrixRuleQueryDo {
+public class MatrixRuleQueryDto {
 
 
-    public MatrixRuleQueryDo(String name, String category, String abscissa, String ordinate, String programName) {
+    public MatrixRuleQueryDto(String name, String category, String abscissa, String ordinate, String programName) {
         this.name = name;
         this.category = category;
         this.abscissa = abscissa;

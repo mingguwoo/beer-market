@@ -30,6 +30,13 @@ public class OxoRowsQry implements Qry {
 
         private Integer isSortDelete;
 
+
+        /**
+         * 对比
+         * @see com.nio.ngfs.plm.bom.configuration.domain.model.oxo.enums.CompareChangeTypeEnum
+         */
+        private String changeType;
+
         /**
          * featureCode下面 optionCode
          */

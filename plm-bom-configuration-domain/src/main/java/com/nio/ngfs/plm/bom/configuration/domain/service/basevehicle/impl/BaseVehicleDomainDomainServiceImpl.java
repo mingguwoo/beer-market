@@ -122,8 +122,8 @@ public class BaseVehicleDomainDomainServiceImpl implements BaseVehicleDomainServ
          */
         basicVehicleAggrMaps.forEach((k, v) -> {
             OxoHeadQry oxoHeadQry = new OxoHeadQry();
-            oxoHeadQry.setModelYear(k);
-            oxoHeadQry.setModelYearCode(featureAggrAF1.get(k));
+            oxoHeadQry.setModelCode(k);
+            oxoHeadQry.setModelYear(featureAggrAF1.get(k));
             Map<String, List<BaseVehicleAggr>> regionVehicleAggrMaps =
                     v.stream().sorted(Comparator.comparing(BaseVehicleAggr::getRegionOptionCode))
                             .collect(Collectors.groupingBy(BaseVehicleAggr::getRegionOptionCode));
@@ -173,6 +173,6 @@ public class BaseVehicleDomainDomainServiceImpl implements BaseVehicleDomainServ
                 headQry.add(oxoHeadQry);
             });
         });
-        return headQry.stream().sorted(Comparator.comparing(OxoHeadQry::getModelYearCode)).toList();
+        return headQry.stream().sorted(Comparator.comparing(OxoHeadQry::getModelYear)).toList();
     }
 }

@@ -4,8 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.nio.bom.share.result.Result;
 import com.nio.ngfs.common.utils.BeanConvertUtils;
 import com.nio.ngfs.plm.bom.configuration.domain.model.common.CommonRepository;
-import com.nio.ngfs.plm.bom.configuration.domain.model.common.EmailParamDo;
-import com.nio.ngfs.plm.bom.configuration.domain.model.common.MatrixRuleQueryDo;
 import com.nio.ngfs.plm.bom.configuration.remote.CommonClientFeign;
 import com.nio.ngfs.plm.bom.configuration.remote.IntegrationClient;
 import com.nio.ngfs.plm.bom.configuration.remote.dto.common.SendEmailRequest;
@@ -44,6 +42,11 @@ public class CommonRepositoryImpl implements CommonRepository {
         return (Map<String, String>) map.get("dataValue");
     }
 
+
+    /**
+     * 发送邮件
+     * @param emailParamDo
+     */
     @Override
     public void sendEmail(EmailParamDo emailParamDo) {
 

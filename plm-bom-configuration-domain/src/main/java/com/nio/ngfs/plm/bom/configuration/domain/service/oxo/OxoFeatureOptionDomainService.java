@@ -34,4 +34,9 @@ public interface OxoFeatureOptionDomainService {
 
 
     List<String>  checkOxoBasicVehicleOptions(String modelCode);
+
+
+
+
+
 }

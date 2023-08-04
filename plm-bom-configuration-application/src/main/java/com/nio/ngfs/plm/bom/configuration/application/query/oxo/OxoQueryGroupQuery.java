@@ -5,7 +5,6 @@ import com.nio.bom.share.enums.BrandEnum;
 import com.nio.ngfs.plm.bom.configuration.application.query.Query;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.domain.model.common.CommonRepository;
-import com.nio.ngfs.plm.bom.configuration.domain.model.common.MatrixRuleQueryDo;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoBaseCmd;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;

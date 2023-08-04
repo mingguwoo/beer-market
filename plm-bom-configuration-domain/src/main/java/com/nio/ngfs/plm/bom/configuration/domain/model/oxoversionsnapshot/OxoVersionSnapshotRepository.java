@@ -11,9 +11,18 @@ import java.util.List;
 public interface OxoVersionSnapshotRepository extends Repository<OxoVersionSnapshotAggr, Long> {
 
 
-
-
+      /**
+       * 查询oxo版本
+       * @param modelCode
+       * @return
+       */
       List<OxoVersionSnapshotAggr> queryOxoVersionSnapshotByModelCode(String modelCode);
+
+
+
+
+
+
 
 
 

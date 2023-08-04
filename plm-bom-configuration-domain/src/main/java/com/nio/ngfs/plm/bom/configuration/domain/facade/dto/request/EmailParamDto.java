@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.domain.model.common;
+package com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request;
 
 
 import lombok.Data;
@@ -9,7 +9,7 @@ import java.util.Map;
  * @author wangchao.wang
  */
 @Data
-public class EmailParamDo {
+public class EmailParamDto {
 
 
 

@@ -15,9 +15,9 @@ import java.util.List;
 @Data
 public class OxoHeadQry implements Dto {
 
-    private String modelYear;
+    private String modelCode;
 
-    private String modelYearCode;
+    private String modelYear;
 
     private List<RegionInfo> regionInfos;
 
@@ -29,6 +29,12 @@ public class OxoHeadQry implements Dto {
         private String regionCode;
 
         private String regionName;
+
+        /**
+         * 比对时候用到
+         * @see com.nio.ngfs.plm.bom.configuration.domain.model.oxo.enums.CompareChangeTypeEnum
+         */
+        private String changeType;
 
         private List<DriveHandInfo> driveHands;
     }
@@ -43,6 +49,13 @@ public class OxoHeadQry implements Dto {
          private String driveHandName;
 
          private List<SalesVersionInfo> salesVersionInfos;
+
+
+        /**
+         * 比对时候用到
+         * @see com.nio.ngfs.plm.bom.configuration.domain.model.oxo.enums.CompareChangeTypeEnum
+         */
+        private String changeType;
     }
 
 
@@ -56,5 +69,11 @@ public class OxoHeadQry implements Dto {
          private String salesName;
 
          private Long headId;
+
+        /**
+         * 比对时候用到
+         * @see com.nio.ngfs.plm.bom.configuration.domain.model.oxo.enums.CompareChangeTypeEnum
+         */
+        private String changeType;
     }
 }

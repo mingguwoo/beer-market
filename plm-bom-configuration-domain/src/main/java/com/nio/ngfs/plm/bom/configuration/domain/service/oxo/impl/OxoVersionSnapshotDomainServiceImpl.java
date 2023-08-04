@@ -28,6 +28,12 @@ public class OxoVersionSnapshotDomainServiceImpl implements OxoVersionSnapshotDo
     private final OxoVersionSnapshotRepository oxoVersionSnapshotRepository;
 
 
+    /**
+     * 查询 oxo版本
+     * @param modelCode
+     * @param type
+     * @return
+     */
     @Override
     public String queryVersionByModelCode(String modelCode, String type) {
 

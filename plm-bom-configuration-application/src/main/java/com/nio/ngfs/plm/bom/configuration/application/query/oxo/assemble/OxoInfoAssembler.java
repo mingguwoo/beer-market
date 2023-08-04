@@ -40,13 +40,13 @@ public class OxoInfoAssembler {
         oxoLists.forEach(modelYears -> {
             modelYears.getRegionInfos().forEach(regionInfos -> {
                 regionInfos.getDriveHands().forEach(driveHandInfos -> {
-                    driveHandInfos.getSalesVersionInfos().forEach(driveHand -> {
+                    driveHandInfos.getSalesVersionInfos().forEach(salesVersionInfo -> {
 
                         BomsOxoOptionPackageEntity entity = rowEntities.stream().filter(head ->
-                                Objects.equals(head.getBaseVehicleId(), driveHand.getHeadId())).findFirst().orElse(null);
+                                Objects.equals(head.getBaseVehicleId(), salesVersionInfo.getHeadId())).findFirst().orElse(null);
 
                         if (Objects.nonNull(entity)) {
-                            oxoEditCmds.add(convertPackageInfoEntity(entity));
+                            oxoEditCmds.add(convertPackageInfoEntity(entity, modelYears, regionInfos, driveHandInfos, salesVersionInfo));
                         }
 
                     });
@@ -59,11 +59,20 @@ public class OxoInfoAssembler {
     }
 
 
-    public static OxoEditCmd convertPackageInfoEntity(BomsOxoOptionPackageEntity entity) {
+    public static OxoEditCmd convertPackageInfoEntity(BomsOxoOptionPackageEntity entity,
+                                                      OxoHeadQry headQry, OxoHeadQry.RegionInfo regionInfo,
+                                                      OxoHeadQry.DriveHandInfo driveHandInfo,
+                                                      OxoHeadQry.SalesVersionInfo salesVersion) {
         OxoEditCmd cmd = new OxoEditCmd();
         cmd.setRowId(entity.getFeatureOptionId());
         cmd.setHeadId(entity.getBaseVehicleId());
         cmd.setPackageCode(entity.getPackageCode());
+        cmd.setModelCode(headQry.getModelCode());
+        cmd.setModelYear(headQry.getModelYear());
+        cmd.setDescription(entity.getDescription());
+        cmd.setDriveHandCode(driveHandInfo.getDriveHandCode());
+        cmd.setRegionCode(regionInfo.getRegionCode());
+        cmd.setSalesCode(salesVersion.getSalesCode());
         return cmd;
 
     }

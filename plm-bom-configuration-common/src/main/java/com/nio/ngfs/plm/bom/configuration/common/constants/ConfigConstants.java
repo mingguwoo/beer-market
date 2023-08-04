@@ -64,4 +64,12 @@ public interface ConfigConstants {
      String VERSION_AA_1="AA.1";
 
 
+     String BASE_VERSION = "baseVersion";
+
+
+     String UN_AVAILABLE = "Unavailable";
+
+
+      String LOW_VERSION = "lowVersion";
+
 }

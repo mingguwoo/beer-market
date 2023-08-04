@@ -26,6 +26,29 @@ public class OxoEditCmd extends OxoBaseCmd{
 
      private String ruleCheck;
 
+
+     private String regionCode;
+
+     private String driveHandCode;
+
+     private String salesCode;
+
+
+     private String modelCode;
+
+
+     private String modelYear;
+
+
+
+     private OxoEditCmd compareOxoEdit;
+
+
+     /**
+      * 比对时候用到
+      * @see com.nio.ngfs.plm.bom.configuration.domain.model.oxo.enums.CompareChangeTypeEnum
+      */
+     private String changeType;
 }
 
 

@@ -280,7 +280,8 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
     /**
      * 编辑Option
      */
-    public void editOption(EditOptionCmd cmd) {
+    public void editOption(EditOptionCmd cmd, FeatureAggr parent) {
+        setParent(parent);
         checkCanEdit();
         checkType(FeatureTypeEnum.OPTION);
         // 参数校验

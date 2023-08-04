@@ -36,7 +36,8 @@ public class EditOptionCommand extends AbstractLockCommand<EditOptionCmd, EditOp
     @Override
     protected EditOptionRespDto executeWithLock(EditOptionCmd cmd) {
         FeatureAggr featureAggr = featureDomainService.getAndCheckFeatureAggr(cmd.getOptionCode(), FeatureTypeEnum.OPTION);
-        featureAggr.editOption(cmd);
+        FeatureAggr parentFeatureAggr = featureDomainService.getAndCheckFeatureAggr(featureAggr.getParentFeatureCode(),FeatureTypeEnum.FEATURE);
+        featureAggr.editOption(cmd,parentFeatureAggr);
         featureDomainService.checkDisplayNameUnique(featureAggr);
         featureRepository.save(featureAggr);
         eventPublisher.publish(new FeatureChangeEvent(featureAggr));

@@ -3,7 +3,7 @@ CREATE TABLE `boms_base_vehicle` (
    `base_vehicle_id` varchar(11) NOT NULL COMMENT '流水号',
    `model_code` varchar(50) NOT NULL DEFAULT '' COMMENT '车型',
    `model_year` varchar(50) NOT NULL DEFAULT '' COMMENT '年款',
-   `region` varchar(50) NOT NULL DEFAULT '' COMMENT '区域',
+   `region_option_code` varchar(50) NOT NULL DEFAULT '' COMMENT '区域',
    `drive_hand` varchar(50) NOT NULL DEFAULT '' COMMENT '驾驶位',
    `sales_version` varchar(50) NOT NULL DEFAULT '' COMMENT '销售版本',
    `status` varchar(50) NOT NULL COMMENT '状态 Active/Inactive',

@@ -137,6 +137,11 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
         }
     }
 
+
+    public String getFeatureCode(){
+        return this.featureId.getFeatureCode();
+    }
+
     /**
      * 新增Group
      */

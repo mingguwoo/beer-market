@@ -117,11 +117,10 @@ public class BomsFeatureLibraryDaoImpl extends AbstractDao<BomsFeatureLibraryMap
 
     @Override
     public List<BomsFeatureLibraryEntity> findFeatureLibraryNotFeatureCodes(List<String> featureCodes) {
-        if (CollectionUtils.isEmpty(featureCodes)) {
-            return Lists.newArrayList();
-        }
         LambdaQueryWrapper<BomsFeatureLibraryEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.notIn(BomsFeatureLibraryEntity::getFeatureCode, featureCodes);
+        if(CollectionUtils.isNotEmpty(featureCodes)) {
+            lambdaQueryWrapper.notIn(BomsFeatureLibraryEntity::getFeatureCode, featureCodes);
+        }
         lambdaQueryWrapper.eq(BomsFeatureLibraryEntity::getType, FeatureTypeEnum.OPTION.getType());
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }

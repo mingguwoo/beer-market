@@ -28,9 +28,6 @@ public interface OxoFeatureOptionRepository extends Repository<OxoFeatureOptionA
 
 
 
-    List<OxoFeatureOptionAggr> queryFeaturesByModel(String modelCode);
-
-
     /**
      * 根据modelCode查询未查询的 featureCode
      * @param modelCode
@@ -45,6 +42,20 @@ public interface OxoFeatureOptionRepository extends Repository<OxoFeatureOptionA
      * @return
      */
     List<OxoFeatureOptionAggr>  queryFeatureListsByModelAndSortDelete(String modelCode);
+
+
+    /**
+     *  添加删除
+     * @param oxoFeatureOptionAggrs
+     */
+    void insertOrUpdateOxoFeatureOptions(List<OxoFeatureOptionAggr> oxoFeatureOptionAggrs);
+
+
+    /**
+     * 更新 数据
+     * @param oxoFeatureOptionAggrs
+     */
+    void updateOxoFeatureOptions(List<OxoFeatureOptionAggr> oxoFeatureOptionAggrs);
 
 
 }

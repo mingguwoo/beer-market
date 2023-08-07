@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.application.service;
 
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageAggr;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
@@ -48,10 +49,25 @@ public interface OxoFeatureOptionApplicationService {
 
 
     /**
-     * 根据
+     * 根据 车型查询oxo working版本信息
      * @param modelCode
      * @return
      */
     OxoListQry queryOxoInfoByModelCode(String modelCode);
 
+
+    /**
+     * 查询 未选中  featureCode
+     * @param modelCode
+     * @return
+     */
+    List<FeatureAggr> queryFeaturesByModel(String modelCode);
+
+
+    /**
+     *  根据车型 查询规则
+     * @param modelCode
+     * @return
+     */
+    List<String> checkRules(String modelCode);
 }

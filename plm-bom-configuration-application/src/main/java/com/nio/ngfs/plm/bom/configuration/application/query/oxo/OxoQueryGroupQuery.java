@@ -4,7 +4,8 @@ package com.nio.ngfs.plm.bom.configuration.application.query.oxo;
 import com.nio.bom.share.enums.BrandEnum;
 import com.nio.ngfs.plm.bom.configuration.application.query.Query;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
-import com.nio.ngfs.plm.bom.configuration.domain.model.common.CommonRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.facade.MatrixRuleFacade;
+import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.MatrixRuleQueryDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoBaseCmd;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -23,7 +24,7 @@ import java.util.Map;
 public class OxoQueryGroupQuery implements Query<OxoBaseCmd,List<String>> {
 
 
-    private final CommonRepository commonRepository;
+    private final MatrixRuleFacade matrixRuleFacade;
 
     @Override
     public List<String> execute(OxoBaseCmd cmd) {
@@ -34,7 +35,7 @@ public class OxoQueryGroupQuery implements Query<OxoBaseCmd,List<String>> {
             name = ConfigConstants.OXO_EMAIL_GROUP_ALPS;
         }
 
-        Map<String, String> map = commonRepository.queryMatrixRuleValuesByAbscissaOrOrdinate(new MatrixRuleQueryDo
+        Map<String, String> map = matrixRuleFacade.queryMatrixRuleValuesByAbscissaOrOrdinate(new MatrixRuleQueryDto
                 (name, "matrix", null, "oxo.email", "PLM.EBOM.PartNumRequest"));
 
         List<String> list = new LinkedList<>();

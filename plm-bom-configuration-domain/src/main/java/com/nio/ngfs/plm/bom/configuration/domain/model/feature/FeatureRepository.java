@@ -79,4 +79,12 @@ public interface FeatureRepository extends Repository<FeatureAggr, FeatureId> {
      */
     FeatureAggr getByFeatureOrOptionCode(String featureOptionCode);
 
+
+    /**
+     * 根据 featureCodes not in  Feature库中
+     * @param featureCodes
+     * @return
+     */
+    List<FeatureAggr> findFeatureLibraryNotFeatureCodes(List<String> featureCodes);
+
 }

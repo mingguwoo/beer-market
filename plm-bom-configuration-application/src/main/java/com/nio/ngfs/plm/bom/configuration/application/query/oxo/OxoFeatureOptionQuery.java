@@ -2,6 +2,8 @@ package com.nio.ngfs.plm.bom.configuration.application.query.oxo;
 
 
 import com.nio.ngfs.plm.bom.configuration.application.query.Query;
+import com.nio.ngfs.plm.bom.configuration.application.service.OxoFeatureOptionApplicationService;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionRepository;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoAddCmd;
@@ -24,28 +26,32 @@ import java.util.stream.Collectors;
 public class OxoFeatureOptionQuery implements Query<OxoBaseCmd, OxoAddCmd> {
 
 
-    private final OxoFeatureOptionRepository oxoFeatureOptionRepository;
+    private final OxoFeatureOptionApplicationService featureOptionApplicationService;
+
+
+
 
     @Override
     public OxoAddCmd execute(OxoBaseCmd cmd) {
         String modelCode = cmd.getModelCode();
 
-        List<OxoFeatureOptionAggr> featureAggrs = oxoFeatureOptionRepository.queryFeaturesByModel(modelCode);
+        List<FeatureAggr> featureAggrs = featureOptionApplicationService.queryFeaturesByModel(modelCode);
 
         if (CollectionUtils.isEmpty(featureAggrs)) {
             return null;
         }
 
-        Map<String, List<OxoFeatureOptionAggr>> stringListMap =
-                featureAggrs.stream().sorted(Comparator.comparing(OxoFeatureOptionAggr::getParentFeatureCode))
-                        .collect(Collectors.groupingBy(OxoFeatureOptionAggr::getParentFeatureCode));
+        Map<String, List<FeatureAggr>> stringListMap =
+                featureAggrs.stream().sorted(Comparator.comparing(FeatureAggr::getParentFeatureCode))
+                        .collect(Collectors.groupingBy(FeatureAggr::getParentFeatureCode));
 
         List<OxoAddCmd.OxoFeatureOption> optionList = new LinkedList<>();
 
         stringListMap.forEach((k, v) -> {
             OxoAddCmd.OxoFeatureOption oxoFeatureOption=new OxoAddCmd.OxoFeatureOption();
             oxoFeatureOption.setFeatureCode(k);
-            oxoFeatureOption.setOptionCodes(v.stream().map(OxoFeatureOptionAggr::getFeatureCode).distinct(). sorted().toList());
+
+            oxoFeatureOption.setOptionCodes(v.stream().map(FeatureAggr::getFeatureCode).distinct(). sorted().toList());
             optionList.add(oxoFeatureOption);
         });
         OxoAddCmd addCmd = new OxoAddCmd();

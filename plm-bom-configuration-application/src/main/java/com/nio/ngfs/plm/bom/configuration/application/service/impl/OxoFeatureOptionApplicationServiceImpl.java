@@ -13,7 +13,11 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatu
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.service.basevehicle.BaseVehicleDomainService;
+import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoFeatureOptionDomainService;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoFeatureOptionDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoOptionPackageDao;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureLibraryEntity;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsOxoFeatureOptionEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsOxoOptionPackageEntity;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoHeadQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
@@ -41,8 +45,9 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
     private final FeatureRepository featureRepository;
     private final OxoFeatureOptionRepository oxoFeatureOptionRepository;
     private final OxoOptionPackageRepository oxoOptionPackageRepository;
-    private final BomsOxoOptionPackageDao bomsOxoOptionPackageInfoDao;
     private final BaseVehicleDomainService baseVehicleDomainService;
+    private final OxoFeatureOptionDomainService featureOptionDomainService;
+
 
     @Override
     public List<OxoFeatureOptionAggr> querySameSortGroupFeatureOption(String model, String featureOptionCode) {
@@ -118,8 +123,8 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
         List<Long> rowIds = oxoFeatureOptions.stream().map(OxoFeatureOptionAggr::getId).distinct().toList();
 
         // 获取打点信息
-        List<BomsOxoOptionPackageEntity> entities =
-                bomsOxoOptionPackageInfoDao.queryOxoOptionPackageByRowIds(rowIds);
+        List<OxoOptionPackageAggr> entities =
+                oxoOptionPackageRepository.queryByBaseVehicleIds(rowIds);
 
         //查询表头信息
         List<OxoHeadQry> oxoLists = baseVehicleDomainService.queryByModel(modelCode);
@@ -200,6 +205,53 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
             }
         });
         return messageList;
+    }
+
+
+
+    /**
+     * 根据 model 查询没有选中的featureCode
+     *
+     * @param modelCode
+     * @return
+     */
+    @Override
+    public List<FeatureAggr> queryFeaturesByModel(String modelCode) {
+        List<OxoFeatureOptionAggr> featureOptionEntities =
+                oxoFeatureOptionRepository.queryByModelAndFeatureCodeList(modelCode, Lists.newArrayList());
+
+        List<String> featureCodes = Lists.newArrayList();
+
+
+        if (CollectionUtils.isNotEmpty(featureOptionEntities)) {
+            featureCodes.addAll(featureOptionEntities.stream().filter(x -> StringUtils.equals(x.getType(), FeatureTypeEnum.OPTION.getType()))
+                    .map(OxoFeatureOptionAggr::getFeatureCode).distinct().toList());
+        }
+
+        return featureRepository.findFeatureLibraryNotFeatureCodes(featureCodes);
+    }
+
+
+
+
+    @Override
+    public  List<String> checkRules(String modelCode){
+        List<String> messages = Lists.newArrayList();
+
+        /**
+         * OXO中是否存在
+         * 在所有Base Vehicle下打点都为“-”的Option（通过Delete Code删除的Option排除在外）
+         */
+        List<String> optionCodes = featureOptionDomainService.checkOxoBasicVehicleOptions(modelCode);
+
+
+        /**
+         * 系统校验（软校验）：
+         * 1.该Option是否应用于Status为Working的Configuration Rule中
+         * 2.该Option是否在Product Configuration有勾选
+         */
+
+        return messages;
     }
 
 }

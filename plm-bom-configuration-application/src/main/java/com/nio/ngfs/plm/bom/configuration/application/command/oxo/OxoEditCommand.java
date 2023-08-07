@@ -1,12 +1,12 @@
 package com.nio.ngfs.plm.bom.configuration.application.command.oxo;
 
 import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockCommand;
+import com.nio.ngfs.plm.bom.configuration.application.service.OxoFeatureOptionApplicationService;
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageFactory;
-import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoFeatureOptionDomainService;
-import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoFeatureOptionDao;
-import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoOptionPackageDao;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageRepository;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoEditCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoEditInfoCmd;
 import lombok.RequiredArgsConstructor;
@@ -25,12 +25,11 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class OxoEditCommand extends AbstractLockCommand<OxoEditInfoCmd, List<String>> {
 
+    private final OxoOptionPackageRepository oxoOptionPackageRepository;
 
-    private final BomsOxoFeatureOptionDao bomsOxoFeatureOptionDao;
+    private final OxoFeatureOptionRepository oxoFeatureOptionRepository;
 
-    private final BomsOxoOptionPackageDao oxoOptionPackageDao;
-
-    private final OxoFeatureOptionDomainService featureOptionDomainService;
+    private final OxoFeatureOptionApplicationService featureOptionApplicationService;
 
     @Override
     protected String getLockKey(OxoEditInfoCmd cmd) {
@@ -42,7 +41,6 @@ public class OxoEditCommand extends AbstractLockCommand<OxoEditInfoCmd, List<Str
 
         List<OxoEditCmd> cmdLists = cmd.getEditCmds();
 
-        String modelCode= cmd.getModelCode();
         String userName =cmd.getUserName();
 
         List<OxoFeatureOptionAggr> oxoFeatureOptionAggrs = Lists.newArrayList();
@@ -70,31 +68,15 @@ public class OxoEditCommand extends AbstractLockCommand<OxoEditInfoCmd, List<Str
 
         //更新 oxo列表
         if (CollectionUtils.isNotEmpty(oxoFeatureOptionAggrs)) {
-            bomsOxoFeatureOptionDao.updateOxoFeatureOptions(oxoFeatureOptionAggrs);
+            oxoFeatureOptionRepository.updateOxoFeatureOptions(oxoFeatureOptionAggrs);
         }
 
 
         //更新 打点信息
-        oxoOptionPackageDao.insertOxoOptionPackages(
+        oxoOptionPackageRepository.insertOxoOptionPackages(
                 OxoOptionPackageFactory.createOxoOptionPackageAggrList(cmdLists, userName));
 
-        List<String> messages = Lists.newArrayList();
 
-        /**
-         * OXO中是否存在
-         * 在所有Base Vehicle下打点都为“-”的Option（通过Delete Code删除的Option排除在外）
-         */
-        List<String> optionCodes = featureOptionDomainService.checkOxoBasicVehicleOptions(modelCode);
-
-
-        /**
-         * 系统校验（软校验）：
-         * 1.该Option是否应用于Status为Working的Configuration Rule中
-         * 2.该Option是否在Product Configuration有勾选
-         */
-
-
-
-        return messages;
+        return featureOptionApplicationService.checkRules(cmd.getModelCode());
     }
 }

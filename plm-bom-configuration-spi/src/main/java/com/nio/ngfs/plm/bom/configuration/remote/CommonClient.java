@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @author wangchao.wang
  */
 @FeignClient(name = "plm-portal-middle-common")
-public interface CommonClientFeign {
+public interface CommonClient {
 
     /**
      * 获取matrix rule

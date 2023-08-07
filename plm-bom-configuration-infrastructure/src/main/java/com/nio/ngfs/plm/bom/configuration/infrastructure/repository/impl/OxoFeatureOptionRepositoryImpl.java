@@ -52,43 +52,11 @@ public class OxoFeatureOptionRepositoryImpl implements OxoFeatureOptionRepositor
     }
 
 
-    /**
-     * 根据 model 查询没有选中的featureCode
-     *
-     * @param modelCode
-     * @return
-     */
-    @Override
-    public List<OxoFeatureOptionAggr> queryFeaturesByModel(String modelCode) {
-        List<BomsOxoFeatureOptionEntity> featureOptionEntities =
-                bomsOxoFeatureOptionDao.queryByModelAndFeatureCodeList(modelCode, Lists.newArrayList());
-
-        List<String> featureCodes = Lists.newArrayList();
-
-
-        if (CollectionUtils.isNotEmpty(featureOptionEntities)) {
-            featureCodes.addAll(featureOptionEntities.stream().filter(x -> StringUtils.equals(x.getType(), FeatureTypeEnum.OPTION.getType()))
-                    .map(BomsOxoFeatureOptionEntity::getFeatureCode).distinct().toList());
-        }
-
-        List<BomsFeatureLibraryEntity> entities =
-                bomsFeatureLibraryDao.findFeatureLibraryNotFeatureCodes(featureCodes);
-
-
-        if (CollectionUtils.isEmpty(entities)) {
-            return Lists.newArrayList();
-        }
-
-
-        return oxoFeatureOptionConverter.convertFeatureEntityListToDoList(entities);
-    }
-
-
     @Override
     public List<OxoFeatureOptionAggr> queryFeatureListsByModel(String modelCode) {
 
         List<BomsOxoFeatureOptionEntity> bomsOxoFeatureOptionEntities =
-                bomsOxoFeatureOptionDao.queryOxoFeatureOptionByModel(modelCode,false);
+                bomsOxoFeatureOptionDao.queryOxoFeatureOptionByModel(modelCode, false);
 
         if (CollectionUtils.isEmpty(bomsOxoFeatureOptionEntities)) {
             return Lists.newArrayList();
@@ -133,9 +101,20 @@ public class OxoFeatureOptionRepositoryImpl implements OxoFeatureOptionRepositor
 
 
         List<BomsOxoFeatureOptionEntity> entities =
-                bomsOxoFeatureOptionDao.queryOxoFeatureOptionByModel(modelCode,true);
+                bomsOxoFeatureOptionDao.queryOxoFeatureOptionByModel(modelCode, true);
 
-        return BeanConvertUtils.convertListTo(entities,OxoFeatureOptionAggr::new);
+        return BeanConvertUtils.convertListTo(entities, OxoFeatureOptionAggr::new);
+    }
+
+    @Override
+    public void insertOrUpdateOxoFeatureOptions(List<OxoFeatureOptionAggr> oxoFeatureOptionAggrs) {
+        bomsOxoFeatureOptionDao.insertOrUpdateBomsOxoFeature(
+                BeanConvertUtils.convertListTo(oxoFeatureOptionAggrs, BomsOxoFeatureOptionEntity::new));
+    }
+
+    @Override
+    public void updateOxoFeatureOptions(List<OxoFeatureOptionAggr> oxoFeatureOptionAggrs) {
+        bomsOxoFeatureOptionDao.updateOxoFeatureOptions(oxoFeatureOptionAggrs);
     }
 
 

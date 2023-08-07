@@ -44,10 +44,6 @@ public class BomsOxoFeatureOptionDaoImpl extends AbstractDao<BomsOxoFeatureOptio
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 
-    @Override
-    public void insertOxoFeatureOptions(List<OxoFeatureOptionAggr> oxoRowInfoAggrs) {
-        getBaseMapper().insertOxoRows(BeanConvertUtils.convertListTo(oxoRowInfoAggrs,BomsOxoFeatureOptionEntity::new));
-    }
 
     @Override
     public void updateOxoFeatureOptions(List<OxoFeatureOptionAggr> oxoRowInfoAggrs) {
@@ -65,6 +61,11 @@ public class BomsOxoFeatureOptionDaoImpl extends AbstractDao<BomsOxoFeatureOptio
             //更新 oxo row
             getBaseMapper().updateById(entity);
         });
+    }
+
+    @Override
+    public void insertOrUpdateBomsOxoFeature(List<BomsOxoFeatureOptionEntity> bomsOxoFeatureOptionEntities) {
+        getBaseMapper().insertOxoRows(bomsOxoFeatureOptionEntities);
     }
 
     @Override

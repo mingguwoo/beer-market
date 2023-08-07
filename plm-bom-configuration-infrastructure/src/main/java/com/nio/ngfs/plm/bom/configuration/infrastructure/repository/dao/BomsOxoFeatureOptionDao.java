@@ -40,12 +40,6 @@ public interface BomsOxoFeatureOptionDao extends IService<BomsOxoFeatureOptionEn
      */
     List<BomsOxoFeatureOptionEntity> queryOxoFeatureOptionByModel(String modelCode, Boolean sortDelete);
 
-    /**
-     *
-     * @param oxoRowInfoAggrs
-     */
-    void insertOxoFeatureOptions(List<OxoFeatureOptionAggr> oxoRowInfoAggrs);
-
 
     /**
      * 批量更新
@@ -54,8 +48,10 @@ public interface BomsOxoFeatureOptionDao extends IService<BomsOxoFeatureOptionEn
     void updateOxoFeatureOptions(List<OxoFeatureOptionAggr> oxoRowInfoAggrs);
 
 
-
-
-
+    /**
+     * 批量新增更新 防止重复
+     * @param entities
+     */
+    void insertOrUpdateBomsOxoFeature(List<BomsOxoFeatureOptionEntity> entities);
 
 }

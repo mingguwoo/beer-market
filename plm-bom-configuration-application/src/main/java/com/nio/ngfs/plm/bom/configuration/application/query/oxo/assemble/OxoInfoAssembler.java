@@ -2,6 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.application.query.oxo.assemble;
 
 import com.google.common.collect.Lists;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageAggr;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsOxoOptionPackageEntity;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoEditCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoHeadQry;
@@ -30,9 +31,9 @@ public class OxoInfoAssembler {
     }
 
 
-    public static List<OxoEditCmd> buildOxoEditCmd(List<BomsOxoOptionPackageEntity> entities, OxoFeatureOptionAggr oxoInfoDo, List<OxoHeadQry> oxoLists) {
+    public static List<OxoEditCmd> buildOxoEditCmd(List<OxoOptionPackageAggr> entities, OxoFeatureOptionAggr oxoInfoDo, List<OxoHeadQry> oxoLists) {
 
-        List<BomsOxoOptionPackageEntity> rowEntities =
+        List<OxoOptionPackageAggr> rowEntities =
                 entities.stream().filter(y -> Objects.equals(y.getFeatureOptionId(), oxoInfoDo.getId())).toList();
 
         List<OxoEditCmd> oxoEditCmds = Lists.newArrayList();
@@ -42,7 +43,7 @@ public class OxoInfoAssembler {
                 regionInfos.getDriveHands().forEach(driveHandInfos -> {
                     driveHandInfos.getSalesVersionInfos().forEach(salesVersionInfo -> {
 
-                        BomsOxoOptionPackageEntity entity = rowEntities.stream().filter(head ->
+                        OxoOptionPackageAggr entity = rowEntities.stream().filter(head ->
                                 Objects.equals(head.getBaseVehicleId(), salesVersionInfo.getHeadId())).findFirst().orElse(null);
 
                         if (Objects.nonNull(entity)) {
@@ -59,7 +60,7 @@ public class OxoInfoAssembler {
     }
 
 
-    public static OxoEditCmd convertPackageInfoEntity(BomsOxoOptionPackageEntity entity,
+    public static OxoEditCmd convertPackageInfoEntity(OxoOptionPackageAggr entity,
                                                       OxoHeadQry headQry, OxoHeadQry.RegionInfo regionInfo,
                                                       OxoHeadQry.DriveHandInfo driveHandInfo,
                                                       OxoHeadQry.SalesVersionInfo salesVersion) {

@@ -8,12 +8,16 @@ import com.alibaba.excel.read.listener.ReadListener;
 import com.alibaba.excel.read.metadata.ReadSheet;
 import com.alibaba.excel.support.ExcelTypeEnum;
 import com.google.common.collect.Lists;
+import com.nio.bom.share.enums.BrandEnum;
+import com.nio.bom.share.enums.CommonErrorCode;
 import com.nio.bom.share.enums.StatusEnum;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.DateUtils;
 import com.nio.bom.share.utils.LambdaUtil;
+import com.nio.bom.share.utils.PreconditionUtil;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureCatalogEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsFeatureLibraryDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureLibraryEntity;
@@ -48,15 +52,24 @@ public class ImportFeatureLibraryTask {
     private final BomsFeatureLibraryDao bomsFeatureLibraryDao;
 
     public void execute(MultipartFile file) {
+        // 读取历史数据
         List<FeatureLibraryHistory> featureLibraryHistoryList = readData(file);
+        // 校验数据
+        checkData(featureLibraryHistoryList);
         List<BomsFeatureLibraryEntity> bomsFeatureLibraryEntityList = Lists.newArrayList();
+        // 解析Group
         importGroup(featureLibraryHistoryList, bomsFeatureLibraryEntityList);
+        // 解析Feature和Option
         importFeatureAndOption(featureLibraryHistoryList, bomsFeatureLibraryEntityList);
+        // 批量保存到数据库
         for (List<BomsFeatureLibraryEntity> partitionList : Lists.partition(bomsFeatureLibraryEntityList, BATCH_SIZE)) {
             bomsFeatureLibraryDao.saveBatch(partitionList);
         }
     }
 
+    /**
+     * 读取历史数据
+     */
     private List<FeatureLibraryHistory> readData(MultipartFile file) {
         try (InputStream inputStream = file.getInputStream();
              ExcelReader excelReader = EasyExcel.read(new BufferedInputStream(inputStream)).excelType(ExcelTypeEnum.XLSX).build()) {
@@ -73,12 +86,58 @@ public class ImportFeatureLibraryTask {
         }
     }
 
+    /**
+     * 校验数据
+     */
+    private void checkData(List<FeatureLibraryHistory> featureLibraryHistoryList) {
+        featureLibraryHistoryList.forEach(history -> {
+            PreconditionUtil.checkNotBlank(history.getCode(), "Code is blank");
+            PreconditionUtil.checkNotBlank(history.getDisplayName(), "DisplayName is blank");
+            PreconditionUtil.checkNotBlank(history.getChineseName(), "ChineseName is blank");
+            PreconditionUtil.checkNotBlank(history.getGroup(), "Group is blank");
+            PreconditionUtil.checkNotBlank(history.getType(), "Type is blank");
+            PreconditionUtil.checkNotBlank(history.getCatalogue(), "Catalogue is blank");
+            PreconditionUtil.checkNotBlank(history.getRequestor(), "Requestor is blank");
+            PreconditionUtil.checkNotBlank(history.getCreator(), "Creator is blank");
+            PreconditionUtil.checkNotBlank(history.getOriginated(), "Originated is blank");
+
+            PreconditionUtil.checkMaxLength(history.getDisplayName(), 128, "DisplayName max length is 128");
+            PreconditionUtil.checkMaxLength(history.getChineseName(), 128, "ChineseName max length is 128");
+            PreconditionUtil.checkMaxLength(history.getDescription(), 128, "Description max length is 128");
+
+            checkEnumValues(history.getType(), Lists.newArrayList(
+                    CONFIGURATION_FEATURE, CONFIGURATION_OPTION
+            ), "Type enum value is not match");
+            checkEnumValues(history.getCatalogue(), Lists.newArrayList(
+                    FeatureCatalogEnum.SALES.getCatalog(), FeatureCatalogEnum.ENGINEERING.getCatalog()
+            ), "Catalogue enum value is not match");
+            checkEnumValues(history.getRequestor(), Lists.newArrayList(
+                    BrandEnum.NIO.name(), BrandEnum.ALPS.name(), BrandEnum.FY.name()
+            ), "Requestor enum value is not match");
+        });
+    }
+
+    /**
+     * 校验枚举值
+     */
+    private void checkEnumValues(String str, List<String> enumValueList, String errorMessage) {
+        if (!enumValueList.contains(str)) {
+            throw new BusinessException(CommonErrorCode.PARAMETER_ERROR.getCode(), errorMessage);
+        }
+    }
+
+    /**
+     * 解析Group
+     */
     private void importGroup(List<FeatureLibraryHistory> featureLibraryHistoryList, List<BomsFeatureLibraryEntity> bomsFeatureLibraryEntityList) {
         List<String> groupCodeList = featureLibraryHistoryList.stream().map(FeatureLibraryHistory::getGroup).distinct().toList();
         List<BomsFeatureLibraryEntity> groupList = groupCodeList.stream().map(this::buildGroup).toList();
         bomsFeatureLibraryEntityList.addAll(groupList);
     }
 
+    /**
+     * 解析Feature和Option
+     */
     private void importFeatureAndOption(List<FeatureLibraryHistory> featureLibraryHistoryList, List<BomsFeatureLibraryEntity> bomsFeatureLibraryEntityList) {
         bomsFeatureLibraryEntityList.addAll(LambdaUtil.map(featureLibraryHistoryList, history -> {
             if (history.isFeature()) {

@@ -19,8 +19,10 @@ public interface OxoVersionSnapshotRepository extends Repository<OxoVersionSnaps
       List<OxoVersionSnapshotAggr> queryOxoVersionSnapshotByModelCode(String modelCode);
 
 
-
-
+      /**
+       * 查询BaseVehicle是否有已发布的oxo版本
+       */
+      List<OxoVersionSnapshotAggr> queryBomsOxoVersionSnapshotsByModel(String modelCode);
 
 
 

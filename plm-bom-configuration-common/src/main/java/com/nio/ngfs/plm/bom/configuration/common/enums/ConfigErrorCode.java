@@ -55,7 +55,8 @@ public enum ConfigErrorCode implements ErrorCode {
     OXO_FEATURE_OPTION_CAN_NOT_DELETE(80030, "The Feature/Option Can Not Delete!"),
     FEATURE_STATUS_NOT_ACTIVE_CAN_NOT_EDIT(80031, "The Feature Status Is Inactive, Can Not Edit!"),
     FEATURE_FEATURE_IS_NOT_ACTIVE(80032, "Feature Is Not Active!"),
-    AF_ERROR(80033,"Please Add AF00 In OXO!");
+    AF_ERROR(80033,"Please Add AF00 In OXO!"),
+    BASE_VEHICLE_ALREADY_RELEASED(80034,"The Base Vehicle Is Published, Can Not Delete!" );
     ;
 
     /**

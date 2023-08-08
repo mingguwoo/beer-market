@@ -1,5 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service.oxo;
 
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.DeleteBaseVehicleCmd;
+
 /**
  * @author xiaozhou.tu
  * @date 2023/7/27
@@ -16,7 +18,7 @@ public interface OxoVersionSnapshotDomainService {
       String  queryVersionByModelCode(String modelCode,String type);
 
 
-
+      void checkBaseVehicleReleased(String modelCode);
 
 
 

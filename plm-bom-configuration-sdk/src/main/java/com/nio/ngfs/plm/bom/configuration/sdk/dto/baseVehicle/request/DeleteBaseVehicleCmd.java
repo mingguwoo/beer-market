@@ -14,4 +14,7 @@ public class DeleteBaseVehicleCmd implements Cmd {
 
     @NotBlank(message = "Base Vehicle Id is blank")
     private String baseVehicleId;
+
+    @NotBlank(message = "Model Code is blank")
+    private String modelCode;
 }

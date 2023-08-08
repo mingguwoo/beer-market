@@ -3,7 +3,9 @@ package com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle;
 import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.service.basevehicle.BaseVehicleDomainService;
+import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoVersionSnapshotDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.DeleteBaseVehicleCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.DeleteBaseVehicleRespDto;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +23,14 @@ public class DeleteBaseVehicleCommand {
     private final BaseVehicleDomainService baseVehicleDomainService;
     private final BaseVehicleRepository baseVehicleRepository;
     private final OxoOptionPackageRepository oxoOptionPackageRepository;
+    private final OxoVersionSnapshotRepository oxoVersionSnapshotRepository;
+    private final OxoVersionSnapshotDomainService oxoVersionSnapshotDomainService;
 
     @Transactional(rollbackFor = Exception.class)
     public DeleteBaseVehicleRespDto execute(DeleteBaseVehicleCmd cmd) {
+        //查询oxo中该版本是否已发布
+        oxoVersionSnapshotDomainService.checkBaseVehicleReleased(cmd.getModelCode());
+        //删除BaseVehicle
         BaseVehicleAggr baseVehicleAggr = baseVehicleDomainService.getBaseVehicleByBaseVehicleId(cmd.getBaseVehicleId());
         baseVehicleDomainService.checkBaseVehicleExist(baseVehicleAggr);
         baseVehicleRepository.removeById(baseVehicleAggr.getId());

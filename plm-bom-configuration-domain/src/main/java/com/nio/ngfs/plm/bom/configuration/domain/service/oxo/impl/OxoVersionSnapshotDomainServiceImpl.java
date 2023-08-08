@@ -1,11 +1,15 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service.oxo.impl;
 
+import com.nio.bom.share.enums.ErrorCode;
+import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.VersionUtils;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
+import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.enums.OxoSnapshotEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoVersionSnapshotDomainService;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.DeleteBaseVehicleCmd;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -84,6 +88,13 @@ public class OxoVersionSnapshotDomainServiceImpl implements OxoVersionSnapshotDo
         }
 
         return StringUtils.EMPTY;
+    }
+
+    @Override
+    public void checkBaseVehicleReleased(String modelCode) {
+        if (CollectionUtils.isNotEmpty(oxoVersionSnapshotRepository.queryBomsOxoVersionSnapshotsByModel(modelCode))){
+            throw new BusinessException(ConfigErrorCode.BASE_VEHICLE_ALREADY_RELEASED);
+        }
     }
 
 }

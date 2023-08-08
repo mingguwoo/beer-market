@@ -33,7 +33,6 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
 
     private final AddBaseVehicleCommand addBaseVehicleCommand;
     private final EditBaseVehicleCommand editBaseVehicleCommand;
-    private final CheckBaseVehicleStatusQuery checkBaseVehicleStatusQuery;
     private final DeleteBaseVehicleCommand deleteBaseVehicleCommand;
     private final QueryBaseVehicleQuery queryBaseVehicleQuery;
     private final ChangeBaseVehicleStatusCommand changeBaseVehicleStatusCommand;
@@ -61,13 +60,6 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
     @NotLogResult
     public ResultInfo<EditBaseVehicleRespDto> editBaseVehicle(@Valid @RequestBody EditBaseVehicleCmd cmd) {
         return ResultInfo.success(editBaseVehicleCommand.execute(cmd));
-    }
-
-    @Override
-    @NeedAuthorization
-    @NotLogResult
-    public ResultInfo<CheckBaseVehicleStatusRespDto> checkBaseVehicleStatus(@Valid @RequestBody CheckBaseVehicleStatusCmd cmd) {
-        return ResultInfo.success(checkBaseVehicleStatusQuery.execute(cmd));
     }
 
     @Override

@@ -24,9 +24,6 @@ public interface PlmBaseVehicleClient {
     @PostMapping("/baseVehicle/editBaseVehicle")
     ResultInfo<EditBaseVehicleRespDto> editBaseVehicle(EditBaseVehicleCmd cmd);
 
-    @PostMapping("/baseVehicle/checkBaseVehicleStatus")
-    ResultInfo<CheckBaseVehicleStatusRespDto> checkBaseVehicleStatus(CheckBaseVehicleStatusCmd cmd);
-
     @PostMapping("baseVehicle/deleteBaseVehicle")
     ResultInfo<DeleteBaseVehicleRespDto> deleteBaseVehicle(DeleteBaseVehicleCmd cmd);
 

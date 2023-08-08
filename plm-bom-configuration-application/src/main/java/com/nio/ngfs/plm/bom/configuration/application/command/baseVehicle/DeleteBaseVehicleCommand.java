@@ -2,11 +2,13 @@ package com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle;
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.service.basevehicle.BaseVehicleDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.DeleteBaseVehicleCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.DeleteBaseVehicleRespDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author bill.wang
@@ -18,11 +20,15 @@ public class DeleteBaseVehicleCommand {
 
     private final BaseVehicleDomainService baseVehicleDomainService;
     private final BaseVehicleRepository baseVehicleRepository;
+    private final OxoOptionPackageRepository oxoOptionPackageRepository;
 
+    @Transactional(rollbackFor = Exception.class)
     public DeleteBaseVehicleRespDto execute(DeleteBaseVehicleCmd cmd) {
         BaseVehicleAggr baseVehicleAggr = baseVehicleDomainService.getBaseVehicleByBaseVehicleId(cmd.getBaseVehicleId());
         baseVehicleDomainService.checkBaseVehicleExist(baseVehicleAggr);
         baseVehicleRepository.removeById(baseVehicleAggr.getId());
+        //删除oxo中对应打点
+        oxoOptionPackageRepository.removeByBaseVehicleIds(baseVehicleAggr.getId());
         return new DeleteBaseVehicleRespDto();
     }
 }

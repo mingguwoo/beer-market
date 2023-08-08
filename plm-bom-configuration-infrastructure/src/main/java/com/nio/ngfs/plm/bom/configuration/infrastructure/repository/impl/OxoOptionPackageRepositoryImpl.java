@@ -65,4 +65,9 @@ public class OxoOptionPackageRepositoryImpl implements OxoOptionPackageRepositor
     public void saveOrUpdatebatch(List<OxoOptionPackageAggr> oxoOptionPackageAggrs) {
         bomsOxoOptionPackageDao.saveOrUpdateBatch(oxoOptionPackageConverter.convertDoListToEntityList(oxoOptionPackageAggrs));
     }
+
+    @Override
+    public void removeByBaseVehicleIds(Long baseVehicleId) {
+        bomsOxoOptionPackageDao.removeByBaseVehicleIds(baseVehicleId);
+    }
 }

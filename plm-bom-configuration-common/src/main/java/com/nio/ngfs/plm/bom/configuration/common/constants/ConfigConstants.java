@@ -39,7 +39,7 @@ public interface ConfigConstants {
 
     String OXO_EMAIL_GROUP = "Engineering Config.OXO";
 
-    String OXO_EMAIL_GROUP_ALPS = "Engineering Config. OXO-Alps";
+    String OXO_EMAIL_GROUP_ALPS = "Engineering Config.OXO-Alps";
 
     String BASE_VEHICLE_ID_PREFIX = "BV";
 

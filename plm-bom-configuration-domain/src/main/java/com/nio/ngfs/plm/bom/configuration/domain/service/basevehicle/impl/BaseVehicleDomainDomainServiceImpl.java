@@ -122,8 +122,8 @@ public class BaseVehicleDomainDomainServiceImpl implements BaseVehicleDomainServ
          */
         basicVehicleAggrMaps.forEach((k, v) -> {
             OxoHeadQry oxoHeadQry = new OxoHeadQry();
-            oxoHeadQry.setModelCode(k);
-            oxoHeadQry.setModelYear(featureAggrAF1.get(k));
+            oxoHeadQry.setModelCode(modelCode);
+            oxoHeadQry.setModelYear(k);
             Map<String, List<BaseVehicleAggr>> regionVehicleAggrMaps =
                     v.stream().sorted(Comparator.comparing(BaseVehicleAggr::getRegionOptionCode))
                             .collect(Collectors.groupingBy(BaseVehicleAggr::getRegionOptionCode));

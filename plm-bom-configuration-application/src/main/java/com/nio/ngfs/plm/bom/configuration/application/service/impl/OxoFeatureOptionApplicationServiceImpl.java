@@ -114,6 +114,16 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
         // 查询行数据
         List<OxoFeatureOptionAggr> oxoFeatureOptions = oxoFeatureOptionRepository.queryFeatureListsByModel(modelCode);
 
+        //查询表头信息
+        List<OxoHeadQry> oxoLists = baseVehicleDomainService.queryByModel(modelCode);
+
+        OxoListQry qry = new OxoListQry();
+        qry.setOxoHeadResps(oxoLists);
+
+        if (CollectionUtils.isEmpty(oxoFeatureOptions)) {
+            return qry;
+        }
+
         //获取所有的行节点
         List<Long> rowIds = oxoFeatureOptions.stream().map(OxoFeatureOptionAggr::getId).distinct().toList();
 
@@ -121,8 +131,6 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
         List<OxoOptionPackageAggr> entities =
                 oxoOptionPackageRepository.queryByBaseVehicleIds(rowIds);
 
-        //查询表头信息
-        List<OxoHeadQry> oxoLists = baseVehicleDomainService.queryByModel(modelCode);
 
         /**
          * 系统默认排序
@@ -140,10 +148,9 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
                         .sorted(Comparator.comparing(OxoFeatureOptionAggr::getCatalog).thenComparing(OxoFeatureOptionAggr::getParentFeatureCode))
                         .collect(Collectors.groupingBy(OxoFeatureOptionAggr::getParentFeatureCode));
 
-        OxoListQry qry=new OxoListQry();
         qry.setOxoHeadResps(oxoLists);
 
-        List<OxoRowsQry> rowsQryList= com.google.common.collect.Lists.newArrayList();
+        List<OxoRowsQry> rowsQryList = com.google.common.collect.Lists.newArrayList();
         oxoInfoDoMaps.forEach((k, features) -> {
             List<OxoFeatureOptionAggr> oxoInfoDoList = features.stream().sorted().sorted(Comparator.comparing(OxoFeatureOptionAggr::getSort)
                     .thenComparing(OxoFeatureOptionAggr::getFeatureCode)).toList();
@@ -164,7 +171,7 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
                         OxoRowsQry optionQry = OxoInfoAssembler.assembleOxoQry(option, k);
 
                         if (CollectionUtils.isNotEmpty(entities)) {
-                            optionQry.setPackInfos(OxoInfoAssembler.buildOxoEditCmd(entities,option,oxoLists));
+                            optionQry.setPackInfos(OxoInfoAssembler.buildOxoEditCmd(entities, option, oxoLists));
                         }
                         optionQrys.add(optionQry);
                     });
@@ -203,7 +210,6 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
     }
 
 
-
     /**
      * 根据 model 查询没有选中的featureCode
      *
@@ -227,10 +233,8 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
     }
 
 
-
-
     @Override
-    public  List<String> checkRules(String modelCode){
+    public List<String> checkRules(String modelCode) {
         List<String> messages = Lists.newArrayList();
 
         /**

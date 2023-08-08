@@ -4,10 +4,7 @@ import com.nio.bom.share.annotation.NeedAuthorization;
 import com.nio.bom.share.annotation.NotLogResult;
 import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.application.command.oxo.*;
-import com.nio.ngfs.plm.bom.configuration.application.query.oxo.OxoFeatureOptionQuery;
-import com.nio.ngfs.plm.bom.configuration.application.query.oxo.OxoInfoQuery;
-import com.nio.ngfs.plm.bom.configuration.application.query.oxo.OxoQueryGroupQuery;
-import com.nio.ngfs.plm.bom.configuration.application.query.oxo.OxoVersionQuery;
+import com.nio.ngfs.plm.bom.configuration.application.query.oxo.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.PageData;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.DeleteFeatureOptionRespDto;
@@ -41,12 +38,14 @@ public class OxoController {
     private final RenewSortFeatureOptionCommand renewSortFeatureOptionCommand;
     private final OxoVersionQuery oxoVersionQuery;
 
+    private final OxoInfoExportQuery oxoInfoExportQuery;
+
     private final OxoInfoQuery oxoInfoQuery;
-
     private final OxoFeatureOptionQuery oxoFeatureOptionQuery;
-
-
     private final OxoQueryGroupQuery oxoQueryGroupQuery;
+
+
+
 
 
     /**
@@ -54,7 +53,7 @@ public class OxoController {
      * @param cmd
      * @return
      */
-    @NeedAuthorization
+    //@NeedAuthorization
     @NotLogResult
     @PostMapping("/queryVersion")
     public ResultInfo<List<String>> queryVersion(@Valid @RequestBody OxoBaseCmd cmd) {
@@ -66,7 +65,7 @@ public class OxoController {
      * @param cmd
      * @return
      */
-    @NeedAuthorization
+    //@NeedAuthorization
     @NotLogResult
     @PostMapping("/queryList")
     public ResultInfo<OxoListQry> queryList(@Valid @RequestBody OxoBaseCmd cmd) {
@@ -90,7 +89,7 @@ public class OxoController {
      * @param cmd
      * @return
      */
-    @NeedAuthorization
+    //@NeedAuthorization
     @NotLogResult
     @PostMapping("/add")
     public ResultInfo add(@Valid @RequestBody OxoAddCmd cmd) {
@@ -167,15 +166,15 @@ public class OxoController {
 //        return ResultInfo.success(oxoDomainService.compare(compareCmd));
 //    }
 //
-//    /**
-//     * oxo 导出
-//     * @param cmd
-//     * @return
-//     */
-//    @PostMapping("/export")
-//    public void export(@Valid @RequestBody OxoListCmd cmd,HttpServletResponse response) {
-//        oxoDomainService.export(cmd,response);
-//    }
+    /**
+     * oxo 导出
+     * @param cmd
+     * @return
+     */
+    @PostMapping("/export")
+    public void export(@Valid @RequestBody OxoBaseCmd cmd,HttpServletResponse response) {
+       // oxoInfoExportQuery.execute(cmd,response);
+    }
 
     /**
      * oxo 对比导出
@@ -187,6 +186,8 @@ public class OxoController {
     @PostMapping("/compareExport")
     public void compareExport(@Valid @RequestBody OxoCompareCmd compareCmd,HttpServletResponse response) {
         //oxoDomainService.compareExport(compareCmd,response);
+
+
     }
 
     /**

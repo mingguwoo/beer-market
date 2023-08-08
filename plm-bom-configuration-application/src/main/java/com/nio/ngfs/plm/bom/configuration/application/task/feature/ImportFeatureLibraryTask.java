@@ -32,6 +32,7 @@ import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -56,15 +57,26 @@ public class ImportFeatureLibraryTask {
         List<FeatureLibraryHistory> featureLibraryHistoryList = readData(file);
         // 校验数据
         checkData(featureLibraryHistoryList);
-        List<BomsFeatureLibraryEntity> bomsFeatureLibraryEntityList = Lists.newArrayList();
         // 解析Group
-        importGroup(featureLibraryHistoryList, bomsFeatureLibraryEntityList);
+        importGroup(featureLibraryHistoryList);
         // 解析Feature和Option
-        importFeatureAndOption(featureLibraryHistoryList, bomsFeatureLibraryEntityList);
+        List<BomsFeatureLibraryEntity> featureOptionList = importFeatureAndOption(featureLibraryHistoryList);
         // 批量保存到数据库
-        for (List<BomsFeatureLibraryEntity> partitionList : Lists.partition(bomsFeatureLibraryEntityList, BATCH_SIZE)) {
-            bomsFeatureLibraryDao.saveBatch(partitionList);
+        for (List<BomsFeatureLibraryEntity> partitionList : Lists.partition(featureOptionList, BATCH_SIZE)) {
+            saveOrUpdate(partitionList);
         }
+    }
+
+    /**
+     * 新增或更新
+     */
+    private void saveOrUpdate(List<BomsFeatureLibraryEntity> partitionList) {
+        List<BomsFeatureLibraryEntity> existEntityList = bomsFeatureLibraryDao.queryByFeatureOptionCodeList(LambdaUtil.map(partitionList,
+                BomsFeatureLibraryEntity::getFeatureCode));
+        Map<String, Long> featureCodeIdMap = LambdaUtil.toKeyValueMap(existEntityList, BomsFeatureLibraryEntity::getFeatureCode, BomsFeatureLibraryEntity::getId);
+        partitionList.forEach(entity -> entity.setId(featureCodeIdMap.get(entity.getFeatureCode())));
+        bomsFeatureLibraryDao.saveBatch(partitionList.stream().filter(i -> i.getId() == null).toList());
+        bomsFeatureLibraryDao.updateBatchById(partitionList.stream().filter(i -> i.getId() != null).toList());
     }
 
     /**
@@ -77,7 +89,7 @@ public class ImportFeatureLibraryTask {
             // 读取Sheet 0
             ReadSheet readSheet = EasyExcel.readSheet(0).head(FeatureLibraryHistory.class)
                     .registerReadListener(readListener)
-                    .headRowNumber(1).build();
+                    .headRowNumber(0).build();
             // 开始读取Sheet
             excelReader.read(Lists.newArrayList(readSheet));
             return readListener.getFeatureLibraryHistoryList();
@@ -108,9 +120,9 @@ public class ImportFeatureLibraryTask {
             checkEnumValues(history.getType(), Lists.newArrayList(
                     CONFIGURATION_FEATURE, CONFIGURATION_OPTION
             ), "Type enum value is not match");
-            checkEnumValues(history.getCatalogue(), Lists.newArrayList(
-                    FeatureCatalogEnum.SALES.getCatalog(), FeatureCatalogEnum.ENGINEERING.getCatalog()
-            ), "Catalogue enum value is not match");
+//            checkEnumValues(history.getCatalogue(), Lists.newArrayList(
+//                    FeatureCatalogEnum.SALES.getCatalog(), FeatureCatalogEnum.ENGINEERING.getCatalog()
+//            ), "Catalogue enum value is not match");
             checkEnumValues(history.getRequestor(), Lists.newArrayList(
                     BrandEnum.NIO.name(), BrandEnum.ALPS.name(), BrandEnum.FY.name()
             ), "Requestor enum value is not match");
@@ -129,24 +141,32 @@ public class ImportFeatureLibraryTask {
     /**
      * 解析Group
      */
-    private void importGroup(List<FeatureLibraryHistory> featureLibraryHistoryList, List<BomsFeatureLibraryEntity> bomsFeatureLibraryEntityList) {
+    private void importGroup(List<FeatureLibraryHistory> featureLibraryHistoryList) {
         List<String> groupCodeList = featureLibraryHistoryList.stream().map(FeatureLibraryHistory::getGroup).distinct().toList();
-        List<BomsFeatureLibraryEntity> groupList = groupCodeList.stream().map(this::buildGroup).toList();
-        bomsFeatureLibraryEntityList.addAll(groupList);
+        groupCodeList.stream().map(this::buildGroup).forEach(bomsFeatureLibraryEntity -> {
+            BomsFeatureLibraryEntity existEntity = bomsFeatureLibraryDao.getByFeatureCodeAndType(bomsFeatureLibraryEntity.getFeatureCode(),
+                    FeatureTypeEnum.GROUP.getType());
+            if (existEntity != null) {
+                bomsFeatureLibraryEntity.setId(existEntity.getId());
+                bomsFeatureLibraryDao.updateById(bomsFeatureLibraryEntity);
+            } else {
+                bomsFeatureLibraryDao.save(bomsFeatureLibraryEntity);
+            }
+        });
     }
 
     /**
      * 解析Feature和Option
      */
-    private void importFeatureAndOption(List<FeatureLibraryHistory> featureLibraryHistoryList, List<BomsFeatureLibraryEntity> bomsFeatureLibraryEntityList) {
-        bomsFeatureLibraryEntityList.addAll(LambdaUtil.map(featureLibraryHistoryList, history -> {
+    private List<BomsFeatureLibraryEntity> importFeatureAndOption(List<FeatureLibraryHistory> featureLibraryHistoryList) {
+        return LambdaUtil.map(featureLibraryHistoryList, history -> {
             if (history.isFeature()) {
                 return buildFeature(history);
             } else if (history.isOption()) {
                 return buildOption(history);
             }
             return null;
-        }));
+        });
     }
 
     private BomsFeatureLibraryEntity buildGroup(String groupCode) {

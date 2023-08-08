@@ -1,7 +1,7 @@
 CREATE TABLE `boms_product_config_model_option`
 (
     `id`           bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-    `model`        varchar(64)     NOT NULL DEFAULT '' COMMENT '车型',
+    `model`        varchar(32)     NOT NULL DEFAULT '' COMMENT '车型',
     `option_code`  varchar(64)     NOT NULL DEFAULT '' COMMENT 'Option Code',
     `feature_code` varchar(64)     NOT NULL DEFAULT '' COMMENT 'Feature Code',
     `create_user`  varchar(32)     NOT NULL DEFAULT '' COMMENT '创建人',

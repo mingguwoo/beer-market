@@ -23,4 +23,6 @@ public class QueryBaseVehicleQry implements Qry {
     private String salesVersion;
 
     private String status;
+
+    private String maturity;
 }

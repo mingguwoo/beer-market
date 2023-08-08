@@ -13,4 +13,4 @@ CREATE TABLE `boms_product_config_model_option`
     UNIQUE KEY `uniq_model_option_code` (`model`, `option_code`) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  ROW_FORMAT = DYNAMIC COMMENT ='单车PC车型的Option表';
+  ROW_FORMAT = DYNAMIC COMMENT ='Product Config车型的Option表';

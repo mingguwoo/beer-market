@@ -17,7 +17,6 @@ import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.bom.share.utils.PreconditionUtil;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureCatalogEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsFeatureLibraryDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureLibraryEntity;
@@ -57,10 +56,10 @@ public class ImportFeatureLibraryTask {
         List<FeatureLibraryHistory> featureLibraryHistoryList = readData(file);
         // 校验数据
         checkData(featureLibraryHistoryList);
-        // 解析Group
+        // 导入Group
         importGroup(featureLibraryHistoryList);
         // 解析Feature和Option
-        List<BomsFeatureLibraryEntity> featureOptionList = importFeatureAndOption(featureLibraryHistoryList);
+        List<BomsFeatureLibraryEntity> featureOptionList = buildFeatureAndOption(featureLibraryHistoryList);
         // 批量保存到数据库
         for (List<BomsFeatureLibraryEntity> partitionList : Lists.partition(featureOptionList, BATCH_SIZE)) {
             saveOrUpdate(partitionList);
@@ -158,7 +157,7 @@ public class ImportFeatureLibraryTask {
     /**
      * 解析Feature和Option
      */
-    private List<BomsFeatureLibraryEntity> importFeatureAndOption(List<FeatureLibraryHistory> featureLibraryHistoryList) {
+    private List<BomsFeatureLibraryEntity> buildFeatureAndOption(List<FeatureLibraryHistory> featureLibraryHistoryList) {
         return LambdaUtil.map(featureLibraryHistoryList, history -> {
             if (history.isFeature()) {
                 return buildFeature(history);

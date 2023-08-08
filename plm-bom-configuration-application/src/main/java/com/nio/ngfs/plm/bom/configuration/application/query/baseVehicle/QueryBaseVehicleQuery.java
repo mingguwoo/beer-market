@@ -54,6 +54,7 @@ public class QueryBaseVehicleQuery extends AbstractQuery<QueryBaseVehicleQry, Li
                 .filter(dto-> StringUtils.isBlank(qry.getSalesVersion()) || Objects.equals(qry.getSalesVersion(),dto.getSalesVersion()))
                 .filter(dto-> StringUtils.isBlank(qry.getRegionOptionCode()) || Objects.equals(qry.getRegionOptionCode(),dto.getRegionOptionCode()))
                 .filter(dto-> StringUtils.isBlank(qry.getDriveHand()) || Objects.equals(qry.getDriveHand(),dto.getDriveHand()))
+                .filter(dto->StringUtils.isBlank(qry.getMaturity()) || Objects.equals(qry.getMaturity(),dto.getMaturity()))
                 .toList();
         return dtoList;
     }

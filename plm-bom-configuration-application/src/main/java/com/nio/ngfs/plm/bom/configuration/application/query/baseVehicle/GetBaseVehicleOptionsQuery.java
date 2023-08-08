@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -37,15 +38,22 @@ public class GetBaseVehicleOptionsQuery {
         List<String> codeList = Stream.of(ConfigConstants.BASE_VEHICLE_SALES_VERSION_FEATURE,ConfigConstants.BASE_VEHICLE_REGION_FEATURE,ConfigConstants.BASE_VEHICLE_DRIVE_HAND_FEATURE).collect(Collectors.toList());
         List<BomsFeatureLibraryEntity> allFeatures = bomsFeatureLibraryDao.queryByParentFeatureCodeListAndType(codeList, FeatureTypeEnum.OPTION.getType());
         List<String> featureList = allFeatures.stream().map(feature->feature.getFeatureCode()).collect(Collectors.toList());
-        //加上modelCode去oxoFeatureOptionDao进行批量查询，看有哪些存在
-        List<BomsOxoFeatureOptionEntity> options = bomsOxoFeatureOptionDao.getBaseVehicleOptions(featureList,qry.getModelCode());
-        List<FeatureAggr> featureAggrList = featureConverter.convertEntityListToDoList(bomsFeatureLibraryDao.queryByFeatureOptionCodeList((options.stream().map(option-> option.getFeatureCode()).toList())));
-        return sortBaseVehicleOptions(featureAggrList);
+        //如果有modelCode，说明是新增或者带着modelCode的搜索条件筛选，用modelCode去oxoFeatureOptionDao进行批量查询，看有哪些存在
+        if (Objects.nonNull(qry.getModelCode())){
+            List<BomsOxoFeatureOptionEntity> options = bomsOxoFeatureOptionDao.getBaseVehicleOptions(featureList,qry.getModelCode());
+            List<FeatureAggr> featureAggrList = featureConverter.convertEntityListToDoList(bomsFeatureLibraryDao.queryByFeatureOptionCodeList((options.stream().map(option-> option.getFeatureCode()).toList())));
+            return sortBaseVehicleOptions(featureAggrList);
+        }
+        //如果没有modelCode，说明是全量搜索条件
+        else {
+            List<FeatureAggr> featureAggrList = featureConverter.convertEntityListToDoList(allFeatures);
+            return sortBaseVehicleOptions(featureAggrList);
+        }
         }
 
 
     /**
-     * 将Option Code List分类成Region Option Code, Sales Version, Drive Hand三类
+     * 将Option Code List分类成Region Option Code, Sales Version, Drive Hand三类并补齐其他信息
      */
     private GetBaseVehicleOptionsRespDto sortBaseVehicleOptions(List<FeatureAggr> featureAggrList) {
         GetBaseVehicleOptionsRespDto ans = new GetBaseVehicleOptionsRespDto();

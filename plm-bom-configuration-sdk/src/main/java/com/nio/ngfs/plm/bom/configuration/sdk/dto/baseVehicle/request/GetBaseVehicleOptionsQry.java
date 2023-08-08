@@ -12,9 +12,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class GetBaseVehicleOptionsQry implements Qry {
 
-    @NotBlank(message = "Model Code is blank")
     private String modelCode;
 
-    @NotBlank(message = "Model Year is blank")
     private String modelYear;
 }

@@ -53,5 +53,14 @@ public interface OxoOptionPackageRepository extends Repository<OxoOptionPackageA
      */
     List<OxoOptionPackageAggr> queryByBaseVehicleIds(List<Long> rowIds);
 
+    /**
+     * 批量更新
+     */
     void saveOrUpdatebatch(List<OxoOptionPackageAggr> oxoOptionPackageAggrs);
+
+
+    /**
+     * 根据basevehicleId删除Oxo
+     */
+    void removeByBaseVehicleIds(Long baseVehicleId);
 }

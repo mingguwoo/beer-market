@@ -55,4 +55,11 @@ public class BomsOxoOptionPackageDaoImpl extends AbstractDao<BomsOxoOptionPackag
         lambdaQueryWrapper.eq(BomsOxoOptionPackageEntity::getBaseVehicleId,baseVehicleId);
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }
+
+    @Override
+    public void removeByBaseVehicleIds(Long baseVehicleId) {
+        LambdaQueryWrapper<BomsOxoOptionPackageEntity> lambdaQueryWrapper= new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(BomsOxoOptionPackageEntity::getBaseVehicleId, baseVehicleId);
+        getBaseMapper().delete(lambdaQueryWrapper);
+    }
 }

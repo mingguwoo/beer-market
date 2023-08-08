@@ -35,4 +35,13 @@ public interface BomsOxoOptionPackageDao extends IService<BomsOxoOptionPackageEn
      * @return OxoPackageInfoAggr 列表
      */
     List<BomsOxoOptionPackageEntity> queryOxoListByBaseVehicle(Long baseVehicleId);
+
+
+    /**
+     * 根据basevehicle获取它所有的点
+     *
+     * @param baseVehicleId
+     * @return OxoPackageInfoAggr 列表
+     */
+    void removeByBaseVehicleIds(Long baseVehicleId);
 }

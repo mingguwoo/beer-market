@@ -34,14 +34,16 @@ public class OxoVersionSnapshotRepositoryImpl implements OxoVersionSnapshotRepos
     }
 
     @Override
-    public List<OxoVersionSnapshotAggr> queryOxoVersionSnapshotByModelCode(String modelCode) {
-        List<OxoVersionSnapshotAggr> snapshotAggrs=
-                oxoVersionSnapshotConverter.convertEntityListToDoList(bomsOxoVersionSnapshotDao.queryBomsOxoVersionSnapshotsByModel(modelCode));
+    public List<OxoVersionSnapshotAggr> queryOxoVersionSnapshotByModelCode(String modelCode, String version, String type) {
+        List<OxoVersionSnapshotAggr> snapshotAggrs =
+                oxoVersionSnapshotConverter.convertEntityListToDoList(
+                        bomsOxoVersionSnapshotDao.queryBomsOxoVersionSnapshotsByModelOrVersionOrType
+                                (modelCode, version, type));
 
 
-        if(CollectionUtils.isNotEmpty(snapshotAggrs)){
+        if (CollectionUtils.isNotEmpty(snapshotAggrs)) {
 
-            snapshotAggrs.forEach(snapshot->{
+            snapshotAggrs.forEach(snapshot -> {
                 snapshot.setOxoSnapshot(snapshot.findOxoSnapshot());
             });
         }
@@ -51,6 +53,7 @@ public class OxoVersionSnapshotRepositoryImpl implements OxoVersionSnapshotRepos
 
     @Override
     public List<OxoVersionSnapshotAggr> queryBomsOxoVersionSnapshotsByModel(String modelCode) {
-        return oxoVersionSnapshotConverter.convertEntityListToDoList(bomsOxoVersionSnapshotDao.queryBomsOxoVersionSnapshotsByModel(modelCode));
+        return oxoVersionSnapshotConverter.convertEntityListToDoList(bomsOxoVersionSnapshotDao.
+                queryBomsOxoVersionSnapshotsByModelOrVersionOrType(modelCode, null, null));
     }
 }

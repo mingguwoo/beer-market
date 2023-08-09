@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
@@ -172,8 +173,8 @@ public class  OxoController {
      * @return
      */
     @PostMapping("/export")
-    public void export(@Valid @RequestBody OxoBaseCmd cmd,HttpServletResponse response) {
-       // oxoInfoExportQuery.execute(cmd,response);
+    public void export(@Valid @RequestBody OxoBaseCmd cmd,HttpServletResponse response, HttpServletRequest request) {
+        oxoInfoExportQuery.execute(cmd,request,response);
     }
 
     /**

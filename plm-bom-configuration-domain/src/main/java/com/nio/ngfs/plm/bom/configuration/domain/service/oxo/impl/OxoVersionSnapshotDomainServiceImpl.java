@@ -43,7 +43,7 @@ public class OxoVersionSnapshotDomainServiceImpl implements OxoVersionSnapshotDo
 
 
         List<OxoVersionSnapshotAggr> oxoVersionSnapshots =
-                oxoVersionSnapshotRepository.queryOxoVersionSnapshotByModelCode(modelCode);
+                oxoVersionSnapshotRepository.queryOxoVersionSnapshotByModelCode(modelCode,null,null);
 
 
         // 根据 车型获取 oxo版本
@@ -89,6 +89,18 @@ public class OxoVersionSnapshotDomainServiceImpl implements OxoVersionSnapshotDo
 
         return StringUtils.EMPTY;
     }
+
+    @Override
+    public OxoVersionSnapshotAggr queryOxoInfoByModelAndVersion(String modelCode, String version) {
+        List<OxoVersionSnapshotAggr>  oxoVersionSnapshots=
+                oxoVersionSnapshotRepository.queryOxoVersionSnapshotByModelCode(modelCode,version,null);
+
+        if(CollectionUtils.isNotEmpty(oxoVersionSnapshots)){
+            return oxoVersionSnapshots.get(0);
+        }
+        return null;
+    }
+
 
     @Override
     public void checkBaseVehicleReleased(String modelCode) {

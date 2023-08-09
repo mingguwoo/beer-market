@@ -16,7 +16,7 @@ public interface OxoVersionSnapshotRepository extends Repository<OxoVersionSnaps
        * @param modelCode
        * @return
        */
-      List<OxoVersionSnapshotAggr> queryOxoVersionSnapshotByModelCode(String modelCode);
+      List<OxoVersionSnapshotAggr> queryOxoVersionSnapshotByModelCode(String modelCode, String version, String type);
 
 
       /**

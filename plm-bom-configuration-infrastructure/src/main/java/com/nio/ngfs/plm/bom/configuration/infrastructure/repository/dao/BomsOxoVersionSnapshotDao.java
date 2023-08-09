@@ -18,7 +18,8 @@ public interface BomsOxoVersionSnapshotDao extends IService<BomsOxoVersionSnapsh
      * @param modelCode
      * @return
      */
-    List<BomsOxoVersionSnapshotEntity> queryBomsOxoVersionSnapshotsByModel(String modelCode);
+    List<BomsOxoVersionSnapshotEntity> queryBomsOxoVersionSnapshotsByModelOrVersionOrType(
+            String modelCode,String version,String type);
 
 
     /**

@@ -22,6 +22,7 @@ public class OxoInfoQuery implements Query<OxoBaseCmd, OxoListQry> {
 
     @Override
     public OxoListQry execute(OxoBaseCmd oxoListQry) {
-        return featureOptionApplicationService.queryOxoInfoByModelCode(oxoListQry.getModelCode());
+        return featureOptionApplicationService.queryOxoInfoByModelCode(
+                oxoListQry.getModelCode(),oxoListQry.getVersion());
     }
 }

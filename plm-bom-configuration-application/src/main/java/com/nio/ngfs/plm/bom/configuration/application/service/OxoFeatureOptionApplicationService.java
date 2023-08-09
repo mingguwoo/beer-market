@@ -51,9 +51,10 @@ public interface OxoFeatureOptionApplicationService {
     /**
      * 根据 车型查询oxo working版本信息
      * @param modelCode
+     * @para version
      * @return
      */
-    OxoListQry queryOxoInfoByModelCode(String modelCode);
+    OxoListQry queryOxoInfoByModelCode(String modelCode,String version);
 
 
     /**

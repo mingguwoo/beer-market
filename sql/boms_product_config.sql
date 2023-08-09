@@ -1,14 +1,14 @@
 CREATE TABLE `boms_product_config`
 (
     `id`                       bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-    `pc_id`                    varchar(64)     NOT NULL DEFAULT '' COMMENT '单车PC ID',
-    `model`                    varchar(32)     NOT NULL DEFAULT '' COMMENT 'Model',
+    `pc_id`                    varchar(128)    NOT NULL DEFAULT '' COMMENT '单车PC ID',
+    `model`                    varchar(64)     NOT NULL DEFAULT '' COMMENT 'Model',
     `model_year`               varchar(32)     NOT NULL DEFAULT '' COMMENT 'Model Year',
     `name`                     varchar(128)    NOT NULL DEFAULT '' COMMENT '单车PC Name',
     `marketing_name`           varchar(128)    NOT NULL DEFAULT '' COMMENT '单车PC Marketing Name',
     `description`              varchar(128)    NOT NULL DEFAULT '' COMMENT '单车PC描述',
-    `based_on_base_vehicle_id` varchar(32)     NOT NULL DEFAULT '' COMMENT 'Based On Base Vehicle ID',
-    `based_on_pc_id`           varchar(64)     NOT NULL DEFAULT '' COMMENT 'Based On PC ID',
+    `based_on_base_vehicle_id` varchar(16)     NOT NULL DEFAULT '' COMMENT 'Based On Base Vehicle ID',
+    `based_on_pc_id`           varchar(128)    NOT NULL DEFAULT '' COMMENT 'Based On PC ID',
     `brand`                    varchar(8)      NOT NULL DEFAULT '' COMMENT 'Model的品牌',
     `skip_check`               varchar(8)      NOT NULL DEFAULT '' COMMENT 'Skip Check开关，取值Open、Close',
     `create_user`              varchar(32)     NOT NULL DEFAULT '' COMMENT '创建人',

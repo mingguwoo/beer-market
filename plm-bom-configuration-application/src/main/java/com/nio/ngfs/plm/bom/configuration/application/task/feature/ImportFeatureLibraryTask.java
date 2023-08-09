@@ -88,7 +88,7 @@ public class ImportFeatureLibraryTask {
             // 读取Sheet 0
             ReadSheet readSheet = EasyExcel.readSheet(0).head(FeatureLibraryHistory.class)
                     .registerReadListener(readListener)
-                    .headRowNumber(0).build();
+                    .headRowNumber(1).build();
             // 开始读取Sheet
             excelReader.read(Lists.newArrayList(readSheet));
             return readListener.getFeatureLibraryHistoryList();
@@ -292,7 +292,7 @@ public class ImportFeatureLibraryTask {
         @ExcelProperty("Status")
         private String status;
 
-        private FeatureLibraryHistory parent;
+        private transient FeatureLibraryHistory parent;
 
         public boolean isFeature() {
             return Objects.equals(getType(), CONFIGURATION_FEATURE);

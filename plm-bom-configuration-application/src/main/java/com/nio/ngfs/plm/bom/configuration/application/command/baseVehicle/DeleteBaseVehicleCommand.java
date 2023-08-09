@@ -23,7 +23,6 @@ public class DeleteBaseVehicleCommand {
     private final BaseVehicleDomainService baseVehicleDomainService;
     private final BaseVehicleRepository baseVehicleRepository;
     private final OxoOptionPackageRepository oxoOptionPackageRepository;
-    private final OxoVersionSnapshotRepository oxoVersionSnapshotRepository;
     private final OxoVersionSnapshotDomainService oxoVersionSnapshotDomainService;
 
     @Transactional(rollbackFor = Exception.class)

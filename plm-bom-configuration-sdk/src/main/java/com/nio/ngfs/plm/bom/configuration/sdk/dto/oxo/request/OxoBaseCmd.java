@@ -4,6 +4,8 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.Cmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.Qry;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author wangchao.wang
  */
@@ -17,4 +19,7 @@ public class OxoBaseCmd implements Cmd, Qry {
     private Integer offSet;
 
     private Integer pageSize;
+
+
+    private List<String> permissionPoints;
 }

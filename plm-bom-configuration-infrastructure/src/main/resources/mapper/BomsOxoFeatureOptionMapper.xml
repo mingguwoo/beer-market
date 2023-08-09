@@ -11,7 +11,7 @@
         type,
         comment,
         sort,
-        sort_delete,
+        soft_delete,
         create_user,
         update_user
         )
@@ -19,7 +19,7 @@
         <foreach collection="bomsOxoRowInfoEntitys" item="entity" index="index" separator=",">
             (#{entity.modelCode},#{entity.featureCode},#{entity.ruleCheck},#{entity.type},#{entity.comment}
             ,#{entity.sort}
-            ,#{entity.sortDelete},#{entity.createUser},#{entity.updateUser})
+            ,#{entity.softDelete},#{entity.createUser},#{entity.updateUser})
         </foreach>
         ON DUPLICATE KEY UPDATE
         <trim prefix="" suffixOverrides=",">

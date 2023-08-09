@@ -52,13 +52,13 @@ public class OxoFeatureOptionAggr extends AbstractDo implements AggrRoot<Long>, 
     /**
      * 排序id
      */
-    private Integer sort;
+    private Integer sort=0;
 
 
     /**
      * 软删除 1删除 0未删除
      */
-    private Integer sortDelete;
+    private Integer sortDelete=0;
 
     private String parentFeatureCode;
 

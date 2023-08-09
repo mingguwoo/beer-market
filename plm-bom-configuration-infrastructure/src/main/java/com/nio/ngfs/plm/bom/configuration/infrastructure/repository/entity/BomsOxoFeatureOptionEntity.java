@@ -46,29 +46,29 @@ public class BomsOxoFeatureOptionEntity extends BaseEntity {
     /**
      * 排序id
      */
-    private Integer sort;
+    private Integer sort = 0;
 
     /**
      * 软删除 1删除 0未删除
      */
-    private Short softDelete;
+    private Short softDelete = 0;
 
     @Override
     public String toString() {
         return "BomsOxoFeatureOption{" +
-            "id = " + getId() +
-            ", modelCode = " + modelCode +
-            ", featureCode = " + featureCode +
-            ", ruleCheck = " + ruleCheck +
-            ", type = " + type +
-            ", comment = " + comment +
-            ", sort = " + sort +
-            ", softDelete = " + softDelete +
-            ", createTime = " + getCreateTime() +
-            ", updateTime = " + getUpdateTime() +
-            ", createUser = " + getCreateUser() +
-            ", updateUser = " + getUpdateUser() +
-            ", delFlag = " + getDelFlag() +
-        "}";
+                "id = " + getId() +
+                ", modelCode = " + modelCode +
+                ", featureCode = " + featureCode +
+                ", ruleCheck = " + ruleCheck +
+                ", type = " + type +
+                ", comment = " + comment +
+                ", sort = " + sort +
+                ", softDelete = " + softDelete +
+                ", createTime = " + getCreateTime() +
+                ", updateTime = " + getUpdateTime() +
+                ", createUser = " + getCreateUser() +
+                ", updateUser = " + getUpdateUser() +
+                ", delFlag = " + getDelFlag() +
+                "}";
     }
 }

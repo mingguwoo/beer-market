@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.application.service.impl;
 
+import com.google.common.collect.Lists;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.application.query.oxo.assemble.OxoInfoAssembler;
@@ -19,7 +20,6 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoRowsQry;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.compress.utils.Sets;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -150,7 +150,7 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
 
         qry.setOxoHeadResps(oxoLists);
 
-        List<OxoRowsQry> rowsQryList = com.google.common.collect.Lists.newArrayList();
+        List<OxoRowsQry> rowsQryList =Lists.newArrayList();
         oxoInfoDoMaps.forEach((k, features) -> {
             List<OxoFeatureOptionAggr> oxoInfoDoList = features.stream().sorted().sorted(Comparator.comparing(OxoFeatureOptionAggr::getSort)
                     .thenComparing(OxoFeatureOptionAggr::getFeatureCode)).toList();
@@ -164,7 +164,7 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
                                         StringUtils.equals(y.getType(), FeatureTypeEnum.OPTION.getType())).
                         sorted(Comparator.comparing(OxoFeatureOptionAggr::getSort).thenComparing(OxoFeatureOptionAggr::getFeatureCode)).toList();
 
-                List<OxoRowsQry> optionQrys = com.google.common.collect.Lists.newArrayList();
+                List<OxoRowsQry> optionQrys = Lists.newArrayList();
 
                 if (CollectionUtils.isNotEmpty(options)) {
                     options.forEach(option -> {
@@ -176,9 +176,9 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
                         optionQrys.add(optionQry);
                     });
                     oxoRowsQry.setOptions(optionQrys);
-                }
-                rowsQryList.add(oxoRowsQry);
-            });
+                    rowsQryList.add(oxoRowsQry);
+                }});
+
         });
 
         qry.setOxoRowsResps(rowsQryList);

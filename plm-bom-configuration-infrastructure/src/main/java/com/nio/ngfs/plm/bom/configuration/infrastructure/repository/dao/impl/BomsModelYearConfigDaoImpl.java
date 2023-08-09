@@ -8,6 +8,8 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsM
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author xiaozhou.tu
  * @date 2023/8/9
@@ -26,6 +28,11 @@ public class BomsModelYearConfigDaoImpl extends AbstractDao<BomsModelYearConfigM
         lambdaQueryWrapper.eq(BomsModelYearConfigEntity::getModel, model);
         lambdaQueryWrapper.eq(BomsModelYearConfigEntity::getModelYear, modelYear);
         return getBaseMapper().selectOne(lambdaQueryWrapper);
+    }
+
+    @Override
+    public List<BomsModelYearConfigEntity> queryAll() {
+        return getBaseMapper().selectList(new LambdaQueryWrapper<>());
     }
 
 }

@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.modelyearconfig;
 
+import com.nio.bom.share.constants.CommonConstants;
 import com.nio.bom.share.domain.model.AggrRoot;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
 import lombok.AllArgsConstructor;
@@ -44,7 +45,7 @@ public class ModelYearConfigAggr extends AbstractDo implements AggrRoot<ModelYea
      * OXO发布
      */
     public void oxoReleased() {
-        setOxoRelease("Yes");
+        setOxoRelease(CommonConstants.YES);
     }
 
 }

@@ -29,7 +29,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/oxo")
-public class OxoController {
+public class  OxoController {
 
     private final OxoSnapshotCommand oxoSnapshotCommand;
     private final DeleteFeatureOptionCommand deleteFeatureOptionCommand;

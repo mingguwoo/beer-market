@@ -88,7 +88,7 @@ public class BaseVehicleApplicationServiceImpl implements BaseVehicleApplication
             //获取和region,salesVersion,driveHand，modelCode有关的所有行信息，用于筛选
             List<OxoFeatureOptionAggr> driveHandRegionSalesVersionRows = queryRegionSalesDrivePoints(cmd.getModelCode());
             //筛选掉重复的打点信息(region,salesVersion,driveHand)
-            List<OxoOptionPackageAggr> filteredAggrs = oxoFeatureOptionDomainService.filter(oxoOptionPackageAggrs,driveHandRegionSalesVersionRows);
+            List<OxoOptionPackageAggr> filteredAggrs = oxoFeatureOptionDomainService.filterRepeatCopyfromPoints(oxoOptionPackageAggrs,driveHandRegionSalesVersionRows);
             //oxo打点
             oxoOptionPackageRepository.inserOxoOptionPackagesByOxoOptionPackages(filteredAggrs.stream().map(aggr->{
                 aggr.setBaseVehicleId(baseVehicleAggr.getId());

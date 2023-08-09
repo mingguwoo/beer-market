@@ -30,7 +30,7 @@ public interface OxoFeatureOptionDomainService {
     /**
      * 筛选掉重复/有冲突的无需打的点
      */
-    List<OxoOptionPackageAggr> filter(List<OxoOptionPackageAggr> points, List<OxoFeatureOptionAggr> driveHandRegionSalesVersionRows);
+    List<OxoOptionPackageAggr> filterRepeatCopyfromPoints(List<OxoOptionPackageAggr> points, List<OxoFeatureOptionAggr> driveHandRegionSalesVersionRows);
 
 
     List<String>  checkOxoBasicVehicleOptions(String modelCode);

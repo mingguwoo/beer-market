@@ -1,8 +1,8 @@
 CREATE TABLE `boms_product_context_feature` (
       `id` int NOT NULL AUTO_INCREMENT COMMENT '主键ID',
       `model_code` varchar(32) NOT NULL COMMENT '车型编码',
-      `feature_code` varchar(32) NOT NULL COMMENT '特征编码',
-      `feature_group` varchar(32) NOT NULL COMMENT 'group id',
+      `feature_code` varchar(128) NOT NULL COMMENT '特征编码',
+      `feature_group` bigint unsigned NOT NULL COMMENT 'group id',
       `type` varchar(32) NOT NULL COMMENT '类型，Feature、Option',
       `feature_seq` int DEFAULT NULL COMMENT '排序',
       `create_user` varchar(32) NOT NULL DEFAULT '' COMMENT '创建人',

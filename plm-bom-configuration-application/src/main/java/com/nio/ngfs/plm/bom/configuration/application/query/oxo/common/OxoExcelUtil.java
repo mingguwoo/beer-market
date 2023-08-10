@@ -200,17 +200,17 @@ public class OxoExcelUtil {
         font.setFontHeightInPoints((short) 11);
 
         XSSFCellStyle cellColorStyle = xssfWorkbook.createCellStyle();
-        cellColorStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(230, 249, 249)));
+        cellColorStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(95, 98, 98)));
         cellColorStyle.setAlignment(HorizontalAlignment.CENTER);    //左右居中
         cellColorStyle.setVerticalAlignment(VerticalAlignment.CENTER);    //上下居中
         cellColorStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         cellColorStyle.setFont(font);
 
         //动态表头样式
-        XSSFCellStyle headStyle = xssfWorkbook.createCellStyle();
-        headStyle.setAlignment(HorizontalAlignment.CENTER);    //左右居中
-        headStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-        headStyle.setFont(font);
+//        XSSFCellStyle headStyle = xssfWorkbook.createCellStyle();
+//        headStyle.setAlignment(HorizontalAlignment.CENTER);    //左右居中
+//        headStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+//        headStyle.setFont(font);
 
         //固定表头样式
         XSSFCellStyle cellCenterStyle = xssfWorkbook.createCellStyle();
@@ -230,7 +230,7 @@ public class OxoExcelUtil {
                 cellStyle.setWrapText(true);
             }
             cell.setCellValue(commonHead.get(i));
-            cell.setCellStyle(headStyle);
+            cell.setCellStyle(cellColorStyle);
             sheet.addMergedRegion(new CellRangeAddress(0, 3, i, i));
         }
 
@@ -245,15 +245,15 @@ public class OxoExcelUtil {
             cell3.setCellValue(oxoBasicVehicleDto.getDriverOption());
             cell2.setCellValue(oxoBasicVehicleDto.getRegion());
             cell1.setCellValue(oxoBasicVehicleDto.getModelYear());
-            cell1.setCellStyle(headStyle);
+            cell1.setCellStyle(cellColorStyle);
             cell2.setCellStyle(cellColorStyle);
-            cell3.setCellStyle(headStyle);
-            cell4.setCellStyle(headStyle);
+            cell3.setCellStyle(cellColorStyle);
+            cell4.setCellStyle(cellColorStyle);
             if (StringUtils.isNotBlank(oxoBasicVehicleDto.getChangeType())) {
                 XSSFRow row5 = sheet.createRow(4);
                 XSSFCell cell5 = row5.createCell(commonHead.size() + i);
                 cell5.setCellValue(oxoBasicVehicleDto.getChangeType());
-                cell5.setCellStyle(headStyle);
+                cell5.setCellStyle(cellColorStyle);
             }
         }
 
@@ -264,7 +264,7 @@ public class OxoExcelUtil {
         //设置列宽
         sheet.setColumnWidth(0, 11 * 256 + 200);
         sheet.setColumnWidth(1, 18 * 256 + 200);
-        sheet.setColumnWidth(2, 16 * 256 + 200);
+        sheet.setColumnWidth(2, 18 * 256 + 200);
         sheet.setColumnWidth(3, 16 * 256 + 200);
         sheet.setColumnWidth(4, 15 * 256 + 200);
         for (int i = 5; i < oxoBasicVehicles.size(); i++) {

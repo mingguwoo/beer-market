@@ -37,12 +37,11 @@ public class OxoVersionQuery implements Query<OxoBaseCmd, List<String>> {
         List<String> roleNames = oxoBaseCmd.getPermissionPoints();
                 // 查询oxo版本
         List<BomsOxoVersionSnapshotEntity> oxoVersionSnapshotAggrs =
-                bomsOxoVersionSnapshotDao.queryBomsOxoVersionSnapshotsByModel(modelCode);
+                bomsOxoVersionSnapshotDao.queryBomsOxoVersionSnapshotsByModelOrVersionOrType(modelCode,null,null);
 
         if (CollectionUtils.isEmpty(oxoVersionSnapshotAggrs)) {
             return Lists.newArrayList();
         }
-
         List<String> revisions = Lists.newArrayList();
 
         List<String> roleRevisions = oxoVersionSnapshotAggrs.stream()

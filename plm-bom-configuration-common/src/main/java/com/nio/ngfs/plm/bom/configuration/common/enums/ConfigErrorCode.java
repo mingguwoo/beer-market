@@ -55,8 +55,24 @@ public enum ConfigErrorCode implements ErrorCode {
     OXO_FEATURE_OPTION_CAN_NOT_DELETE(80030, "The Feature/Option Can Not Delete!"),
     FEATURE_STATUS_NOT_ACTIVE_CAN_NOT_EDIT(80031, "The Feature Status Is Inactive, Can Not Edit!"),
     FEATURE_FEATURE_IS_NOT_ACTIVE(80032, "Feature Is Not Active!"),
-    AF_ERROR(80033,"Please Add AF00 In OXO!"),
-    BASE_VEHICLE_ALREADY_RELEASED(80034,"The Base Vehicle Is Published, Can Not Delete!" );
+    AF_ERROR(80033, "Please Add AF00 In OXO!"),
+    BASE_VEHICLE_ALREADY_RELEASED(80034, "The Base Vehicle Is Published, Can Not Delete!"),
+
+    /**
+     * Product Config
+     */
+    PRODUCT_CONFIG_BASED_ON_ONLY_SELECT_ONE(81000, "Based On Base Vehicle And Base On PC Can Only Select One!"),
+    PRODUCT_CONFIG_PC_ID_FORMAT_ERROR(81001, "PC Id Format Error!"),
+    PRODUCT_CONFIG_PC_NAME_HAS_SPACE(81002, "PC Name Has Blank, Please Remove It!"),
+    PRODUCT_CONFIG_PC_NAME_FORMAT_ERROR(81003, "PC Name Can Only Contains Alphabet、Number、_、-、. !"),
+    PRODUCT_CONFIG_PC_NAME_REPEAT(81004, "This PC Name Is Existed In【Model/Model Year】, Please Input A New One!"),
+
+    /**
+     * Other
+     */
+    BOM_MIDDLE_PLATFORM_MODEL_NOT_EXIST(89000, "Model Not Exist In Bom Middle Platform!"),
+    BOM_MIDDLE_PLATFORM_GET_MODEL_FAIL(89001, "Get Model From Bom Middle Platform Fail!"),
+
     ;
 
     /**

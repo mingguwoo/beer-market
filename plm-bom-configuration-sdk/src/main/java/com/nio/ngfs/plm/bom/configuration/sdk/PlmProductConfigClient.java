@@ -1,8 +1,10 @@
 package com.nio.ngfs.plm.bom.configuration.sdk;
 
 import com.nio.bom.share.result.ResultInfo;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.request.AddPcCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.request.GetBasedOnPcListQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.request.GetModelListQry;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.AddPcRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.GetBasedOnPcListRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.GetModelListRespDto;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -34,5 +36,14 @@ public interface PlmProductConfigClient {
      */
     @PostMapping("/productConfig/getBasedOnPcList")
     ResultInfo<List<GetBasedOnPcListRespDto>> getBasedOnPcList(GetBasedOnPcListQry qry);
+
+    /**
+     * 新增PC
+     *
+     * @param cmd 命令
+     * @return 响应
+     */
+    @PostMapping("/productConfig/addPc")
+    ResultInfo<AddPcRespDto> addPc(AddPcCmd cmd);
 
 }

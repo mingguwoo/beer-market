@@ -37,4 +37,9 @@ public interface RedisKeyConstant {
 
     String OXO_SAVE_SNAPSHOT_LOCK_KEY_PREFIX = CONFIGURATION_PREFIX + "oxo:save:snapshot:lock:";
 
+    /**
+     * Product Config
+     */
+    String PRODUCT_CONFIG_ADD_PC_LOCK_KEY_FORMAT = CONFIGURATION_PREFIX + "productConfig:pc:add:lock:%s:%s";
+
 }

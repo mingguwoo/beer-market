@@ -2,6 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.domain.service.oxo;
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotAggr;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.DeleteBaseVehicleCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
 
 import java.util.List;
 
@@ -29,9 +30,15 @@ public interface OxoVersionSnapshotDomainService {
      */
      OxoVersionSnapshotAggr queryOxoInfoByModelAndVersion(String modelCode,String version);
 
-
+    /**
+     * 校验BaseVehicle是否在oxo中是否已有发布版本
+     */
       void checkBaseVehicleReleased(String modelCode);
 
+    /**
+     * 解析OxoSnapShot字符串
+     */
+      OxoListQry resolveSnapShot(String oxoSnapShot);
 
 
 }

@@ -2,7 +2,7 @@ CREATE TABLE `boms_oxo_feature_option` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
   `model_code` varchar(32) NOT NULL DEFAULT '' COMMENT '车型',
   `feature_code` varchar(32) NOT NULL COMMENT '配置code',
-  `rule_check` varchar(32) NOT NULL DEFAULT '固定值Y/N 定义Rule发布时软校验',
+  `rule_check` varchar(32) NOT NULL DEFAULT '固定值Y/N 定义Rule发布时软校验' COMMENT '规则校验',
   `type` varchar(32) NOT NULL COMMENT '类型，Feature、Option',
   `comment` varchar(512) DEFAULT NULL COMMENT '评论',
   `sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序id',

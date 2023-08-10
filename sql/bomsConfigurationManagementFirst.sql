@@ -1,5 +1,5 @@
 CREATE TABLE `boms_base_vehicle` (
-     `id` bigint NOT NULL AUTO_INCREMENT,
+     `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
      `base_vehicle_id` varchar(11) NOT NULL COMMENT '流水号',
      `model_code` varchar(50) NOT NULL DEFAULT '' COMMENT '车型',
      `model_year` varchar(50) NOT NULL DEFAULT '' COMMENT '年款',
@@ -13,7 +13,7 @@ CREATE TABLE `boms_base_vehicle` (
      `update_user` varchar(32) NOT NULL DEFAULT '' COMMENT '修改人',
      `maturity` varchar(16) NOT NULL DEFAULT 'U' COMMENT '定义Model/Model Year的成熟度(U代表Under Study,P代表Production)',
      `del_flag` tinyint NOT NULL DEFAULT '0' COMMENT '1删除 0未删除',
-     PRIMARY KEY (`id`)
+                                     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  COMMENT='BaseVehicle整车基础配置表';
 
 CREATE TABLE `boms_feature_change_log`
@@ -84,7 +84,7 @@ CREATE TABLE `boms_oxo_feature_option` (
    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
    `model_code` varchar(32) NOT NULL DEFAULT '' COMMENT '车型',
    `feature_code` varchar(32) NOT NULL COMMENT '配置code',
-   `rule_check` varchar(32) NOT NULL DEFAULT '固定值Y/N 定义Rule发布时软校验',
+   `rule_check` varchar(32) NOT NULL DEFAULT '固定值Y/N 定义Rule发布时软校验' COMMENT '规则校验',
    `type` varchar(32) NOT NULL COMMENT '类型，Feature、Option',
    `comment` varchar(512) DEFAULT NULL COMMENT '评论',
    `sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序id',
@@ -120,7 +120,7 @@ CREATE TABLE `boms_oxo_version_snapshot` (
      `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
      `model_code` varchar(32) NOT NULL DEFAULT '' COMMENT '车型',
      `version` varchar(32) NOT NULL COMMENT '版本号',
-     `oxo_snapshot` longtext NOT NULL COMMENT 'oxo快照信息',
+     `oxo_snapshot` longtext COMMENT 'oxo快照信息',
      `type` varchar(32)  NOT NULL  COMMENT 'Formal/Informal',
      `brand` varchar(32) NOT NULL COMMENT '品牌',
      `title` varchar(1024) DEFAULT NULL COMMENT '发版标题',
@@ -132,6 +132,6 @@ CREATE TABLE `boms_oxo_version_snapshot` (
      `update_user` varchar(32) NOT NULL DEFAULT '' COMMENT '更新者',
      `del_flag` smallint NOT NULL DEFAULT '0' COMMENT '是否删除 1删除 0未删除',
      PRIMARY KEY (`id`) USING BTREE,
-     UNIQUE KEY `idx_model_version` (`model_code`,`version`,`type`) USING BTREE
+     UNIQUE KEY `uniq_model_version` (`model_code`,`version`,`type`) USING BTREE
 ) ENGINE=InnoDB COMMENT='oxo快照表' ;
 

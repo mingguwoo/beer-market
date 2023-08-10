@@ -125,6 +125,10 @@ public class ImportFeatureLibraryTask {
             checkEnumValues(history.getRequestor(), Lists.newArrayList(
                     BrandEnum.NIO.name(), BrandEnum.ALPS.name(), BrandEnum.FY.name()
             ), "Requestor enum value is not match");
+
+            if (history.isOption() && history.getParent() == null) {
+                throw new BusinessException(CommonErrorCode.PARAMETER_ERROR.getCode(), "Option Has No Parent Feature");
+            }
         });
     }
 

@@ -8,5 +8,5 @@ import lombok.Data;
  * @date 2023/8/9
  */
 @Data
-public class ModelListQry implements Qry {
+public class GetModelListQry implements Qry {
 }

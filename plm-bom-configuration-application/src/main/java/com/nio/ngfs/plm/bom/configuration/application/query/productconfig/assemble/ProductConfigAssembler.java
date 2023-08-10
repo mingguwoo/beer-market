@@ -2,7 +2,9 @@ package com.nio.ngfs.plm.bom.configuration.application.query.productconfig.assem
 
 import com.nio.ngfs.plm.bom.configuration.common.util.ModelYearComparator;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsModelYearConfigEntity;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.ModelListRespDto;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductConfigEntity;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.GetBasedOnPcListRespDto;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.GetModelListRespDto;
 
 import java.util.List;
 
@@ -12,11 +14,18 @@ import java.util.List;
  */
 public class ProductConfigAssembler {
 
-    public static ModelListRespDto assemble(String model, List<BomsModelYearConfigEntity> modelYearConfigEntityList) {
-        ModelListRespDto respDto = new ModelListRespDto();
+    public static GetModelListRespDto assemble(String model, List<BomsModelYearConfigEntity> entityList) {
+        GetModelListRespDto respDto = new GetModelListRespDto();
         respDto.setModel(model);
-        respDto.setModelYearList(modelYearConfigEntityList.stream().map(BomsModelYearConfigEntity::getModelYear)
+        respDto.setModelYearList(entityList.stream().map(BomsModelYearConfigEntity::getModelYear)
                 .sorted(new ModelYearComparator()).toList());
+        return respDto;
+    }
+
+    public static GetBasedOnPcListRespDto assemble(BomsProductConfigEntity entity) {
+        GetBasedOnPcListRespDto respDto = new GetBasedOnPcListRespDto();
+        respDto.setPcId(entity.getPcId());
+        respDto.setPcName(entity.getName());
         return respDto;
     }
 

@@ -37,19 +37,14 @@ public class ExportFeatureLibraryQuery {
     private static final List<String> TITLE_LIST = Lists.newArrayList(
             "Feature Code", "Display Name", "Chinese Name", "Description", "Group",
             "Type", "Catalogue", "Requestor", "Creator", "Originated", "Update User",
-            "Last Modified", "Status"
+            "Last Modified", "Status", "Model Year"
     );
-    private static final List<String> TITLE_LIST_2 = Lists.newArrayList();
-
-    static {
-        TITLE_LIST_2.addAll(TITLE_LIST);
-        TITLE_LIST_2.add("Model Year");
-    }
 
     private final QueryFeatureLibraryQuery queryFeatureLibraryQuery;
 
     public void execute(ExportFeatureLibraryQry qry, HttpServletResponse response) {
         // 查询Feature Library列表
+        qry.setRelatedModel(true);
         List<QueryFeatureLibraryDto> featureLibraryDtoList = queryFeatureLibraryQuery.execute(qry);
         try (XSSFWorkbook workbook = new XSSFWorkbook();
              OutputStream output = response.getOutputStream()) {
@@ -58,7 +53,7 @@ public class ExportFeatureLibraryQuery {
             response.setHeader(CommonConstants.HEADER_CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"");
             response.setHeader(CommonConstants.HEADER_ACCESS_CONTROL_EXPOSE_HEADERS, CommonConstants.HEADER_CONTENT_DISPOSITION);
             response.setContentType("application/octet-stream;charset=UTF-8");
-            exportFeatureLibrary(qry, featureLibraryDtoList, workbook);
+            exportFeatureLibrary(featureLibraryDtoList, workbook);
             workbook.write(output);
         } catch (IOException e) {
             throw new BusinessException(ConfigErrorCode.EXCEL_DOWNLOAD_ERROR, e.getMessage());
@@ -68,11 +63,11 @@ public class ExportFeatureLibraryQuery {
     /**
      * Feature Library导出到Excel
      */
-    private void exportFeatureLibrary(ExportFeatureLibraryQry qry, List<QueryFeatureLibraryDto> featureLibraryDtoList, XSSFWorkbook workbook) {
+    private void exportFeatureLibrary(List<QueryFeatureLibraryDto> featureLibraryDtoList, XSSFWorkbook workbook) {
         XSSFSheet sheet = workbook.createSheet();
         configSheetStyle(sheet);
-        setSheetTitle(workbook, sheet, qry);
-        writeFeatureOptionRow(qry, featureLibraryDtoList, workbook, sheet);
+        setSheetTitle(workbook, sheet);
+        writeFeatureOptionRow(featureLibraryDtoList, workbook, sheet);
     }
 
     /**
@@ -85,14 +80,13 @@ public class ExportFeatureLibraryQuery {
     /**
      * 设置标题
      */
-    private void setSheetTitle(XSSFWorkbook workbook, XSSFSheet sheet, ExportFeatureLibraryQry qry) {
+    private void setSheetTitle(XSSFWorkbook workbook, XSSFSheet sheet) {
         XSSFCellStyle style = workbook.createCellStyle();
-        style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         style.setFillForegroundColor(HSSFColor.HSSFColorPredefined.SKY_BLUE.getIndex());
+        style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         int columnIndex = 0;
         XSSFRow row = sheet.createRow(0);
-        List<String> titleList = qry.isRelatedModel() ? TITLE_LIST_2 : TITLE_LIST;
-        for (String title : titleList) {
+        for (String title : TITLE_LIST) {
             XSSFCell cell = row.createCell(columnIndex++);
             cell.setCellValue(title);
             cell.setCellStyle(style);
@@ -112,14 +106,14 @@ public class ExportFeatureLibraryQuery {
     /**
      * 写Feature和Option行数据
      */
-    private void writeFeatureOptionRow(ExportFeatureLibraryQry qry, List<QueryFeatureLibraryDto> featureLibraryDtoList, XSSFWorkbook workbook, XSSFSheet sheet) {
+    private void writeFeatureOptionRow(List<QueryFeatureLibraryDto> featureLibraryDtoList, XSSFWorkbook workbook, XSSFSheet sheet) {
         int rowIndex = 1;
         XSSFCellStyle featureCellStyle = createFeatureCellStyle(workbook);
         for (QueryFeatureLibraryDto group : featureLibraryDtoList) {
             for (QueryFeatureLibraryDto feature : group.getChildren()) {
-                createFeatureOptionRow(qry, feature, sheet, rowIndex++, featureCellStyle);
+                createFeatureOptionRow(feature, sheet, rowIndex++, featureCellStyle);
                 for (QueryFeatureLibraryDto option : feature.getChildren()) {
-                    createFeatureOptionRow(qry, option, sheet, rowIndex++, null);
+                    createFeatureOptionRow(option, sheet, rowIndex++, null);
                 }
             }
         }
@@ -128,7 +122,7 @@ public class ExportFeatureLibraryQuery {
     /**
      * 创建Feature/Option行
      */
-    private void createFeatureOptionRow(ExportFeatureLibraryQry qry, QueryFeatureLibraryDto featureOption, XSSFSheet sheet, int rowIndex, XSSFCellStyle cellStyle) {
+    private void createFeatureOptionRow(QueryFeatureLibraryDto featureOption, XSSFSheet sheet, int rowIndex, XSSFCellStyle cellStyle) {
         int columnIndex = -1;
         XSSFRow row = sheet.createRow(rowIndex);
         createCell(row, ++columnIndex, featureOption.getFeatureCode(), cellStyle);
@@ -144,9 +138,7 @@ public class ExportFeatureLibraryQuery {
         createCell(row, ++columnIndex, featureOption.getUpdateUser(), cellStyle);
         createCell(row, ++columnIndex, featureOption.getUpdateTime(), cellStyle);
         createCell(row, ++columnIndex, featureOption.getStatus(), cellStyle);
-        if (qry.isRelatedModel()) {
-            createCell(row, ++columnIndex, featureOption.getModelYear(), cellStyle);
-        }
+        createCell(row, ++columnIndex, featureOption.getModelYear(), cellStyle);
     }
 
     /**

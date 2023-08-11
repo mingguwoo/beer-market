@@ -23,7 +23,9 @@ public class AddPcCmd implements Cmd {
     @Size(max = 128, message = "Name max length is 128")
     private String name;
 
-    private String basedOnBaseVehicleId;
+    private Long basedOnBaseVehicleId;
+
+    private Long oxoVersionSnapshotId;
 
     private String basedOnPcId;
 

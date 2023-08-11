@@ -7,11 +7,17 @@ import com.nio.ngfs.plm.bom.configuration.domain.facade.ModelFacade;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.ProductConfigOptionAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.ProductConfigOptionRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.service.productconfig.ProductConfigDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.request.AddPcCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.AddPcRespDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * 新增PC
@@ -24,6 +30,7 @@ import org.springframework.stereotype.Component;
 public class AddPcCommand extends AbstractLockCommand<AddPcCmd, AddPcRespDto> {
 
     private final ProductConfigRepository productConfigRepository;
+    private final ProductConfigOptionRepository productConfigOptionRepository;
     private final ProductConfigDomainService productConfigDomainService;
     private final ProductConfigApplicationService productConfigApplicationService;
     private final ModelFacade modelFacade;
@@ -43,9 +50,20 @@ public class AddPcCommand extends AbstractLockCommand<AddPcCmd, AddPcRespDto> {
         productConfigAggr.add();
         productConfigDomainService.checkPcNameUnique(productConfigAggr);
         // copy PC的Option Code勾选
-        productConfigApplicationService.copyProductConfigOptionByPc(productConfigAggr);
-        productConfigRepository.save(productConfigAggr);
+        List<ProductConfigOptionAggr> basedOnPcOptionAggrList = productConfigApplicationService.copyProductConfigOptionByPc(productConfigAggr);
+        // copy Base Vehicle的Option Code勾选
+        List<ProductConfigOptionAggr> basedOnBaseVehicleOptionAggrList = productConfigApplicationService.copyProductConfigOptionByBaseVehicle(productConfigAggr);
+        // 保存到数据库
+        ((AddPcCommand) AopContext.currentProxy()).saveProductConfigAndProductConfigOption(productConfigAggr, basedOnPcOptionAggrList, basedOnBaseVehicleOptionAggrList);
         return new AddPcRespDto();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void saveProductConfigAndProductConfigOption(ProductConfigAggr productConfigAggr, List<ProductConfigOptionAggr> basedOnPcOptionAggrList,
+                                                        List<ProductConfigOptionAggr> basedOnBaseVehicleOptionAggrList) {
+        productConfigRepository.save(productConfigAggr);
+        productConfigOptionRepository.batchSave(basedOnPcOptionAggrList);
+        productConfigOptionRepository.batchSave(basedOnBaseVehicleOptionAggrList);
     }
 
 }

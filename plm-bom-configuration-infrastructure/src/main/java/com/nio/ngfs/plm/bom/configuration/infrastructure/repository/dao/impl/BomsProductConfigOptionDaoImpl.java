@@ -8,6 +8,8 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsP
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author xiaozhou.tu
  * @date 2023/8/9
@@ -18,6 +20,21 @@ public class BomsProductConfigOptionDaoImpl extends AbstractDao<BomsProductConfi
 
     @Override
     protected void fuzzyConditions(WherePageRequest<BomsProductConfigOptionEntity> bomsProductConfigOptionEntityWherePageRequest, LambdaQueryWrapper<BomsProductConfigOptionEntity> queryWrapper) {
+    }
+
+    @Override
+    public BomsProductConfigOptionEntity getByPcIdAndOptionCode(String pcId, String optionCode) {
+        LambdaQueryWrapper<BomsProductConfigOptionEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(BomsProductConfigOptionEntity::getPcId, pcId);
+        lambdaQueryWrapper.eq(BomsProductConfigOptionEntity::getOptionCode, optionCode);
+        return getBaseMapper().selectOne(lambdaQueryWrapper);
+    }
+
+    @Override
+    public List<BomsProductConfigOptionEntity> queryByPcId(String pcId) {
+        LambdaQueryWrapper<BomsProductConfigOptionEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(BomsProductConfigOptionEntity::getPcId, pcId);
+        return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 
 }

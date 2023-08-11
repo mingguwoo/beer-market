@@ -66,6 +66,9 @@ public enum ConfigErrorCode implements ErrorCode {
     PRODUCT_CONFIG_PC_NAME_HAS_SPACE(81002, "PC Name Has Blank, Please Remove It!"),
     PRODUCT_CONFIG_PC_NAME_FORMAT_ERROR(81003, "PC Name Can Only Contains Alphabet、Number、_、-、. !"),
     PRODUCT_CONFIG_PC_NAME_REPEAT(81004, "This PC Name Is Existed In【Model/Model Year】, Please Input A New One!"),
+    PRODUCT_CONFIG_BASED_ON_PC_NOT_EXIST(81005, "Based On PC Not Exist!"),
+    PRODUCT_CONFIG_BASED_ON_BASE_VEHICLE_NOT_EXIST(81006, "Based On Base Vehicle Not Exist!"),
+    PRODUCT_CONFIG_OXO_VERSION_SNAPSHOT_ID_IS_NULL(81007, "OXO Version Snapshot Id Is Null!"),
 
     /**
      * Other

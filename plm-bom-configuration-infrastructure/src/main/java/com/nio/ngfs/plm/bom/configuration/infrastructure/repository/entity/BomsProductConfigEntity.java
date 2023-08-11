@@ -52,9 +52,14 @@ public class BomsProductConfigEntity extends BaseEntity {
     private String description;
 
     /**
-     * Based On Base Vehicle ID
+     * Based On Base Vehicle主键ID
      */
-    private String basedOnBaseVehicleId;
+    private Long basedOnBaseVehicleId;
+
+    /**
+     * Base Vehicle所在的OXO打包版本id
+     */
+    private Long oxoVersionSnapshotId;
 
     /**
      * Based On PC ID
@@ -74,22 +79,23 @@ public class BomsProductConfigEntity extends BaseEntity {
     @Override
     public String toString() {
         return "BomsProductConfig{" +
-            "id = " + getId() +
-            ", pcId = " + pcId +
-            ", model = " + model +
-            ", modelYear = " + modelYear +
-            ", name = " + name +
-            ", marketingName = " + marketingName +
-            ", description = " + description +
-            ", basedOnBaseVehicleId = " + basedOnBaseVehicleId +
-            ", basedOnPcId = " + basedOnPcId +
-            ", brand = " + brand +
-            ", skipCheck = " + skipCheck +
-            ", createUser = " + getCreateUser() +
-            ", updateUser = " + getUpdateUser() +
-            ", createTime = " + getCreateTime() +
-            ", updateTime = " + getUpdateTime() +
-            ", delFlag = " + getDelFlag() +
-        "}";
+                "id = " + getId() +
+                ", pcId = " + pcId +
+                ", model = " + model +
+                ", modelYear = " + modelYear +
+                ", name = " + name +
+                ", marketingName = " + marketingName +
+                ", description = " + description +
+                ", basedOnBaseVehicleId = " + basedOnBaseVehicleId +
+                ", oxoVersionSnapshotId = " + oxoVersionSnapshotId +
+                ", basedOnPcId = " + basedOnPcId +
+                ", brand = " + brand +
+                ", skipCheck = " + skipCheck +
+                ", createUser = " + getCreateUser() +
+                ", updateUser = " + getUpdateUser() +
+                ", createTime = " + getCreateTime() +
+                ", updateTime = " + getUpdateTime() +
+                ", delFlag = " + getDelFlag() +
+                "}";
     }
 }

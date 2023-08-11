@@ -62,6 +62,7 @@ public class OxoInfoExportQuery {
         OxoListQry qry = oxoFeatureOptionApplicationService.queryOxoInfoByModelCode(modelCode, version);
 
 
+        //导出数据
         OxoExcelUtil.oxoExport(qry, modelCode, version, response, request);
 
 

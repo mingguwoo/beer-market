@@ -53,9 +53,14 @@ public class ProductConfigAggr extends AbstractDo implements AggrRoot<String> {
     private String description;
 
     /**
-     * Based On Base Vehicle ID
+     * Based On Base Vehicle主键ID
      */
-    private String basedOnBaseVehicleId;
+    private Long basedOnBaseVehicleId;
+
+    /**
+     * Base Vehicle所在的OXO打包版本id
+     */
+    private Long oxoVersionSnapshotId;
 
     /**
      * Based On PC ID
@@ -82,8 +87,11 @@ public class ProductConfigAggr extends AbstractDo implements AggrRoot<String> {
      */
     public void add() {
         checkName();
-        if (StringUtils.isNotBlank(basedOnBaseVehicleId) && StringUtils.isNotBlank(basedOnPcId)) {
+        if (basedOnBaseVehicleId == null && StringUtils.isNotBlank(basedOnPcId)) {
             throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_BASED_ON_ONLY_SELECT_ONE);
+        }
+        if (basedOnBaseVehicleId == null && oxoVersionSnapshotId == null) {
+            throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_OXO_VERSION_SNAPSHOT_ID_IS_NULL);
         }
         setSkipCheck(CommonConstants.CLOSE);
     }

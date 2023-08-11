@@ -15,6 +15,7 @@ public class ProductConfigFactory {
                 .modelYear(cmd.getModelYear())
                 .name(cmd.getName())
                 .basedOnBaseVehicleId(cmd.getBasedOnBaseVehicleId())
+                .oxoVersionSnapshotId(cmd.getOxoVersionSnapshotId())
                 .basedOnPcId(cmd.getBasedOnPcId())
                 .brand(brand)
                 .createUser(cmd.getCreateUser())

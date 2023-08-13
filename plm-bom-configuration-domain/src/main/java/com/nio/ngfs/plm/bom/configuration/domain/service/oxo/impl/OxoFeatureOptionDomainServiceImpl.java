@@ -107,8 +107,8 @@ public class OxoFeatureOptionDomainServiceImpl implements OxoFeatureOptionDomain
 
         optionPackages.stream().collect(Collectors.groupingBy(OxoOptionPackageAggr::getFeatureOptionId)).forEach((k, v) -> {
             if (v.stream().allMatch(x ->
-                    StringUtils.equals(x.getPackageCode(), OxoOptionPackageTypeEnum.UNAVAILABLE.getCode()) &&
-                            Objects.equals(x.getBaseVehicleId(),k))) {
+                    StringUtils.equals(x.getPackageCode(), OxoOptionPackageTypeEnum.UNAVAILABLE.getType()) &&
+                            Objects.equals(x.getFeatureOptionId(), k))) {
                 optionCodes.add(
                         oxoFeatureOptionAggrs.stream().filter(x -> Objects.equals(x.getId(), k))
                                 .findFirst().orElse(new OxoFeatureOptionAggr()).getFeatureCode());

@@ -3,6 +3,7 @@ package com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author wangchao.wang
@@ -10,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class OxoEditCmd extends OxoBaseCmd{
 
-     @NotBlank(message = "headId不能为空")
+     @NotNull(message = "headId不能为空")
      private Long headId;
 
      private Long rowId;

@@ -77,6 +77,7 @@ public class OxoEditCommand extends AbstractLockCommand<OxoEditInfoCmd, List<Str
                 OxoOptionPackageFactory.createOxoOptionPackageAggrList(cmdLists, userName));
 
 
+        // 教研数据
         return featureOptionApplicationService.checkRules(cmd.getModelCode());
     }
 }

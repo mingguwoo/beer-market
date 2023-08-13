@@ -1,9 +1,8 @@
 package com.nio.ngfs.plm.bom.configuration.application.query.oxo.common;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import com.nio.bom.share.utils.DateUtils;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.OxoBasicVehicleDto;
-import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.enums.CompareChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.enums.OxoOptionPackageTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoEditCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoHeadQry;
@@ -12,7 +11,6 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoRowsQry;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
@@ -23,9 +21,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -91,8 +89,8 @@ public class OxoExcelUtil {
         OutputStream output = null;
         try {
             output = response.getOutputStream();
-            response.reset();
-            response.setHeader("Content-Disposition", "attachment; filename=\"" + "OXO_Feature.xlsx" + "\"");
+            String name = modelCode + "_" + version + "_OXO_Feature_" + DateUtils.dateTimeNow() + ".xlsx";
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + name + "\"");
             response.setContentType("application/octet-stream;charset=UTF-8");
             response.setHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
             response.setHeader("Access-Control-Allow-Credentials", "true");
@@ -121,7 +119,7 @@ public class OxoExcelUtil {
                 buildOptionHeadDatas(x, childRow, cellOptionColorStyle, cellOptionCodeColorStyle);
                 List<OxoEditCmd> optionOxoConfigration = x.getPackInfos();
                 Map<String, List<OxoEditCmd>> oxoConfigrationMap = optionOxoConfigration.stream().collect(Collectors.groupingBy(o -> String.format(
-                        "%s-%s-%s-%s", modelCode + " " + o.getModelYear()+ " " + version, o.getRegionCode(), o.getDriveHandCode(), o.getSalesCode())));
+                        "%s-%s-%s-%s", modelCode + " " + o.getModelYear() + " " + version, o.getRegionCode(), o.getDriveHandCode(), o.getSalesCode())));
 
                 for (int i = 0; i < oxoBasicVehicles.size(); i++) {
                     XSSFCell cell = childRow.createCell(i + 5);
@@ -200,23 +198,27 @@ public class OxoExcelUtil {
         font.setFontHeightInPoints((short) 11);
 
         XSSFCellStyle cellColorStyle = xssfWorkbook.createCellStyle();
-        cellColorStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(95, 98, 98)));
+        cellColorStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(141, 144, 144)));
         cellColorStyle.setAlignment(HorizontalAlignment.CENTER);    //左右居中
         cellColorStyle.setVerticalAlignment(VerticalAlignment.CENTER);    //上下居中
         cellColorStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         cellColorStyle.setFont(font);
 
         //动态表头样式
-//        XSSFCellStyle headStyle = xssfWorkbook.createCellStyle();
-//        headStyle.setAlignment(HorizontalAlignment.CENTER);    //左右居中
-//        headStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-//        headStyle.setFont(font);
+        XSSFCellStyle headStyle = xssfWorkbook.createCellStyle();
+        headStyle.setAlignment(HorizontalAlignment.CENTER);    //左右居中
+        headStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        headStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(141, 144, 144)));
+        headStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        headStyle.setFont(font);
 
         //固定表头样式
         XSSFCellStyle cellCenterStyle = xssfWorkbook.createCellStyle();
         cellCenterStyle.setAlignment(HorizontalAlignment.CENTER);    //左右居中
         cellCenterStyle.setVerticalAlignment(VerticalAlignment.CENTER);    //上下居中
         cellCenterStyle.setFont(font);
+        cellCenterStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(141, 144, 144)));
+        cellCenterStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
         XSSFRow row1 = sheet.createRow(0);
         XSSFRow row2 = sheet.createRow(1);
@@ -225,10 +227,6 @@ public class OxoExcelUtil {
         //设置固定表头
         for (int i = 0; i < commonHead.size(); i++) {
             XSSFCell cell = row1.createCell(i);
-            if (i == 0) {
-                XSSFCellStyle cellStyle = cell.getCellStyle();
-                cellStyle.setWrapText(true);
-            }
             cell.setCellValue(commonHead.get(i));
             cell.setCellStyle(cellColorStyle);
             sheet.addMergedRegion(new CellRangeAddress(0, 3, i, i));
@@ -245,16 +243,10 @@ public class OxoExcelUtil {
             cell3.setCellValue(oxoBasicVehicleDto.getDriverOption());
             cell2.setCellValue(oxoBasicVehicleDto.getRegion());
             cell1.setCellValue(oxoBasicVehicleDto.getModelYear());
-            cell1.setCellStyle(cellColorStyle);
+            cell1.setCellStyle(headStyle);
             cell2.setCellStyle(cellColorStyle);
-            cell3.setCellStyle(cellColorStyle);
-            cell4.setCellStyle(cellColorStyle);
-            if (StringUtils.isNotBlank(oxoBasicVehicleDto.getChangeType())) {
-                XSSFRow row5 = sheet.createRow(4);
-                XSSFCell cell5 = row5.createCell(commonHead.size() + i);
-                cell5.setCellValue(oxoBasicVehicleDto.getChangeType());
-                cell5.setCellStyle(cellColorStyle);
-            }
+            cell3.setCellStyle(headStyle);
+            cell4.setCellStyle(headStyle);
         }
 
         //合并单元格
@@ -352,7 +344,8 @@ public class OxoExcelUtil {
                 });
             });
         });
-        return oxoBasicVehicleDtos;
+        return oxoBasicVehicleDtos.stream().sorted(Comparator.comparing(OxoBasicVehicleDto::getModelYear).thenComparing(OxoBasicVehicleDto::getRegionCode)
+                .thenComparing(OxoBasicVehicleDto::getDriverOptionCode).thenComparing(OxoBasicVehicleDto::getSalesOptionCode)).toList();
 
     }
 

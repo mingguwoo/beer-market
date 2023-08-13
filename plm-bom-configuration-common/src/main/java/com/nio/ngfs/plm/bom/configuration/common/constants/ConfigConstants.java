@@ -72,4 +72,7 @@ public interface ConfigConstants {
 
       String LOW_VERSION = "lowVersion";
 
+
+      String PRODUCT_CONFIGURATION_ERROR ="Feature {0} Is Applied In Product Configuration!";
+
 }

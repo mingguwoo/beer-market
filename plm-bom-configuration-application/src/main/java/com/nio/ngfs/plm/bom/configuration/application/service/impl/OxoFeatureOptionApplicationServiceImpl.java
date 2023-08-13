@@ -19,6 +19,8 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVer
 import com.nio.ngfs.plm.bom.configuration.domain.service.basevehicle.BaseVehicleDomainService;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoFeatureOptionDomainService;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoVersionSnapshotDomainService;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsProductConfigModelOptionDao;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductConfigModelOptionEntity;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoHeadQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoRowsQry;
@@ -29,6 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -47,6 +50,8 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
     private final BaseVehicleDomainService baseVehicleDomainService;
     private final OxoFeatureOptionDomainService featureOptionDomainService;
     private final OxoVersionSnapshotDomainService versionSnapshotDomainService;
+
+    private final BomsProductConfigModelOptionDao bomsProductConfigModelOptionDao;
 
 
     @Override
@@ -121,11 +126,11 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
         // 快照版本查询
         if (StringUtils.isNotBlank(version) && !StringUtils.equals(version, ConfigConstants.WORKING)) {
 
-            OxoVersionSnapshotAggr  oxoVersionSnapshot =
-                    versionSnapshotDomainService.queryOxoInfoByModelAndVersion(modelCode,version);
+            OxoVersionSnapshotAggr oxoVersionSnapshot =
+                    versionSnapshotDomainService.queryOxoInfoByModelAndVersion(modelCode, version);
 
-            if(Objects.nonNull(oxoVersionSnapshot)){
-                return JSONObject.parseObject(oxoVersionSnapshot.getOxoSnapshot(),OxoListQry.class);
+            if (Objects.nonNull(oxoVersionSnapshot)) {
+                return JSONObject.parseObject(oxoVersionSnapshot.getOxoSnapshot(), OxoListQry.class);
             }
 
             // 查询working版本
@@ -269,6 +274,18 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
          * 1.该Option是否应用于Status为Working的Configuration Rule中
          * 2.该Option是否在Product Configuration有勾选
          */
+
+        if (CollectionUtils.isNotEmpty(optionCodes)) {
+            //该Option是否在Product Configuration有勾选
+            List<BomsProductConfigModelOptionEntity> entities =
+                    bomsProductConfigModelOptionDao.queryProductConfigModelOptionByModelOrFeatureOrOptionCode(modelCode, null, null, optionCodes);
+
+            if (CollectionUtils.isNotEmpty(entities)) {
+                entities.forEach(entity -> {
+                    messages.add(MessageFormat.format(ConfigConstants.PRODUCT_CONFIGURATION_ERROR,entity.getOptionCode()));
+                });
+            }
+        }
 
         return messages;
     }

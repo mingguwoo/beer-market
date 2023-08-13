@@ -3,10 +3,15 @@ package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.nio.ngfs.common.model.page.WherePageRequest;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsProductConfigModelOptionDao;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductConfigEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductConfigModelOptionEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsProductConfigModelOptionMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @author xiaozhou.tu
@@ -20,4 +25,30 @@ public class BomsProductConfigModelOptionDaoImpl extends AbstractDao<BomsProduct
     protected void fuzzyConditions(WherePageRequest<BomsProductConfigModelOptionEntity> bomsProductConfigModelOptionEntityWherePageRequest, LambdaQueryWrapper<BomsProductConfigModelOptionEntity> queryWrapper) {
     }
 
+
+
+    @Override
+    public List<BomsProductConfigModelOptionEntity> queryProductConfigModelOptionByModelOrFeatureOrOptionCode(String modelCode,
+                                                                                                              String featureCode,
+                                                                                                              String optionCode,
+                                                                                                              List<String> optionCodes) {
+
+        LambdaQueryWrapper<BomsProductConfigModelOptionEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(BomsProductConfigModelOptionEntity::getModel, modelCode);
+
+
+        if(StringUtils.isNotBlank(featureCode)){
+            lambdaQueryWrapper.eq(BomsProductConfigModelOptionEntity::getFeatureCode, featureCode);
+        }
+
+        if(StringUtils.isNotBlank(optionCode)){
+            lambdaQueryWrapper.eq(BomsProductConfigModelOptionEntity::getOptionCode, optionCode);
+        }
+
+        if(CollectionUtils.isNotEmpty(optionCodes)){
+            lambdaQueryWrapper.in(BomsProductConfigModelOptionEntity::getOptionCode, optionCodes);
+        }
+
+        return getBaseMapper().selectList(lambdaQueryWrapper);
+    }
 }

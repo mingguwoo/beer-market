@@ -101,7 +101,7 @@ public class  OxoController {
      * 添加oxo 下拉code列表
      * @return
      */
-    @NeedAuthorization
+    //@NeedAuthorization
     @NotLogResult
     @PostMapping("/queryFeatureList")
     public ResultInfo<OxoAddCmd> queryFeatureList(@Valid @RequestBody OxoBaseCmd cmd) {
@@ -113,7 +113,7 @@ public class  OxoController {
      * @param cmd
      * @return
      */
-    @NeedAuthorization
+    //@NeedAuthorization
     @NotLogResult
     @PostMapping("/edit")
     public ResultInfo edit(@Valid @RequestBody OxoEditInfoCmd cmd) {
@@ -124,7 +124,7 @@ public class  OxoController {
      * 查询邮件group
      * @return
      */
-    @NeedAuthorization
+    //@NeedAuthorization
     @NotLogResult
     @PostMapping("/queryEmailGroup")
     public ResultInfo<List<String>> queryEmailGroup() {
@@ -136,7 +136,7 @@ public class  OxoController {
      * @param cmd
      * @return
      */
-    @NeedAuthorization
+    //@NeedAuthorization
     @NotLogResult
     @PostMapping("/saveSnapshot")
     public ResultInfo saveSnapshot(@Valid @RequestBody OxoSnapshotCmd cmd) {

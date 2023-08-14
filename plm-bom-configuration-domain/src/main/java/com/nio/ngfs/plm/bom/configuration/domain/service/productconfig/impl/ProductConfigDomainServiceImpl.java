@@ -23,6 +23,15 @@ public class ProductConfigDomainServiceImpl implements ProductConfigDomainServic
     private final ProductConfigRepository productConfigRepository;
 
     @Override
+    public ProductConfigAggr getAndCheckAggr(String pcId) {
+        ProductConfigAggr productConfigAggr = productConfigRepository.find(pcId);
+        if (productConfigAggr == null) {
+            throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_PC_NOT_EXIST);
+        }
+        return productConfigAggr;
+    }
+
+    @Override
     public String generatePcId(String model, String modelYear) {
         String pcIdPrefix = model + " " + modelYear + "-";
         ProductConfigAggr productConfigAggr = productConfigRepository.queryLastPcByModelAndModelYear(model, modelYear);

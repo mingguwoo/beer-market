@@ -6,6 +6,7 @@ import com.nio.bom.share.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.common.util.RegexUtil;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.request.EditPcCmd;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -91,7 +92,7 @@ public class ProductConfigAggr extends AbstractDo implements AggrRoot<String> {
      * 新增PC
      */
     public void add() {
-        checkName();
+        checkName(name);
         // Based On Base Vehicle和Based On PC只能二选一
         if (basedOnBaseVehicleId != null && StringUtils.isNotBlank(basedOnPcId)) {
             throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_BASED_ON_ONLY_SELECT_ONE);
@@ -104,9 +105,17 @@ public class ProductConfigAggr extends AbstractDo implements AggrRoot<String> {
     }
 
     /**
+     * 编辑PC
+     */
+    public void edit(EditPcCmd cmd) {
+        checkName(cmd.getName());
+        setName(cmd.getName());
+    }
+
+    /**
      * 校验Name
      */
-    private void checkName() {
+    private void checkName(String name) {
         if (name.contains(StringUtils.SPACE)) {
             throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_PC_NAME_HAS_SPACE);
         }

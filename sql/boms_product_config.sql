@@ -2,7 +2,7 @@ CREATE TABLE `boms_product_config`
 (
     `id`                       bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
     `pc_id`                    varchar(128)    NOT NULL DEFAULT '' COMMENT '单车PC ID',
-    `model`                    varchar(64)     NOT NULL DEFAULT '' COMMENT 'Model',
+    `model_code`               varchar(64)     NOT NULL DEFAULT '' COMMENT 'Model',
     `model_year`               varchar(32)     NOT NULL DEFAULT '' COMMENT 'Model Year',
     `name`                     varchar(128)    NOT NULL DEFAULT '' COMMENT '单车PC Name',
     `marketing_name`           varchar(128)    NOT NULL DEFAULT '' COMMENT '单车PC Marketing Name',
@@ -20,7 +20,7 @@ CREATE TABLE `boms_product_config`
     `del_flag`                 tinyint(4)      NOT NULL DEFAULT 0 COMMENT '是否逻辑删除，0：否，1：是',
     PRIMARY KEY (`id`) USING BTREE,
     UNIQUE KEY `uniq_pc_id` (`pc_id`) USING BTREE,
-    INDEX `idx_model_model_year` (`model`, `model_year`) USING BTREE
+    INDEX `idx_model_code_model_year` (`model_code`, `model_year`) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   ROW_FORMAT = DYNAMIC COMMENT ='单车PC表';

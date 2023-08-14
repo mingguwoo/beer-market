@@ -11,7 +11,7 @@ public class ProductConfigFactory {
     public static ProductConfigAggr create(AddPcCmd cmd, String pcId, String brand) {
         return ProductConfigAggr.builder()
                 .pcId(pcId)
-                .model(cmd.getModel())
+                .modelCode(cmd.getModel())
                 .modelYear(cmd.getModelYear())
                 .name(cmd.getName())
                 .basedOnBaseVehicleId(cmd.getBasedOnBaseVehicleId())

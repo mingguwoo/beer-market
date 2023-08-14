@@ -24,7 +24,7 @@ public class BomsProductConfigModelOptionEntity extends BaseEntity {
     /**
      * 车型
      */
-    private String model;
+    private String modelCode;
 
     /**
      * Option Code
@@ -39,15 +39,15 @@ public class BomsProductConfigModelOptionEntity extends BaseEntity {
     @Override
     public String toString() {
         return "BomsProductConfigModelOption{" +
-            "id = " + getId() +
-            ", model = " + model +
-            ", optionCode = " + optionCode +
-            ", featureCode = " + featureCode +
-            ", createUser = " + getCreateUser() +
-            ", updateUser = " + getUpdateUser() +
-            ", createTime = " + getCreateTime() +
-            ", updateTime = " + getUpdateTime() +
-            ", delFlag = " + getDelFlag() +
-        "}";
+                "id = " + getId() +
+                ", modelCode = " + modelCode +
+                ", optionCode = " + optionCode +
+                ", featureCode = " + featureCode +
+                ", createUser = " + getCreateUser() +
+                ", updateUser = " + getUpdateUser() +
+                ", createTime = " + getCreateTime() +
+                ", updateTime = " + getUpdateTime() +
+                ", delFlag = " + getDelFlag() +
+                "}";
     }
 }

@@ -22,19 +22,19 @@ public interface BomsProductConfigDao extends IService<BomsProductConfigEntity> 
     /**
      * 根据车型查询
      *
-     * @param model 车型
+     * @param modelCode 车型
      * @return BomsProductConfigEntity列表
      */
-    List<BomsProductConfigEntity> queryByModel(String model);
+    List<BomsProductConfigEntity> queryByModel(String modelCode);
 
     /**
      * 根据车型和Model Year查询最新的PC
      *
-     * @param model     车型
+     * @param modelCode 车型
      * @param modelYear Model Year
      * @return BomsProductConfigEntity
      */
-    BomsProductConfigEntity queryLastPcByModelAndModelYear(String model, String modelYear);
+    BomsProductConfigEntity queryLastPcByModelAndModelYear(String modelCode, String modelYear);
 
     /**
      * 根据Name查询

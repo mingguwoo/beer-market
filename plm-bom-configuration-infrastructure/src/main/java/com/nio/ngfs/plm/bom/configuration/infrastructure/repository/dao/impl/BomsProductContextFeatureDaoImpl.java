@@ -8,6 +8,8 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsP
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author bill.wang
  * @date 2023/8/9
@@ -18,5 +20,12 @@ public class BomsProductContextFeatureDaoImpl extends AbstractDao<BomsProductCon
     @Override
     protected void fuzzyConditions(WherePageRequest<BomsProductContextFeatureEntity> bomsProductContextFeatureEntityWherePageRequest, LambdaQueryWrapper<BomsProductContextFeatureEntity> queryWrapper) {
 
+    }
+
+    @Override
+    public List<BomsProductContextFeatureEntity> queryByModelCode(String modelCode) {
+        LambdaQueryWrapper<BomsProductContextFeatureEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(BomsProductContextFeatureEntity::getModelCode,modelCode);
+        return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 }

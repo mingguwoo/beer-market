@@ -7,10 +7,10 @@ import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.AddBas
 import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.ChangeBaseVehicleStatusCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.DeleteBaseVehicleCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle.EditBaseVehicleCommand;
-import com.nio.ngfs.plm.bom.configuration.application.query.baseVehicle.*;
+import com.nio.ngfs.plm.bom.configuration.application.query.basevehicle.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmBaseVehicleClient;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.*;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.*;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.request.*;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.response.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;

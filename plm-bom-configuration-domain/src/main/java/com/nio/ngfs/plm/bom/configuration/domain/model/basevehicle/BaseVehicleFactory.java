@@ -1,7 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle;
 
 import com.google.common.collect.Lists;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.AddBaseVehicleCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.request.AddBaseVehicleCmd;
 
 import java.util.List;
 

@@ -3,8 +3,8 @@ package com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle;
 import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.service.basevehicle.BaseVehicleDomainService;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.ChangeBaseVehicleStatusCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.ChangeBaseVehicleStatusRespDto;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.request.ChangeBaseVehicleStatusCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.response.ChangeBaseVehicleStatusRespDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

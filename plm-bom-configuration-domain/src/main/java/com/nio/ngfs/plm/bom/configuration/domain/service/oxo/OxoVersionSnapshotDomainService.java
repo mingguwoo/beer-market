@@ -1,10 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service.oxo;
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotAggr;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.DeleteBaseVehicleCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
-
-import java.util.List;
 
 /**
  * @author xiaozhou.tu

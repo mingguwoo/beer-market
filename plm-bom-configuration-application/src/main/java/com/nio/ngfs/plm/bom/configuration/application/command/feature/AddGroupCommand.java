@@ -43,7 +43,7 @@ public class AddGroupCommand extends AbstractLockCommand<AddGroupCmd, AddGroupRe
         // Repository保存聚合根
         featureRepository.save(featureAggr);
         eventPublisher.publish(new FeatureChangeEvent(featureAggr));
-        return new AddGroupRespDto();
+        return new AddGroupRespDto(featureAggr.getId());
     }
 
 }

@@ -42,7 +42,7 @@ public class AddFeatureCommand extends AbstractLockCommand<AddFeatureCmd, AddFea
         featureDomainService.checkDisplayNameUnique(featureAggr);
         featureRepository.save(featureAggr);
         eventPublisher.publish(new FeatureChangeEvent(featureAggr));
-        return new AddFeatureRespDto();
+        return new AddFeatureRespDto(featureAggr.getId());
     }
 
 }

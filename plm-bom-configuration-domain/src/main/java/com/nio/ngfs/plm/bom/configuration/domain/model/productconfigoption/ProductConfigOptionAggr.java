@@ -32,6 +32,11 @@ public class ProductConfigOptionAggr extends AbstractDo implements AggrRoot<Prod
      */
     private String selectCanEdit;
 
+    /**
+     * 类型，0-正常，1-From Base Vehicle，2-From PC
+     */
+    private Integer type;
+
     @Override
     public ProductConfigOptionId getUniqId() {
         return productConfigOptionId;

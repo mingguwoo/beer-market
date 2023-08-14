@@ -59,16 +59,26 @@ public enum ConfigErrorCode implements ErrorCode {
     BASE_VEHICLE_ALREADY_RELEASED(80034, "The Base Vehicle Is Published, Can Not Delete!"),
 
     /**
+     * Base Vehicle
+     */
+
+    /**
+     * OXO
+     */
+    OXO_VERSION_SNAPSHOT_NOT_EXIST(82000, "OXO Version Snapshot Not Exist!"),
+
+    /**
      * Product Config
      */
-    PRODUCT_CONFIG_BASED_ON_ONLY_SELECT_ONE(81000, "Based On Base Vehicle And Base On PC Can Only Select One!"),
-    PRODUCT_CONFIG_PC_ID_FORMAT_ERROR(81001, "PC Id Format Error!"),
-    PRODUCT_CONFIG_PC_NAME_HAS_SPACE(81002, "PC Name Has Blank, Please Remove It!"),
-    PRODUCT_CONFIG_PC_NAME_FORMAT_ERROR(81003, "PC Name Can Only Contains Alphabet、Number、_、-、. !"),
-    PRODUCT_CONFIG_PC_NAME_REPEAT(81004, "This PC Name Is Existed In【Model/Model Year】, Please Input A New One!"),
-    PRODUCT_CONFIG_BASED_ON_PC_NOT_EXIST(81005, "Based On PC Not Exist!"),
-    PRODUCT_CONFIG_BASED_ON_BASE_VEHICLE_NOT_EXIST(81006, "Based On Base Vehicle Not Exist!"),
-    PRODUCT_CONFIG_OXO_VERSION_SNAPSHOT_ID_IS_NULL(81007, "OXO Version Snapshot Id Is Null!"),
+    PRODUCT_CONFIG_BASED_ON_ONLY_SELECT_ONE(83000, "Based On Base Vehicle And Base On PC Can Only Select One!"),
+    PRODUCT_CONFIG_PC_ID_FORMAT_ERROR(83001, "PC Id Format Error!"),
+    PRODUCT_CONFIG_PC_NAME_HAS_SPACE(83002, "PC Name Has Blank, Please Remove It!"),
+    PRODUCT_CONFIG_PC_NAME_FORMAT_ERROR(83003, "PC Name Can Only Contains Alphabet、Number、_、-、. !"),
+    PRODUCT_CONFIG_PC_NAME_REPEAT(83004, "This PC Name Is Existed In【Model/Model Year】, Please Input A New One!"),
+    PRODUCT_CONFIG_BASED_ON_PC_NOT_EXIST(83005, "Based On PC Not Exist!"),
+    PRODUCT_CONFIG_BASED_ON_BASE_VEHICLE_NOT_EXIST(83006, "Based On Base Vehicle Not Exist!"),
+    PRODUCT_CONFIG_OXO_VERSION_SNAPSHOT_ID_IS_NULL(83007, "OXO Version Snapshot Id Is Null!"),
+    PRODUCT_CONFIG_BASED_ON_BASE_VEHICLE_TYPE_ERROR(83008, "Copy From Released OXO Base Vehicle Option Error!"),
 
     /**
      * Other

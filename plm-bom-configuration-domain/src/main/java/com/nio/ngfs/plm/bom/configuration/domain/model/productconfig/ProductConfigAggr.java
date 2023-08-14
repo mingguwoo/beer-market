@@ -87,10 +87,12 @@ public class ProductConfigAggr extends AbstractDo implements AggrRoot<String> {
      */
     public void add() {
         checkName();
-        if (basedOnBaseVehicleId == null && StringUtils.isNotBlank(basedOnPcId)) {
+        // Based On Base Vehicle和Based On PC只能二选一
+        if (basedOnBaseVehicleId != null && StringUtils.isNotBlank(basedOnPcId)) {
             throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_BASED_ON_ONLY_SELECT_ONE);
         }
-        if (basedOnBaseVehicleId == null && oxoVersionSnapshotId == null) {
+        // 选择了Based On Base Vehicle，oxoVersionSnapshotId不可为空
+        if (basedOnBaseVehicleId != null && oxoVersionSnapshotId == null) {
             throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_OXO_VERSION_SNAPSHOT_ID_IS_NULL);
         }
         setSkipCheck(CommonConstants.CLOSE);

@@ -22,10 +22,34 @@ public class OxoAddCmd extends OxoBaseCmd {
     @ToString
     public static class OxoFeatureOption {
 
-         private String featureCode;
+        private String featureCode;
 
-         private List<String> optionCodes;
+        private List<OxoOption> optionCodes;
+
+
+        private String ruleCheck = "Y";
+
+        private String displayName;
+
+        private String chineseName;
 
     }
+
+
+    @Getter
+    @Setter
+    @ToString
+    public static class OxoOption {
+
+        private String optionCode;
+
+
+        private String ruleCheck = "Y";
+
+        private String displayName;
+
+        private String chineseName;
+    }
+
 
 }

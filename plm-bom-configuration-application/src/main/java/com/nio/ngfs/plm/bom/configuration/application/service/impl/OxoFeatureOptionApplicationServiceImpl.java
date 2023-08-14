@@ -254,7 +254,15 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
                     .map(OxoFeatureOptionAggr::getFeatureCode).distinct().toList());
         }
 
-        return featureRepository.findFeatureLibraryNotFeatureCodes(featureCodes);
+        // 查询 featureCodes
+        List<FeatureAggr> optionAggrs = featureRepository.findFeatureLibraryNotFeatureCodes(featureCodes);
+
+        if (CollectionUtils.isNotEmpty(optionAggrs)) {
+            List<FeatureAggr> featureAggrs = featureRepository.queryByFeatureOptionCodeList(
+                    optionAggrs.stream().map(FeatureAggr::getParentFeatureCode).distinct().toList());
+            optionAggrs.addAll(featureAggrs);
+        }
+        return optionAggrs;
     }
 
 
@@ -282,7 +290,7 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
 
             if (CollectionUtils.isNotEmpty(entities)) {
                 entities.forEach(entity -> {
-                    messages.add(MessageFormat.format(ConfigConstants.PRODUCT_CONFIGURATION_ERROR,entity.getOptionCode()));
+                    messages.add(MessageFormat.format(ConfigConstants.PRODUCT_CONFIGURATION_ERROR, entity.getOptionCode()));
                 });
             }
         }

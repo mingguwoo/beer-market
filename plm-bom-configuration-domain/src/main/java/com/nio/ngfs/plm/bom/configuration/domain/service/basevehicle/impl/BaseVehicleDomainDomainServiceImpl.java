@@ -173,6 +173,6 @@ public class BaseVehicleDomainDomainServiceImpl implements BaseVehicleDomainServ
                 headQry.add(oxoHeadQry);
             });
         });
-        return headQry.stream().sorted(Comparator.comparing(OxoHeadQry::getModelYear)).toList();
+        return headQry.stream().distinct().sorted(Comparator.comparing(OxoHeadQry::getModelYear)).toList();
     }
 }

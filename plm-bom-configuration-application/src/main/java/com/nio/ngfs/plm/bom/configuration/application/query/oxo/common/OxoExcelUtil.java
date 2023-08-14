@@ -44,7 +44,7 @@ public class OxoExcelUtil {
         XSSFWorkbook xssfWorkbook = buildHead(oxoBasicVehicles);
 
         List<OxoRowsQry> dataList = oxoListQry.getOxoRowsResps();
-        AtomicInteger rowIndex = new AtomicInteger(4);
+        AtomicInteger rowIndex = new AtomicInteger(3);
 
         //设置字体大小
         XSSFFont featureFont = xssfWorkbook.createFont();

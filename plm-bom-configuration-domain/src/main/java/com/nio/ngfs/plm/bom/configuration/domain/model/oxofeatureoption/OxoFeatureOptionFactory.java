@@ -29,7 +29,7 @@ public class OxoFeatureOptionFactory {
             rowInfoAggr.setModelCode(modelCode);
             rowInfoAggr.setCreateUser(userName);
             rowInfoAggr.setUpdateUser(userName);
-            rowInfoAggr.setRuleCheck(RuleCheckEnum.Y.getCode());
+            rowInfoAggr.setRuleCheck(featureOption.getRuleCheck());
             rowInfoAggr.setType(FeatureTypeEnum.FEATURE.getType());
             rowInfoAggr.setFeatureCode(featureOption.getFeatureCode());
             oxoRowInfoAggrs.add(rowInfoAggr);
@@ -40,9 +40,9 @@ public class OxoFeatureOptionFactory {
                 optionRowInfo.setModelCode(modelCode);
                 optionRowInfo.setCreateUser(userName);
                 optionRowInfo.setUpdateUser(userName);
-                optionRowInfo.setRuleCheck(RuleCheckEnum.Y.getCode());
+                optionRowInfo.setRuleCheck(optionCode.getRuleCheck());
                 optionRowInfo.setType(FeatureTypeEnum.OPTION.getType());
-                optionRowInfo.setFeatureCode(optionCode);
+                optionRowInfo.setFeatureCode(optionCode.getOptionCode());
                 oxoRowInfoAggrs.add(optionRowInfo);
             });
 

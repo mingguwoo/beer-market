@@ -23,6 +23,11 @@ public class BomsProductConfigDaoImpl extends AbstractDao<BomsProductConfigMappe
     }
 
     @Override
+    public void remove(BomsProductConfigEntity entity) {
+        getBaseMapper().remove(entity);
+    }
+
+    @Override
     public BomsProductConfigEntity getByPcId(String pcId) {
         LambdaQueryWrapper<BomsProductConfigEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(BomsProductConfigEntity::getPcId, pcId);
@@ -38,11 +43,9 @@ public class BomsProductConfigDaoImpl extends AbstractDao<BomsProductConfigMappe
 
     @Override
     public BomsProductConfigEntity queryLastPcByModelAndModelYear(String modelCode, String modelYear) {
-        LambdaQueryWrapper<BomsProductConfigEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.likeRight(BomsProductConfigEntity::getPcId, modelCode + " " + modelYear);
-        lambdaQueryWrapper.orderByDesc(BomsProductConfigEntity::getPcId);
-        lambdaQueryWrapper.last("limit 1");
-        return getBaseMapper().selectOne(lambdaQueryWrapper);
+        // 此处需包含逻辑删除的数据
+        String pcIdPrefix = modelCode + " " + modelYear + "-";
+        return getBaseMapper().queryLastPcByPcIdPrefix(pcIdPrefix);
     }
 
     @Override

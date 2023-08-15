@@ -110,6 +110,15 @@ public class ProductConfigAggr extends AbstractDo implements AggrRoot<String> {
     public void edit(EditPcCmd cmd) {
         checkName(cmd.getName());
         setName(cmd.getName());
+        setUpdateUser(cmd.getUpdateUser());
+    }
+
+    /**
+     * 删除PC
+     */
+    public void delete(String updateUser) {
+        setDelFlag(CommonConstants.DEL_FLAG);
+        setUpdateUser(updateUser);
     }
 
     /**

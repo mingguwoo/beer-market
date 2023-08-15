@@ -44,4 +44,6 @@ public interface RedisKeyConstant {
 
     String PRODUCT_CONFIG_EDIT_PC_LOCK_KEY_PREFIX = CONFIGURATION_PREFIX + "productConfig:pc:edit:lock:";
 
+    String PRODUCT_CONFIG_DELETE_PC_LOCK_KEY_PREFIX = CONFIGURATION_PREFIX + "productConfig:pc:delete:lock:";
+
 }

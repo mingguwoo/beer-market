@@ -2,6 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductConfigEntity;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -12,5 +13,20 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsP
  * @since 2023-08-09
  */
 public interface BomsProductConfigMapper extends BaseMapper<BomsProductConfigEntity> {
+
+    /**
+     * 删除
+     *
+     * @param entity BomsProductConfigEntity
+     */
+    void remove(@Param("entity") BomsProductConfigEntity entity);
+
+    /**
+     * 根据pcIdPrefix查询最新的PC
+     *
+     * @param pcIdPrefix pcIdPrefix
+     * @return BomsProductConfigEntity
+     */
+    BomsProductConfigEntity queryLastPcByPcIdPrefix(@Param("pcIdPrefix") String pcIdPrefix);
 
 }

@@ -1,14 +1,8 @@
 package com.nio.ngfs.plm.bom.configuration.sdk;
 
 import com.nio.bom.share.result.ResultInfo;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.request.AddPcCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.request.EditPcCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.request.GetBasedOnPcListQry;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.request.GetModelListQry;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.AddPcRespDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.EditPcRespDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.GetBasedOnPcListRespDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.GetModelListRespDto;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.request.*;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -56,5 +50,14 @@ public interface PlmProductConfigClient {
      */
     @PostMapping("/productConfig/editPc")
     ResultInfo<EditPcRespDto> editPc(EditPcCmd cmd);
+
+    /**
+     * 删除PC
+     *
+     * @param cmd 命令
+     * @return 响应
+     */
+    @PostMapping("/productConfig/deletePc")
+    ResultInfo<DeletePcRespDto> deletePc(DeletePcCmd cmd);
 
 }

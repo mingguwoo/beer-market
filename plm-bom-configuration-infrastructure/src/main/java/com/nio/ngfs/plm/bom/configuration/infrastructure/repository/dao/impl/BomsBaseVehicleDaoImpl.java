@@ -30,10 +30,8 @@ public class BomsBaseVehicleDaoImpl extends AbstractDao<BomsBaseVehicleMapper, B
     }
 
     @Override
-    public BomsBaseVehicleEntity getLastestBaseVehicle() {
-        LambdaQueryWrapper<BomsBaseVehicleEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.orderByDesc(BomsBaseVehicleEntity::getId).last("limit 1");
-        return getBaseMapper().selectOne(lambdaQueryWrapper);
+    public Long getLastestBaseVehicle() {
+        return getBaseMapper().getLatestBaseVehicle();
     }
 
     @Override

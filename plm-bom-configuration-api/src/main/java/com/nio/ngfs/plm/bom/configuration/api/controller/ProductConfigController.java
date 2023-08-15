@@ -3,18 +3,13 @@ package com.nio.ngfs.plm.bom.configuration.api.controller;
 import com.nio.bom.share.annotation.NotLogResult;
 import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.application.command.productconfig.AddPcCommand;
+import com.nio.ngfs.plm.bom.configuration.application.command.productconfig.DeletePcCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.productconfig.EditPcCommand;
 import com.nio.ngfs.plm.bom.configuration.application.query.productconfig.GetBasedOnPcListQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.productconfig.GetModelListQuery;
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmProductConfigClient;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.request.AddPcCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.request.EditPcCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.request.GetBasedOnPcListQry;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.request.GetModelListQry;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.AddPcRespDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.EditPcRespDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.GetBasedOnPcListRespDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.GetModelListRespDto;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.request.*;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,6 +29,7 @@ public class ProductConfigController implements PlmProductConfigClient {
     private final GetBasedOnPcListQuery getBasedOnPcListQuery;
     private final AddPcCommand addPcCommand;
     private final EditPcCommand editPcCommand;
+    private final DeletePcCommand deletePcCommand;
 
     @Override
     @NotLogResult
@@ -57,6 +53,12 @@ public class ProductConfigController implements PlmProductConfigClient {
     @NotLogResult
     public ResultInfo<EditPcRespDto> editPc(@Valid @RequestBody EditPcCmd cmd) {
         return ResultInfo.success(editPcCommand.execute(cmd));
+    }
+
+    @Override
+    @NotLogResult
+    public ResultInfo<DeletePcRespDto> deletePc(@Valid @RequestBody DeletePcCmd cmd) {
+        return ResultInfo.success(deletePcCommand.execute(cmd));
     }
 
 }

@@ -24,11 +24,11 @@ public interface BomsBaseVehicleDao extends IService<BomsBaseVehicleEntity> {
     List<BomsBaseVehicleEntity> queryByModelCodeModelYearRegionOptionCodeDriveHandSalesVersion(String modelCode, String modelYear, String regionOptionCode, String driveHand, String salesVersion);
 
     /**
-     * 获取最新BaseVehicle记录
+     * 获取最新BaseVehicle记录的id
      *
-     * @return BomsBasicVehicle
+     * @return id
      */
-    BomsBaseVehicleEntity getLastestBaseVehicle();
+    Long getLastestBaseVehicle();
 
     /**
      * 根据Base Vehicle ID 获取 Base Vehicle

@@ -3,7 +3,6 @@ package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.nio.ngfs.common.model.page.WherePageRequest;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsProductConfigModelOptionDao;
-import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductConfigEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductConfigModelOptionEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsProductConfigModelOptionMapper;
 import lombok.extern.slf4j.Slf4j;

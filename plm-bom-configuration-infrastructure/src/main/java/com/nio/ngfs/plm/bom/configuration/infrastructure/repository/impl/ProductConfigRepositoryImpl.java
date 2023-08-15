@@ -30,6 +30,11 @@ public class ProductConfigRepositoryImpl implements ProductConfigRepository {
     }
 
     @Override
+    public void remove(ProductConfigAggr aggr) {
+        bomsProductConfigDao.remove(productConfigConverter.convertDoToEntity(aggr));
+    }
+
+    @Override
     public ProductConfigAggr queryLastPcByModelAndModelYear(String modelCode, String modelYear) {
         return productConfigConverter.convertEntityToDo(bomsProductConfigDao.queryLastPcByModelAndModelYear(modelCode, modelYear));
     }

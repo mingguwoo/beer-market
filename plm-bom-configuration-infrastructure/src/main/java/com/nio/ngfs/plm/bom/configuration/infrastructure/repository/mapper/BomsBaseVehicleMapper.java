@@ -7,4 +7,6 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsB
  * @date 2023/7/18
  */
 public interface BomsBaseVehicleMapper extends BaseMapper<BomsBaseVehicleEntity> {
+
+    Long getLatestBaseVehicle();
 }

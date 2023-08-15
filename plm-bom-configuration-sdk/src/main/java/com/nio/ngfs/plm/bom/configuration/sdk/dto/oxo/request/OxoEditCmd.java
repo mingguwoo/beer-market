@@ -2,7 +2,6 @@ package com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**

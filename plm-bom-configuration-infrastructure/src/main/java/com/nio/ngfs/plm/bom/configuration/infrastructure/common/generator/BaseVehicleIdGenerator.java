@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.text.DecimalFormat;
 import java.text.Format;
+import java.util.Objects;
 
 /**
  * @author bill.wang
@@ -54,11 +55,11 @@ public class BaseVehicleIdGenerator {
 
     private long getSequenceFromDb(){
         Long sequence = 1L;
-        BomsBaseVehicleEntity bomsBaseVehicleEntity = bomsBaseVehicleDao.getLastestBaseVehicle();
-        if (ObjectUtils.isEmpty(bomsBaseVehicleEntity)) {
+        Long id = bomsBaseVehicleDao.getLastestBaseVehicle();
+        if (Objects.isNull(id)) {
             log.info( "base vehicle表为空, 设置base vehicle id 为1");
             return sequence;
         }
-        return bomsBaseVehicleEntity.getId() + 1;
+        return id + 1;
     }
 }

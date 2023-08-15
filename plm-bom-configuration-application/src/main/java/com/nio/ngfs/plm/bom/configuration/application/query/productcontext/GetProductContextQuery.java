@@ -27,17 +27,13 @@ public class GetProductContextQuery {
     private final BomsProductContextDao bomsProductContextDao;
     private final BomsProductContextFeatureDao bomsProductContextFeatureDao;
     private final ProductContextQueryService productContextQueryService;
-    private final BomsFeatureLibraryDao bomsFeatureLibraryDao;
 
     public GetProductContextRespDto execute(GetProductContextQry qry){
         List<BomsProductContextEntity> bomsProductContextEntities = bomsProductContextDao.queryByModelCode(qry.getModelCode());
         //获取全部点
         List<BomsProductContextFeatureEntity> bomsProductContextFeatureEntities = bomsProductContextFeatureDao.queryByModelCode(qry.getModelCode());
         List<ProductContextDto> pointList = LambdaUtil.map(bomsProductContextEntities, ProductContextAssembler::assemble);
-        //根据featureCode,optionCode,catalog先筛选option/feature
-//        List<FeatureAggr> featureAggrs = productContextQueryService.getAllRelatedFeature(pointList,qry);
-        GetProductContextRespDto dtoList = productContextQueryService.filter(pointList, bomsProductContextFeatureEntities,qry);
-        return null;
+        return productContextQueryService.filterAndBuildResponse(pointList, bomsProductContextFeatureEntities,qry);
     }
 
 }

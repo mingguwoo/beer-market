@@ -12,6 +12,13 @@ import java.util.List;
 public interface BomsProductConfigDao extends IService<BomsProductConfigEntity> {
 
     /**
+     * 删除
+     *
+     * @param entity BomsProductConfigEntity
+     */
+    void remove(BomsProductConfigEntity entity);
+
+    /**
      * 根据pcId查询
      *
      * @param pcId PC Id

@@ -27,7 +27,6 @@ public class GetProductContextQuery {
     private final BomsProductContextDao bomsProductContextDao;
     private final BomsProductContextFeatureDao bomsProductContextFeatureDao;
     private final ProductContextQueryService productContextQueryService;
-    private final BomsFeatureLibraryDao bomsFeatureLibraryDao;
 
     public GetProductContextRespDto execute(GetProductContextQry qry){
         List<BomsProductContextEntity> bomsProductContextEntities = bomsProductContextDao.queryByModelCode(qry.getModelCode());

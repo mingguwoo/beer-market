@@ -50,12 +50,9 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
             pointList = pointList.stream().filter(point-> finalRowList.contains(pointMap.get(point))).toList();
         }
         //模糊搜索，筛选optionCode featureCode
-        pointList = pointList.stream().filter(point-> {
-            return matchSearch(point.getOptionCode(), qry.getFeature()) ||
-                    matchSearch(point.getFeatureCode(),qry.getFeature()) ||
-                    matchSearch(featureAggrMap.get(point.getFeatureCode()).getDisplayName(),qry.getFeature());
-
-        }).toList();
+        pointList = pointList.stream().filter(point-> matchSearch(point.getOptionCode(), qry.getFeature()) ||
+                matchSearch(point.getFeatureCode(),qry.getFeature()) ||
+                matchSearch(featureAggrMap.get(point.getFeatureCode()).getDisplayName(),qry.getFeature())).toList();
         rowList = pointList.stream().map(point->pointMap.get(point)).toList();
         //组装Dto
         return buildResponseDto(pointList,rowList,featureAggrMap);

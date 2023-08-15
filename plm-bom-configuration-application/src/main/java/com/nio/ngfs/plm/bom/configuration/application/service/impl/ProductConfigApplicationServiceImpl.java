@@ -8,11 +8,11 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVer
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigRepository;
-import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.domainobject.BasedOnBaseVehicleFeature;
-import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.domainobject.BasedOnBaseVehicleOption;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.ProductConfigOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.ProductConfigOptionFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.ProductConfigOptionRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.domainobject.BasedOnBaseVehicleFeature;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.domainobject.BasedOnBaseVehicleOption;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoVersionSnapshotDomainService;
 import com.nio.ngfs.plm.bom.configuration.domain.service.productconfig.ProductConfigOptionDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoEditCmd;

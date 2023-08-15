@@ -7,7 +7,10 @@ import com.nio.ngfs.plm.bom.configuration.application.command.basevehicle.AddBas
 import com.nio.ngfs.plm.bom.configuration.application.command.basevehicle.ChangeBaseVehicleStatusCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.basevehicle.DeleteBaseVehicleCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.basevehicle.EditBaseVehicleCommand;
-import com.nio.ngfs.plm.bom.configuration.application.query.basevehicle.*;
+import com.nio.ngfs.plm.bom.configuration.application.query.basevehicle.ExportBaseVehicleQuery;
+import com.nio.ngfs.plm.bom.configuration.application.query.basevehicle.GetBaseVehicleOptionsQuery;
+import com.nio.ngfs.plm.bom.configuration.application.query.basevehicle.QueryBaseVehicleQuery;
+import com.nio.ngfs.plm.bom.configuration.application.query.basevehicle.QueryCopyFromModelQuery;
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmBaseVehicleClient;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.request.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.response.*;

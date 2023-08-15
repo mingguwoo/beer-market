@@ -22,7 +22,7 @@ public class OxoRowsQry implements Qry {
 
         private String comments;
 
-        private Long headId;
+        private Long rowId;
 
         private String ruleCheck;
 

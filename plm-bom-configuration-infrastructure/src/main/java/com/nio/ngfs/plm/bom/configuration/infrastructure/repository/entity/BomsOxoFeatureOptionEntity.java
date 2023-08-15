@@ -51,7 +51,7 @@ public class BomsOxoFeatureOptionEntity extends BaseEntity {
     /**
      * 软删除 1删除 0未删除
      */
-    private Short softDelete = 0;
+    private Integer softDelete = 0;
 
     @Override
     public String toString() {

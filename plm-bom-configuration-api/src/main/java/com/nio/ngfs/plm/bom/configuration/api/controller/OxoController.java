@@ -78,7 +78,7 @@ public class  OxoController {
      * @param cmd 命令
      * @return 结果
      */
-    @NeedAuthorization
+    //@NeedAuthorization
     @NotLogResult
     @PostMapping("/deleteFeatureOption")
     public ResultInfo<DeleteFeatureOptionRespDto> deleteFeatureOption(@Valid @RequestBody DeleteFeatureOptionCmd cmd) {

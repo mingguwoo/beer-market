@@ -14,4 +14,8 @@ public class OxoEditInfoCmd extends OxoBaseCmd{
        @NotEmpty
        @Valid
        private List<OxoEditCmd> editCmds;
+
+
+
+
 }

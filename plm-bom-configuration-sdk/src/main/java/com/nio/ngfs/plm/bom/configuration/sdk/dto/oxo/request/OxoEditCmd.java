@@ -19,13 +19,6 @@ public class OxoEditCmd extends OxoBaseCmd{
 
      private String description;
 
-     /**
-      * 评论
-      */
-     private String comments;
-
-     private String ruleCheck;
-
 
      private String regionCode;
 

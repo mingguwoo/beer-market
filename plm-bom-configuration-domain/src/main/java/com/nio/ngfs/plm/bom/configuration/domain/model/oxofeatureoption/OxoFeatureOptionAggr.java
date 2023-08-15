@@ -58,7 +58,7 @@ public class OxoFeatureOptionAggr extends AbstractDo implements AggrRoot<Long>, 
     /**
      * 软删除 1删除 0未删除
      */
-    private Integer sortDelete=0;
+    private Integer softDelete=0;
 
     private String parentFeatureCode;
 
@@ -103,7 +103,7 @@ public class OxoFeatureOptionAggr extends AbstractDo implements AggrRoot<Long>, 
      */
     public boolean canDelete() {
         return Objects.equals(CommonConstants.NOT_DEL_FLAG, delFlag) &&
-                Objects.equals(CommonConstants.NOT_DEL_FLAG, sortDelete);
+                Objects.equals(CommonConstants.NOT_DEL_FLAG, softDelete);
     }
 
     /**
@@ -134,7 +134,7 @@ public class OxoFeatureOptionAggr extends AbstractDo implements AggrRoot<Long>, 
      * 软删除
      */
     public void softDelete() {
-        setSortDelete(CommonConstants.DEL_FLAG);
+        setSoftDelete(CommonConstants.DEL_FLAG);
         if (isFeature() && CollectionUtils.isNotEmpty(children)) {
             children.forEach(OxoFeatureOptionAggr::softDelete);
         }

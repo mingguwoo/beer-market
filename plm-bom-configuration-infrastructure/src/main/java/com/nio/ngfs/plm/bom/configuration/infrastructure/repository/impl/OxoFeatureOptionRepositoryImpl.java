@@ -86,7 +86,7 @@ public class OxoFeatureOptionRepositoryImpl implements OxoFeatureOptionRepositor
             }
             oxoFeatureOptionAggr.setRuleCheck(x.getRuleCheck());
             oxoFeatureOptionAggr.setComment(x.getComment());
-            oxoFeatureOptionAggr.setSortDelete(Integer.valueOf(x.getSoftDelete()));
+            oxoFeatureOptionAggr.setSoftDelete(x.getSoftDelete());
             oxoFeatureOptionAggr.setModelCode(modelCode);
             oxoFeatureOptionAggr.setSort(x.getSort());
 

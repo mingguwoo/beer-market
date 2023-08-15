@@ -18,14 +18,14 @@ public class OxoInfoAssembler {
     public static OxoRowsQry assembleOxoQry(OxoFeatureOptionAggr infoDo, String group) {
         OxoRowsQry qry = new OxoRowsQry();
         qry.setCatalog(infoDo.getCatalog());
-        qry.setHeadId(infoDo.getId());
         qry.setDisplayName(infoDo.getDisplayName());
         qry.setChineseName(infoDo.getChineseName());
         qry.setRuleCheck(infoDo.getRuleCheck());
         qry.setFeatureCode(infoDo.getFeatureCode());
         qry.setGroup(group);
         qry.setComments(infoDo.getComment());
-        qry.setIsSortDelete(infoDo.getSortDelete());
+        qry.setRowId(infoDo.getId());
+        qry.setIsSortDelete(infoDo.getSoftDelete());
         return qry;
     }
 

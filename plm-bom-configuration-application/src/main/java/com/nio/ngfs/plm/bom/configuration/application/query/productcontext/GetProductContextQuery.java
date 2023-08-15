@@ -34,10 +34,7 @@ public class GetProductContextQuery {
         //获取全部点
         List<BomsProductContextFeatureEntity> bomsProductContextFeatureEntities = bomsProductContextFeatureDao.queryByModelCode(qry.getModelCode());
         List<ProductContextDto> pointList = LambdaUtil.map(bomsProductContextEntities, ProductContextAssembler::assemble);
-        //根据featureCode,optionCode,catalog先筛选option/feature
-//        List<FeatureAggr> featureAggrs = productContextQueryService.getAllRelatedFeature(pointList,qry);
-        GetProductContextRespDto dtoList = productContextQueryService.filter(pointList, bomsProductContextFeatureEntities,qry);
-        return null;
+        return productContextQueryService.filterAndBuildResponse(pointList, bomsProductContextFeatureEntities,qry);
     }
 
 }

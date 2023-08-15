@@ -46,8 +46,10 @@ public class AddPcCommand extends AbstractLockCommand<AddPcCmd, AddPcRespDto> {
         String brand = modelFacade.getBrandByModel(cmd.getModel());
         // 生成PC Id
         String pcId = productConfigDomainService.generatePcId(cmd.getModel(), cmd.getModelYear());
+        // 创建聚合根
         ProductConfigAggr productConfigAggr = ProductConfigFactory.create(cmd, pcId, brand);
         productConfigAggr.add();
+        // 校验PC Name是否唯一
         productConfigDomainService.checkPcNameUnique(productConfigAggr);
         // copy PC的Option Code勾选
         List<ProductConfigOptionAggr> basedOnPcOptionAggrList = productConfigApplicationService.copyProductConfigOptionByPc(productConfigAggr);

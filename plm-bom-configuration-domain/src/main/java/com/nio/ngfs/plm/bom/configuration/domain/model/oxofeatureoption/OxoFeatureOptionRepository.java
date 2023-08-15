@@ -26,6 +26,13 @@ public interface OxoFeatureOptionRepository extends Repository<OxoFeatureOptionA
      */
     void batchSave(List<OxoFeatureOptionAggr> aggrList);
 
+    /**
+     * 批量删除
+     *
+     * @param aggrList 聚合根列表
+     */
+    void batchRemove(List<OxoFeatureOptionAggr> aggrList);
+
 
 
     /**

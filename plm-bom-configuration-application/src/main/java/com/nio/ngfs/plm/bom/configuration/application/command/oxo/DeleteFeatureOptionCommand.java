@@ -11,12 +11,14 @@ import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoFeatureOptionDom
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.DeleteFeatureOptionCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.DeleteFeatureOptionRespDto;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -50,26 +52,40 @@ public class DeleteFeatureOptionCommand extends AbstractLockCommand<DeleteFeatur
         featureOptionApplicationService.buildFeatureOptionWithChildren(featureOptionAggrList);
         // 在最新Release版本OXO中查询存在的Feature/Option
         Set<String> existFeatureOptionCodeSet = featureOptionApplicationService.queryExistFeatureOptionInLastedReleaseSnapshot(featureOptionAggrList);
-        // 物理删除
+        // 逻辑删除
         List<OxoFeatureOptionAggr> physicalDeleteList = featureOptionAggrList.stream().filter(i -> !existFeatureOptionCodeSet.contains(i.getFeatureCode())).toList();
         physicalDeleteList.forEach(OxoFeatureOptionAggr::physicalDelete);
-        // 逻辑删除
+        // 软删除
         List<OxoFeatureOptionAggr> softDeleteList = featureOptionAggrList.stream().filter(i -> existFeatureOptionCodeSet.contains(i.getFeatureCode())).toList();
         softDeleteList.forEach(OxoFeatureOptionAggr::softDelete);
         // 校验并删除打点
         Pair<List<OxoOptionPackageAggr>, List<String>> result = featureOptionApplicationService.checkAndDeleteOptionPackage(softDeleteList);
-        // 待更新的Feature/Option行
-        List<OxoFeatureOptionAggr> updateFeatureOptionAggrList = Lists.newArrayList(featureOptionAggrList.iterator());
-        featureOptionAggrList.forEach(i -> updateFeatureOptionAggrList.addAll(i.getChildren()));
         // 事务保存到数据库
-        ((DeleteFeatureOptionCommand) AopContext.currentProxy()).saveFeatureOptionAndOptionPackage(updateFeatureOptionAggrList, result.getLeft());
+        ((DeleteFeatureOptionCommand) AopContext.currentProxy()).saveFeatureOptionAndOptionPackage(physicalDeleteList, softDeleteList, result.getLeft());
         return new DeleteFeatureOptionRespDto(result.getRight());
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void saveFeatureOptionAndOptionPackage(List<OxoFeatureOptionAggr> featureOptionAggrList, List<OxoOptionPackageAggr> optionPackageAggrList) {
-        featureOptionRepository.batchSave(featureOptionAggrList);
+    public void saveFeatureOptionAndOptionPackage(List<OxoFeatureOptionAggr> physicalDeleteList, List<OxoFeatureOptionAggr> softDeleteList, List<OxoOptionPackageAggr> optionPackageAggrList) {
+        // 逻辑删除
+        featureOptionRepository.batchRemove(buildFeatureAndOptionList(physicalDeleteList));
+        // 软删除
+        featureOptionRepository.batchSave(buildFeatureAndOptionList(softDeleteList));
         oxoOptionPackageRepository.batchSave(optionPackageAggrList);
+    }
+
+    private static List<OxoFeatureOptionAggr> buildFeatureAndOptionList(List<OxoFeatureOptionAggr> featureOptionAggrList) {
+        if (CollectionUtils.isEmpty(featureOptionAggrList)) {
+            return Collections.emptyList();
+        }
+        // 待更新的Feature/Option行
+        List<OxoFeatureOptionAggr> featureAndOptionList = Lists.newArrayList(featureOptionAggrList.iterator());
+        featureOptionAggrList.forEach(i -> {
+            if (CollectionUtils.isNotEmpty(i.getChildren())) {
+                featureAndOptionList.addAll(i.getChildren());
+            }
+        });
+        return featureAndOptionList;
     }
 
 }

@@ -6,6 +6,7 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.Ox
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoOptionPackageDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.common.DaoSupport;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -33,6 +34,9 @@ public class OxoOptionPackageRepositoryImpl implements OxoOptionPackageRepositor
 
     @Override
     public void batchSave(List<OxoOptionPackageAggr> aggrList) {
+        if (CollectionUtils.isEmpty(aggrList)) {
+            return;
+        }
         bomsOxoOptionPackageDao.saveBatch(oxoOptionPackageConverter.convertDoListToEntityList(aggrList));
     }
 

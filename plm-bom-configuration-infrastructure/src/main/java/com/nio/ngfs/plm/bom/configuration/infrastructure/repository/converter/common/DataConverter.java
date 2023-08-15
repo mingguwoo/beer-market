@@ -66,19 +66,4 @@ public interface DataConverter<DO extends AbstractDo, Entity extends BaseEntity>
         return ConverterUtil.convertList(entityList, this::convertEntityToDo);
     }
 
-
-
-//    default List<OxoFeatureOptionAggr> convertFeatureEntityListToDoList(List<BomsFeatureLibraryEntity> entities) {
-//        return entities.stream().map(x->{
-//            OxoFeatureOptionAggr featureOptionAggr=new OxoFeatureOptionAggr();
-//            featureOptionAggr.setType(x.getType());
-//            featureOptionAggr.setFeatureCode(x.getFeatureCode());
-//            featureOptionAggr.setDisplayName(x.getDisplayName());
-//            featureOptionAggr.setChineseName(x.getChineseName());
-//            featureOptionAggr.setParentFeatureCode(x.getParentFeatureCode());
-//            featureOptionAggr.setCatalog(x.getCatalog());
-//            return featureOptionAggr;
-//        }).toList();
-//    }
-
 }

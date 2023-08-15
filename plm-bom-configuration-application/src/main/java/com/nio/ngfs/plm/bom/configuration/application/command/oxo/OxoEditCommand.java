@@ -39,42 +39,38 @@ public class OxoEditCommand extends AbstractLockCommand<OxoEditInfoCmd, List<Str
     @Override
     protected List<String> executeWithLock(OxoEditInfoCmd cmd) {
 
-        List<OxoEditCmd> cmdLists = cmd.getEditCmds();
-
-        String userName =cmd.getUserName();
-
-        List<OxoFeatureOptionAggr> oxoFeatureOptionAggrs = Lists.newArrayList();
+        String userName = cmd.getUserName();
 
         // 更新备注 和 ruleCheck
-        cmdLists.stream().filter(x ->
-                Objects.nonNull(x.getHeadId()) &&
-                        (StringUtils.isNotBlank(x.getComments()) ||
-                                StringUtils.isNotBlank(x.getRuleCheck()))).toList().forEach(editCmd -> {
+        if (CollectionUtils.isNotEmpty(cmd.getEditOxoRows())) {
+            List<OxoFeatureOptionAggr> oxoFeatureOptionAggrs = Lists.newArrayList();
+            cmd.getEditOxoRows().forEach(editCmd -> {
+                OxoFeatureOptionAggr optionAggr = new OxoFeatureOptionAggr();
 
-            OxoFeatureOptionAggr optionAggr = new OxoFeatureOptionAggr();
+                if (StringUtils.isNotBlank(editCmd.getComments())) {
+                    optionAggr.setComment(editCmd.getComments());
+                }
 
-            if (StringUtils.isNotBlank(editCmd.getComments())) {
-                optionAggr.setComment(editCmd.getComments());
+                if (StringUtils.isNotBlank(editCmd.getRuleCheck())) {
+                    optionAggr.setRuleCheck(editCmd.getRuleCheck());
+                }
+                optionAggr.setId(editCmd.getRowId());
+                optionAggr.setUpdateUser(userName);
+                oxoFeatureOptionAggrs.add(optionAggr);
+            });
+
+            //更新 oxo列表
+            if (CollectionUtils.isNotEmpty(oxoFeatureOptionAggrs)) {
+                oxoFeatureOptionRepository.updateOxoFeatureOptions(oxoFeatureOptionAggrs);
             }
-
-            if (StringUtils.isNotBlank(editCmd.getRuleCheck())) {
-                optionAggr.setRuleCheck(editCmd.getRuleCheck());
-            }
-            optionAggr.setId(editCmd.getHeadId());
-            optionAggr.setUpdateUser(userName);
-            oxoFeatureOptionAggrs.add(optionAggr);
-        });
-
-
-        //更新 oxo列表
-        if (CollectionUtils.isNotEmpty(oxoFeatureOptionAggrs)) {
-            oxoFeatureOptionRepository.updateOxoFeatureOptions(oxoFeatureOptionAggrs);
         }
 
 
-        //更新 打点信息
-        oxoOptionPackageRepository.insertOxoOptionPackages(
-                OxoOptionPackageFactory.createOxoOptionPackageAggrList(cmdLists, userName));
+        if(CollectionUtils.isNotEmpty(cmd.getEditCmds())) {
+            //更新 打点信息
+            oxoOptionPackageRepository.insertOxoOptionPackages(
+                    OxoOptionPackageFactory.createOxoOptionPackageAggrList(cmd.getEditCmds(), userName));
+        }
 
 
         // 教研数据

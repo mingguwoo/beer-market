@@ -9,6 +9,14 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConf
 public interface ProductConfigDomainService {
 
     /**
+     * 获取并校验聚合根
+     *
+     * @param pcId PC Id
+     * @return 聚合根
+     */
+    ProductConfigAggr getAndCheckAggr(String pcId);
+
+    /**
      * 生成PC Id
      *
      * @param model     车型

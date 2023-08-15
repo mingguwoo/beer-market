@@ -3,7 +3,7 @@ package com.nio.ngfs.plm.bom.configuration.domain.service.feature;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.GetBaseVehicleOptionsRespDto;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.response.GetBaseVehicleOptionsRespDto;
 
 import java.util.List;
 

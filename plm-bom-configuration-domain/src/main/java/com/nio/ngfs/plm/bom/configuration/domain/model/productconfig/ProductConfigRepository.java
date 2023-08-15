@@ -11,11 +11,11 @@ public interface ProductConfigRepository extends Repository<ProductConfigAggr, S
     /**
      * 根据车型和Model Year查询最新的PC
      *
-     * @param model     车型
+     * @param modelCode 车型
      * @param modelYear Model Year
      * @return ProductConfigAggr
      */
-    ProductConfigAggr queryLastPcByModelAndModelYear(String model, String modelYear);
+    ProductConfigAggr queryLastPcByModelAndModelYear(String modelCode, String modelYear);
 
     /**
      * 根据Name查询

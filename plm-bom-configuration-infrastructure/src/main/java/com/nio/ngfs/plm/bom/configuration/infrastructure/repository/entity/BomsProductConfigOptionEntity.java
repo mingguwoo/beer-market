@@ -41,19 +41,25 @@ public class BomsProductConfigOptionEntity extends BaseEntity {
      */
     private String selectCanEdit;
 
+    /**
+     * 类型，0-正常，1-From Base Vehicle，2-From PC
+     */
+    private Integer type;
+
     @Override
     public String toString() {
         return "BomsProductConfigOption{" +
-            "id = " + getId() +
-            ", pcId = " + pcId +
-            ", optionCode = " + optionCode +
-            ", selectStatus = " + selectStatus +
-            ", selectCanEdit = " + selectCanEdit +
-            ", createUser = " + getCreateUser() +
-            ", updateUser = " + getUpdateUser() +
-            ", createTime = " + getCreateTime() +
-            ", updateTime = " + getUpdateTime() +
-            ", delFlag = " + getDelFlag() +
-        "}";
+                "id = " + getId() +
+                ", pcId = " + pcId +
+                ", optionCode = " + optionCode +
+                ", selectStatus = " + selectStatus +
+                ", selectCanEdit = " + selectCanEdit +
+                ", type = " + type +
+                ", createUser = " + getCreateUser() +
+                ", updateUser = " + getUpdateUser() +
+                ", createTime = " + getCreateTime() +
+                ", updateTime = " + getUpdateTime() +
+                ", delFlag = " + getDelFlag() +
+                "}";
     }
 }

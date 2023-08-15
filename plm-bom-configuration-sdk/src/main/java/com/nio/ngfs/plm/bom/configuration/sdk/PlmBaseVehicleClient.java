@@ -1,8 +1,8 @@
 package com.nio.ngfs.plm.bom.configuration.sdk;
 
 import com.nio.bom.share.result.ResultInfo;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.*;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.*;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.request.*;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.response.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 

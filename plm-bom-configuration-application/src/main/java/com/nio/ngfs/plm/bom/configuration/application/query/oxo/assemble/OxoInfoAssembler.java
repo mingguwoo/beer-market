@@ -54,7 +54,7 @@ public class OxoInfoAssembler {
             });
         });
 
-        return oxoEditCmds;
+        return oxoEditCmds.stream().distinct().toList();
 
     }
 

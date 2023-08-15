@@ -34,7 +34,7 @@ public class BomsProductConfigModelOptionDaoImpl extends AbstractDao<BomsProduct
                                                                                                               List<String> optionCodes) {
 
         LambdaQueryWrapper<BomsProductConfigModelOptionEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(BomsProductConfigModelOptionEntity::getModel, modelCode);
+        lambdaQueryWrapper.eq(BomsProductConfigModelOptionEntity::getModelCode, modelCode);
 
 
         if(StringUtils.isNotBlank(featureCode)){

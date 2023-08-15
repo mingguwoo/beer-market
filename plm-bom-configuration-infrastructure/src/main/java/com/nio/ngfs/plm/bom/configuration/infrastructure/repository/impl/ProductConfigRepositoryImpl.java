@@ -30,8 +30,8 @@ public class ProductConfigRepositoryImpl implements ProductConfigRepository {
     }
 
     @Override
-    public ProductConfigAggr queryLastPcByModelAndModelYear(String model, String modelYear) {
-        return productConfigConverter.convertEntityToDo(bomsProductConfigDao.queryLastPcByModelAndModelYear(model, modelYear));
+    public ProductConfigAggr queryLastPcByModelAndModelYear(String modelCode, String modelYear) {
+        return productConfigConverter.convertEntityToDo(bomsProductConfigDao.queryLastPcByModelAndModelYear(modelCode, modelYear));
     }
 
     @Override

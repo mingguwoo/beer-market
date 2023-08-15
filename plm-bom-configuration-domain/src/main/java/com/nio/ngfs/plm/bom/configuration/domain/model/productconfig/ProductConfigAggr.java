@@ -6,6 +6,7 @@ import com.nio.bom.share.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.common.util.RegexUtil;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.request.EditPcCmd;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,7 +31,7 @@ public class ProductConfigAggr extends AbstractDo implements AggrRoot<String> {
     /**
      * Model
      */
-    private String model;
+    private String modelCode;
 
     /**
      * Model Year
@@ -58,9 +59,14 @@ public class ProductConfigAggr extends AbstractDo implements AggrRoot<String> {
     private Long basedOnBaseVehicleId;
 
     /**
-     * Base Vehicle所在的OXO打包版本id
+     * Based On Base Vehicle所在的OXO发布版本id
      */
     private Long oxoVersionSnapshotId;
+
+    /**
+     * Based On Base Vehicle是否完成初始化勾选，0：否，1：是
+     */
+    private Integer completeInitSelect;
 
     /**
      * Based On PC ID
@@ -86,20 +92,30 @@ public class ProductConfigAggr extends AbstractDo implements AggrRoot<String> {
      * 新增PC
      */
     public void add() {
-        checkName();
-        if (basedOnBaseVehicleId == null && StringUtils.isNotBlank(basedOnPcId)) {
+        checkName(name);
+        // Based On Base Vehicle和Based On PC只能二选一
+        if (basedOnBaseVehicleId != null && StringUtils.isNotBlank(basedOnPcId)) {
             throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_BASED_ON_ONLY_SELECT_ONE);
         }
-        if (basedOnBaseVehicleId == null && oxoVersionSnapshotId == null) {
+        // 选择了Based On Base Vehicle，oxoVersionSnapshotId不可为空
+        if (basedOnBaseVehicleId != null && oxoVersionSnapshotId == null) {
             throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_OXO_VERSION_SNAPSHOT_ID_IS_NULL);
         }
         setSkipCheck(CommonConstants.CLOSE);
     }
 
     /**
+     * 编辑PC
+     */
+    public void edit(EditPcCmd cmd) {
+        checkName(cmd.getName());
+        setName(cmd.getName());
+    }
+
+    /**
      * 校验Name
      */
-    private void checkName() {
+    private void checkName(String name) {
         if (name.contains(StringUtils.SPACE)) {
             throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_PC_NAME_HAS_SPACE);
         }

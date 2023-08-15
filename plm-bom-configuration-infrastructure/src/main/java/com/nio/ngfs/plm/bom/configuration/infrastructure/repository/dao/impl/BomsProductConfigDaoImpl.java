@@ -30,16 +30,16 @@ public class BomsProductConfigDaoImpl extends AbstractDao<BomsProductConfigMappe
     }
 
     @Override
-    public List<BomsProductConfigEntity> queryByModel(String model) {
+    public List<BomsProductConfigEntity> queryByModel(String modelCode) {
         LambdaQueryWrapper<BomsProductConfigEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(BomsProductConfigEntity::getModel, model);
+        lambdaQueryWrapper.eq(BomsProductConfigEntity::getModelCode, modelCode);
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 
     @Override
-    public BomsProductConfigEntity queryLastPcByModelAndModelYear(String model, String modelYear) {
+    public BomsProductConfigEntity queryLastPcByModelAndModelYear(String modelCode, String modelYear) {
         LambdaQueryWrapper<BomsProductConfigEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.likeRight(BomsProductConfigEntity::getPcId, model + " " + modelYear);
+        lambdaQueryWrapper.likeRight(BomsProductConfigEntity::getPcId, modelCode + " " + modelYear);
         lambdaQueryWrapper.orderByDesc(BomsProductConfigEntity::getPcId);
         lambdaQueryWrapper.last("limit 1");
         return getBaseMapper().selectOne(lambdaQueryWrapper);

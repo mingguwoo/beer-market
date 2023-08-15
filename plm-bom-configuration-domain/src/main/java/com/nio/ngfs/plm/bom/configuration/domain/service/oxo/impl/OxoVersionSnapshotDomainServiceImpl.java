@@ -1,7 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service.oxo.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.nio.bom.share.enums.ErrorCode;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.GZIPUtils;
 import com.nio.bom.share.utils.VersionUtils;
@@ -11,7 +10,6 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVer
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.enums.OxoSnapshotEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoVersionSnapshotDomainService;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.request.DeleteBaseVehicleCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

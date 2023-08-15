@@ -43,32 +43,45 @@ public enum ConfigErrorCode implements ErrorCode {
     FEATURE_GROUP_ROOT_IS_INTERNAL(80018, "GROUP_ROOT Is Used For Internal!"),
     FEATURE_ADD_GROUP_IN_3DE_FIRST(80019, "Please Add This Group In 3DE Group Library First!"),
     FEATURE_UPDATE_GROUP_IN_3DE_FIRST(80020, "Please Update This Group In 3DE Group Library First!"),
-    BASE_VEHICLE_MATURITY_INVALID(80021, "Maturity Is Invalid!"),
-    BASE_VEHICLE_REPEAT(80022, "This Base Vehicle already exists, can not be created repeatedly!"),
-    BASE_VEHICLE_NOT_EXISTS(80023, "Base Vehicle Not Existed!"),
-    BASE_VEHICLE_MODEL_CODE_MODEL_YEAR_INVALID(80024, "Base Vehicle Can Not Change Model Code Or Model Year!"),
-    BASE_VEHICLE_MATURITY_CHANGE_INVALID(80025, "Base Vehicle Can Not Revert Its Maturity From P To U!"),
-    BASE_VEHICLE_STATUS_INVALID(80026, "Base Vehicle Status Is Invalid!"),
-    FEATURE_TYPE_INVALID(80027, "Type Is Invalid!"),
-    FEATURE_FEATURE_CODE_TOO_SHORT(80028, "Feature Code Min Length Is 4!"),
-    FEATURE_OPTION_CODE_TOO_SHORT(80029, "Option Code Min Length Is 4!"),
-    OXO_FEATURE_OPTION_CAN_NOT_DELETE(80030, "The Feature/Option Can Not Delete!"),
-    FEATURE_STATUS_NOT_ACTIVE_CAN_NOT_EDIT(80031, "The Feature Status Is Inactive, Can Not Edit!"),
-    FEATURE_FEATURE_IS_NOT_ACTIVE(80032, "Feature Is Not Active!"),
-    AF_ERROR(80033, "Please Add AF00 In OXO!"),
-    BASE_VEHICLE_ALREADY_RELEASED(80034, "The Base Vehicle Is Published, Can Not Delete!"),
+    FEATURE_TYPE_INVALID(80021, "Type Is Invalid!"),
+    FEATURE_FEATURE_CODE_TOO_SHORT(80022, "Feature Code Min Length Is 4!"),
+    FEATURE_OPTION_CODE_TOO_SHORT(80023, "Option Code Min Length Is 4!"),
+    FEATURE_STATUS_NOT_ACTIVE_CAN_NOT_EDIT(80024, "The Feature Status Is Inactive, Can Not Edit!"),
+    FEATURE_FEATURE_IS_NOT_ACTIVE(80025, "Feature Is Not Active!"),
+    FEATURE_FEATURE_CAN_NOT_BE_ACTIVE(80026, "Group Is Inactive, Feature Can Not Be Active! "),
+    FEATURE_OPTION_CAN_NOT_BE_ACTIVE(80027, "Feature Is Inactive, Option Can Not Be Active! "),
+
+    /**
+     * Base Vehicle
+     */
+    BASE_VEHICLE_MATURITY_INVALID(81000, "Maturity Is Invalid!"),
+    BASE_VEHICLE_REPEAT(81001, "This Base Vehicle already exists, can not be created repeatedly!"),
+    BASE_VEHICLE_NOT_EXISTS(81002, "Base Vehicle Not Existed!"),
+    BASE_VEHICLE_MODEL_CODE_MODEL_YEAR_INVALID(81003, "Base Vehicle Can Not Change Model Code Or Model Year!"),
+    BASE_VEHICLE_MATURITY_CHANGE_INVALID(81004, "Base Vehicle Can Not Revert Its Maturity From P To U!"),
+    BASE_VEHICLE_STATUS_INVALID(81005, "Base Vehicle Status Is Invalid!"),
+    BASE_VEHICLE_ALREADY_RELEASED(81006, "The Base Vehicle Is Published, Can Not Delete!"),
+
+    /**
+     * OXO
+     */
+    OXO_VERSION_SNAPSHOT_NOT_EXIST(82000, "OXO Version Snapshot Not Exist!"),
+    OXO_FEATURE_OPTION_CAN_NOT_DELETE(82001, "The Feature/Option Can Not Delete!"),
+    AF_ERROR(82002, "Please Add AF00 In OXO!"),
 
     /**
      * Product Config
      */
-    PRODUCT_CONFIG_BASED_ON_ONLY_SELECT_ONE(81000, "Based On Base Vehicle And Base On PC Can Only Select One!"),
-    PRODUCT_CONFIG_PC_ID_FORMAT_ERROR(81001, "PC Id Format Error!"),
-    PRODUCT_CONFIG_PC_NAME_HAS_SPACE(81002, "PC Name Has Blank, Please Remove It!"),
-    PRODUCT_CONFIG_PC_NAME_FORMAT_ERROR(81003, "PC Name Can Only Contains Alphabet、Number、_、-、. !"),
-    PRODUCT_CONFIG_PC_NAME_REPEAT(81004, "This PC Name Is Existed In【Model/Model Year】, Please Input A New One!"),
-    PRODUCT_CONFIG_BASED_ON_PC_NOT_EXIST(81005, "Based On PC Not Exist!"),
-    PRODUCT_CONFIG_BASED_ON_BASE_VEHICLE_NOT_EXIST(81006, "Based On Base Vehicle Not Exist!"),
-    PRODUCT_CONFIG_OXO_VERSION_SNAPSHOT_ID_IS_NULL(81007, "OXO Version Snapshot Id Is Null!"),
+    PRODUCT_CONFIG_BASED_ON_ONLY_SELECT_ONE(83000, "Based On Base Vehicle And Base On PC Can Only Select One!"),
+    PRODUCT_CONFIG_PC_ID_FORMAT_ERROR(83001, "PC Id Format Error!"),
+    PRODUCT_CONFIG_PC_NAME_HAS_SPACE(83002, "PC Name Has Blank, Please Remove It!"),
+    PRODUCT_CONFIG_PC_NAME_FORMAT_ERROR(83003, "PC Name Can Only Contains Alphabet、Number、_、-、. !"),
+    PRODUCT_CONFIG_PC_NAME_REPEAT(83004, "This PC Name Is Existed In【Model/Model Year】, Please Input A New One!"),
+    PRODUCT_CONFIG_BASED_ON_PC_NOT_EXIST(83005, "Based On PC Not Exist!"),
+    PRODUCT_CONFIG_BASED_ON_BASE_VEHICLE_NOT_EXIST(83006, "Based On Base Vehicle Not Exist!"),
+    PRODUCT_CONFIG_OXO_VERSION_SNAPSHOT_ID_IS_NULL(83007, "OXO Version Snapshot Id Is Null!"),
+    PRODUCT_CONFIG_BASED_ON_BASE_VEHICLE_TYPE_ERROR(83008, "Copy From Released OXO Base Vehicle Option Error!"),
+    PRODUCT_CONFIG_PC_NOT_EXIST(83009, "PC Not Exist!"),
 
     /**
      * Other

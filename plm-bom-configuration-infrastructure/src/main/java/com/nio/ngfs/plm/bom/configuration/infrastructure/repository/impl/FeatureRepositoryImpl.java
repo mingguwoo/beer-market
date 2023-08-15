@@ -8,6 +8,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureType
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.FeatureConverter;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsFeatureLibraryDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.common.DaoSupport;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureLibraryEntity;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -31,7 +32,11 @@ public class FeatureRepositoryImpl implements FeatureRepository {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void save(FeatureAggr aggr) {
-        DaoSupport.saveOrUpdate(bomsFeatureLibraryDao, featureConverter.convertDoToEntity(aggr));
+        BomsFeatureLibraryEntity entity = featureConverter.convertDoToEntity(aggr);
+        DaoSupport.saveOrUpdate(bomsFeatureLibraryDao, entity);
+        if (aggr.getId() == null) {
+            aggr.setId(entity.getId());
+        }
         // 节点变更不会影响父节点，此处不处理父节点
         // 保存子节点列表
         if (CollectionUtils.isNotEmpty(aggr.getChildrenList())) {
@@ -117,6 +122,7 @@ public class FeatureRepositoryImpl implements FeatureRepository {
 
     /**
      * 过滤 featureCodes
+     *
      * @param featureCodes
      * @return
      */

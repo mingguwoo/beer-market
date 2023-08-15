@@ -29,7 +29,7 @@ public class BomsProductConfigEntity extends BaseEntity {
     /**
      * Model
      */
-    private String model;
+    private String modelCode;
 
     /**
      * Model Year
@@ -57,9 +57,14 @@ public class BomsProductConfigEntity extends BaseEntity {
     private Long basedOnBaseVehicleId;
 
     /**
-     * Base Vehicle所在的OXO打包版本id
+     * Based On Base Vehicle所在的OXO发布版本id
      */
     private Long oxoVersionSnapshotId;
+
+    /**
+     * Based On Base Vehicle是否完成初始化勾选，0：否，1：是
+     */
+    private Integer completeInitSelect;
 
     /**
      * Based On PC ID
@@ -81,13 +86,14 @@ public class BomsProductConfigEntity extends BaseEntity {
         return "BomsProductConfig{" +
                 "id = " + getId() +
                 ", pcId = " + pcId +
-                ", model = " + model +
+                ", modelCode = " + modelCode +
                 ", modelYear = " + modelYear +
                 ", name = " + name +
                 ", marketingName = " + marketingName +
                 ", description = " + description +
                 ", basedOnBaseVehicleId = " + basedOnBaseVehicleId +
                 ", oxoVersionSnapshotId = " + oxoVersionSnapshotId +
+                ", completeInitSelect = " + completeInitSelect +
                 ", basedOnPcId = " + basedOnPcId +
                 ", brand = " + brand +
                 ", skipCheck = " + skipCheck +

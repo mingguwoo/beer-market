@@ -15,8 +15,8 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureType
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureGroupCodeChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureStatusChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.service.feature.FeatureDomainService;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.BaseVehicleOptionsRespDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.baseVehicle.response.GetBaseVehicleOptionsRespDto;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.response.BaseVehicleOptionsRespDto;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.response.GetBaseVehicleOptionsRespDto;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;

@@ -41,7 +41,7 @@ public class OxoOptionPackageApplicationServiceImpl implements OxoOptionPackageA
                 .map(OxoFeatureOptionAggr::getFeatureCode).distinct().toList();
 
         //查询表头数据
-        List<OxoHeadQry> oxoHeads = baseVehicleDomainService.queryByModel(modelCode);
+        List<OxoHeadQry> oxoHeads = baseVehicleDomainService.queryByModel(modelCode,false);
 
         //查询行数据
         List<OxoFeatureOptionAggr> entityList = oxoFeatureOptionRepository.queryByModelAndFeatureCodeList(modelCode, optionCodes);

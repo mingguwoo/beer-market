@@ -44,7 +44,7 @@ public interface BomsBaseVehicleDao extends IService<BomsBaseVehicleEntity> {
      */
     List<BomsBaseVehicleEntity> queryAll();
 
-    List<BomsBaseVehicleEntity> queryByModel(String modelCode);
+    List<BomsBaseVehicleEntity> queryByModel(String modelCode,Boolean isMaturity);
 
     /**
      * 获取同一ModeCode下Status为active的Model

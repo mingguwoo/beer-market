@@ -72,8 +72,8 @@ public class BaseVehicleRepositoryImpl implements BaseVehicleRepository {
 
 
     @Override
-    public List<BaseVehicleAggr> queryByModel(String modelCode) {
-        return baseVehicleConverter.convertEntityListToDoList(bomsBaseVehicleDao.queryByModel(modelCode));
+    public List<BaseVehicleAggr> queryByModel(String modelCode,Boolean isMaturity) {
+        return baseVehicleConverter.convertEntityListToDoList(bomsBaseVehicleDao.queryByModel(modelCode,isMaturity));
     }
 
 

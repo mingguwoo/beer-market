@@ -54,7 +54,7 @@ public interface OxoFeatureOptionApplicationService {
      * @para version
      * @return
      */
-    OxoListQry queryOxoInfoByModelCode(String modelCode,String version);
+    OxoListQry queryOxoInfoByModelCode(String modelCode, String version,Boolean isMaturity);
 
 
     /**

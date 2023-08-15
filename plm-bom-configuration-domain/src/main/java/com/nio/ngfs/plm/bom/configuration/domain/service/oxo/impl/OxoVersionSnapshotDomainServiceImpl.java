@@ -6,6 +6,7 @@ import com.nio.bom.share.utils.GZIPUtils;
 import com.nio.bom.share.utils.VersionUtils;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.enums.OxoSnapshotEnum;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author xiaozhou.tu
@@ -35,68 +37,87 @@ public class OxoVersionSnapshotDomainServiceImpl implements OxoVersionSnapshotDo
 
     /**
      * 查询 oxo版本
+     *
      * @param modelCode
      * @param type
      * @return
      */
     @Override
-    public String queryVersionByModelCode(String modelCode, String type) {
+    public OxoVersionSnapshotAggr queryVersionByModelCode(String modelCode, String type) {
 
 
         List<OxoVersionSnapshotAggr> oxoVersionSnapshots =
-                oxoVersionSnapshotRepository.queryOxoVersionSnapshotByModelCode(modelCode,null,null);
+                oxoVersionSnapshotRepository.queryOxoVersionSnapshotByModelCode(modelCode, null, null);
+
+
+        OxoVersionSnapshotAggr oxoVersionSnapshotAggr = new OxoVersionSnapshotAggr();
 
 
         // 根据 车型获取 oxo版本
         if (CollectionUtils.isNotEmpty(oxoVersionSnapshots)) {
 
-            List<String> versions = oxoVersionSnapshots.stream().filter(x -> StringUtils.equals(x.getType(), OxoSnapshotEnum.FORMAL.getCode())).
-                    map(OxoVersionSnapshotAggr::getVersion).distinct().sorted(Comparator.reverseOrder()).toList();
+            List<OxoVersionSnapshotAggr> formalVersions = oxoVersionSnapshots.stream().filter(x -> StringUtils.equals(x.getType(), OxoSnapshotEnum.FORMAL.getCode()))
+                    .sorted(Comparator.comparing(OxoVersionSnapshotAggr::getVersion).reversed()).toList();
 
 
-            String version = versions.get(0);
+            // 如果FORMAL版本 为空
+            if (CollectionUtils.isEmpty(formalVersions) && StringUtils.equals(type, OxoSnapshotEnum.FORMAL.getCode())) {
 
-            // Formal
-            if (StringUtils.equals(type, OxoSnapshotEnum.FORMAL.getCode())) {
+                oxoVersionSnapshotAggr.setVersion(ConfigConstants.VERSION_AA);
 
-                //如果包含小版本
-                if (version.contains(ConfigConstants.REG_DOT)) {
-                    //则系统基于最新已发布版本号去除后缀，保留前两个大写字母，生成新版本号
-                    return VersionUtils.getMajorRev(version);
-                } else {
-                    //则系统基于最新已发布版本号往后顺延自动生成新版本号
-                    return VersionUtils.findNextRev(version);
+            } else if (CollectionUtils.isEmpty(formalVersions) && StringUtils.equals(type, OxoSnapshotEnum.INFORMAL.getCode())) {
+
+                List<OxoVersionSnapshotAggr> informalVersions =
+                        oxoVersionSnapshots.stream().filter(x -> StringUtils.equals(x.getType(), OxoSnapshotEnum.INFORMAL.getCode()))
+                                .sorted(Comparator.comparing(OxoVersionSnapshotAggr::getVersion).reversed()).toList();
+
+                if (CollectionUtils.isNotEmpty(informalVersions)) {
+                    oxoVersionSnapshotAggr.setVersion(VersionUtils.getNextMajorRev(informalVersions.get(0).getVersion()));
                 }
-            }
+            } else if (CollectionUtils.isNotEmpty(formalVersions)) {
 
-            if (StringUtils.equals(type, OxoSnapshotEnum.INFORMAL.getCode())) {
-                //则系统基于最新已发布版本号，后缀数字+1，生成新版本号
-                if (version.contains(ConfigConstants.REG_DOT)) {
-                    return VersionUtils.getNextMajorRev(version);
+                OxoVersionSnapshotAggr oxoVersionSnapshot = formalVersions.get(0);
+                String version = oxoVersionSnapshot.getVersion();
+
+                if (StringUtils.equals(type, OxoSnapshotEnum.FORMAL.getCode())) {
+                    //如果包含小版本
+                    if (version.contains(ConfigConstants.REG_DOT)) {
+                        //则系统基于最新已发布版本号去除后缀，保留前两个大写字母，生成新版本号
+                        oxoVersionSnapshotAggr.setVersion(VersionUtils.getMajorRev(version));
+                    } else {
+                        //则系统基于最新已发布版本号往后顺延自动生成新版本号
+                        oxoVersionSnapshotAggr.setVersion(VersionUtils.findNextRev(version));
+                    }
+                    oxoVersionSnapshotAggr.setPreVersion(VersionUtils.findPrevRev(oxoVersionSnapshotAggr.getVersion()));
+                    oxoVersionSnapshotAggr.setPreOxoSnapshot(
+                            formalVersions.stream().filter(x -> StringUtils.equals(x.getVersion(), oxoVersionSnapshotAggr.getPreVersion())).findFirst()
+                                    .orElse(new OxoVersionSnapshotAggr()).getOxoSnapshot());
                 } else {
-                    //则系则系统基于最新已发布版本号往后顺延+“.”+数字，再自动生成新版本号
-                    //系统中存在的最新版本号为AB，则系统基于AB往后顺延（字母排序）生成AC+“.”+数字，即生成AC.1
-                    return VersionUtils.findNextRev(version) + ConfigConstants.REG_DOT + "1";
+                    if (version.contains(ConfigConstants.REG_DOT)) {
+                        oxoVersionSnapshotAggr.setVersion(VersionUtils.getNextMajorRev(version));
+                    }else{
+                        oxoVersionSnapshotAggr.setVersion(version+".1");
+                    }
                 }
+
             }
         } else {
-
             if (StringUtils.equals(type, OxoSnapshotEnum.FORMAL.getCode())) {
-                return ConfigConstants.VERSION_AA;
+                oxoVersionSnapshotAggr.setVersion(ConfigConstants.VERSION_AA);
             } else {
-                return ConfigConstants.VERSION_AA_1;
+                oxoVersionSnapshotAggr.setVersion(ConfigConstants.VERSION_AA_1);
             }
         }
 
-        return StringUtils.EMPTY;
+        return oxoVersionSnapshotAggr;
     }
 
     @Override
     public OxoVersionSnapshotAggr queryOxoInfoByModelAndVersion(String modelCode, String version) {
-        List<OxoVersionSnapshotAggr>  oxoVersionSnapshots=
-                oxoVersionSnapshotRepository.queryOxoVersionSnapshotByModelCode(modelCode,version,null);
+        List<OxoVersionSnapshotAggr> oxoVersionSnapshots =
+                oxoVersionSnapshotRepository.queryOxoVersionSnapshotByModelCode(modelCode, version, null);
 
-        if(CollectionUtils.isNotEmpty(oxoVersionSnapshots)){
+        if (CollectionUtils.isNotEmpty(oxoVersionSnapshots)) {
             return oxoVersionSnapshots.get(0);
         }
         return null;
@@ -105,14 +126,14 @@ public class OxoVersionSnapshotDomainServiceImpl implements OxoVersionSnapshotDo
 
     @Override
     public void checkBaseVehicleReleased(String modelCode) {
-        if (CollectionUtils.isNotEmpty(oxoVersionSnapshotRepository.queryBomsOxoVersionSnapshotsByModel(modelCode))){
+        if (CollectionUtils.isNotEmpty(oxoVersionSnapshotRepository.queryBomsOxoVersionSnapshotsByModel(modelCode))) {
             throw new BusinessException(ConfigErrorCode.BASE_VEHICLE_ALREADY_RELEASED);
         }
     }
 
     @Override
     public OxoListQry resolveSnapShot(String oxoSnapShot) {
-        return JSON.parseObject(GZIPUtils.uncompress(oxoSnapShot),OxoListQry.class);
+        return JSON.parseObject(GZIPUtils.uncompress(oxoSnapShot), OxoListQry.class);
     }
 
 }

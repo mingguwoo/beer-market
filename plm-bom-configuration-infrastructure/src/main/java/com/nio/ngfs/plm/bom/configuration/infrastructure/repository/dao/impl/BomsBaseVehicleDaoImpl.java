@@ -37,7 +37,7 @@ public class BomsBaseVehicleDaoImpl extends AbstractDao<BomsBaseVehicleMapper, B
     @Override
     public BomsBaseVehicleEntity queryBaseVehicleByBaseVehicleId(String baseVehicleId) {
         LambdaQueryWrapper<BomsBaseVehicleEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(BomsBaseVehicleEntity::getBaseVehicleId,baseVehicleId);
+        lambdaQueryWrapper.eq(BomsBaseVehicleEntity::getBaseVehicleId, baseVehicleId);
         return getBaseMapper().selectOne(lambdaQueryWrapper);
     }
 
@@ -47,10 +47,14 @@ public class BomsBaseVehicleDaoImpl extends AbstractDao<BomsBaseVehicleMapper, B
     }
 
     @Override
-    public List<BomsBaseVehicleEntity> queryByModel(String modelCode) {
+    public List<BomsBaseVehicleEntity> queryByModel(String modelCode, Boolean isMaturity) {
         LambdaQueryWrapper<BomsBaseVehicleEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(BomsBaseVehicleEntity::getModelCode, modelCode);
         lambdaQueryWrapper.eq(BomsBaseVehicleEntity::getStatus, StatusEnum.ACTIVE.getStatus());
+        //仅包含Maturity为P且Status为Active的Base Vehicle
+        if (isMaturity) {
+            lambdaQueryWrapper.eq(BomsBaseVehicleEntity::getMaturity, "P");
+        }
         lambdaQueryWrapper.orderByDesc(BomsBaseVehicleEntity::getModelYear);
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }

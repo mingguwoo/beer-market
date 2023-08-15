@@ -30,7 +30,7 @@ public interface BaseVehicleDomainService {
      * @param modelCode
      * @return
      */
-    List<OxoHeadQry> queryByModel(String modelCode);
+    List<OxoHeadQry> queryByModel(String modelCode,Boolean isMaturity);
 
     /**
      * 校验BaseVehicle是否存在

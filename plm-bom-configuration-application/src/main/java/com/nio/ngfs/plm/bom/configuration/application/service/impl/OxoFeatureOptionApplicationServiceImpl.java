@@ -119,7 +119,7 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
     }
 
     @Override
-    public OxoListQry queryOxoInfoByModelCode(String modelCode, String version) {
+    public OxoListQry queryOxoInfoByModelCode(String modelCode, String version,Boolean isMaturity) {
 
         OxoListQry qry = new OxoListQry();
 
@@ -139,7 +139,7 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
             List<OxoFeatureOptionAggr> oxoFeatureOptions = oxoFeatureOptionRepository.queryFeatureListsByModel(modelCode);
 
             //查询表头信息
-            List<OxoHeadQry> oxoLists = baseVehicleDomainService.queryByModel(modelCode);
+            List<OxoHeadQry> oxoLists = baseVehicleDomainService.queryByModel(modelCode,isMaturity);
 
             qry.setOxoHeadResps(oxoLists);
 

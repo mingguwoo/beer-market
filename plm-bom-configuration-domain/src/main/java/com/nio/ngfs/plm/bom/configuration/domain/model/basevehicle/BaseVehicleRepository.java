@@ -28,7 +28,7 @@ public interface BaseVehicleRepository extends Repository<BaseVehicleAggr,String
      * @param modelCode
      * @return
      */
-    List<BaseVehicleAggr> queryByModel(String modelCode);
+    List<BaseVehicleAggr> queryByModel(String modelCode,Boolean isMaturity);
 
     /**
      * 根据Base Vehicle Id 查找 Base Vehicle

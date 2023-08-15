@@ -60,6 +60,25 @@ public class OxoVersionSnapshotAggr extends AbstractDo implements AggrRoot<Long>
      */
     private String emailGroup;
 
+
+    /**
+     * 上一版本
+     */
+    private String preVersion;
+
+
+    /**
+     * 上一版本 快照
+     */
+    private String preOxoSnapshot;
+
+
+
+
+
+
+
+
     @Override
     public Long getUniqId() {
         return id;
@@ -71,5 +90,10 @@ public class OxoVersionSnapshotAggr extends AbstractDo implements AggrRoot<Long>
     public String findOxoSnapshot(){
         return GZIPUtils.uncompress(this.oxoSnapshot);
     }
+
+
+
+
+
 
 }

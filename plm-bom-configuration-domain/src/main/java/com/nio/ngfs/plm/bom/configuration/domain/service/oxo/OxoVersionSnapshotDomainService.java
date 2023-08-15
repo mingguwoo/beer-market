@@ -16,7 +16,7 @@ public interface OxoVersionSnapshotDomainService {
      * @param type
      * @return
      */
-      String  queryVersionByModelCode(String modelCode,String type);
+    OxoVersionSnapshotAggr  queryVersionByModelCode(String modelCode,String type);
 
 
     /**

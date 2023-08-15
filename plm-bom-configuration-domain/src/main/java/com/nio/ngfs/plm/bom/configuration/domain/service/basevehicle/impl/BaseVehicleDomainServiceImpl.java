@@ -79,10 +79,10 @@ public class BaseVehicleDomainServiceImpl implements BaseVehicleDomainService {
 
 
     @Override
-    public List<OxoHeadQry> queryByModel(String modelCode) {
+    public List<OxoHeadQry> queryByModel(String modelCode,Boolean isMaturity) {
 
         //获取表头数据
-        List<BaseVehicleAggr> baseVehicleAggrs = baseVehicleRepository.queryByModel(modelCode);
+        List<BaseVehicleAggr> baseVehicleAggrs = baseVehicleRepository.queryByModel(modelCode,isMaturity);
 
 
         List<OxoHeadQry> headQry = Lists.newArrayList();

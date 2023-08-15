@@ -50,7 +50,7 @@ public class OxoInfoExportQuery {
         String version = oxoBaseCmd.getVersion();
 
         //查询oxo  info数据
-        OxoListQry qry = oxoFeatureOptionApplicationService.queryOxoInfoByModelCode(modelCode, version);
+        OxoListQry qry = oxoFeatureOptionApplicationService.queryOxoInfoByModelCode(modelCode, version,false);
 
 
         //导出数据

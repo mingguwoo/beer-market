@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.application.command.baseVehicle;
+package com.nio.ngfs.plm.bom.configuration.application.command.basevehicle;
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleRepository;

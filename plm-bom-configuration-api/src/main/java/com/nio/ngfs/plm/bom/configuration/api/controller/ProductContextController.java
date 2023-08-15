@@ -3,7 +3,7 @@ package com.nio.ngfs.plm.bom.configuration.api.controller;
 import com.nio.bom.share.annotation.NeedAuthorization;
 import com.nio.bom.share.annotation.NotLogResult;
 import com.nio.bom.share.result.ResultInfo;
-import com.nio.ngfs.plm.bom.configuration.application.command.productContext.AddProductContextCommand;
+import com.nio.ngfs.plm.bom.configuration.application.command.productcontext.AddProductContextCommand;
 import com.nio.ngfs.plm.bom.configuration.application.query.productcontext.GetProductContextQuery;
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmProductContextClient;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.request.AddProductContextCmd;

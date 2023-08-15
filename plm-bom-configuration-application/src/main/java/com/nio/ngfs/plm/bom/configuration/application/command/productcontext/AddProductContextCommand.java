@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.application.command.productContext;
+package com.nio.ngfs.plm.bom.configuration.application.command.productcontext;
 
 import com.nio.ngfs.plm.bom.configuration.application.service.ProductContextApplicationService;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoVersionSnapshotDomainService;

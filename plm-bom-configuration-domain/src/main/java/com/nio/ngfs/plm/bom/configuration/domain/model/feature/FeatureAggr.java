@@ -137,8 +137,7 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
         }
     }
 
-
-    public String getFeatureCode(){
+    public String getFeatureCode() {
         return this.featureId.getFeatureCode();
     }
 
@@ -249,6 +248,12 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
         if (oldStatusEnum == newStatusEnum) {
             return FeatureStatusChangeTypeEnum.NO_CHANGE;
         }
+        // Feature由Inactive改为Active时，Group必须为Active
+        if (oldStatusEnum == StatusEnum.INACTIVE && newStatusEnum == StatusEnum.ACTIVE) {
+            if (parent.isInactive()) {
+                throw new BusinessException(ConfigErrorCode.FEATURE_FEATURE_CAN_NOT_BE_ACTIVE);
+            }
+        }
         // Feature状态变更
         setStatus(newStatusEnum.getStatus());
         setUpdateUser(cmd.getUpdateUser());
@@ -313,6 +318,12 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
         }
         if (oldStatusEnum == newStatusEnum) {
             return FeatureStatusChangeTypeEnum.NO_CHANGE;
+        }
+        // Option由Inactive改为Active时，Feature必须为Active
+        if (oldStatusEnum == StatusEnum.INACTIVE && newStatusEnum == StatusEnum.ACTIVE) {
+            if (parent.isInactive()) {
+                throw new BusinessException(ConfigErrorCode.FEATURE_OPTION_CAN_NOT_BE_ACTIVE);
+            }
         }
         setStatus(newStatusEnum.getStatus());
         setUpdateUser(cmd.getUpdateUser());

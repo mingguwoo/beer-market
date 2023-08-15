@@ -14,8 +14,8 @@ import java.util.List;
 public interface ProductContextQueryService {
 
     /**
-     * 筛选得到符合条件的productContext
+     * 筛选得到符合条件的productContext并组装结果并返回
      */
-    public GetProductContextRespDto filter(List<ProductContextDto> pointList, List<BomsProductContextFeatureEntity> rowList, GetProductContextQry qry);
+    GetProductContextRespDto filterAndBuildResponse(List<ProductContextDto> pointList, List<BomsProductContextFeatureEntity> rowList, GetProductContextQry qry);
 
     }

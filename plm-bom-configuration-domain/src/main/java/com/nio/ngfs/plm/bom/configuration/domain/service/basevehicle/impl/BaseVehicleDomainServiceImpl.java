@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class BaseVehicleDomainDomainServiceImpl implements BaseVehicleDomainService {
+public class BaseVehicleDomainServiceImpl implements BaseVehicleDomainService {
 
     private final BaseVehicleRepository baseVehicleRepository;
 

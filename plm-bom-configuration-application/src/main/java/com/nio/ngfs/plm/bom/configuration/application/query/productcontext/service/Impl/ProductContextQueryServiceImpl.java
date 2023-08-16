@@ -75,7 +75,7 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
         //组装行
         //先存Feature
         rowList.forEach(row-> {
-            if (Objects.equals(row.getType(), ProductContextFeatureEnum.feature.getType())){
+            if (Objects.equals(row.getType(), ProductContextFeatureEnum.FEATURE.getType())){
                 ProductContextFeatureRowDto productContextFeatureRowDto = new ProductContextFeatureRowDto();
                 productContextFeatureRowDto.setRowId(row.getId());
                 productContextFeatureRowDto.setFeatureCode(row.getFeatureCode());
@@ -87,7 +87,7 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
         });
         //再存Option
         rowList.forEach(row->{
-            if (Objects.equals(row.getType(), ProductContextFeatureEnum.option.getType())) {
+            if (Objects.equals(row.getType(), ProductContextFeatureEnum.OPTION.getType())) {
                 ProductContextOptionRowDto productContextOptionRowDto = new ProductContextOptionRowDto();
                 //获取父级feature的code
                 String parentCode = featureAggrMap.get(row.getFeatureCode()).getParentFeatureCode();

@@ -1,27 +1,30 @@
-package com.nio.ngfs.plm.bom.configuration.application.command.productcontext;
+package com.nio.ngfs.plm.bom.configuration.application.event.productcontext;
 
 import com.nio.ngfs.plm.bom.configuration.application.service.ProductContextApplicationService;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.event.OxoVersionReleaseEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoVersionSnapshotDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.request.AddProductContextCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.response.AddProductContextRespDto;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
  * @author bill.wang
- * @date 2023/8/10
+ * @date 2023/8/15
  */
 @Component
 @RequiredArgsConstructor
-public class AddProductContextCommand {
+public class ProductContextSyncOxoHandler {
 
     private final OxoVersionSnapshotDomainService oxoVersionSnapshotDomainService;
     private final ProductContextApplicationService productContextApplicationService;
 
-    public AddProductContextRespDto execute(AddProductContextCmd cmd){
-        OxoListQry oxoListQry = oxoVersionSnapshotDomainService.resolveSnapShot(cmd.getOxoSnapshot());
+    @EventListener
+    @Async("commonThreadPool")
+    public void oOxonVersionReleaseEvent(@NotNull OxoVersionReleaseEvent oxoVersionReleaseEvent){
+        OxoListQry oxoListQry = oxoVersionSnapshotDomainService.resolveSnapShot(oxoVersionReleaseEvent.getOxoSnapshot());
         productContextApplicationService.addProductContext(oxoListQry);
-        return new AddProductContextRespDto();
     }
 }

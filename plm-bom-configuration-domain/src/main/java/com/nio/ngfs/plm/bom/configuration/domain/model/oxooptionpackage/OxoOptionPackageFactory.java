@@ -71,8 +71,7 @@ public class OxoOptionPackageFactory {
     public static List<OxoOptionPackageAggr> createOxoOptionPackageAggrList(List<OxoEditCmd> cmdLists, String userName) {
 
         String brand = ConfigConstants.brandName.get();
-        return cmdLists.stream().filter(x -> StringUtils.isNotBlank(x.getPackageCode())).map(x -> {
-
+        return cmdLists.stream().map(x -> {
             OxoOptionPackageAggr packageAggr = new OxoOptionPackageAggr();
             packageAggr.setFeatureOptionId(x.getRowId());
             packageAggr.setBaseVehicleId(x.getHeadId());

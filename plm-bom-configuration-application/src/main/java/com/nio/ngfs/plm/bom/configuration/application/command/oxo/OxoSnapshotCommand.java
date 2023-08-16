@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.application.command.oxo;
 
+import com.alibaba.fastjson.JSONObject;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.ngfs.common.utils.BeanConvertUtils;
 import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockCommand;
@@ -11,6 +12,7 @@ import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.enums.OxoSnapshotEnum;
+import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoCompareDomainService;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoVersionSnapshotDomainService;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoVersionSnapshotDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsOxoVersionSnapshotEntity;
@@ -36,6 +38,10 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, Bool
 
 
     private final OxoFeatureOptionApplicationService featureOptionApplicationService;
+
+
+
+    private final OxoCompareDomainService oxoCompareDomainService;
 
 
     @Override
@@ -79,7 +85,15 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, Bool
 
         //发送对比邮件  FORMAL版本邮件，版本号 AA
         if (StringUtils.equals(type, OxoSnapshotEnum.FORMAL.getCode())
-                && !StringUtils.equals(version, ConfigConstants.VERSION_AA) && StringUtils.isNotBlank(oxoVersionSnapshotAggr.getPreOxoSnapshot())) {
+                && !StringUtils.equals(version, ConfigConstants.VERSION_AA)
+                && StringUtils.isNotBlank(oxoVersionSnapshotAggr.getPreOxoSnapshot())) {
+
+            //获取对比信息
+            OxoListQry preOxoListQry= JSONObject.parseObject(oxoVersionSnapshotAggr.getPreOxoSnapshot(),OxoListQry.class);
+
+            // 对比
+            OxoListQry compareOxoListQry = oxoCompareDomainService.compareVersion(oxoListQry,preOxoListQry,true);
+
 
             //发送邮件
 

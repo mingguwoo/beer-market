@@ -38,11 +38,12 @@ public class BaseVehicleDomainServiceImpl implements BaseVehicleDomainService {
     public void checkBaseVehicleUnique(BaseVehicleAggr baseVehicleAggr) {
         List<BaseVehicleAggr> existedBaseVehicleAggrList = baseVehicleRepository.queryByModelCodeModelYearRegionDriveHandSalesVersion(baseVehicleAggr.getModelCode(), baseVehicleAggr.getModelYear(),
                 baseVehicleAggr.getRegionOptionCode(), baseVehicleAggr.getDriveHand(), baseVehicleAggr.getSalesVersion());
-        if (CollectionUtils.isNotEmpty(existedBaseVehicleAggrList)){
+        if (CollectionUtils.isNotEmpty(existedBaseVehicleAggrList)) {
             //如果是edit自身记录，不报错，直接跳过
-            if (!checkIsEdit(existedBaseVehicleAggrList,baseVehicleAggr)){
+            if (!checkIsEdit(existedBaseVehicleAggrList, baseVehicleAggr)) {
                 throw new BusinessException(ConfigErrorCode.BASE_VEHICLE_REPEAT);
-            };
+            }
+            ;
         }
     }
 
@@ -51,7 +52,7 @@ public class BaseVehicleDomainServiceImpl implements BaseVehicleDomainService {
      */
     @Override
     public void checkBaseVehicleExist(BaseVehicleAggr baseVehicleAggr) {
-        if (Objects.isNull(baseVehicleAggr)){
+        if (Objects.isNull(baseVehicleAggr)) {
             throw new BusinessException(ConfigErrorCode.BASE_VEHICLE_NOT_EXISTS);
         }
     }
@@ -63,7 +64,7 @@ public class BaseVehicleDomainServiceImpl implements BaseVehicleDomainService {
         return baseVehicleAggr;
     }
 
-    private boolean checkIsEdit(List<BaseVehicleAggr> existedBaseVehicleAggrList, BaseVehicleAggr baseVehicleAggr){
+    private boolean checkIsEdit(List<BaseVehicleAggr> existedBaseVehicleAggrList, BaseVehicleAggr baseVehicleAggr) {
         //判断是不是edit
         if (Objects.nonNull(baseVehicleAggr.getBaseVehicleId())) {
             existedBaseVehicleAggrList.forEach(existedBaseVehicleAggr -> {
@@ -79,10 +80,10 @@ public class BaseVehicleDomainServiceImpl implements BaseVehicleDomainService {
 
 
     @Override
-    public List<OxoHeadQry> queryByModel(String modelCode,Boolean isMaturity) {
+    public List<OxoHeadQry> queryByModel(String modelCode, Boolean isMaturity) {
 
         //获取表头数据
-        List<BaseVehicleAggr> baseVehicleAggrs = baseVehicleRepository.queryByModel(modelCode,isMaturity);
+        List<BaseVehicleAggr> baseVehicleAggrs = baseVehicleRepository.queryByModel(modelCode, isMaturity);
 
 
         List<OxoHeadQry> headQry = Lists.newArrayList();
@@ -106,11 +107,12 @@ public class BaseVehicleDomainServiceImpl implements BaseVehicleDomainService {
                         .stream().collect(Collectors.toMap(FeatureAggr::getDisplayName, x -> x.getFeatureId().getFeatureCode()));
 
         Map<String, List<FeatureAggr>> featureIdListMap = featureAggrs.stream()
-                .filter(x-> StringUtils.equals(x.getFeatureId().getType(),FeatureTypeEnum.OPTION.getType()))
-                .collect(Collectors.groupingBy(x-> x.getFeatureId().getFeatureCode()));
+                .filter(x -> StringUtils.equals(x.getFeatureId().getType(), FeatureTypeEnum.OPTION.getType()))
+                .collect(Collectors.groupingBy(x -> x.getFeatureId().getFeatureCode()));
 
         Map<String, List<BaseVehicleAggr>> basicVehicleAggrMaps =
-                baseVehicleAggrs.stream().collect(Collectors.groupingBy(BaseVehicleAggr::getModelYear));
+                baseVehicleAggrs.stream()
+                        .collect(Collectors.groupingBy(BaseVehicleAggr::getModelYear));
 
 
         /**
@@ -126,40 +128,42 @@ public class BaseVehicleDomainServiceImpl implements BaseVehicleDomainService {
             oxoHeadQry.setModelYear(k);
             Map<String, List<BaseVehicleAggr>> regionVehicleAggrMaps =
                     v.stream().sorted(Comparator.comparing(BaseVehicleAggr::getRegionOptionCode))
-                            .collect(Collectors.groupingBy(BaseVehicleAggr::getRegionOptionCode));
+                            .collect(Collectors.groupingBy(BaseVehicleAggr::getRegionOptionCode,LinkedHashMap::new,Collectors.toList()));
 
             List<OxoHeadQry.RegionInfo> regionInfos = new ArrayList<>();
 
             regionVehicleAggrMaps.forEach((region, regionLists) -> {
-                if(featureIdListMap.containsKey(region)){
-                    OxoHeadQry.RegionInfo regionInfo=new OxoHeadQry.RegionInfo();
+                if (featureIdListMap.containsKey(region)) {
+                    OxoHeadQry.RegionInfo regionInfo = new OxoHeadQry.RegionInfo();
                     regionInfo.setRegionName(featureIdListMap.get(region).get(0).getDisplayName());
                     regionInfo.setRegionCode(region);
 
                     Map<String, List<BaseVehicleAggr>> driveVehicleAggrMaps =
                             regionLists.stream().sorted(Comparator.comparing(BaseVehicleAggr::getDriveHand))
-                            .collect(Collectors.groupingBy(BaseVehicleAggr::getDriveHand));
+                                    .collect(Collectors.groupingBy(BaseVehicleAggr::getDriveHand,LinkedHashMap::new,Collectors.toList()));
 
-                    List<OxoHeadQry.DriveHandInfo> driveHandInfos= Lists.newArrayList();
-                    driveVehicleAggrMaps.forEach((drive,driveLists)->{
-                        if(featureIdListMap.containsKey(drive)) {
-                            OxoHeadQry.DriveHandInfo driveHandInfo=new OxoHeadQry.DriveHandInfo();
+                    List<OxoHeadQry.DriveHandInfo> driveHandInfos = Lists.newArrayList();
+                    driveVehicleAggrMaps.forEach((drive, driveLists) -> {
+                        if (featureIdListMap.containsKey(drive)) {
+                            OxoHeadQry.DriveHandInfo driveHandInfo = new OxoHeadQry.DriveHandInfo();
                             driveHandInfo.setDriveHandCode(drive);
                             driveHandInfo.setDriveHandName(featureIdListMap.get(drive).get(0).getDisplayName());
 
                             Map<String, List<BaseVehicleAggr>> salesVehicleAggrMaps =
-                                    regionLists.stream().sorted(Comparator.comparing(BaseVehicleAggr::getSalesVersion))
-                                            .collect(Collectors.groupingBy(BaseVehicleAggr::getSalesVersion));
+                                    driveLists.stream().sorted(Comparator.comparing(BaseVehicleAggr::getSalesVersion))
+                                            .collect(Collectors.groupingBy(BaseVehicleAggr::getSalesVersion,LinkedHashMap::new,Collectors.toList()));
 
-                            List<OxoHeadQry.SalesVersionInfo> salesVersionInfos= Lists.newArrayList();
+                            List<OxoHeadQry.SalesVersionInfo> salesVersionInfos = Lists.newArrayList();
 
-                            salesVehicleAggrMaps.forEach((saleVersion,saleLists)->{
-                                if(featureIdListMap.containsKey(saleVersion)) {
-                                    OxoHeadQry.SalesVersionInfo salesVersionInfo=new OxoHeadQry.SalesVersionInfo();
-                                    salesVersionInfo.setSalesName(featureIdListMap.get(saleVersion).get(0).getDisplayName());
-                                    salesVersionInfo.setSalesCode(saleVersion);
-                                    salesVersionInfo.setHeadId(saleLists.get(0).getId());
-                                    salesVersionInfos.add(salesVersionInfo);
+                            salesVehicleAggrMaps.forEach((saleVersion, saleLists) -> {
+                                if (featureIdListMap.containsKey(saleVersion)) {
+                                    saleLists.forEach(sales -> {
+                                        OxoHeadQry.SalesVersionInfo salesVersionInfo = new OxoHeadQry.SalesVersionInfo();
+                                        salesVersionInfo.setSalesName(featureIdListMap.get(saleVersion).get(0).getChineseName());
+                                        salesVersionInfo.setSalesCode(saleVersion);
+                                        salesVersionInfo.setHeadId(sales.getId());
+                                        salesVersionInfos.add(salesVersionInfo);
+                                    });
                                 }
                             });
                             driveHandInfo.setSalesVersionInfos(salesVersionInfos);
@@ -169,10 +173,10 @@ public class BaseVehicleDomainServiceImpl implements BaseVehicleDomainService {
                     });
                     regionInfos.add(regionInfo);
                 }
-                oxoHeadQry.setRegionInfos(regionInfos);
-                headQry.add(oxoHeadQry);
             });
+            oxoHeadQry.setRegionInfos(regionInfos);
+            headQry.add(oxoHeadQry);
         });
-        return headQry.stream().distinct().sorted(Comparator.comparing(OxoHeadQry::getModelYear)).toList();
+        return headQry.stream().sorted(Comparator.comparing(x -> featureAggrAF1.get(x.getModelYear()))).toList();
     }
 }

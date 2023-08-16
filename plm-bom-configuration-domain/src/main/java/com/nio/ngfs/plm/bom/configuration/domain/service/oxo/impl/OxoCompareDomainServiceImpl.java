@@ -1,11 +1,13 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service.oxo.impl;
 
 import com.google.common.collect.Lists;
+import com.nio.bom.share.utils.GZIPUtils;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.domainobject.CompareOxoFeatureModel;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.enums.CompareChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoCompareDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoEditCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoTemplateRequestCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoHeadQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoRowsQry;
@@ -15,10 +17,8 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author wangchao.wang
@@ -416,4 +416,262 @@ public class OxoCompareDomainServiceImpl implements OxoCompareDomainService {
 
 
     }
+
+
+
+//    public void sendCompareOxoEmails(OxoSnapshotRequest request, OxoVersionSnapshot oldSnapshot, IpFeatureEntity newEntity, OxoVersionSnapshot newSnapshot) {
+//
+//        List<OxoTemplateRequestCmd.HeadTitle> headTitles = new LinkedList<>();
+//        List<OxoTemplateRequestCmd.OxoInfo> oxoInfos = new LinkedList<>();
+//        List<OxoTemplateRequestCmd.RegionOptionCode> regionOptionCodes = new LinkedList<>();
+//        List<OxoTemplateRequestCmd.DriveHandOptionCode> driveHandOptionCodes = new LinkedList<>();
+//        List<OxoTemplateRequestCmd.SalesOptionName> salesOptionNames = new LinkedList<>();
+//
+//        if(Objects.nonNull(oldSnapshot)) {
+//            IpFeatureEntity oldEntity = JsonHelper.parseToObject(GZIPUtils.uncompress(oldSnapshot.getOxoSnapshot()), IpFeatureEntity.class);
+//
+//
+//            ComPareOxoFeatureInfoRequest featureInfoRequest = new ComPareOxoFeatureInfoRequest();
+//            featureInfoRequest.setShowDiff(true);
+//
+//            IpFeatureEntity ipFeatureEntity = compareVersion(newEntity, oldEntity, featureInfoRequest, true);
+//
+//            log.info("ipFeatureEntity entity;{}", JsonHelper.parseToJson(ipFeatureEntity));
+//
+//
+//            String oldVersion = oldSnapshot.getVersion();
+//            String newVersion = newSnapshot.getVersion();
+//
+//
+//            Map<String, List<ModelYearFeatureOption>> compareInfos = ipFeatureEntity.getHeadInfo();
+//
+//            if (MapUtils.isEmpty(compareInfos) || compareInfos.size() == 0) {
+//                compareInfos = newEntity.getHeadInfo();
+//            }
+//
+//
+//            int titleSize = 0;
+//            for (Map.Entry<String, List<ModelYearFeatureOption>> entry : compareInfos.entrySet()) {
+//                String title = entry.getKey() + " " + oldVersion + " vs " + entry.getKey() + " " + newVersion;
+//
+//                List<ModelYearFeatureOption> featureOptions = entry.getValue();
+//
+//                int headTitleSize = 0;
+//                for (ModelYearFeatureOption region : featureOptions) {
+//                    OxoTemplateRequest.RegionOptionCode code = new OxoTemplateRequest.RegionOptionCode();
+//                    code.setRegionOptionCode(region.getOptionEnName());
+//                    code.setColor("#e0ffff");//蓝色
+//                    List<ModelYearFeatureOption.DriverOptionInfo> driverOptionInfos = region.getDriverOptionInfos();
+//
+//                    int regionCodeSize = 0;
+//                    for (ModelYearFeatureOption.DriverOptionInfo driverOptionInfo : driverOptionInfos) {
+//                        OxoTemplateRequest.DriveHandOptionCode driveOptionCode = new OxoTemplateRequest.DriveHandOptionCode();
+//                        driveOptionCode.setDriveHandOptionCode(StringUtils.isNotBlank(driverOptionInfo.getDriveHardOptionName()) ?
+//                                driverOptionInfo.getDriveHardOptionName() : driverOptionInfo.getDriveHardOptionCode());
+//                        regionCodeSize += driverOptionInfo.getSalesVersionList().size();
+//                        headTitleSize += driverOptionInfo.getSalesVersionList().size();
+//                        titleSize += driverOptionInfo.getSalesVersionList().size();
+//                        driveOptionCode.setDriveHandOptionSize(String.valueOf(driverOptionInfo.getSalesVersionList().size()));
+//                        driveOptionCode.setColor("#e0ffff");//蓝色
+//                        driveHandOptionCodes.add(driveOptionCode);
+//
+//                        for (ModelYearFeatureOption.SalesOptionInfo salesOptionInfo : driverOptionInfo.getSalesVersionList()) {
+//                            OxoTemplateRequest.SalesOptionName salesOptionName = new OxoTemplateRequest.SalesOptionName();
+//
+//                            if (StringUtils.equals(ComapreChangeTypeEnum.ADD.getName(), salesOptionInfo.getChangeType()) ||
+//                                    StringUtils.equals(ComapreChangeTypeEnum.DELETE.getName(), salesOptionInfo.getChangeType())) {
+//                                salesOptionName.setSalesOptionName(salesOptionInfo.getChangeType() + " " + salesOptionInfo.getChineseName());
+//                            } else {
+//                                salesOptionName.setSalesOptionName(salesOptionInfo.getChineseName());
+//                            }
+//
+//                            if (StringUtils.equals(ComapreChangeTypeEnum.ADD.getName(), salesOptionInfo.getChangeType())) {
+//                                salesOptionName.setColor("#228b22"); //绿
+//                            } else if (StringUtils.equals(ComapreChangeTypeEnum.DELETE.getName(), salesOptionInfo.getChangeType())) {
+//                                salesOptionName.setColor("#f08080"); //红
+//                            }
+////                        else{
+////                            salesOptionName.setColor("#fffaf0"); //白
+////                        }
+//                            salesOptionNames.add(salesOptionName);
+//                        }
+//                    }
+//
+//                    code.setRegionCodeSize(String.valueOf(regionCodeSize));
+//                    regionOptionCodes.add(code);
+//                }
+//
+//                OxoTemplateRequest.HeadTitle headTitle = new OxoTemplateRequest.HeadTitle();
+//                headTitle.setHeadTitle(title);
+//                headTitle.setHeadTitleSize(String.valueOf(headTitleSize));
+//                headTitles.add(headTitle);
+//            }
+//
+//            List<IpdOXOOutput> ipdOXOOutputs = convertPackageOption(compareInfos);
+//
+//            List<Feature> features = ipFeatureEntity.getIpdList();
+//
+//            int finalTitleSize = titleSize;
+//            features.forEach(feature -> {
+//                List<IpdOXOOutput> ipdOXOOutputList = new ArrayList<>();
+//                feature.getChildren().forEach(x -> {
+//                    ipdOXOOutputList.addAll(x.getOptionOxoConfigration());
+//                });
+//
+//                if (CollectionUtils.isEmpty(ipdOXOOutputList)) {
+//                    return;
+//                }
+//
+//                OxoTemplateRequest.OxoInfo oxoInfo = new OxoTemplateRequest.OxoInfo();
+//                oxoInfo.setName(feature.getChineseName());
+//                oxoInfo.setChangeType(feature.getChangeType());
+//                oxoInfo.setFeatureCode(feature.getFeatureCode());
+//                oxoInfo.setDisPlayName(feature.getName());
+//                oxoInfo.setLibrary(feature.getLibrary());
+//
+//                oxoInfo.setPackageOptions(convertPackageOptionAll(finalTitleSize, null, null));
+//                oxoInfo.setColor("#e0ffff"); //蓝色
+//                oxoInfos.add(oxoInfo);
+//                feature.getChildren().forEach(y -> {
+//                    if (CollectionUtils.isEmpty(y.getOptionOxoConfigration())) {
+//                        return;
+//                    }
+//                    OxoTemplateRequest.OxoInfo childrenOxo = new OxoTemplateRequest.OxoInfo();
+//                    childrenOxo.setLibrary(y.getLibrary());
+//                    childrenOxo.setName(y.getChineseName());
+//                    childrenOxo.setDisPlayName(y.getOptionName());
+//                    childrenOxo.setFeatureCode(y.getOptionCode());
+//                    childrenOxo.setPackageOptions(convertPackageOptionAll(finalTitleSize, y, ipdOXOOutputs));
+//                    if (childrenOxo.getPackageOptions().stream().allMatch(x -> StringUtils.isBlank(x.getPackageOption()))) {
+//                        childrenOxo.setChangeType(null);
+//                    }
+//                    else if(childrenOxo.getPackageOptions().stream().noneMatch(x -> StringUtils.isNotBlank(x.getPackageOption())
+//                            && x.getPackageOption().contains(">"))
+//                            && StringUtils.equals(y.getChangeType(), ComapreChangeTypeEnum.MODIFY.getName())){
+//                        childrenOxo.setChangeType(null);
+//                    }
+//                    else {
+//                        childrenOxo.setChangeType(StringUtils.equals(y.getChangeType(), ComapreChangeTypeEnum.DEL.getName()) ? null : y.getChangeType());
+//                    }
+//
+//                    //childrenOxo.setColor("#fffaf0"); //白色
+//                    oxoInfos.add(childrenOxo);
+//                });
+//            });
+//        }
+//
+//
+//        OxoTemplateRequest templateRequest = new OxoTemplateRequest();
+//        templateRequest.setRegionOptionCodes(regionOptionCodes);
+//        templateRequest.setChangeContent(newSnapshot.getChangeContent());
+//        if(StringUtils.equals(newSnapshot.getBrand(), BrandEnum.NIO_CONSTANT)) {
+//            templateRequest.setUrl(oxoEmailChangeLogUrl + request.getModelCode());
+//        }else {
+//            templateRequest.setUrl(oxoEmailAlpsChangeLogUrl + request.getModelCode());
+//        }
+//
+//        templateRequest.setHeadTitles(headTitles);
+//        templateRequest.setSalesOptionNames(salesOptionNames);
+//        templateRequest.setDriveHandOptionCodes(driveHandOptionCodes);
+//        templateRequest.setTemplates(oxoInfos);
+//        templateRequest.setOxoTitle(newSnapshot.getTitle() + "_" + newSnapshot.getVersion());
+//        buildAndSendEmail(templateRequest, getEmails(request));
+//    }
+//
+//
+//    public List<String> getEmails(OxoSnapshotRequest request){
+//
+//        //获取邮件收件人
+//        Map<String, String> map = queryMatrixRuleValuesByAbscissaOrOrdinate(new MatrixRuleQueryParam
+//                (BaseCommonConstant.OXO_EMAIL_GROUP, "matrix", null, "oxo.email", "PLM.EBOM.PartNumRequest"));
+//
+//        String[] emailGroups = request.getSetGroup().split(",");
+//
+//        List<String> emails = new LinkedList<>();
+//
+//        for (String group : emailGroups) {
+//            emails.addAll(Arrays.asList(map.get(group).split("\n")));
+//        }
+//
+//        return emails.stream().distinct().collect(Collectors.toList());
+//    }
+//
+//    private void buildAndSendEmail(OxoTemplateRequest templateRequest, List<String> users) {
+//        List<Map> maps = new ArrayList<>();
+//
+//        for (String user : users) {
+//            Map<String, Object> emailMap = new HashMap<>(4);
+//            emailMap.put("templateNo", oxoEmailTemplateNo);
+//            emailMap.put("variables", templateRequest);
+//            emailMap.put("receiverEmail", user + "@nio.com");
+//            emailMap.put("subject", "");
+//            maps.add(emailMap);
+//        }
+//
+//        Map params = new HashMap();
+//        params.put("mailList", maps);
+//        try {
+//            String param = JsonHelper.parseToJson(params);
+//            log.info("buildAnd request:{}", param);
+//            productConfigurationFeign.sendBatchEmails(param);
+//        } catch (Exception e) {
+//            log.error("sendBatchEmails failed", e);
+//        }
+//    }
+//
+//
+//    public List<OxoTemplateRequest.PackageOption> convertPackageOptionAll(int titleSize, Option option, List<IpdOXOOutput> ipdOXOOutputs) {
+//
+//        List<OxoTemplateRequest.PackageOption> options = new ArrayList<>();
+//
+//        if (Objects.isNull(option) || CollectionUtils.isEmpty(option.getOptionOxoConfigration())) {
+//            for (int i = 0; i < titleSize; i++) {
+//                OxoTemplateRequest.PackageOption packageOption = new OxoTemplateRequest.PackageOption();
+//                if (Objects.isNull(option)) {
+//                    packageOption.setColor("#e0ffff");  //蓝色
+//                }
+////                }else{
+////                    packageOption.setColor("#fffaf0");  //白色
+////                }
+//                packageOption.setPackSize(titleSize);
+//                options.add(packageOption);
+//            }
+//            return options;
+//        }
+//
+//        ipdOXOOutputs.forEach(x -> {
+//
+//            List<IpdOXOOutput> ipdOXOOutputs1 = option.getOptionOxoConfigration().stream().filter(y -> StringUtils.equals(y.getModelYear(), x.getModelYear()) &&
+//                    StringUtils.equals(y.getSalesOptionCode(), x.getSalesOptionCode()) && StringUtils.equals(y.getDriveOptionCode(), x.getDriveOptionCode())
+//                    && StringUtils.equals(y.getRegionOptionCode(), x.getRegionOptionCode()) &&
+//                    !StringUtils.equals(y.getChangeType(),ComapreChangeTypeEnum.DELETE.getName())).collect(Collectors.toList());
+//
+//            //delete 列需要删除
+//            if (ipdOXOOutputs1.size() > 0 && !StringUtils.equals(x.getChangeType(),ComapreChangeTypeEnum.DELETE.getName())) {
+//                IpdOXOOutput ipdOXOOutput = ipdOXOOutputs1.get(0);
+//                //todo
+//                OxoTemplateRequest.PackageOption packageOption = new OxoTemplateRequest.PackageOption();
+//                if (Objects.nonNull(ipdOXOOutput.getCompareIpdOXOOutput())) {
+//                    packageOption.setPackageOption(convertPackageNo(ipdOXOOutput.getCompareIpdOXOOutput().getPackageNo()) + " > " + convertPackageNo(ipdOXOOutput.getPackageNo()));
+//                } else {
+//                    packageOption.setPackageOption(convertPackageNo(ipdOXOOutput.getPackageNo()));
+//                }
+//                packageOption.setPackSize(titleSize);
+//                if (!StringUtils.equals(ComapreChangeTypeEnum.NO_CHANGE.getName(), ipdOXOOutput.getChangeType())&& !StringUtils.equals(ComapreChangeTypeEnum.DEL.getName(), ipdOXOOutput.getChangeType())) {
+//                    packageOption.setColor("#f0e68c");  //黄色
+//                }
+//                options.add(packageOption);
+//
+//            } else {
+//                OxoTemplateRequest.PackageOption packageOption = new OxoTemplateRequest.PackageOption();
+//                //packageOption.setColor("#fffaf0");  //白色
+//                packageOption.setPackSize(titleSize);
+//                options.add(packageOption);
+//            }
+//        });
+//
+//        return options;
+//
+//
+//    }
 }

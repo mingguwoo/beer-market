@@ -10,8 +10,8 @@ public enum ProductContextFeatureEnum {
     /**
      * Product Context Feature的type属性
      */
-    feature("Feature"),
-    option("Option");
+    FEATURE("Feature"),
+    OPTION("Option");
 
     private final String type;
 

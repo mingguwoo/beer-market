@@ -122,6 +122,7 @@ public class BomsFeatureLibraryDaoImpl extends AbstractDao<BomsFeatureLibraryMap
             lambdaQueryWrapper.notIn(BomsFeatureLibraryEntity::getFeatureCode, featureCodes);
         }
         lambdaQueryWrapper.eq(BomsFeatureLibraryEntity::getType, FeatureTypeEnum.OPTION.getType());
+        lambdaQueryWrapper.eq(BomsFeatureLibraryEntity::getStatus, StatusEnum.ACTIVE.getStatus());
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 
@@ -134,6 +135,7 @@ public class BomsFeatureLibraryDaoImpl extends AbstractDao<BomsFeatureLibraryMap
         LambdaQueryWrapper<BomsFeatureLibraryEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.in(BomsFeatureLibraryEntity::getFeatureCode, featureOptionCodeList);
         lambdaQueryWrapper.in(BomsFeatureLibraryEntity::getType, FEATURE_OPTION_TYPE_LIST);
+        lambdaQueryWrapper.eq(BomsFeatureLibraryEntity::getStatus, StatusEnum.ACTIVE.getStatus());
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 

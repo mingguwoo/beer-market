@@ -147,8 +147,8 @@ public class FeatureController implements PlmFeatureClient {
      */
     @NotLogResult
     @PostMapping("/feature/importFeatureLibrary")
-    public void importFeatureLibrary(@RequestPart("file") MultipartFile file) {
-        importFeatureLibraryTask.execute(file);
+    public ResultInfo<ImportFeatureLibraryRespDto> importFeatureLibrary(@RequestPart("file") MultipartFile file) {
+        return ResultInfo.success(importFeatureLibraryTask.execute(file));
     }
 
 }

@@ -36,9 +36,11 @@ public class ProductContextApplicationServiceImpl implements ProductContextAppli
         List<OxoRowsQry> featureList = oxoListQry.getOxoRowsResps();
         Map<OxoRowsQry,List<OxoRowsQry>> featureOptionMap = new HashMap<>();
         oxoListQry.getOxoRowsResps().forEach(featureRow->featureOptionMap.put(featureRow,featureRow.getOptions()));
+        //没有该model的product context，直接新增
         if (productContextAggrs.isEmpty()){
+            //先处理其他的
             List<ProductContextFeatureAggr> productContextFeatureAggrList =  productContextFeatureFactory.createProductContextFeatureList(featureList,featureOptionMap,oxoListQry);
-            List<ProductContextAggr> productContextAggrList = productContextFactory.createProductContextListFromOxo();
+            List<ProductContextAggr> productContextAggrList = productContextFactory.createProductContextListFromOxo(featureList,featureOptionMap,oxoListQry);
         }
     }
 }

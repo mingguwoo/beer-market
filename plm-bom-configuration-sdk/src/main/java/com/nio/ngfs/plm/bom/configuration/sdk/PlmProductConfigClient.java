@@ -60,4 +60,13 @@ public interface PlmProductConfigClient {
     @PostMapping("/productConfig/deletePc")
     ResultInfo<DeletePcRespDto> deletePc(DeletePcCmd cmd);
 
+    /**
+     * 查询PC列表
+     *
+     * @param qry 查询
+     * @return 响应
+     */
+    @PostMapping("/productConfig/queryPc")
+    ResultInfo<List<QueryPcRespDto>> queryPc(QueryPcQry qry);
+
 }

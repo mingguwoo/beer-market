@@ -18,4 +18,13 @@
         limit 1
     </select>
 
+    <select id="queryByPcIdList" resultType="com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductConfigEntity">
+        select *
+        from boms_product_config
+        where pc_id in
+        <foreach collection="pcIdList" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
 </mapper>

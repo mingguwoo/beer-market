@@ -54,4 +54,12 @@ public interface BomsBaseVehicleDao extends IService<BomsBaseVehicleEntity> {
     List<BomsBaseVehicleEntity> queryCopyFromModel(String modelCode);
 
     List<BomsBaseVehicleEntity> queryByModelCodeAndModelYear(String modelCode, String modelYear);
+
+    /**
+     * 根据id列表查询
+     * @param idList id列表
+     * @return BomsBaseVehicleEntity列表
+     */
+    List<BomsBaseVehicleEntity> queryByIdList(List<Long> idList);
+
 }

@@ -1,11 +1,13 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.google.common.collect.Lists;
 import com.nio.ngfs.common.model.page.WherePageRequest;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsProductConfigDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductConfigEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsProductConfigMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -53,6 +55,25 @@ public class BomsProductConfigDaoImpl extends AbstractDao<BomsProductConfigMappe
         LambdaQueryWrapper<BomsProductConfigEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(BomsProductConfigEntity::getName, name);
         return getBaseMapper().selectOne(lambdaQueryWrapper);
+    }
+
+    @Override
+    public List<BomsProductConfigEntity> queryByModelAndModelYearList(String modelCode, List<String> modelYearList) {
+        LambdaQueryWrapper<BomsProductConfigEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(BomsProductConfigEntity::getModelCode, modelCode);
+        if (CollectionUtils.isNotEmpty(modelYearList)) {
+            lambdaQueryWrapper.in(BomsProductConfigEntity::getModelYear, modelYearList);
+        }
+        return getBaseMapper().selectList(lambdaQueryWrapper);
+    }
+
+    @Override
+    public List<BomsProductConfigEntity> queryByPcIdList(List<String> pcIdList) {
+        if (CollectionUtils.isEmpty(pcIdList)) {
+            return Lists.newArrayList();
+        }
+        // 此处需包含逻辑删除的数据
+        return getBaseMapper().queryByPcIdList(pcIdList);
     }
 
 }

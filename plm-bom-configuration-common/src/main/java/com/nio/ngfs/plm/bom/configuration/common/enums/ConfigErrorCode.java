@@ -82,6 +82,7 @@ public enum ConfigErrorCode implements ErrorCode {
     PRODUCT_CONFIG_OXO_VERSION_SNAPSHOT_ID_IS_NULL(83007, "OXO Version Snapshot Id Is Null!"),
     PRODUCT_CONFIG_BASED_ON_BASE_VEHICLE_TYPE_ERROR(83008, "Copy From Released OXO Base Vehicle Option Error!"),
     PRODUCT_CONFIG_PC_NOT_EXIST(83009, "PC Not Exist!"),
+    PRODUCT_CONFIG_BASED_ON_BASE_VEHICLE_OPTION_NOT_EXIST(83010, "Based On Base Vehicle Option Code Not Exist!"),
 
     /**
      * Other

@@ -27,10 +27,11 @@ public interface OxoFeatureOptionApplicationService {
     /**
      * 在最新Release版本OXO中查询存在的Feature/Option
      *
+     * @param modelCode 车型
      * @param featureOptionAggrList OxoFeatureOptionAggr列表
      * @return Feature/Option Code集合
      */
-    Set<String> queryExistFeatureOptionInLastedReleaseSnapshot(List<OxoFeatureOptionAggr> featureOptionAggrList);
+    Set<String> queryExistFeatureOptionInLastedReleaseSnapshot(String modelCode, List<OxoFeatureOptionAggr> featureOptionAggrList);
 
     /**
      * 构建Feature/Option行的子节点列表
@@ -43,9 +44,10 @@ public interface OxoFeatureOptionApplicationService {
      * 校验并删除打点
      *
      * @param featureOptionAggrList OxoFeatureOptionAggr列表
+     * @param modelCode 车型
      * @return OxoOptionPackageAggr列表
      */
-    Pair<List<OxoOptionPackageAggr>, List<String>> checkAndDeleteOptionPackage(List<OxoFeatureOptionAggr> featureOptionAggrList);
+    Pair<List<OxoOptionPackageAggr>, List<String>> checkAndDeleteOptionPackage(String modelCode, List<OxoFeatureOptionAggr> featureOptionAggrList);
 
 
     /**

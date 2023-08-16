@@ -1,5 +1,9 @@
 package com.nio.ngfs.plm.bom.configuration.common.constants;
 
+import com.google.common.collect.Lists;
+
+import java.util.List;
+
 /**
  * 配置管理特有的常量，如果是通用常量请使用share包中的CommonConstants
  *
@@ -44,10 +48,9 @@ public interface ConfigConstants {
     String BASE_VEHICLE_ID_PREFIX = "BV";
 
     String BASE_VEHICLE_REGION_FEATURE = "AD00";
-
     String BASE_VEHICLE_DRIVE_HAND_FEATURE = "AN00";
-
     String BASE_VEHICLE_SALES_VERSION_FEATURE = "19AA";
+    List<String> BASE_VEHICLE_FEATURE_CODE_LIST = Lists.newArrayList(BASE_VEHICLE_REGION_FEATURE, BASE_VEHICLE_DRIVE_HAND_FEATURE, BASE_VEHICLE_SALES_VERSION_FEATURE);
 
     String HEADER_ACCESS_CONTROL_EXPOSE_HEADERS = "Access-Control-Expose-Headers";
     String HEADER_CONTENT_DISPOSITION = "Content-Disposition";

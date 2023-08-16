@@ -51,4 +51,21 @@ public interface BomsProductConfigDao extends IService<BomsProductConfigEntity> 
      */
     BomsProductConfigEntity getByName(String name);
 
+    /**
+     * 根据车型和Model Year列表查询
+     *
+     * @param modelCode     车型
+     * @param modelYearList Model Year列表
+     * @return BomsProductConfigEntity列表
+     */
+    List<BomsProductConfigEntity> queryByModelAndModelYearList(String modelCode, List<String> modelYearList);
+
+    /**
+     * 根据PC Id列表查询
+     *
+     * @param pcIdList PC Id列表
+     * @return BomsProductConfigEntity列表
+     */
+    List<BomsProductConfigEntity> queryByPcIdList(List<String> pcIdList);
+
 }

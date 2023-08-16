@@ -20,6 +20,7 @@ import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsFeatureLibraryDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureLibraryEntity;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.ImportFeatureLibraryRespDto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +52,7 @@ public class ImportFeatureLibraryTask {
 
     private final BomsFeatureLibraryDao bomsFeatureLibraryDao;
 
-    public void execute(MultipartFile file) {
+    public ImportFeatureLibraryRespDto execute(MultipartFile file) {
         // 读取历史数据
         List<FeatureLibraryHistory> featureLibraryHistoryList = readData(file);
         // 校验数据
@@ -64,6 +65,7 @@ public class ImportFeatureLibraryTask {
         for (List<BomsFeatureLibraryEntity> partitionList : Lists.partition(featureOptionList, BATCH_SIZE)) {
             saveOrUpdate(partitionList);
         }
+        return new ImportFeatureLibraryRespDto();
     }
 
     /**

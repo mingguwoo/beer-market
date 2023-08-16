@@ -51,15 +51,14 @@ public class DeleteFeatureOptionCommand extends AbstractLockCommand<DeleteFeatur
         // 构建Feature/Option行的子节点列表
         featureOptionApplicationService.buildFeatureOptionWithChildren(featureOptionAggrList);
         // 在最新Release版本OXO中查询存在的Feature/Option
-        Set<String> existFeatureOptionCodeSet = featureOptionApplicationService.queryExistFeatureOptionInLastedReleaseSnapshot(featureOptionAggrList);
+        Set<String> existFeatureOptionCodeSet = featureOptionApplicationService.queryExistFeatureOptionInLastedReleaseSnapshot(cmd.getModelCode(), featureOptionAggrList);
         // 逻辑删除
         List<OxoFeatureOptionAggr> physicalDeleteList = featureOptionAggrList.stream().filter(i -> !existFeatureOptionCodeSet.contains(i.getFeatureCode())).toList();
-        physicalDeleteList.forEach(OxoFeatureOptionAggr::physicalDelete);
         // 软删除
         List<OxoFeatureOptionAggr> softDeleteList = featureOptionAggrList.stream().filter(i -> existFeatureOptionCodeSet.contains(i.getFeatureCode())).toList();
         softDeleteList.forEach(OxoFeatureOptionAggr::softDelete);
-        // 校验并删除打点
-        Pair<List<OxoOptionPackageAggr>, List<String>> result = featureOptionApplicationService.checkAndDeleteOptionPackage(softDeleteList);
+        // 软删除的Feature/Option行，校验并删除打点
+        Pair<List<OxoOptionPackageAggr>, List<String>> result = featureOptionApplicationService.checkAndDeleteOptionPackage(cmd.getModelCode(), softDeleteList);
         // 事务保存到数据库
         ((DeleteFeatureOptionCommand) AopContext.currentProxy()).saveFeatureOptionAndOptionPackage(physicalDeleteList, softDeleteList, result.getLeft());
         return new DeleteFeatureOptionRespDto(result.getRight());
@@ -78,10 +77,10 @@ public class DeleteFeatureOptionCommand extends AbstractLockCommand<DeleteFeatur
         if (CollectionUtils.isEmpty(featureOptionAggrList)) {
             return Collections.emptyList();
         }
-        // 待更新的Feature/Option行
+        // Feature和Option行列表
         List<OxoFeatureOptionAggr> featureAndOptionList = Lists.newArrayList(featureOptionAggrList.iterator());
         featureOptionAggrList.forEach(i -> {
-            if (CollectionUtils.isNotEmpty(i.getChildren())) {
+            if (i.isFeature() && CollectionUtils.isNotEmpty(i.getChildren())) {
                 featureAndOptionList.addAll(i.getChildren());
             }
         });

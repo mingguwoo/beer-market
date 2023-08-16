@@ -1,12 +1,14 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.google.common.collect.Lists;
 import com.nio.bom.share.enums.StatusEnum;
 import com.nio.ngfs.common.model.page.WherePageRequest;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsBaseVehicleDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsBaseVehicleEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsBaseVehicleMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -75,6 +77,14 @@ public class BomsBaseVehicleDaoImpl extends AbstractDao<BomsBaseVehicleMapper, B
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 
+    @Override
+    public List<BomsBaseVehicleEntity> queryByIdList(List<Long> idList) {
+        if (CollectionUtils.isEmpty(idList)) {
+            return Lists.newArrayList();
+        }
+        // 此处需包含逻辑删除的数据
+        return getBaseMapper().queryByIdList(idList);
+    }
 
     @Override
     protected void fuzzyConditions(WherePageRequest<BomsBaseVehicleEntity> bomsBasicVehicleEntityWherePageRequest, LambdaQueryWrapper<BomsBaseVehicleEntity> queryWrapper) {

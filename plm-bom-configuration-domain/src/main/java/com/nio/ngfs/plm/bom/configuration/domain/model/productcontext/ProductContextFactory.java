@@ -5,6 +5,7 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoEditCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoHeadQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoRowsQry;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 
@@ -12,6 +13,7 @@ import java.util.*;
  * @author bill.wang
  * @date 2023/8/10
  */
+@Component
 public class ProductContextFactory {
 
     public static List<ProductContextAggr> createProductContextListFromOxo(List<OxoRowsQry> featureList, Map<OxoRowsQry,List<OxoRowsQry>> featureOptionMap, OxoListQry oxoListQry){

@@ -10,6 +10,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature.Pro
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoRowsQry;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -25,8 +26,6 @@ import java.util.Map;
 public class ProductContextApplicationServiceImpl implements ProductContextApplicationService {
 
     private final ProductContextRepository productContextRepository;
-    private final ProductContextFactory productContextFactory;
-    private final ProductContextFeatureFactory productContextFeatureFactory;
     @Override
     public void addProductContext(OxoListQry oxoListQry) {
 
@@ -39,8 +38,8 @@ public class ProductContextApplicationServiceImpl implements ProductContextAppli
         //没有该model的product context，直接新增
         if (productContextAggrs.isEmpty()){
             //先处理其他的
-            List<ProductContextFeatureAggr> productContextFeatureAggrList =  productContextFeatureFactory.createProductContextFeatureList(featureList,featureOptionMap,oxoListQry);
-            List<ProductContextAggr> productContextAggrList = productContextFactory.createProductContextListFromOxo(featureList,featureOptionMap,oxoListQry);
+            List<ProductContextFeatureAggr> productContextFeatureAggrList =  ProductContextFeatureFactory.createProductContextFeatureList(featureList,featureOptionMap,oxoListQry);
+            List<ProductContextAggr> productContextAggrList = ProductContextFactory.createProductContextListFromOxo(featureList,featureOptionMap,oxoListQry);
         }
     }
 }

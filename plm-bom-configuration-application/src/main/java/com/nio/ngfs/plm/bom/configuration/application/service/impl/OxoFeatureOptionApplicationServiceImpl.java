@@ -2,6 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.application.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.application.query.oxo.assemble.OxoInfoAssembler;
@@ -15,7 +16,10 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatu
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.enums.OxoOptionPackageTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.enums.OxoSnapshotEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.service.basevehicle.BaseVehicleDomainService;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoFeatureOptionDomainService;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoVersionSnapshotDomainService;
@@ -50,7 +54,7 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
     private final BaseVehicleDomainService baseVehicleDomainService;
     private final OxoFeatureOptionDomainService featureOptionDomainService;
     private final OxoVersionSnapshotDomainService versionSnapshotDomainService;
-
+    private final OxoVersionSnapshotRepository oxoVersionSnapshotRepository;
     private final BomsProductConfigModelOptionDao bomsProductConfigModelOptionDao;
 
 
@@ -74,8 +78,33 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
     }
 
     @Override
-    public Set<String> queryExistFeatureOptionInLastedReleaseSnapshot(List<OxoFeatureOptionAggr> featureOptionAggrList) {
-        return Sets.newHashSet();
+    public Set<String> queryExistFeatureOptionInLastedReleaseSnapshot(String modelCode, List<OxoFeatureOptionAggr> featureOptionAggrList) {
+        if (CollectionUtils.isEmpty(featureOptionAggrList)) {
+            return Collections.emptySet();
+        }
+        // 查询最新Release的OXO版本
+        OxoVersionSnapshotAggr oxoVersionSnapshotAggr = oxoVersionSnapshotRepository.queryLastReleaseSnapshotByModel(modelCode, null);
+        if (oxoVersionSnapshotAggr == null) {
+            return Collections.emptySet();
+        }
+        OxoListQry oxoListQry = versionSnapshotDomainService.resolveSnapShot(oxoVersionSnapshotAggr.getOxoSnapshot());
+        Set<String> existFeatureOptionCodeSet = Sets.newHashSet();
+        Set<String> featureOptionCodeSet = featureOptionAggrList.stream().map(OxoFeatureOptionAggr::getFeatureCode).collect(Collectors.toSet());
+        if (oxoListQry != null && CollectionUtils.isNotEmpty(oxoListQry.getOxoRowsResps())) {
+            oxoListQry.getOxoRowsResps().forEach(feature -> {
+                if (featureOptionCodeSet.contains(feature.getFeatureCode())) {
+                    existFeatureOptionCodeSet.add(feature.getFeatureCode());
+                }
+                if (CollectionUtils.isNotEmpty(feature.getOptions())) {
+                    feature.getOptions().forEach(option -> {
+                        if (featureOptionCodeSet.contains(option.getFeatureCode())) {
+                            existFeatureOptionCodeSet.add(option.getFeatureCode());
+                        }
+                    });
+                }
+            });
+        }
+        return existFeatureOptionCodeSet;
     }
 
     @Override
@@ -88,8 +117,8 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
         List<String> featureCodeList = LambdaUtil.map(featureOptionAggrList, OxoFeatureOptionAggr::isFeature, OxoFeatureOptionAggr::getFeatureCode);
         // 查询Feature的Option列表
         List<FeatureAggr> featureAggrList = featureRepository.queryByParentFeatureCodeListAndType(featureCodeList, FeatureTypeEnum.OPTION.getType());
-        List<String> optionCodeList = LambdaUtil.map(featureAggrList, i -> i.getFeatureId().getFeatureCode());
-        Map<String, String> optionFeatureCodeMap = LambdaUtil.toKeyValueMap(featureAggrList, i -> i.getFeatureId().getFeatureCode(), FeatureAggr::getParentFeatureCode);
+        List<String> optionCodeList = LambdaUtil.map(featureAggrList, FeatureAggr::getFeatureCode);
+        Map<String, String> optionFeatureCodeMap = LambdaUtil.toKeyValueMap(featureAggrList, FeatureAggr::getFeatureCode, FeatureAggr::getParentFeatureCode);
         // 查询Option行列表
         List<OxoFeatureOptionAggr> optionAggrList = oxoFeatureOptionRepository.queryByModelAndFeatureCodeList(modelCode, optionCodeList);
         Map<String, List<OxoFeatureOptionAggr>> optionAggrByFeatureMap = LambdaUtil.groupBy(optionAggrList, i -> optionFeatureCodeMap.get(i.getFeatureCode()));
@@ -103,7 +132,10 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
     }
 
     @Override
-    public Pair<List<OxoOptionPackageAggr>, List<String>> checkAndDeleteOptionPackage(List<OxoFeatureOptionAggr> featureOptionAggrList) {
+    public Pair<List<OxoOptionPackageAggr>, List<String>> checkAndDeleteOptionPackage(String modelCode, List<OxoFeatureOptionAggr> featureOptionAggrList) {
+        if (CollectionUtils.isEmpty(featureOptionAggrList)) {
+            return Pair.of(Collections.emptyList(), Collections.emptyList());
+        }
         // 查询所有Option的打点信息
         List<OxoFeatureOptionAggr> optionAggrList = LambdaUtil.map(featureOptionAggrList, OxoFeatureOptionAggr::isOption, Function.identity());
         featureOptionAggrList.stream().filter(OxoFeatureOptionAggr::isFeature).forEach(featureAggr ->
@@ -114,12 +146,12 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
         // Option的打点置为-
         List<OxoOptionPackageAggr> updateOptionPackageAggrList = optionPackageAggrList.stream().filter(OxoOptionPackageAggr::deleteOptionPackage).toList();
         Map<Long, OxoFeatureOptionAggr> featureOptionMapById = LambdaUtil.toKeyMap(optionAggrList, OxoFeatureOptionAggr::getId);
-        List<String> messageList = checkDeleteOptionPackage(optionPackageAggrList, featureOptionMapById);
+        List<String> messageList = checkDeleteOptionPackage(optionPackageAggrList, featureOptionMapById, modelCode);
         return Pair.of(updateOptionPackageAggrList, messageList);
     }
 
     @Override
-    public OxoListQry queryOxoInfoByModelCode(String modelCode, String version,Boolean isMaturity) {
+    public OxoListQry queryOxoInfoByModelCode(String modelCode, String version, Boolean isMaturity) {
 
         OxoListQry qry = new OxoListQry();
 
@@ -139,7 +171,7 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
             List<OxoFeatureOptionAggr> oxoFeatureOptions = oxoFeatureOptionRepository.queryFeatureListsByModel(modelCode);
 
             //查询表头信息
-            List<OxoHeadQry> oxoLists = baseVehicleDomainService.queryByModel(modelCode,isMaturity);
+            List<OxoHeadQry> oxoLists = baseVehicleDomainService.queryByModel(modelCode, isMaturity);
 
             qry.setOxoHeadResps(oxoLists);
 
@@ -210,28 +242,58 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
         return qry;
     }
 
-    private List<String> checkDeleteOptionPackage(List<OxoOptionPackageAggr> optionPackageAggrList, Map<Long, OxoFeatureOptionAggr> featureOptionMapById) {
-        List<String> messageList = Lists.newArrayList();
-        Set<String> messageCodeSet = Sets.newHashSet();
+    private List<String> checkDeleteOptionPackage(List<OxoOptionPackageAggr> optionPackageAggrList, Map<Long, OxoFeatureOptionAggr> featureOptionMapById,
+                                                  String modelCode) {
+        Map<String, String> messageMap = Maps.newHashMap();
+        // 打点按Option行分组
         Map<Long, List<OxoOptionPackageAggr>> optionPackageAggrMap = LambdaUtil.groupBy(optionPackageAggrList, OxoOptionPackageAggr::getFeatureOptionId);
         optionPackageAggrMap.forEach((featureOptionId, aggrList) -> {
             // Option的打点全为-，跳过
             if (aggrList.stream().allMatch(OxoOptionPackageAggr::isPackageUnavailable)) {
                 return;
             }
-            // todo: 最新Formal版本OXO判断
             OxoFeatureOptionAggr featureOptionAggr = featureOptionMapById.get(featureOptionId);
             OxoFeatureOptionAggr parent = featureOptionAggr.getParent();
-            if (parent != null && !messageCodeSet.contains(parent.getFeatureCode())) {
+            if (parent != null) {
                 // 勾选Feature的提示
-                messageCodeSet.add(parent.getFeatureCode());
-                messageList.add("The Options In Feature " + parent.getFeatureCode() + " Has Valid Assignment(Not \"-\")!");
+                messageMap.putIfAbsent(parent.getFeatureCode(), "The Options In Feature " + parent.getFeatureCode() + " Has Valid Assignment(Not \"-\")!");
             } else {
                 // 勾选Option的提示
-                messageList.add("Option " + featureOptionAggr.getFeatureCode() + " Has Valid Assignment(Not \"-\")!");
+                messageMap.putIfAbsent(featureOptionAggr.getFeatureCode(), "Option " + featureOptionAggr.getFeatureCode() + " Has Valid Assignment(Not \"-\")!");
             }
         });
-        return messageList;
+        // 判断Option行在当前最新Formal版本OXO是否不全为"-"
+        OxoVersionSnapshotAggr oxoVersionSnapshotAggr = oxoVersionSnapshotRepository.queryLastReleaseSnapshotByModel(modelCode, OxoSnapshotEnum.FORMAL);
+        if (oxoVersionSnapshotAggr == null) {
+            return Lists.newArrayList(messageMap.values());
+        }
+        OxoListQry oxoListQry = versionSnapshotDomainService.resolveSnapShot(oxoVersionSnapshotAggr.getOxoSnapshot());
+        if (oxoListQry == null || CollectionUtils.isEmpty(oxoListQry.getOxoRowsResps())) {
+            return Lists.newArrayList(messageMap.values());
+        }
+        oxoListQry.getOxoRowsResps().forEach(feature -> {
+            if (CollectionUtils.isEmpty(feature.getOptions())) {
+                return;
+            }
+            feature.getOptions().forEach(option -> {
+                OxoFeatureOptionAggr featureOptionAggr = featureOptionMapById.get(option.getRowId());
+                if (featureOptionAggr == null) {
+                    return;
+                }
+                if (option.getPackInfos().stream().allMatch(i -> Objects.equals(i.getPackageCode(), OxoOptionPackageTypeEnum.UNAVAILABLE.getType()))) {
+                    return;
+                }
+                OxoFeatureOptionAggr parent = featureOptionAggr.getParent();
+                if (parent != null) {
+                    // 勾选Feature的提示
+                    messageMap.putIfAbsent(parent.getFeatureCode(), "The Options In Feature " + parent.getFeatureCode() + " Has Valid Assignment(Not \"-\") In Latest Formal OXO!");
+                } else {
+                    // 勾选Option的提示
+                    messageMap.putIfAbsent(featureOptionAggr.getFeatureCode(), "Option " + featureOptionAggr.getFeatureCode() + " Has Valid Assignment(Not \"-\") In Latest Formal OXO!");
+                }
+            });
+        });
+        return Lists.newArrayList(messageMap.values());
     }
 
 

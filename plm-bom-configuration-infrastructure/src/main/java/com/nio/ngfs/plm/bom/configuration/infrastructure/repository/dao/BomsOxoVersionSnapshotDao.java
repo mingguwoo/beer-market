@@ -11,7 +11,14 @@ import java.util.List;
  */
 public interface BomsOxoVersionSnapshotDao extends IService<BomsOxoVersionSnapshotEntity> {
 
-
+    /**
+     * 根据车型查询最新Release的OXO版本
+     *
+     * @param modelCode 车型
+     * @param type 类型
+     * @return BomsOxoVersionSnapshotEntity
+     */
+    BomsOxoVersionSnapshotEntity queryLastReleaseSnapshotByModel(String modelCode, String type);
 
     /**
      * 根据modelCode查询

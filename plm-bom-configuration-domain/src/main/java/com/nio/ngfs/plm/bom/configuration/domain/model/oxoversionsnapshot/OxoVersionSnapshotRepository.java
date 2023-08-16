@@ -1,6 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot;
 
 import com.nio.bom.share.domain.repository.Repository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.enums.OxoSnapshotEnum;
 
 import java.util.List;
 
@@ -10,6 +11,14 @@ import java.util.List;
  */
 public interface OxoVersionSnapshotRepository extends Repository<OxoVersionSnapshotAggr, Long> {
 
+      /**
+       * 根据车型查询最新Release的OXO版本
+       *
+       * @param modelCode 车型
+       * @param type 类型
+       * @return OxoVersionSnapshotAggr
+       */
+      OxoVersionSnapshotAggr queryLastReleaseSnapshotByModel(String modelCode, OxoSnapshotEnum type);
 
       /**
        * 查询oxo版本

@@ -2,6 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.impl;
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.enums.OxoSnapshotEnum;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.OxoVersionSnapshotConverter;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoVersionSnapshotDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.common.DaoSupport;
@@ -30,6 +31,13 @@ public class OxoVersionSnapshotRepositoryImpl implements OxoVersionSnapshotRepos
     @Override
     public OxoVersionSnapshotAggr find(Long id) {
         return oxoVersionSnapshotConverter.convertEntityToDo(bomsOxoVersionSnapshotDao.getById(id));
+    }
+
+    @Override
+    public OxoVersionSnapshotAggr queryLastReleaseSnapshotByModel(String modelCode, OxoSnapshotEnum type) {
+        return oxoVersionSnapshotConverter.convertEntityToDo(
+                bomsOxoVersionSnapshotDao.queryLastReleaseSnapshotByModel(modelCode, type != null ? type.getCode() : null)
+        );
     }
 
     @Override

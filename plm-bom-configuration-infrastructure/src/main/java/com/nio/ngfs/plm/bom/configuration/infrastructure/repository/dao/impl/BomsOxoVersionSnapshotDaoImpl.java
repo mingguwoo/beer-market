@@ -24,6 +24,16 @@ public class BomsOxoVersionSnapshotDaoImpl extends AbstractDao<BomsOxoVersionSna
     }
 
     @Override
+    public BomsOxoVersionSnapshotEntity queryLastReleaseSnapshotByModel(String modelCode, String type) {
+        LambdaQueryWrapper<BomsOxoVersionSnapshotEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(BomsOxoVersionSnapshotEntity::getModelCode, modelCode);
+        lambdaQueryWrapper.eq(BomsOxoVersionSnapshotEntity::getType, type);
+        lambdaQueryWrapper.orderByDesc(BomsOxoVersionSnapshotEntity::getVersion);
+        lambdaQueryWrapper.last("limit 1");
+        return getBaseMapper().selectOne(lambdaQueryWrapper);
+    }
+
+    @Override
     public List<BomsOxoVersionSnapshotEntity> queryBomsOxoVersionSnapshotsByModelOrVersionOrType(
             String modelCode, String version, String type) {
         LambdaQueryWrapper<BomsOxoVersionSnapshotEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();

@@ -121,16 +121,6 @@ public class OxoFeatureOptionAggr extends AbstractDo implements AggrRoot<Long>, 
     }
 
     /**
-     * 物理删除
-     */
-    public void physicalDelete() {
-        setDelFlag(CommonConstants.DEL_FLAG);
-        if (isFeature() && CollectionUtils.isNotEmpty(children)) {
-            children.forEach(OxoFeatureOptionAggr::physicalDelete);
-        }
-    }
-
-    /**
      * 软删除
      */
     public void softDelete() {

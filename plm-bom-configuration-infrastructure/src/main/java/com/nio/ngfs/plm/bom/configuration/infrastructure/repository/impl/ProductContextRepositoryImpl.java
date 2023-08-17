@@ -27,6 +27,11 @@ public class ProductContextRepositoryImpl implements ProductContextRepository {
     }
 
     @Override
+    public void batchSave(List<ProductContextAggr> productContextAggrs) {
+        bomsProductContextDao.saveBatch(productContextConverter.convertDoListToEntityList(productContextAggrs));
+    }
+
+    @Override
     public void save(ProductContextAggr productContextAggr) {
         DaoSupport.saveOrUpdate(bomsProductContextDao,productContextConverter.convertDoToEntity(productContextAggr));
     }

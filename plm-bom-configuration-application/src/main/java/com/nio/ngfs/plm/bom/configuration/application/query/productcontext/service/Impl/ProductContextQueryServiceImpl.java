@@ -1,11 +1,23 @@
 package com.nio.ngfs.plm.bom.configuration.application.query.productcontext.service.Impl;
 
+import com.nio.bom.share.constants.CommonConstants;
 import com.nio.ngfs.plm.bom.configuration.application.query.productcontext.service.ProductContextQueryService;
+import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.ProductContextAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.ProductContextFactory;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.ProductContextRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature.ProductContextFeatureAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature.ProductContextFeatureFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature.enums.ProductContextFeatureEnum;
+import com.nio.ngfs.plm.bom.configuration.domain.service.feature.FeatureDomainService;
+import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoVersionSnapshotDomainService;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.FeatureConverter;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsFeatureLibraryDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductContextFeatureEntity;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoRowsQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.request.GetProductContextQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.response.*;
 import lombok.RequiredArgsConstructor;
@@ -73,11 +85,12 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
         Map<String,ProductContextFeatureRowDto> featureRowDtoMap = new HashMap<>();
         GetProductContextRespDto getProductContextRespDto = new GetProductContextRespDto();
         //组装行
-        //先存Feature
+            //先存Feature
         rowList.forEach(row-> {
             if (Objects.equals(row.getType(), ProductContextFeatureEnum.FEATURE.getType())){
                 ProductContextFeatureRowDto productContextFeatureRowDto = new ProductContextFeatureRowDto();
                 productContextFeatureRowDto.setRowId(row.getId());
+                productContextFeatureRowDto.setCatalog(featureAggrMap.get(row.getFeatureCode()).getCatalog());
                 productContextFeatureRowDto.setFeatureCode(row.getFeatureCode());
                 productContextFeatureRowDto.setDisplayName(featureAggrMap.get(row.getFeatureCode()).getDisplayName());
                 getProductContextRespDto.getProductContextFeatureRowDtoList().add(productContextFeatureRowDto);
@@ -85,7 +98,7 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
                 featureRowDtoMap.put(row.getFeatureCode(),productContextFeatureRowDto);
             }
         });
-        //再存Option
+            //再存Option
         rowList.forEach(row->{
             if (Objects.equals(row.getType(), ProductContextFeatureEnum.OPTION.getType())) {
                 ProductContextOptionRowDto productContextOptionRowDto = new ProductContextOptionRowDto();
@@ -93,11 +106,13 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
                 String parentCode = featureAggrMap.get(row.getFeatureCode()).getParentFeatureCode();
                 productContextOptionRowDto.setDisplayName(featureAggrMap.get(row.getFeatureCode()).getDisplayName());
                 productContextOptionRowDto.setRowId(row.getId());
+                productContextOptionRowDto.setCatalog(featureAggrMap.get(row.getFeatureCode()).getCatalog());
                 productContextOptionRowDto.setFeatureCode(row.getFeatureCode());
                 //记下optionCode对应的行信息
                 featureRowDtoMap.get(parentCode).getOptionRowList().add(productContextOptionRowDto);
             }
         });
+
         //组装列和列行记录表
         //  先处理列id
         List<String> modelModelYearList = new ArrayList<>();

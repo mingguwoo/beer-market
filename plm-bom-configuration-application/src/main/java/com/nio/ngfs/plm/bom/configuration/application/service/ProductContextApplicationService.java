@@ -8,6 +8,5 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
  */
 public interface ProductContextApplicationService {
 
-    void addProductContext(OxoListQry oxoListQry);
 
 }

@@ -21,7 +21,7 @@ public class ProductContextFeatureAggr extends AbstractDo implements AggrRoot<Lo
 
     private String featureCode;
 
-    private String featureGroup;
+    private Long featureGroup;
 
     private String type;
 

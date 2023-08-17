@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * @author xiaozhou.tu
  * @date 2023/8/10
@@ -38,6 +40,24 @@ public class ModelFacadeImpl implements ModelFacade {
             throw new BusinessException(ConfigErrorCode.BOM_MIDDLE_PLATFORM_MODEL_NOT_EXIST);
         }
         return response.getData().getBrand();
+    }
+
+    @Override
+    public List<String> getModelYearByModel(String model) {
+        ResultInfo<ModelDto> response;
+        try {
+            response = bomMiddlePlatformClient.getModel(model);
+        } catch (Exception e) {
+            log.error("bomMiddlePlatformClient getModel error", e);
+            throw new BusinessException(CommonErrorCode.THIRD_PARTY_ERROR, e.getMessage());
+        }
+        if (response == null || !response.isSuccess()) {
+            throw new BusinessException(ConfigErrorCode.BOM_MIDDLE_PLATFORM_GET_MODEL_FAIL);
+        }
+        if (response.getData() == null) {
+            throw new BusinessException(ConfigErrorCode.BOM_MIDDLE_PLATFORM_MODEL_NOT_EXIST);
+        }
+        return response.getData().getModelYear();
     }
 
 }

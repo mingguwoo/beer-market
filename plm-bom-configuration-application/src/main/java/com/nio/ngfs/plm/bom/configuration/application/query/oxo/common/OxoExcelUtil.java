@@ -134,7 +134,7 @@ public class OxoExcelUtil {
                             String packageNo = oxoEditCmd.getPackageCode();
                             StringBuilder packageCellValue = new StringBuilder();
                             //设置打点属性值
-                            cell.setCellValue(packageCellValue.append(OxoOptionPackageTypeEnum.getByType(packageNo).getCode()).toString());
+                            cell.setCellValue(packageCellValue.append(OxoOptionPackageTypeEnum.getByType(packageNo).getCode()+oxoEditCmd.getDescription()).toString());
                         }
                     }
                 }
@@ -259,7 +259,7 @@ public class OxoExcelUtil {
         sheet.setColumnWidth(2, 18 * 256 + 200);
         sheet.setColumnWidth(3, 16 * 256 + 200);
         sheet.setColumnWidth(4, 15 * 256 + 200);
-        for (int i = 5; i < oxoBasicVehicles.size(); i++) {
+        for (int i = 5; i < oxoBasicVehicles.size()+5; i++) {
             // sheet.autoSizeColumn(i, true);
             //  int width = sheet.getColumnWidth(i) * 2;
             sheet.setColumnWidth(i, 14 * 256 + 200);

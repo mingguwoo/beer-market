@@ -7,6 +7,7 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoO
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.common.DaoSupport;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -62,7 +63,17 @@ public class OxoOptionPackageRepositoryImpl implements OxoOptionPackageRepositor
 
     @Override
     public List<OxoOptionPackageAggr> queryByBaseVehicleIds(List<Long> rowIds) {
-        return  oxoOptionPackageConverter.convertEntityListToDoList(bomsOxoOptionPackageDao.queryOxoOptionPackageByRowIds(rowIds));
+        List<OxoOptionPackageAggr> oxoOptionPackageAggrs=
+                oxoOptionPackageConverter.convertEntityListToDoList(bomsOxoOptionPackageDao.queryOxoOptionPackageByRowIds(rowIds));
+
+        if(CollectionUtils.isNotEmpty(oxoOptionPackageAggrs)){
+            oxoOptionPackageAggrs.forEach(x->{
+                if(StringUtils.isBlank(x.getDescription())){
+                    x.setDescription(StringUtils.EMPTY);
+                }
+            });
+        }
+        return oxoOptionPackageAggrs;
     }
 
     @Override

@@ -2,8 +2,10 @@ package com.nio.ngfs.plm.bom.configuration.application.command.productconfig;
 
 import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockCommand;
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
+import com.nio.ngfs.plm.bom.configuration.domain.event.EventPublisher;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.event.ProductConfigUpdateEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.service.productconfig.ProductConfigDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.request.EditPcCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.EditPcRespDto;
@@ -22,6 +24,7 @@ public class EditPcCommand extends AbstractLockCommand<EditPcCmd, EditPcRespDto>
 
     private final ProductConfigRepository productConfigRepository;
     private final ProductConfigDomainService productConfigDomainService;
+    private final EventPublisher eventPublisher;
 
     @Override
     protected String getLockKey(EditPcCmd cmd) {
@@ -38,6 +41,8 @@ public class EditPcCommand extends AbstractLockCommand<EditPcCmd, EditPcRespDto>
         productConfigDomainService.checkPcNameUnique(productConfigAggr);
         // 保存到数据库
         productConfigRepository.save(productConfigAggr);
+        // 发布PC更新事件
+        eventPublisher.publish(new ProductConfigUpdateEvent(productConfigAggr.getPcId(), productConfigAggr.getName()));
         return new EditPcRespDto();
     }
 

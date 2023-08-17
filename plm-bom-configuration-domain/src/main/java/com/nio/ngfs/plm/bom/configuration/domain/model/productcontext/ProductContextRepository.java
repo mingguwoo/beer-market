@@ -16,7 +16,14 @@ public interface ProductContextRepository extends Repository<ProductContextAggr,
      * @param modelCode
      * @return
      */
-    public List<ProductContextAggr> queryByModelCode(String modelCode);
+    List<ProductContextAggr> queryByModelCode(String modelCode);
+
+    /**
+     * 批量保存
+     * @param productContextAggrs
+     */
+    void batchSave(List<ProductContextAggr> productContextAggrs);
+
 
 
 }

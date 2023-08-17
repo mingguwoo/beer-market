@@ -5,8 +5,11 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature.Pro
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.ProductContextFeatureConverter;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsProductContextFeatureDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.common.DaoSupport;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @author bill.wang
@@ -27,5 +30,15 @@ public class ProductContextFeatureRepositoryImpl implements ProductContextFeatur
     @Override
     public ProductContextFeatureAggr find(Long aLong) {
         return null;
+    }
+
+    @Override
+    public void batchSave(List<ProductContextFeatureAggr> productContextFeatureAggrList) {
+        productContextFeatureDao.saveBatch(productContextFeatureConverter.convertDoListToEntityList(productContextFeatureAggrList));
+    }
+
+    @Override
+    public List<ProductContextFeatureAggr> queryByModelCode(String modelCode) {
+        return productContextFeatureConverter.convertEntityListToDoList(productContextFeatureDao.queryByModelCode(modelCode));
     }
 }

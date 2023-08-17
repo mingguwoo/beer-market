@@ -1,5 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.domain.facade;
 
+import java.util.List;
+
 /**
  * @author xiaozhou.tu
  * @date 2023/8/10
@@ -13,5 +15,12 @@ public interface ModelFacade {
      * @return 品牌
      */
     String getBrandByModel(String model);
+
+    /**
+     * 根据车型获取年款
+     * @param model
+     * @return
+     */
+    List<String> getModelYearByModel(String model);
 
 }

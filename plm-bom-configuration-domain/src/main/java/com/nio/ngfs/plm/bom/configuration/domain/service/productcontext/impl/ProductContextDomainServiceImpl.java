@@ -1,0 +1,87 @@
+package com.nio.ngfs.plm.bom.configuration.domain.service.productcontext.impl;
+
+import com.nio.bom.share.constants.CommonConstants;
+import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
+import com.nio.ngfs.plm.bom.configuration.domain.facade.ModelFacade;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.ProductContextAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.ProductContextFactory;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.ProductContextRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature.ProductContextFeatureAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature.ProductContextFeatureFactory;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature.ProductContextFeatureRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.service.feature.FeatureDomainService;
+import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoVersionSnapshotDomainService;
+import com.nio.ngfs.plm.bom.configuration.domain.service.productcontext.ProductContextDomainService;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoRowsQry;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+
+/**
+ * @author bill.wang
+ * @date 2023/8/17
+ */
+@Service
+@RequiredArgsConstructor
+public class ProductContextDomainServiceImpl implements ProductContextDomainService {
+
+    private final OxoVersionSnapshotDomainService oxoVersionSnapshotDomainService;
+    private final FeatureDomainService featureDomainService;
+    private final FeatureRepository featureRepository;
+    private final ProductContextRepository productContextRepository;
+    private final ProductContextFeatureRepository productContextFeatureRepository;
+    private final ModelFacade modelFacade;
+
+    @Override
+    public void addProductContext(String oxoSnapShot) {
+        OxoListQry oxoListQry = oxoVersionSnapshotDomainService.resolveSnapShot(oxoSnapShot);
+        String modelCode = oxoListQry.getOxoHeadResps().get(CommonConstants.INT_ZERO).getModelCode();
+        List<String> modelYearList = modelFacade.getModelYearByModel(modelCode);
+        //AF00相关信息初始化
+        FeatureAggr featureModelYearAggr = featureDomainService.getAndCheckFeatureAggr(ConfigConstants.FEATURE_CODE_AF00, FeatureTypeEnum.FEATURE);
+        Map<String,String> modelYearMap = new HashMap<>();
+
+        //判断是否已有记录
+        List<ProductContextAggr> productContextAggrs =  productContextRepository.queryByModelCode(oxoListQry.getOxoHeadResps().get(CommonConstants.INT_ZERO).getModelCode());
+        //记录feature和feature下的所有option
+        List<OxoRowsQry> featureList = oxoListQry.getOxoRowsResps();
+        Map<OxoRowsQry,List<OxoRowsQry>> featureOptionMap = new HashMap<>();
+        oxoListQry.getOxoRowsResps().forEach(featureRow->featureOptionMap.put(featureRow,featureRow.getOptions()));
+        //获取groupCode与groupId的对应关系
+        Map<String,Long> featureGroupMap = new HashMap<>();
+        List<FeatureAggr> groupList = featureRepository.getGroupList();
+        groupList.forEach(group->featureGroupMap.put(group.getFeatureId().getFeatureCode(),group.getId()));
+        //没有该model的product context，直接新增
+        if (productContextAggrs.isEmpty()){
+            //先处理其他的
+            List<ProductContextFeatureAggr> productContextFeatureAggrList =  ProductContextFeatureFactory.createProductContextFeatureList(featureList,featureOptionMap,modelCode,featureGroupMap);
+            List<ProductContextAggr> productContextAggrList = ProductContextFactory.createProductContextList(featureList,oxoListQry);
+            //单独处理AF00
+            ProductContextFeatureFactory.createModelYearProductContextFeature(productContextFeatureAggrList,featureModelYearAggr,modelCode,modelYearMap);
+            ProductContextFactory.createModelYearProductContext(productContextAggrList,modelCode,modelYearList,modelYearMap);
+            productContextRepository.batchSave(productContextAggrList);
+            productContextFeatureRepository.batchSave(productContextFeatureAggrList);
+        }
+        //有该model的product context，检查更新
+        else{
+            List<String> addedModelYearList= new ArrayList<>();
+            //先获取已有product context
+            List<ProductContextAggr> oldProductContextList = productContextRepository.queryByModelCode(modelCode);
+            List<ProductContextFeatureAggr> oldProductContextFeatureList = productContextFeatureRepository.queryByModelCode(modelCode);
+            //先处理其他的
+            List<ProductContextFeatureAggr> productContextFeatureAggrList = ProductContextFeatureFactory.createAddedProductContextFeatureList(oldProductContextFeatureList,featureList,featureOptionMap,modelCode,featureGroupMap);
+            List<ProductContextAggr> productContextAggrList = ProductContextFactory.createAddedProductContextList(oldProductContextList,featureList,oxoListQry);
+            //单独处理AF00
+            ProductContextFeatureFactory.createAddedModelYearProductContextFeature(productContextFeatureAggrList,featureModelYearAggr,modelCode,modelYearMap,oldProductContextFeatureList,addedModelYearList);
+            ProductContextFactory.createAddedModelYearProductContextFeature(oldProductContextList,productContextAggrList,modelCode,modelYearList,modelYearMap);
+            productContextRepository.batchSave(productContextAggrList);
+            productContextFeatureRepository.batchSave(productContextFeatureAggrList);
+        }
+
+    }
+}

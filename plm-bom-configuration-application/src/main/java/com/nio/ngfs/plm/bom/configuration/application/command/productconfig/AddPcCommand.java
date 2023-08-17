@@ -3,10 +3,12 @@ package com.nio.ngfs.plm.bom.configuration.application.command.productconfig;
 import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockCommand;
 import com.nio.ngfs.plm.bom.configuration.application.service.ProductConfigApplicationService;
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
+import com.nio.ngfs.plm.bom.configuration.domain.event.EventPublisher;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.ModelFacade;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.event.ProductConfigAddEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.ProductConfigOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.ProductConfigOptionRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.service.productconfig.ProductConfigDomainService;
@@ -34,6 +36,7 @@ public class AddPcCommand extends AbstractLockCommand<AddPcCmd, AddPcRespDto> {
     private final ProductConfigDomainService productConfigDomainService;
     private final ProductConfigApplicationService productConfigApplicationService;
     private final ModelFacade modelFacade;
+    private final EventPublisher eventPublisher;
 
     @Override
     protected String getLockKey(AddPcCmd cmd) {
@@ -57,6 +60,8 @@ public class AddPcCommand extends AbstractLockCommand<AddPcCmd, AddPcRespDto> {
         List<ProductConfigOptionAggr> basedOnBaseVehicleOptionAggrList = productConfigApplicationService.copyProductConfigOptionByBaseVehicle(productConfigAggr);
         // 保存到数据库
         ((AddPcCommand) AopContext.currentProxy()).saveProductConfigAndProductConfigOption(productConfigAggr, basedOnPcOptionAggrList, basedOnBaseVehicleOptionAggrList);
+        // 发布PC新增事件
+        eventPublisher.publish(new ProductConfigAddEvent(productConfigAggr));
         return new AddPcRespDto();
     }
 

@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.application.query.oxo;
 
+import com.google.common.collect.Lists;
 import com.nio.ngfs.plm.bom.configuration.application.query.Query;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.AdministratorDetailFacade;
@@ -9,7 +10,6 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsO
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoBaseCmd;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -39,9 +39,12 @@ public class OxoVersionQuery implements Query<OxoBaseCmd, List<String>> {
         List<BomsOxoVersionSnapshotEntity> oxoVersionSnapshotAggrs =
                 bomsOxoVersionSnapshotDao.queryBomsOxoVersionSnapshotsByModelOrVersionOrType(modelCode,null,null);
 
-        if (CollectionUtils.isEmpty(oxoVersionSnapshotAggrs)) {
+        if (CollectionUtils.isEmpty(oxoVersionSnapshotAggrs) && roleNames.contains(ConfigConstants.CONFIG_ADMIN)) {
+            return Lists.newArrayList(ConfigConstants.WORKING);
+        }else if(CollectionUtils.isEmpty(oxoVersionSnapshotAggrs)){
             return Lists.newArrayList();
         }
+
         List<String> revisions = Lists.newArrayList();
 
         List<String> roleRevisions = oxoVersionSnapshotAggrs.stream()

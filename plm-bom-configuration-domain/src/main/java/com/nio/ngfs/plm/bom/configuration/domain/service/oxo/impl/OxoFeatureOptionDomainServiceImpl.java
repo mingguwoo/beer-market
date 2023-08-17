@@ -63,7 +63,7 @@ public class OxoFeatureOptionDomainServiceImpl implements OxoFeatureOptionDomain
         // 更新排序值sort
         Map<String, OxoFeatureOptionAggr> oxoFeatureOptionAggrMap = LambdaUtil.toKeyMap(oxoFeatureOptionAggrList, OxoFeatureOptionAggr::getFeatureCode);
         for (int i = 0; i < newSortFeatureCodeList.size(); i++) {
-            oxoFeatureOptionAggrMap.get(newSortFeatureCodeList.get(i)).renewSort(i);
+            oxoFeatureOptionAggrMap.get(newSortFeatureCodeList.get(i)).renewSort(i + 1);
         }
     }
 

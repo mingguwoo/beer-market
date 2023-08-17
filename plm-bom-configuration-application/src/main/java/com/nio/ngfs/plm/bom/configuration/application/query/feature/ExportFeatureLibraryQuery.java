@@ -1,23 +1,18 @@
 package com.nio.ngfs.plm.bom.configuration.application.query.feature;
 
 import com.google.common.collect.Lists;
-import com.nio.bom.share.constants.CommonConstants;
-import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.DateUtils;
-import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
+import com.nio.ngfs.plm.bom.configuration.application.query.AbstractExportQuery;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.ExportFeatureLibraryQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.QueryFeatureLibraryDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.List;
 
 /**
@@ -29,7 +24,7 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ExportFeatureLibraryQuery {
+public class ExportFeatureLibraryQuery extends AbstractExportQuery {
 
     /**
      * Excel标题列表
@@ -46,18 +41,8 @@ public class ExportFeatureLibraryQuery {
         // 查询Feature Library列表
         qry.setRelatedModel(true);
         List<QueryFeatureLibraryDto> featureLibraryDtoList = queryFeatureLibraryQuery.execute(qry);
-        try (XSSFWorkbook workbook = new XSSFWorkbook();
-             OutputStream output = response.getOutputStream()) {
-            String fileName = "Feature Library-" + DateUtils.dateTimeNow("yyyyMMddHHmm") + ".xlsx";
-            response.reset();
-            response.setHeader(CommonConstants.HEADER_CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"");
-            response.setHeader(CommonConstants.HEADER_ACCESS_CONTROL_EXPOSE_HEADERS, CommonConstants.HEADER_CONTENT_DISPOSITION);
-            response.setContentType("application/octet-stream;charset=UTF-8");
-            exportFeatureLibrary(featureLibraryDtoList, workbook);
-            workbook.write(output);
-        } catch (IOException e) {
-            throw new BusinessException(ConfigErrorCode.EXCEL_DOWNLOAD_ERROR, e.getMessage());
-        }
+        String fileName = "Feature Library-" + DateUtils.dateTimeNow("yyyyMMddHHmm") + ".xlsx";
+        export(response, fileName, workbook -> exportFeatureLibrary(featureLibraryDtoList, workbook));
     }
 
     /**
@@ -66,31 +51,8 @@ public class ExportFeatureLibraryQuery {
     private void exportFeatureLibrary(List<QueryFeatureLibraryDto> featureLibraryDtoList, XSSFWorkbook workbook) {
         XSSFSheet sheet = workbook.createSheet();
         configSheetStyle(sheet);
-        setSheetTitle(workbook, sheet);
+        setSheetTitle(workbook, sheet, TITLE_LIST);
         writeFeatureOptionRow(featureLibraryDtoList, workbook, sheet);
-    }
-
-    /**
-     * 设置Sheet样式
-     */
-    private void configSheetStyle(XSSFSheet sheet) {
-        sheet.setDefaultColumnWidth(15);
-    }
-
-    /**
-     * 设置标题
-     */
-    private void setSheetTitle(XSSFWorkbook workbook, XSSFSheet sheet) {
-        XSSFCellStyle style = workbook.createCellStyle();
-        style.setFillForegroundColor(HSSFColor.HSSFColorPredefined.SKY_BLUE.getIndex());
-        style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        int columnIndex = 0;
-        XSSFRow row = sheet.createRow(0);
-        for (String title : TITLE_LIST) {
-            XSSFCell cell = row.createCell(columnIndex++);
-            cell.setCellValue(title);
-            cell.setCellStyle(style);
-        }
     }
 
     /**
@@ -139,18 +101,6 @@ public class ExportFeatureLibraryQuery {
         createCell(row, ++columnIndex, featureOption.getUpdateTime(), cellStyle);
         createCell(row, ++columnIndex, featureOption.getStatus(), cellStyle);
         createCell(row, ++columnIndex, featureOption.getModelYear(), cellStyle);
-    }
-
-    /**
-     * 创建Feature/Option单元格
-     */
-    private void createCell(XSSFRow row, int columnIndex, String value, XSSFCellStyle cellStyle) {
-        XSSFCell cell = row.createCell(columnIndex);
-        cell.setCellValue(value);
-        cell.setCellType(CellType.STRING);
-        if (cellStyle != null) {
-            cell.setCellStyle(cellStyle);
-        }
     }
 
 }

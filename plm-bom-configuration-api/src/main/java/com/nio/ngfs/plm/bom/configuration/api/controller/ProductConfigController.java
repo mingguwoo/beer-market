@@ -5,6 +5,7 @@ import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.application.command.productconfig.AddPcCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.productconfig.DeletePcCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.productconfig.EditPcCommand;
+import com.nio.ngfs.plm.bom.configuration.application.query.productconfig.ExportPcQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.productconfig.GetBasedOnPcListQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.productconfig.GetModelListQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.productconfig.QueryPcQuery;
@@ -12,9 +13,11 @@ import com.nio.ngfs.plm.bom.configuration.sdk.PlmProductConfigClient;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.request.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -32,6 +35,7 @@ public class ProductConfigController implements PlmProductConfigClient {
     private final EditPcCommand editPcCommand;
     private final DeletePcCommand deletePcCommand;
     private final QueryPcQuery queryPcQuery;
+    private final ExportPcQuery exportPcQuery;
 
     @Override
     @NotLogResult
@@ -67,6 +71,12 @@ public class ProductConfigController implements PlmProductConfigClient {
     @NotLogResult
     public ResultInfo<List<QueryPcRespDto>> queryPc(@Valid @RequestBody QueryPcQry qry) {
         return ResultInfo.success(queryPcQuery.execute(qry));
+    }
+
+    @NotLogResult
+    @PostMapping("/productConfig/exportPc")
+    public void exportPc(@Valid @RequestBody ExportPcQry qry, HttpServletResponse response) {
+        exportPcQuery.execute(qry, response);
     }
 
 }

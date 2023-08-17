@@ -51,6 +51,11 @@ public class QueryPcRespDto implements Dto {
 
         private String salesVersionCn;
 
+        @Override
+        public String toString() {
+            return regionCode + "/" + driveHandCode + "/" + salesVersionCode;
+        }
+
     }
 
 }

@@ -16,7 +16,7 @@ public class EmailParamDto {
       private String templateNo;
 
 
-      private String subject;
+      private String subject="";
 
 
       private String receiverEmail;

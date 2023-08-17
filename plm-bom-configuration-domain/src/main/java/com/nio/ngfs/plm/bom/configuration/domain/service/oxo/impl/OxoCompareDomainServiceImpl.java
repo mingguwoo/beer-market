@@ -1,10 +1,20 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service.oxo.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
+import com.nio.bom.share.enums.BrandEnum;
 import com.nio.bom.share.utils.GZIPUtils;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
+import com.nio.ngfs.plm.bom.configuration.domain.facade.EmailFacade;
+import com.nio.ngfs.plm.bom.configuration.domain.facade.MatrixRuleFacade;
+import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.EmailParamDto;
+import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.MatrixRuleQueryDto;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.domainobject.CompareOxoFeatureModel;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.enums.CompareChangeTypeEnum;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.enums.OxoOptionPackageTypeEnum;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoCompareDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoEditCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoTemplateRequestCmd;
@@ -15,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -28,6 +39,20 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OxoCompareDomainServiceImpl implements OxoCompareDomainService {
 
+
+    @Value("${oxo.email.changeLog.url}")
+    private String oxoEmailChangeLogUrl;
+
+    @Value("${oxo.email.alps.changeLog.url}")
+    private String oxoEmailAlpsChangeLogUrl;
+
+
+    private final EmailFacade emailFacade;
+
+    private final MatrixRuleFacade matrixRuleFacade;
+
+    @Value("${oxo.email.templateNo}")
+    private String oxoEmailTemplateNo;
 
     /**
      * 高低版本对比
@@ -169,11 +194,13 @@ public class OxoCompareDomainServiceImpl implements OxoCompareDomainService {
                     }
                     //低版本和高版本比较(高版本没有，低版本有，则为删除)
                     regionInfo.setChangeType(CompareChangeTypeEnum.DELETE.getName());
+                    //todo
 //                    //基准添加删除的modelYearFeature
 //                    List<ModelYearFeatureOption> modelYearFeatureOptionList =
 //                            compareOxoFeatureModel.getBaseIpFeature().getOxoHeadResps()
 //                    modelYear.add(modelYearFeatureOption);
 //                    compareOxoFeatureModel.getBaseIpFeature().getOxoRowsResps().put(k, modelYearFeatureOptionList);
+                    compareOxoFeatureModel.getBaseIpFeature().getOxoHeadResps().add(modelYear);
                     //子级直接继承
                     setRegionChildrenChangeType(regionInfo.getDriveHands(), CompareChangeTypeEnum.DELETE.getName());
                     return;
@@ -289,7 +316,7 @@ public class OxoCompareDomainServiceImpl implements OxoCompareDomainService {
                 option.getPackInfos().forEach(oxo -> {
                     //比较所有低oxo打点
                     String oxoKey = String.format("%s:%s:%s:%s:%s:%s:%s",
-                            versionName, oxo.getModelCode(), oxo.getModelYear(),feature.getFeatureCode(),
+                            versionName, oxo.getModelCode(), oxo.getModelYear(), feature.getFeatureCode(),
                             oxo.getRegionCode(), oxo.getDriveHandCode(), oxo.getSalesCode());
                     OxoEditCmd compareOxo = oxoMap.get(oxoKey);
                     if (oxoMap.containsKey(oxoKey) && !oxoMap.get(oxoKey).getPackageCode().equals(oxo.getPackageCode())) {
@@ -312,11 +339,11 @@ public class OxoCompareDomainServiceImpl implements OxoCompareDomainService {
 
                 long count = option.getPackInfos().stream().filter(s -> compareOxoFeatureModel.getSalesOptionInfoMap().containsKey(
                         String.format("%s:%s:%s:%s:%s:%s:%s", versionName, s.getModelCode(),
-                        s.getModelYear(), "AD00", s.getRegionCode(), s.getDriveHandCode(), s.getSalesCode()))).count();
+                                s.getModelYear(), "AD00", s.getRegionCode(), s.getDriveHandCode(), s.getSalesCode()))).count();
 
 
                 long unAvailableCount = option.getPackInfos().stream().filter(s -> compareOxoFeatureModel.getSalesOptionInfoMap().containsKey(String.format("%s:%s:%s:%s:%s:%s:%s", versionName,
-                        s.getModelCode(),s.getModelYear(), "AD00",
+                        s.getModelCode(), s.getModelYear(), "AD00",
                         s.getRegionCode(), s.getDriveHandCode(), s.getSalesCode())) && s.getPackageCode().equals(ConfigConstants.UN_AVAILABLE)).count();
 
                 //2、check option所有的oxo是不是Unavailable，如果都是Unavailable，则设置option为Delete
@@ -418,260 +445,242 @@ public class OxoCompareDomainServiceImpl implements OxoCompareDomainService {
     }
 
 
+    @Override
+    public void sendCompareEmail(OxoListQry compareOxoListQry, OxoVersionSnapshotAggr oxoVersionSnapshot) {
 
-//    public void sendCompareOxoEmails(OxoSnapshotRequest request, OxoVersionSnapshot oldSnapshot, IpFeatureEntity newEntity, OxoVersionSnapshot newSnapshot) {
-//
-//        List<OxoTemplateRequestCmd.HeadTitle> headTitles = new LinkedList<>();
-//        List<OxoTemplateRequestCmd.OxoInfo> oxoInfos = new LinkedList<>();
-//        List<OxoTemplateRequestCmd.RegionOptionCode> regionOptionCodes = new LinkedList<>();
-//        List<OxoTemplateRequestCmd.DriveHandOptionCode> driveHandOptionCodes = new LinkedList<>();
-//        List<OxoTemplateRequestCmd.SalesOptionName> salesOptionNames = new LinkedList<>();
-//
-//        if(Objects.nonNull(oldSnapshot)) {
-//            IpFeatureEntity oldEntity = JsonHelper.parseToObject(GZIPUtils.uncompress(oldSnapshot.getOxoSnapshot()), IpFeatureEntity.class);
-//
-//
-//            ComPareOxoFeatureInfoRequest featureInfoRequest = new ComPareOxoFeatureInfoRequest();
-//            featureInfoRequest.setShowDiff(true);
-//
-//            IpFeatureEntity ipFeatureEntity = compareVersion(newEntity, oldEntity, featureInfoRequest, true);
-//
-//            log.info("ipFeatureEntity entity;{}", JsonHelper.parseToJson(ipFeatureEntity));
-//
-//
-//            String oldVersion = oldSnapshot.getVersion();
-//            String newVersion = newSnapshot.getVersion();
-//
-//
-//            Map<String, List<ModelYearFeatureOption>> compareInfos = ipFeatureEntity.getHeadInfo();
-//
-//            if (MapUtils.isEmpty(compareInfos) || compareInfos.size() == 0) {
-//                compareInfos = newEntity.getHeadInfo();
-//            }
-//
-//
-//            int titleSize = 0;
-//            for (Map.Entry<String, List<ModelYearFeatureOption>> entry : compareInfos.entrySet()) {
-//                String title = entry.getKey() + " " + oldVersion + " vs " + entry.getKey() + " " + newVersion;
-//
-//                List<ModelYearFeatureOption> featureOptions = entry.getValue();
-//
-//                int headTitleSize = 0;
-//                for (ModelYearFeatureOption region : featureOptions) {
-//                    OxoTemplateRequest.RegionOptionCode code = new OxoTemplateRequest.RegionOptionCode();
-//                    code.setRegionOptionCode(region.getOptionEnName());
-//                    code.setColor("#e0ffff");//蓝色
-//                    List<ModelYearFeatureOption.DriverOptionInfo> driverOptionInfos = region.getDriverOptionInfos();
-//
-//                    int regionCodeSize = 0;
-//                    for (ModelYearFeatureOption.DriverOptionInfo driverOptionInfo : driverOptionInfos) {
-//                        OxoTemplateRequest.DriveHandOptionCode driveOptionCode = new OxoTemplateRequest.DriveHandOptionCode();
-//                        driveOptionCode.setDriveHandOptionCode(StringUtils.isNotBlank(driverOptionInfo.getDriveHardOptionName()) ?
-//                                driverOptionInfo.getDriveHardOptionName() : driverOptionInfo.getDriveHardOptionCode());
-//                        regionCodeSize += driverOptionInfo.getSalesVersionList().size();
-//                        headTitleSize += driverOptionInfo.getSalesVersionList().size();
-//                        titleSize += driverOptionInfo.getSalesVersionList().size();
-//                        driveOptionCode.setDriveHandOptionSize(String.valueOf(driverOptionInfo.getSalesVersionList().size()));
-//                        driveOptionCode.setColor("#e0ffff");//蓝色
-//                        driveHandOptionCodes.add(driveOptionCode);
-//
-//                        for (ModelYearFeatureOption.SalesOptionInfo salesOptionInfo : driverOptionInfo.getSalesVersionList()) {
-//                            OxoTemplateRequest.SalesOptionName salesOptionName = new OxoTemplateRequest.SalesOptionName();
-//
-//                            if (StringUtils.equals(ComapreChangeTypeEnum.ADD.getName(), salesOptionInfo.getChangeType()) ||
-//                                    StringUtils.equals(ComapreChangeTypeEnum.DELETE.getName(), salesOptionInfo.getChangeType())) {
-//                                salesOptionName.setSalesOptionName(salesOptionInfo.getChangeType() + " " + salesOptionInfo.getChineseName());
-//                            } else {
-//                                salesOptionName.setSalesOptionName(salesOptionInfo.getChineseName());
-//                            }
-//
-//                            if (StringUtils.equals(ComapreChangeTypeEnum.ADD.getName(), salesOptionInfo.getChangeType())) {
-//                                salesOptionName.setColor("#228b22"); //绿
-//                            } else if (StringUtils.equals(ComapreChangeTypeEnum.DELETE.getName(), salesOptionInfo.getChangeType())) {
-//                                salesOptionName.setColor("#f08080"); //红
-//                            }
-////                        else{
-////                            salesOptionName.setColor("#fffaf0"); //白
-////                        }
-//                            salesOptionNames.add(salesOptionName);
-//                        }
-//                    }
-//
-//                    code.setRegionCodeSize(String.valueOf(regionCodeSize));
-//                    regionOptionCodes.add(code);
-//                }
-//
-//                OxoTemplateRequest.HeadTitle headTitle = new OxoTemplateRequest.HeadTitle();
-//                headTitle.setHeadTitle(title);
-//                headTitle.setHeadTitleSize(String.valueOf(headTitleSize));
-//                headTitles.add(headTitle);
-//            }
-//
-//            List<IpdOXOOutput> ipdOXOOutputs = convertPackageOption(compareInfos);
-//
-//            List<Feature> features = ipFeatureEntity.getIpdList();
-//
-//            int finalTitleSize = titleSize;
-//            features.forEach(feature -> {
-//                List<IpdOXOOutput> ipdOXOOutputList = new ArrayList<>();
-//                feature.getChildren().forEach(x -> {
-//                    ipdOXOOutputList.addAll(x.getOptionOxoConfigration());
-//                });
-//
-//                if (CollectionUtils.isEmpty(ipdOXOOutputList)) {
-//                    return;
-//                }
-//
-//                OxoTemplateRequest.OxoInfo oxoInfo = new OxoTemplateRequest.OxoInfo();
-//                oxoInfo.setName(feature.getChineseName());
-//                oxoInfo.setChangeType(feature.getChangeType());
-//                oxoInfo.setFeatureCode(feature.getFeatureCode());
-//                oxoInfo.setDisPlayName(feature.getName());
-//                oxoInfo.setLibrary(feature.getLibrary());
-//
-//                oxoInfo.setPackageOptions(convertPackageOptionAll(finalTitleSize, null, null));
-//                oxoInfo.setColor("#e0ffff"); //蓝色
-//                oxoInfos.add(oxoInfo);
-//                feature.getChildren().forEach(y -> {
-//                    if (CollectionUtils.isEmpty(y.getOptionOxoConfigration())) {
-//                        return;
-//                    }
-//                    OxoTemplateRequest.OxoInfo childrenOxo = new OxoTemplateRequest.OxoInfo();
-//                    childrenOxo.setLibrary(y.getLibrary());
-//                    childrenOxo.setName(y.getChineseName());
-//                    childrenOxo.setDisPlayName(y.getOptionName());
-//                    childrenOxo.setFeatureCode(y.getOptionCode());
-//                    childrenOxo.setPackageOptions(convertPackageOptionAll(finalTitleSize, y, ipdOXOOutputs));
-//                    if (childrenOxo.getPackageOptions().stream().allMatch(x -> StringUtils.isBlank(x.getPackageOption()))) {
-//                        childrenOxo.setChangeType(null);
-//                    }
-//                    else if(childrenOxo.getPackageOptions().stream().noneMatch(x -> StringUtils.isNotBlank(x.getPackageOption())
-//                            && x.getPackageOption().contains(">"))
-//                            && StringUtils.equals(y.getChangeType(), ComapreChangeTypeEnum.MODIFY.getName())){
-//                        childrenOxo.setChangeType(null);
-//                    }
-//                    else {
-//                        childrenOxo.setChangeType(StringUtils.equals(y.getChangeType(), ComapreChangeTypeEnum.DEL.getName()) ? null : y.getChangeType());
-//                    }
-//
-//                    //childrenOxo.setColor("#fffaf0"); //白色
-//                    oxoInfos.add(childrenOxo);
-//                });
-//            });
-//        }
-//
-//
-//        OxoTemplateRequest templateRequest = new OxoTemplateRequest();
-//        templateRequest.setRegionOptionCodes(regionOptionCodes);
-//        templateRequest.setChangeContent(newSnapshot.getChangeContent());
-//        if(StringUtils.equals(newSnapshot.getBrand(), BrandEnum.NIO_CONSTANT)) {
-//            templateRequest.setUrl(oxoEmailChangeLogUrl + request.getModelCode());
-//        }else {
-//            templateRequest.setUrl(oxoEmailAlpsChangeLogUrl + request.getModelCode());
-//        }
-//
-//        templateRequest.setHeadTitles(headTitles);
-//        templateRequest.setSalesOptionNames(salesOptionNames);
-//        templateRequest.setDriveHandOptionCodes(driveHandOptionCodes);
-//        templateRequest.setTemplates(oxoInfos);
-//        templateRequest.setOxoTitle(newSnapshot.getTitle() + "_" + newSnapshot.getVersion());
-//        buildAndSendEmail(templateRequest, getEmails(request));
-//    }
-//
-//
-//    public List<String> getEmails(OxoSnapshotRequest request){
-//
-//        //获取邮件收件人
-//        Map<String, String> map = queryMatrixRuleValuesByAbscissaOrOrdinate(new MatrixRuleQueryParam
-//                (BaseCommonConstant.OXO_EMAIL_GROUP, "matrix", null, "oxo.email", "PLM.EBOM.PartNumRequest"));
-//
-//        String[] emailGroups = request.getSetGroup().split(",");
-//
-//        List<String> emails = new LinkedList<>();
-//
-//        for (String group : emailGroups) {
-//            emails.addAll(Arrays.asList(map.get(group).split("\n")));
-//        }
-//
-//        return emails.stream().distinct().collect(Collectors.toList());
-//    }
-//
-//    private void buildAndSendEmail(OxoTemplateRequest templateRequest, List<String> users) {
-//        List<Map> maps = new ArrayList<>();
-//
-//        for (String user : users) {
-//            Map<String, Object> emailMap = new HashMap<>(4);
-//            emailMap.put("templateNo", oxoEmailTemplateNo);
-//            emailMap.put("variables", templateRequest);
-//            emailMap.put("receiverEmail", user + "@nio.com");
-//            emailMap.put("subject", "");
-//            maps.add(emailMap);
-//        }
-//
-//        Map params = new HashMap();
-//        params.put("mailList", maps);
-//        try {
-//            String param = JsonHelper.parseToJson(params);
-//            log.info("buildAnd request:{}", param);
-//            productConfigurationFeign.sendBatchEmails(param);
-//        } catch (Exception e) {
-//            log.error("sendBatchEmails failed", e);
-//        }
-//    }
-//
-//
-//    public List<OxoTemplateRequest.PackageOption> convertPackageOptionAll(int titleSize, Option option, List<IpdOXOOutput> ipdOXOOutputs) {
-//
-//        List<OxoTemplateRequest.PackageOption> options = new ArrayList<>();
-//
-//        if (Objects.isNull(option) || CollectionUtils.isEmpty(option.getOptionOxoConfigration())) {
-//            for (int i = 0; i < titleSize; i++) {
-//                OxoTemplateRequest.PackageOption packageOption = new OxoTemplateRequest.PackageOption();
-//                if (Objects.isNull(option)) {
-//                    packageOption.setColor("#e0ffff");  //蓝色
-//                }
-////                }else{
-////                    packageOption.setColor("#fffaf0");  //白色
-////                }
-//                packageOption.setPackSize(titleSize);
-//                options.add(packageOption);
-//            }
-//            return options;
-//        }
-//
-//        ipdOXOOutputs.forEach(x -> {
-//
-//            List<IpdOXOOutput> ipdOXOOutputs1 = option.getOptionOxoConfigration().stream().filter(y -> StringUtils.equals(y.getModelYear(), x.getModelYear()) &&
-//                    StringUtils.equals(y.getSalesOptionCode(), x.getSalesOptionCode()) && StringUtils.equals(y.getDriveOptionCode(), x.getDriveOptionCode())
-//                    && StringUtils.equals(y.getRegionOptionCode(), x.getRegionOptionCode()) &&
-//                    !StringUtils.equals(y.getChangeType(),ComapreChangeTypeEnum.DELETE.getName())).collect(Collectors.toList());
-//
-//            //delete 列需要删除
-//            if (ipdOXOOutputs1.size() > 0 && !StringUtils.equals(x.getChangeType(),ComapreChangeTypeEnum.DELETE.getName())) {
-//                IpdOXOOutput ipdOXOOutput = ipdOXOOutputs1.get(0);
-//                //todo
-//                OxoTemplateRequest.PackageOption packageOption = new OxoTemplateRequest.PackageOption();
-//                if (Objects.nonNull(ipdOXOOutput.getCompareIpdOXOOutput())) {
-//                    packageOption.setPackageOption(convertPackageNo(ipdOXOOutput.getCompareIpdOXOOutput().getPackageNo()) + " > " + convertPackageNo(ipdOXOOutput.getPackageNo()));
-//                } else {
-//                    packageOption.setPackageOption(convertPackageNo(ipdOXOOutput.getPackageNo()));
-//                }
-//                packageOption.setPackSize(titleSize);
-//                if (!StringUtils.equals(ComapreChangeTypeEnum.NO_CHANGE.getName(), ipdOXOOutput.getChangeType())&& !StringUtils.equals(ComapreChangeTypeEnum.DEL.getName(), ipdOXOOutput.getChangeType())) {
-//                    packageOption.setColor("#f0e68c");  //黄色
-//                }
-//                options.add(packageOption);
-//
-//            } else {
-//                OxoTemplateRequest.PackageOption packageOption = new OxoTemplateRequest.PackageOption();
-//                //packageOption.setColor("#fffaf0");  //白色
-//                packageOption.setPackSize(titleSize);
-//                options.add(packageOption);
-//            }
-//        });
-//
-//        return options;
-//
-//
-//    }
+        List<OxoTemplateRequestCmd.HeadTitle> headTitles = new LinkedList<>();
+        List<OxoTemplateRequestCmd.OxoInfo> oxoInfos = new LinkedList<>();
+        List<OxoTemplateRequestCmd.RegionOptionCode> regionOptionCodes = new LinkedList<>();
+        List<OxoTemplateRequestCmd.DriveHandOptionCode> driveHandOptionCodes = new LinkedList<>();
+        List<OxoTemplateRequestCmd.SalesOptionName> salesOptionNames = new LinkedList<>();
+
+
+        //新老版本
+        String oldVersion = oxoVersionSnapshot.getPreVersion();
+        String newVersion = oxoVersionSnapshot.getVersion();
+        String modelCode = oxoVersionSnapshot.getModelCode();
+
+        //最新oxo版本
+        OxoListQry newOxoListOry = JSONObject.parseObject(JSONArray.parse(oxoVersionSnapshot.getOxoSnapshot()).toString(), OxoListQry.class);
+
+        List<OxoHeadQry> compareInfos = compareOxoListQry.getOxoHeadResps();
+
+
+        if (CollectionUtils.isEmpty(compareInfos)) {
+            compareInfos = newOxoListOry.getOxoHeadResps();
+        }
+
+
+        int titleSize = 0;
+        for (OxoHeadQry compareInfo : compareInfos) {
+
+            String title = compareInfo.getModelCode() + " " + compareInfo.getModelYear() + " " + oldVersion + " vs " + compareInfo.getModelCode() + " " + compareInfo.getModelYear() + " " + newVersion;
+
+            int headTitleSize = 0;
+            for (OxoHeadQry.RegionInfo regionInfo : compareInfo.getRegionInfos()) {
+                OxoTemplateRequestCmd.RegionOptionCode code = new OxoTemplateRequestCmd.RegionOptionCode();
+                code.setRegionOptionCode(regionInfo.getRegionName());
+                code.setColor("#e0ffff");//蓝色
+
+                int regionCodeSize = 0;
+                for (OxoHeadQry.DriveHandInfo driveHandInfo : regionInfo.getDriveHands()) {
+                    OxoTemplateRequestCmd.DriveHandOptionCode driveOptionCode = new OxoTemplateRequestCmd.DriveHandOptionCode();
+                    driveOptionCode.setDriveHandOptionCode(driveHandInfo.getDriveHandName());
+                    regionCodeSize += driveHandInfo.getSalesVersionInfos().size();
+                    headTitleSize += driveHandInfo.getSalesVersionInfos().size();
+                    titleSize += driveHandInfo.getSalesVersionInfos().size();
+                    driveOptionCode.setDriveHandOptionSize(String.valueOf(driveHandInfo.getSalesVersionInfos().size()));
+                    driveOptionCode.setColor("#e0ffff");//蓝色
+                    driveHandOptionCodes.add(driveOptionCode);
+
+                    for (OxoHeadQry.SalesVersionInfo salesOptionInfo : driveHandInfo.getSalesVersionInfos()) {
+                        OxoTemplateRequestCmd.SalesOptionName salesOptionName = new OxoTemplateRequestCmd.SalesOptionName();
+
+                        if (StringUtils.equals(CompareChangeTypeEnum.ADD.getName(), salesOptionInfo.getChangeType()) ||
+                                StringUtils.equals(CompareChangeTypeEnum.DELETE.getName(), salesOptionInfo.getChangeType())) {
+                            salesOptionName.setSalesOptionName(salesOptionInfo.getChangeType() + " " + salesOptionInfo.getSalesName());
+                        } else {
+                            salesOptionName.setSalesOptionName(salesOptionInfo.getSalesName());
+                        }
+
+                        if (StringUtils.equals(CompareChangeTypeEnum.ADD.getName(), salesOptionInfo.getChangeType())) {
+                            salesOptionName.setColor("#228b22"); //绿
+                        } else if (StringUtils.equals(CompareChangeTypeEnum.DELETE.getName(), salesOptionInfo.getChangeType())) {
+                            salesOptionName.setColor("#f08080"); //红
+                        }
+                        salesOptionNames.add(salesOptionName);
+                    }
+                }
+
+                code.setRegionCodeSize(String.valueOf(regionCodeSize));
+                regionOptionCodes.add(code);
+            }
+            OxoTemplateRequestCmd.HeadTitle headTitle = new OxoTemplateRequestCmd.HeadTitle();
+            headTitle.setHeadTitle(title);
+            headTitle.setHeadTitleSize(String.valueOf(headTitleSize));
+            headTitles.add(headTitle);
+        }
+
+
+        List<OxoRowsQry> features = compareOxoListQry.getOxoRowsResps();
+
+        int finalTitleSize = titleSize;
+        features.forEach(feature -> {
+
+            List<OxoEditCmd> oxoEditCmds = new ArrayList<>();
+            feature.getOptions().forEach(x -> {
+                oxoEditCmds.addAll(x.getPackInfos());
+            });
+
+            if (CollectionUtils.isEmpty(oxoEditCmds)) {
+                return;
+            }
+
+            OxoTemplateRequestCmd.OxoInfo oxoInfo = new OxoTemplateRequestCmd.OxoInfo();
+            oxoInfo.setName(feature.getChineseName());
+            oxoInfo.setChangeType(feature.getChangeType());
+            oxoInfo.setFeatureCode(feature.getFeatureCode());
+            oxoInfo.setDisPlayName(feature.getDisplayName());
+            oxoInfo.setLibrary(feature.getGroup());
+
+            oxoInfo.setPackageOptions(convertPackageOptionAll(finalTitleSize, null, null));
+            oxoInfo.setColor("#e0ffff"); //蓝色
+            oxoInfos.add(oxoInfo);
+            feature.getOptions().forEach(y -> {
+                OxoTemplateRequestCmd.OxoInfo childrenOxo = new OxoTemplateRequestCmd.OxoInfo();
+                childrenOxo.setLibrary(y.getGroup());
+                childrenOxo.setName(y.getChineseName());
+                childrenOxo.setDisPlayName(y.getDisplayName());
+                childrenOxo.setFeatureCode(y.getFeatureCode());
+                childrenOxo.setPackageOptions(convertPackageOptionAll(finalTitleSize, y, oxoEditCmds));
+                if (childrenOxo.getPackageOptions().stream().allMatch(x -> StringUtils.isBlank(x.getPackageOption()))) {
+                    childrenOxo.setChangeType(null);
+                } else if (childrenOxo.getPackageOptions().stream().noneMatch(x -> StringUtils.isNotBlank(x.getPackageOption())
+                        && x.getPackageOption().contains(">"))
+                        && StringUtils.equals(y.getChangeType(), CompareChangeTypeEnum.MODIFY.getName())) {
+                    childrenOxo.setChangeType(null);
+                } else {
+                    childrenOxo.setChangeType(StringUtils.equals(y.getChangeType(), CompareChangeTypeEnum.DEL.getName()) ? null : y.getChangeType());
+                }
+
+                childrenOxo.setColor("#fffaf0"); //白色
+                oxoInfos.add(childrenOxo);
+            });
+        });
+
+        OxoTemplateRequestCmd templateRequest = new OxoTemplateRequestCmd();
+        templateRequest.setRegionOptionCodes(regionOptionCodes);
+        templateRequest.setChangeContent(oxoVersionSnapshot.getChangeContent());
+        if (StringUtils.equals(oxoVersionSnapshot.getBrand(), BrandEnum.NIO.toString())) {
+            templateRequest.setUrl(oxoEmailChangeLogUrl + modelCode);
+        } else {
+            templateRequest.setUrl(oxoEmailAlpsChangeLogUrl + modelCode);
+        }
+
+        templateRequest.setHeadTitles(headTitles);
+        templateRequest.setSalesOptionNames(salesOptionNames);
+        templateRequest.setDriveHandOptionCodes(driveHandOptionCodes);
+        templateRequest.setTemplates(oxoInfos);
+        templateRequest.setOxoTitle(oxoVersionSnapshot.getTitle() + "_" + oxoVersionSnapshot.getVersion());
+        buildAndSendEmail(templateRequest, getEmails(oxoVersionSnapshot));
+    }
+
+
+    /**
+     * 获取收件人
+     *
+     * @param oxoVersionSnapshot
+     * @return
+     */
+    public List<String> getEmails(OxoVersionSnapshotAggr oxoVersionSnapshot) {
+
+        String name = ConfigConstants.OXO_EMAIL_GROUP;
+        if (StringUtils.equals(oxoVersionSnapshot.getBrand(), BrandEnum.ALPS.name())) {
+            name = ConfigConstants.OXO_EMAIL_GROUP_ALPS;
+        }
+
+        Map<String, String> map = matrixRuleFacade.queryMatrixRuleValuesByAbscissaOrOrdinate(new MatrixRuleQueryDto
+                (name, "matrix", null, "oxo.email", "PLM.EBOM.PartNumRequest"));
+
+        String[] emailGroups = oxoVersionSnapshot.getEmailGroup().split(",");
+
+        List<String> emails = new LinkedList<>();
+
+        for (String group : emailGroups) {
+            emails.addAll(Arrays.asList(map.get(group).split("\n")));
+        }
+
+        return emails.stream().distinct().collect(Collectors.toList());
+    }
+
+    private void buildAndSendEmail(OxoTemplateRequestCmd templateRequest, List<String> users) {
+        for (String user : users) {
+            EmailParamDto emailParamDto = new EmailParamDto();
+            emailParamDto.setTemplateNo(oxoEmailTemplateNo);
+            emailParamDto.setReceiverEmail(user + "@nio.com");
+            emailParamDto.setVariables(JSON.parseObject(JSONObject.toJSONString(templateRequest), Map.class));
+            try {
+                log.info("sendEmail request:{},user:{}", JSONObject.toJSONString(templateRequest), user);
+                emailFacade.sendEmail(emailParamDto);
+            } catch (Exception e) {
+                log.error("sendBatchEmails failed", e);
+            }
+        }
+    }
+
+    public List<OxoTemplateRequestCmd.PackageOption> convertPackageOptionAll(int titleSize, OxoRowsQry option, List<OxoEditCmd> oxoEditCmds) {
+
+        List<OxoTemplateRequestCmd.PackageOption> options = new ArrayList<>();
+
+
+        // 设置 feature
+        if (Objects.isNull(option) || CollectionUtils.isEmpty(option.getOptions())) {
+            for (int i = 0; i < titleSize; i++) {
+                OxoTemplateRequestCmd.PackageOption packageOption = new OxoTemplateRequestCmd.PackageOption();
+                if (Objects.isNull(option)) {
+                    packageOption.setColor("#e0ffff");  //蓝色
+                }
+                packageOption.setPackSize(titleSize);
+                options.add(packageOption);
+            }
+            return options;
+        }
+
+        oxoEditCmds.forEach(x -> {
+
+            List<OxoEditCmd> ipdOXOOutputs1 = option.getPackInfos().stream().filter(y ->
+                    StringUtils.equals(y.getModelCode(),x.getModelCode()) && StringUtils.equals(y.getModelYear(),x.getModelYear()) &&
+                    StringUtils.equals(y.getSalesCode(), x.getSalesCode()) && StringUtils.equals(y.getDriveHandCode(), x.getDriveHandCode())
+                    && StringUtils.equals(y.getRegionCode(), x.getRegionCode()) &&
+                    !StringUtils.equals(y.getChangeType(), CompareChangeTypeEnum.DELETE.getName())).toList();
+            //delete 列需要删除
+            if (ipdOXOOutputs1.size() > 0 && !StringUtils.equals(x.getChangeType(), CompareChangeTypeEnum.DELETE.getName())) {
+                OxoEditCmd ipdOXOOutput = ipdOXOOutputs1.get(0);
+                //todo
+                OxoTemplateRequestCmd.PackageOption packageOption = new OxoTemplateRequestCmd.PackageOption();
+                if (Objects.nonNull(ipdOXOOutput.getCompareOxoEdit())) {
+                    packageOption.setPackageOption(OxoOptionPackageTypeEnum.getByType(ipdOXOOutput.getCompareOxoEdit().getPackageCode())+
+                            ipdOXOOutput.getDescription()+ " > " +
+                            OxoOptionPackageTypeEnum.getByType(ipdOXOOutput.getPackageCode()));
+                } else {
+                    packageOption.setPackageOption(OxoOptionPackageTypeEnum.getByType(ipdOXOOutput.getPackageCode())+ipdOXOOutput.getDescription());
+                }
+                packageOption.setPackSize(titleSize);
+                if (!StringUtils.equals(CompareChangeTypeEnum.NO_CHANGE.getName(), ipdOXOOutput.getChangeType()) &&
+                        !StringUtils.equals(CompareChangeTypeEnum.DEL.getName(), ipdOXOOutput.getChangeType())) {
+                    packageOption.setColor("#f0e68c");  //黄色
+                }
+                options.add(packageOption);
+
+            } else {
+                OxoTemplateRequestCmd.PackageOption packageOption = new OxoTemplateRequestCmd.PackageOption();
+                packageOption.setPackSize(titleSize);
+                options.add(packageOption);
+            }
+        });
+
+        return options;
+
+
+    }
 }

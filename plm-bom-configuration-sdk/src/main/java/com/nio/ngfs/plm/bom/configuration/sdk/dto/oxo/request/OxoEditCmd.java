@@ -17,7 +17,7 @@ public class OxoEditCmd extends OxoBaseCmd{
 
      private String packageCode;
 
-     private String description;
+     private String description="";
 
 
      private String regionCode;

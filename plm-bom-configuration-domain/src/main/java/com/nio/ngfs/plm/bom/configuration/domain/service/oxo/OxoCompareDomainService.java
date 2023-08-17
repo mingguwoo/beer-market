@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service.oxo;
 
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotAggr;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
 
 /**
@@ -19,9 +20,9 @@ public interface OxoCompareDomainService {
                               boolean showDiff);
 
 
-
-
-
-
-
+    /**
+     * 发送对比邮件
+     * @param compareOxoListQry
+     */
+    void sendCompareEmail(OxoListQry compareOxoListQry, OxoVersionSnapshotAggr oxoVersionSnapshot);
 }

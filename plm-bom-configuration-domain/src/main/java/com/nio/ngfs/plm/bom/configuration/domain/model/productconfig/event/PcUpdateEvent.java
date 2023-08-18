@@ -1,6 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.event;
 
 import com.nio.ngfs.plm.bom.configuration.domain.event.DomainEvent;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigAggr;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,10 +15,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductConfigUpdateEvent extends DomainEvent {
+public class PcUpdateEvent extends DomainEvent {
 
-    private String pcId;
-
-    private String name;
+    private ProductConfigAggr productConfigAggr;
 
 }

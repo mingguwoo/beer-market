@@ -8,7 +8,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.facade.ModelFacade;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigRepository;
-import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.event.ProductConfigAddEvent;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.event.PcAddEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.ProductConfigOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.ProductConfigOptionRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.service.productconfig.ProductConfigDomainService;
@@ -61,7 +61,7 @@ public class AddPcCommand extends AbstractLockCommand<AddPcCmd, AddPcRespDto> {
         // 保存到数据库
         ((AddPcCommand) AopContext.currentProxy()).saveProductConfigAndProductConfigOption(productConfigAggr, basedOnPcOptionAggrList, basedOnBaseVehicleOptionAggrList);
         // 发布PC新增事件
-        eventPublisher.publish(new ProductConfigAddEvent(productConfigAggr));
+        eventPublisher.publish(new PcAddEvent(productConfigAggr));
         return new AddPcRespDto();
     }
 

@@ -3,8 +3,13 @@ package com.nio.ngfs.plm.bom.configuration.infrastructure.common.warn;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.nio.bom.share.utils.GsonUtils;
+import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncAddPcDto;
+import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncDeletePcDto;
+import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncUpdatePcDto;
 import com.nio.ngfs.plm.bom.configuration.remote.FeishuIntegrationClient;
-import com.nio.ngfs.plm.bom.configuration.remote.dto.common.PlmEnoviaResult;
+import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.PlmDeletePcDto;
+import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.PlmModifyPcDto;
+import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.PlmSyncProductConfigurationDto;
 import com.nio.ngfs.plm.bom.configuration.remote.dto.feature.PlmFeatureOptionSyncDto;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -26,23 +31,21 @@ import static com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstant
 public class ConfigurationTo3deWarnSender {
 
     private static final String TITLE_FORMAT = "配置管理同步3DE告警（%s）";
-    private static final String CONTENT_TEMPLATE_1 = """
+    private static final String FEATURE_LIBRARY = "Feature Library";
+    private static final String PRODUCT_CONFIGURATION = "Product Configuration";
+    private static final String CONTENT_TEMPLATE = """
             模块: %s\r
             失败信息: %s\r
             请求参数: %s\r
-            失败响应: %s
-            """;
-    private static final String CONTENT_TEMPLATE_2 = """
-            模块: %s\r
-            失败信息: %s\r
-            请求参数: %s\r
-            异常信息: %s
+            错误信息: %s
             """;
 
     @Value("${warn.3de.env:}")
     private String env;
     @Value("${warn.3de.feature.ats:}")
     private String featureAts;
+    @Value("${warn.3de.productConfig.ats:}")
+    private String productConfigAts;
 
     private final FeishuIntegrationClient feishuIntegrationClient;
 
@@ -61,24 +64,49 @@ public class ConfigurationTo3deWarnSender {
     }
 
     /**
-     * 发送同步Feature/Option失败告警
+     * 获取Product Config告警人列表
      */
-    public void sendSyncFeatureOptionWarn(PlmFeatureOptionSyncDto syncDto, PlmEnoviaResult<Object> result) {
-        String message = FeishuPostMessageBuilder.buildPostMessage(getTitle(),
-                Lists.newArrayList(String.format(CONTENT_TEMPLATE_1, "Feature Library", buildSyncFeatureOptionMsg(syncDto),
-                        GsonUtils.toJson(syncDto), GsonUtils.toJson(result))),
-                getFeatureLibraryAtList());
-        feishuIntegrationClient.sendMessageTo3deGroup(message);
+    private List<String> getProductConfigAtList() {
+        return Splitter.on(",").omitEmptyStrings().trimResults().splitToList(productConfigAts);
     }
 
     /**
-     * 发送同步Feature/Option异常告警
+     * 发送同步Feature/Option告警
      */
-    public void sendSyncFeatureOptionWarn(PlmFeatureOptionSyncDto syncDto, Exception e) {
-        String message = FeishuPostMessageBuilder.buildPostMessage(getTitle(),
-                Lists.newArrayList(String.format(CONTENT_TEMPLATE_2, "Feature Library", buildSyncFeatureOptionMsg(syncDto),
-                        GsonUtils.toJson(syncDto), e.getMessage())),
-                getFeatureLibraryAtList());
+    public void sendSyncFeatureOptionWarn(PlmFeatureOptionSyncDto syncDto, String errorMsg) {
+        sendWarnMessage(FEATURE_LIBRARY, syncDto, errorMsg, getFeatureLibraryAtList(), buildSyncFeatureOptionMsg(syncDto));
+    }
+
+    /**
+     * 发送同步新增PC告警
+     */
+    public void sendAddPcWarn(SyncAddPcDto dto, PlmSyncProductConfigurationDto syncDto, String errorMsg) {
+        sendWarnMessage(PRODUCT_CONFIGURATION, syncDto, errorMsg, getProductConfigAtList(),
+                String.format("Model/Model Year %s Add Base PC %s Fail!", dto.getModel() + " " + dto.getModelYear(), syncDto.getPcId()));
+    }
+
+    /**
+     * 发送同步修改PC告警
+     */
+    public void sendUpdatePcWarn(SyncUpdatePcDto dto, PlmModifyPcDto syncDto, String errorMsg) {
+        sendWarnMessage(PRODUCT_CONFIGURATION, syncDto, errorMsg, getProductConfigAtList(),
+                String.format("Model/Model Year %s Update Base PC %s Fail!", dto.getModel() + " " + dto.getModelYear(), syncDto.getPcId()));
+    }
+
+    /**
+     * 发送同步删除PC告警
+     */
+    public void sendDeletePcWarn(SyncDeletePcDto dto, PlmDeletePcDto syncDto, String errorMsg) {
+        sendWarnMessage(PRODUCT_CONFIGURATION, syncDto, errorMsg, getProductConfigAtList(),
+                String.format("Model/Model Year %s Delete Base PC %s Fail!", dto.getModel() + " " + dto.getModelYear(), syncDto.getPcId()));
+    }
+
+    private <Req> void sendWarnMessage(String module, Req request, String errorMsg, List<String> atList, String failMsg) {
+        String message = FeishuPostMessageBuilder.buildPostMessage(
+                getTitle(),
+                Lists.newArrayList(String.format(CONTENT_TEMPLATE, module, failMsg, GsonUtils.toJson(request), errorMsg)),
+                atList
+        );
         feishuIntegrationClient.sendMessageTo3deGroup(message);
     }
 

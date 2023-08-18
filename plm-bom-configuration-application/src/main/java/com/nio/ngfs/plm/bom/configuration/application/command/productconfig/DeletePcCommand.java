@@ -5,7 +5,7 @@ import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
 import com.nio.ngfs.plm.bom.configuration.domain.event.EventPublisher;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigRepository;
-import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.event.ProductConfigDeleteEvent;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.event.PcDeleteEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.service.productconfig.ProductConfigDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.request.DeletePcCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.DeletePcRespDto;
@@ -40,7 +40,7 @@ public class DeletePcCommand extends AbstractLockCommand<DeletePcCmd, DeletePcRe
         // 数据库逻辑删除
         productConfigRepository.remove(productConfigAggr);
         // 发布PC删除事件
-        eventPublisher.publish(new ProductConfigDeleteEvent(productConfigAggr.getPcId()));
+        eventPublisher.publish(new PcDeleteEvent(productConfigAggr));
         return new DeletePcRespDto();
     }
 

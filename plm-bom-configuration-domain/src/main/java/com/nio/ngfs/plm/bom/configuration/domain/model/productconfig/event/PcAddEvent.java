@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductConfigAddEvent extends DomainEvent {
+public class PcAddEvent extends DomainEvent {
 
     private ProductConfigAggr productConfigAggr;
 

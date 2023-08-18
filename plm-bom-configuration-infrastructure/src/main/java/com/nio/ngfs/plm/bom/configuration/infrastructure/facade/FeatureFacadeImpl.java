@@ -1,14 +1,13 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.facade;
 
-import com.nio.bom.share.utils.FeignInvokeUtils;
 import com.nio.bom.share.utils.GsonUtils;
 import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.FeatureFacade;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.FeatureOptionSyncReqDto;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.common.warn.ConfigurationTo3deWarnSender;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.facade.common.AbstractEnoviaFacade;
 import com.nio.ngfs.plm.bom.configuration.remote.PlmEnoviaClient;
-import com.nio.ngfs.plm.bom.configuration.remote.dto.common.PlmEnoviaResult;
 import com.nio.ngfs.plm.bom.configuration.remote.dto.feature.PlmFeatureOptionSyncDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +20,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class FeatureFacadeImpl implements FeatureFacade {
+public class FeatureFacadeImpl extends AbstractEnoviaFacade implements FeatureFacade {
 
     private final PlmEnoviaClient plmEnoviaClient;
     private final ConfigurationTo3deWarnSender configurationTo3deWarnSender;
@@ -54,19 +53,9 @@ public class FeatureFacadeImpl implements FeatureFacade {
                     ConfigConstants.FEATURE_OPTION_SYNC_UPDATE);
             return option;
         }));
-        try {
-            log.info("FeatureFacade syncFeatureOption request={}", GsonUtils.toJson(syncDto));
-            PlmEnoviaResult<Object> result = FeignInvokeUtils.invokeWithRetry(plmEnoviaClient::syncFeatureOption, syncDto,
-                    "PlmEnoviaClient.syncFeatureOption", PlmEnoviaResult::isSuccess);
-            log.info("FeatureFacade syncFeatureOption response={}", GsonUtils.toJson(result));
-            if (!result.isSuccess()) {
-                log.error("FeatureFacade syncFeatureOption fail msg={}", result.getMsg());
-                configurationTo3deWarnSender.sendSyncFeatureOptionWarn(syncDto, result);
-            }
-        } catch (Exception e) {
-            log.error("FeatureFacade syncFeatureOption error", e);
-            configurationTo3deWarnSender.sendSyncFeatureOptionWarn(syncDto, e);
-        }
+        invokeEnovia(plmEnoviaClient::syncFeatureOption, syncDto, "PlmEnoviaClient.syncFeatureOption", (response, e) ->
+                configurationTo3deWarnSender.sendSyncFeatureOptionWarn(syncDto, e != null ? e.getMessage() : GsonUtils.toJson(response))
+        );
     }
 
 }

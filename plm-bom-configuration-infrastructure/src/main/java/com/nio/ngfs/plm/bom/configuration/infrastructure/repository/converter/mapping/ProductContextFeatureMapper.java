@@ -1,8 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.mapping;
 
-import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.ProductContextAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature.ProductContextFeatureAggr;
-import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductContextEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductContextFeatureEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

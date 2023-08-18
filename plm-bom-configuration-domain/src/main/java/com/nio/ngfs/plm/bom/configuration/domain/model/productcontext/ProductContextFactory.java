@@ -2,7 +2,6 @@ package com.nio.ngfs.plm.bom.configuration.domain.model.productcontext;
 
 import com.nio.bom.share.constants.CommonConstants;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.enums.OxoOptionPackageTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoEditCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoHeadQry;
@@ -21,16 +20,16 @@ public class ProductContextFactory {
 
     /**
      * 初始化product context时构建product context打勾信息
+     * @param productContextAggrList
      * @param featureList
      * @param oxoListQry
      * @return
      */
-    public static List<ProductContextAggr> createProductContextList(List<OxoRowsQry> featureList, OxoListQry oxoListQry){
+    public static void createProductContextList(List<ProductContextAggr> productContextAggrList,List<OxoRowsQry> featureList, OxoListQry oxoListQry){
         Map<Long,OxoRowsQry> rowMap = new HashMap<>();
         Map<Long,OxoHeadQry> headMap = new HashMap<>();
         Map<String,String> optionFeatureMap = new HashMap<>();
         List<OxoEditCmd> pointRecord = new ArrayList<>();
-        List<ProductContextAggr> productContextAggrs = new ArrayList<>();
         recordOxoRelationship(oxoListQry,featureList,rowMap,headMap,optionFeatureMap,pointRecord);
         pointRecord.forEach(point->{
             //将AF00以外的所有信息打勾
@@ -40,10 +39,9 @@ public class ProductContextFactory {
                 productContextAggr.setModelYear(headMap.get(point.getHeadId()).getModelYear());
                 productContextAggr.setOptionCode(rowMap.get(point.getRowId()).getFeatureCode());
                 productContextAggr.setFeatureCode(optionFeatureMap.get(rowMap.get(point.getRowId()).getFeatureCode()));
-                productContextAggrs.add(productContextAggr);
+                productContextAggrList.add(productContextAggr);
             }
         });
-        return productContextAggrs;
     }
 
     /**
@@ -53,12 +51,11 @@ public class ProductContextFactory {
      * @param oxoListQry
      * @return
      */
-    public static List<ProductContextAggr> createAddedProductContextList(List<ProductContextAggr> oldProductContextAggrList,List<OxoRowsQry> featureList, OxoListQry oxoListQry){
+    public static void createAddedProductContextList(List<ProductContextAggr> productContextAggrList,List<ProductContextAggr> oldProductContextAggrList,List<OxoRowsQry> featureList, OxoListQry oxoListQry){
         Map<Long,OxoRowsQry> rowMap = new HashMap<>();
         Map<Long,OxoHeadQry> headMap = new HashMap<>();
         Map<String,String> optionFeatureMap = new HashMap<>();
         List<OxoEditCmd> pointRecord = new ArrayList<>();
-        List<ProductContextAggr> productContextAggrs = new ArrayList<>();
         recordOxoRelationship(oxoListQry,featureList,rowMap,headMap,optionFeatureMap,pointRecord);
         Set<String> existProductContextSet = new HashSet<>();
         oldProductContextAggrList.forEach(aggr->{
@@ -71,10 +68,9 @@ public class ProductContextFactory {
                 productContextAggr.setModelYear(headMap.get(point.getHeadId()).getModelYear());
                 productContextAggr.setOptionCode(rowMap.get(point.getRowId()).getFeatureCode());
                 productContextAggr.setFeatureCode(optionFeatureMap.get(rowMap.get(point.getRowId()).getFeatureCode()));
-                productContextAggrs.add(productContextAggr);
+                productContextAggrList.add(productContextAggr);
             }
         });
-        return productContextAggrs;
     }
 
     /**
@@ -102,7 +98,7 @@ public class ProductContextFactory {
      * @param modelYearList
      * @param modelYearMap
      */
-    public static void createAddedModelYearProductContextFeature(List<ProductContextAggr> oldProductContextList,List<ProductContextAggr> productContextAggrList, String modelCode,List<String> modelYearList,Map<String,String> modelYearMap){
+    public static void createAddedModelYearProductContextFeature(List<ProductContextAggr> productContextAggrList,List<ProductContextAggr> oldProductContextList, String modelCode,List<String> modelYearList,Map<String,String> modelYearMap){
         Set<String> oldModelYearSet = new HashSet<>();
         //获取所有原先model year的option code
         oldProductContextList.forEach(oldProductContext->{

@@ -7,7 +7,6 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleAg
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoEditCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoHeadQry;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 

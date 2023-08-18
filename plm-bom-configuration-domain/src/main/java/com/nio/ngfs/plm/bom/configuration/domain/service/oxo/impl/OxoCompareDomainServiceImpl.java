@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.nio.bom.share.enums.BrandEnum;
-import com.nio.bom.share.utils.GZIPUtils;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.EmailFacade;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.MatrixRuleFacade;

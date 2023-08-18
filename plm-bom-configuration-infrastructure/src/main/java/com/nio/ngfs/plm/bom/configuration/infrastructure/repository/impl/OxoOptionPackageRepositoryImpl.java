@@ -43,7 +43,9 @@ public class OxoOptionPackageRepositoryImpl implements OxoOptionPackageRepositor
 
     @Override
     public void insertOxoOptionPackages(List<OxoOptionPackageAggr> oxoPackages) {
-        bomsOxoOptionPackageDao.insertOxoOptionPackages(oxoPackages);
+        if(CollectionUtils.isNotEmpty(oxoPackages)) {
+            bomsOxoOptionPackageDao.insertOxoOptionPackages(oxoPackages);
+        }
     }
 
     @Override

@@ -92,6 +92,7 @@ public class OxoExcelUtil {
             String name = modelCode + "_" + version + "_OXO_Feature_" + DateUtils.dateTimeNow() + ".xlsx";
             response.setHeader("Content-Disposition", "attachment; filename=\"" + name + "\"");
             response.setContentType("application/octet-stream;charset=UTF-8");
+            response.setHeader("access-control-expose-headers", "content-disposition");
             response.setHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
             response.setHeader("Access-Control-Allow-Credentials", "true");
             xssfWorkbook.write(output);

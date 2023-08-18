@@ -5,7 +5,6 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.co
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.mapping.MapstructMapper;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.mapping.ProductContextFeatureMapper;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductContextFeatureEntity;
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.stereotype.Component;
 
 /**

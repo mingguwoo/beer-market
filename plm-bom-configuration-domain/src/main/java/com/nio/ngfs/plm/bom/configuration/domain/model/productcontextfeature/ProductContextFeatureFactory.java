@@ -3,10 +3,7 @@ package com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature;
 import com.nio.bom.share.constants.CommonConstants;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
-import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.ProductContextAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature.enums.ProductContextFeatureEnum;
-import com.nio.ngfs.plm.bom.configuration.domain.service.feature.FeatureDomainService;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoRowsQry;
 
 import java.util.*;
@@ -19,14 +16,14 @@ public class ProductContextFeatureFactory {
 
     /**
      * 初始化product context时新建product context行
+     * @param productContextFeatureAggrList
      * @param featureList
      * @param featureOptionMap
      * @param modelCode
      * @param featureGroupMap
      * @return
      */
-    public static List<ProductContextFeatureAggr> createProductContextFeatureList(List<OxoRowsQry> featureList, Map<OxoRowsQry,List<OxoRowsQry>> featureOptionMap, String modelCode,Map<String,Long> featureGroupMap){
-        List<ProductContextFeatureAggr> aggrs = new ArrayList<>();
+    public static void createProductContextFeatureList(List<ProductContextFeatureAggr> productContextFeatureAggrList,List<OxoRowsQry> featureList, Map<OxoRowsQry,List<OxoRowsQry>> featureOptionMap, String modelCode,Map<String,Long> featureGroupMap){
         featureList.forEach(feature->{
             if (!Objects.equals(feature.getFeatureCode().substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO),ConfigConstants.FEATURE_CODE_AF00.substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO))){
                 ProductContextFeatureAggr productContextFeatureAggr = new ProductContextFeatureAggr();
@@ -34,18 +31,17 @@ public class ProductContextFeatureFactory {
                 productContextFeatureAggr.setFeatureCode(feature.getFeatureCode());
                 productContextFeatureAggr.setFeatureGroup(featureGroupMap.get(feature.getGroup()));
                 productContextFeatureAggr.setType(ProductContextFeatureEnum.FEATURE.getType());
-                aggrs.add(productContextFeatureAggr);
+                productContextFeatureAggrList.add(productContextFeatureAggr);
                 featureOptionMap.get(feature).forEach(option->{
                     ProductContextFeatureAggr aggr = new ProductContextFeatureAggr();
                     aggr.setModelCode(modelCode);
                     aggr.setFeatureCode(option.getFeatureCode());
                     aggr.setFeatureGroup(featureGroupMap.get(option.getGroup()));
                     aggr.setType(ProductContextFeatureEnum.OPTION.getType());
-                    aggrs.add(aggr);
+                    productContextFeatureAggrList.add(aggr);
                 });
             }
         });
-        return aggrs;
     }
 
     /**
@@ -57,8 +53,7 @@ public class ProductContextFeatureFactory {
      * @param featureGroupMap
      * @return
      */
-    public static List<ProductContextFeatureAggr> createAddedProductContextFeatureList(List<ProductContextFeatureAggr> oldProductContextFeatureList,List<OxoRowsQry> featureList, Map<OxoRowsQry,List<OxoRowsQry>> featureOptionMap, String modelCode,Map<String,Long> featureGroupMap){
-        List<ProductContextFeatureAggr> aggrs = new ArrayList<>();
+    public static void createAddedProductContextFeatureList(List<ProductContextFeatureAggr> productContextFeatureAggrList,List<ProductContextFeatureAggr> oldProductContextFeatureList,List<OxoRowsQry> featureList, Map<OxoRowsQry,List<OxoRowsQry>> featureOptionMap, String modelCode,Map<String,Long> featureGroupMap){
         Set<String> existFeatureCodeSet = new HashSet<>();
         //先记录已有行
         oldProductContextFeatureList.forEach(aggr->{
@@ -73,7 +68,7 @@ public class ProductContextFeatureFactory {
                     productContextFeatureAggr.setFeatureCode(feature.getFeatureCode());
                     productContextFeatureAggr.setFeatureGroup(featureGroupMap.get(feature.getGroup()));
                     productContextFeatureAggr.setType(ProductContextFeatureEnum.FEATURE.getType());
-                    aggrs.add(productContextFeatureAggr);
+                    productContextFeatureAggrList.add(productContextFeatureAggr);
                 }
                 featureOptionMap.get(feature).forEach(option->{
                     if (!existFeatureCodeSet.contains(option.getFeatureCode())){
@@ -82,13 +77,11 @@ public class ProductContextFeatureFactory {
                         aggr.setFeatureCode(option.getFeatureCode());
                         aggr.setFeatureGroup(featureGroupMap.get(option.getGroup()));
                         aggr.setType(ProductContextFeatureEnum.OPTION.getType());
-                        aggrs.add(aggr);
+                        productContextFeatureAggrList.add(aggr);
                     }
                 });
             }
-        });
-        return aggrs;
-    }
+        });}
 
     /**
      * 初始化product context时新建product context的model year相关行

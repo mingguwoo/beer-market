@@ -4,6 +4,7 @@ import com.nio.bom.share.constants.CommonConstants;
 import com.nio.ngfs.plm.bom.configuration.application.service.BaseVehicleApplicationService;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
@@ -13,8 +14,10 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptio
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoFeatureOptionDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.request.AddBaseVehicleCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.request.EditBaseVehicleCmd;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,13 +38,14 @@ public class BaseVehicleApplicationServiceImpl implements BaseVehicleApplication
     private final OxoFeatureOptionRepository oxoFeatureOptionRepository;
     private final OxoOptionPackageRepository oxoOptionPackageRepository;
     private final OxoFeatureOptionDomainService oxoFeatureOptionDomainService;
-    private List<Long> regionList = new ArrayList<>();
-    private List<Long> driveList= new ArrayList<>();
-    private List<Long> salesList= new ArrayList<>();
+    private final BaseVehicleRepository baseVehicleRepository;
 
     @Override
     public List<OxoOptionPackageAggr> EditBaseVehicleFilter(BaseVehicleAggr baseVehicleAggr, List<OxoOptionPackageAggr> aggrs, List<OxoFeatureOptionAggr> rows) {
         //先筛选所有行，将他们分成三类
+        List<Long> regionList = new ArrayList<>();
+        List<Long> driveList= new ArrayList<>();
+        List<Long> salesList= new ArrayList<>();
         Map<String,Long> pointRecord = new HashMap<>();
         rows.forEach(row->{
             //将行分类
@@ -99,5 +103,38 @@ public class BaseVehicleApplicationServiceImpl implements BaseVehicleApplication
             }).toList());
         }
 
+    }
+
+    @Override
+    @Transactional( rollbackFor = Exception.class)
+    public void addBaseVehicleSaveToDb(BaseVehicleAggr baseVehicleAggr, List<OxoOptionPackageAggr> packages, AddBaseVehicleCmd cmd) {
+        //base vehicle增加记录
+        baseVehicleRepository.save(baseVehicleAggr);
+        //oxo打点
+        oxoOptionPackageRepository.inserOxoOptionPackagesByOxoOptionPackages(packages);
+        //copyFrom打点
+        addCopyFromPoints(cmd,baseVehicleAggr);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteBaseVehicleSaveToDb(BaseVehicleAggr baseVehicleAggr) {
+        //删除base vehicle记录
+        baseVehicleRepository.removeById(baseVehicleAggr.getId());
+        //删除oxo中对应打点
+        oxoOptionPackageRepository.removeByBaseVehicleIds(baseVehicleAggr.getId());
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void editBaseVehicleSaveToDb(BaseVehicleAggr baseVehicleAggr, EditBaseVehicleCmd cmd) {
+        baseVehicleRepository.save(baseVehicleAggr);
+        //获取该baseVehicle下所有点
+        List<OxoOptionPackageAggr> oxoOptionPackageAggrs = oxoOptionPackageRepository.queryByBaseVehicleId(baseVehicleAggr.getId());
+        //获取和region,salesVersion,driveHand，modelCode有关的所有行信息，用于筛选
+        List<OxoFeatureOptionAggr> driveHandRegionSalesVersionRows = queryRegionSalesDrivePoints(cmd.getModelCode());
+        //筛选得到相关的打点信息(region,salesVersion,driveHand)
+        List<OxoOptionPackageAggr> newPoints = EditBaseVehicleFilter(baseVehicleAggr, oxoOptionPackageAggrs,driveHandRegionSalesVersionRows);
+        oxoOptionPackageRepository.saveOrUpdatebatch(newPoints);
     }
 }

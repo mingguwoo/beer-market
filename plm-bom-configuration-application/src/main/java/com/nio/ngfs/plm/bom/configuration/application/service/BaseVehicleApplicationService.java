@@ -4,6 +4,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleAg
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageAggr;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.request.AddBaseVehicleCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.request.EditBaseVehicleCmd;
 
 import java.util.List;
 
@@ -18,4 +19,11 @@ public interface BaseVehicleApplicationService {
     List<OxoFeatureOptionAggr> queryRegionSalesDrivePoints(String modelCode);
 
     void addCopyFromPoints(AddBaseVehicleCmd cmd, BaseVehicleAggr baseVehicleAggr);
+
+    void addBaseVehicleSaveToDb(BaseVehicleAggr baseVehicleAggr,List<OxoOptionPackageAggr> packages,AddBaseVehicleCmd cmd);
+
+    void deleteBaseVehicleSaveToDb(BaseVehicleAggr baseVehicleAggr);
+
+    void editBaseVehicleSaveToDb(BaseVehicleAggr baseVehicleAggr, EditBaseVehicleCmd cmd);
+
 }

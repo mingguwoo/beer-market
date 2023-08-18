@@ -16,6 +16,7 @@ import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.*;
+import org.springframework.http.MediaType;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -92,6 +93,7 @@ public class OxoExcelUtil {
             String name = modelCode + "_" + version + "_OXO_Feature_" + DateUtils.dateTimeNow() + ".xlsx";
             response.setHeader("Content-Disposition", "attachment; filename=\"" + name + "\"");
             response.setContentType("application/octet-stream;charset=UTF-8");
+            response.setHeader("access-control-expose-headers", "content-disposition");
             response.setHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
             response.setHeader("Access-Control-Allow-Credentials", "true");
             xssfWorkbook.write(output);

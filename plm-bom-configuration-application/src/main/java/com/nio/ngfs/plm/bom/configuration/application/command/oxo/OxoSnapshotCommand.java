@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.ngfs.common.utils.BeanConvertUtils;
 import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockCommand;
-import com.nio.ngfs.plm.bom.configuration.application.query.oxo.OxoInfoQuery;
 import com.nio.ngfs.plm.bom.configuration.application.service.OxoFeatureOptionApplicationService;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;

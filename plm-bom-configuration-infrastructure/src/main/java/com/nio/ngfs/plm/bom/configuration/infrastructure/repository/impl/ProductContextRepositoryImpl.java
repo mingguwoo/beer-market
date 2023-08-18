@@ -5,7 +5,6 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.ProductCon
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.ProductContextConverter;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsProductContextDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.common.DaoSupport;
-import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductContextEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

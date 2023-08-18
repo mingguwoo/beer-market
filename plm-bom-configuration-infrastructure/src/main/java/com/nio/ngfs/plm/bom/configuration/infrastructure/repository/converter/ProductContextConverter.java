@@ -5,7 +5,6 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.co
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.mapping.MapstructMapper;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.mapping.ProductContextMapper;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductContextEntity;
-import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsProductContextMapper;
 import org.springframework.stereotype.Component;
 
 /**

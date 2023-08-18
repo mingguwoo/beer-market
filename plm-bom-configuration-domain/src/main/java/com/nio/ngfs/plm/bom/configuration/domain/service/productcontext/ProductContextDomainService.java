@@ -6,9 +6,4 @@ package com.nio.ngfs.plm.bom.configuration.domain.service.productcontext;
  */
 public interface ProductContextDomainService {
 
-    /**
-     * 同步oxo，生成product context
-     * @param oxoSnapShot
-     */
-    void addProductContext(String oxoSnapShot);
 }

@@ -1,17 +1,22 @@
 package com.nio.ngfs.plm.bom.configuration.application.query.productconfig.assemble;
 
+import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.DateUtils;
+import com.nio.bom.share.utils.LambdaUtil;
+import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.common.util.ModelYearComparator;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsBaseVehicleEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureLibraryEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsModelYearConfigEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductConfigEntity;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.GetBasedOnBaseVehicleListRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.GetBasedOnPcListRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.GetModelListRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.QueryPcRespDto;
 import org.springframework.beans.BeanUtils;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author xiaozhou.tu
@@ -58,6 +63,38 @@ public class ProductConfigAssembler {
             respDto.setBasedOnPcName(basedOnPc.getName());
         }
         return respDto;
+    }
+
+    public static List<GetBasedOnBaseVehicleListRespDto> assemble(String modelCode, List<BomsBaseVehicleEntity> baseVehicleEntityList,
+                                                                  List<BomsFeatureLibraryEntity> baseVehicleOptionList) {
+        Map<String, BomsFeatureLibraryEntity> baseVehicleOptionMap = LambdaUtil.toKeyMap(baseVehicleOptionList, BomsFeatureLibraryEntity::getFeatureCode);
+        Map<String, List<BomsBaseVehicleEntity>> baseVehicleEntityGroup = LambdaUtil.groupBy(baseVehicleEntityList, BomsBaseVehicleEntity::getModelYear);
+        return LambdaUtil.map(baseVehicleEntityGroup.entrySet(), entry -> {
+            GetBasedOnBaseVehicleListRespDto respDto = new GetBasedOnBaseVehicleListRespDto();
+            respDto.setModel(modelCode);
+            respDto.setModelYear(entry.getKey());
+            respDto.setBaseVehicleList(entry.getValue().stream().map(baseVehicleEntity -> {
+                GetBasedOnBaseVehicleListRespDto.BasedOnBaseVehicleDto baseVehicleDto = new GetBasedOnBaseVehicleListRespDto.BasedOnBaseVehicleDto();
+                baseVehicleDto.setId(baseVehicleEntity.getId());
+                baseVehicleDto.setBaseVehicleId(baseVehicleEntity.getBaseVehicleId());
+                baseVehicleDto.setRegionCode(baseVehicleEntity.getRegionOptionCode());
+                baseVehicleDto.setRegionCn(getBomsFeatureLibraryEntity(baseVehicleOptionMap, baseVehicleEntity.getRegionOptionCode()).getChineseName());
+                baseVehicleDto.setDriveHandCode(baseVehicleEntity.getDriveHand());
+                baseVehicleDto.setDriveHandCn(getBomsFeatureLibraryEntity(baseVehicleOptionMap, baseVehicleEntity.getDriveHand()).getChineseName());
+                baseVehicleDto.setSalesVersionCode(baseVehicleEntity.getSalesVersion());
+                baseVehicleDto.setSalesVersionCn(getBomsFeatureLibraryEntity(baseVehicleOptionMap, baseVehicleEntity.getSalesVersion()).getChineseName());
+                return baseVehicleDto;
+            }).toList());
+            return respDto;
+        });
+    }
+
+    private static BomsFeatureLibraryEntity getBomsFeatureLibraryEntity(Map<String, BomsFeatureLibraryEntity> baseVehicleOptionMap, String optionCode) {
+        BomsFeatureLibraryEntity bomsFeatureLibraryEntity = baseVehicleOptionMap.get(optionCode);
+        if (bomsFeatureLibraryEntity == null) {
+            throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_BASED_ON_BASE_VEHICLE_OPTION_NOT_EXIST);
+        }
+        return bomsFeatureLibraryEntity;
     }
 
 }

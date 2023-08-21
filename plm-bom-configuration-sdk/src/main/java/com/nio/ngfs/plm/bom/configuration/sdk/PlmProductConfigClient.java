@@ -25,6 +25,15 @@ public interface PlmProductConfigClient {
     ResultInfo<List<GetModelListRespDto>> getModelList(GetModelListQry qry);
 
     /**
+     * 查询Based On Base Vehicle列表
+     *
+     * @param qry 查询
+     * @return 响应
+     */
+    @PostMapping("/productConfig/getBasedOnBaseVehicleList")
+    ResultInfo<List<GetBasedOnBaseVehicleListRespDto>> getBasedOnBaseVehicleList(GetBasedOnBaseVehicleListQry qry);
+
+    /**
      * 查询Based On PC列表
      *
      * @param qry 查询

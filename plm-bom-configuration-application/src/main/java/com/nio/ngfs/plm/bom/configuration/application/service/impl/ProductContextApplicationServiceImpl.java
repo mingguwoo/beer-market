@@ -61,15 +61,10 @@ public class ProductContextApplicationServiceImpl implements ProductContextAppli
         Map<OxoRowsQry,List<OxoRowsQry>> featureOptionMap = new HashMap<>();
         oxoListQry.getOxoRowsResps().forEach(featureRow->featureOptionMap.put(featureRow,featureRow.getOptions()));
 
-        //获取groupCode与groupId的对应关系
-        Map<String,Long> featureGroupMap = new HashMap<>();
-        List<FeatureAggr> groupList = featureRepository.getGroupList();
-        groupList.forEach(group->featureGroupMap.put(group.getFeatureId().getFeatureCode(),group.getId()));
-
         //没有该model的product context，直接新增
         if (oldProductContextList.isEmpty()){
             //先处理其他的
-            ProductContextFeatureFactory.createProductContextFeatureList(productContextFeatureAggrList,featureList,featureOptionMap,modelCode,featureGroupMap);
+            ProductContextFeatureFactory.createProductContextFeatureList(productContextFeatureAggrList,featureList,featureOptionMap,modelCode);
             ProductContextFactory.createProductContextList(productContextAggrList,featureList,oxoListQry);
             //单独处理AF00
             ProductContextFeatureFactory.createModelYearProductContextFeature(productContextFeatureAggrList,featureModelYearAggr,modelCode,modelYearMap);
@@ -79,7 +74,7 @@ public class ProductContextApplicationServiceImpl implements ProductContextAppli
         else{
             List<String> addedModelYearList= new ArrayList<>();
             //先处理其他的
-            ProductContextFeatureFactory.createAddedProductContextFeatureList(productContextFeatureAggrList,oldProductContextFeatureList,featureList,featureOptionMap,modelCode,featureGroupMap);
+            ProductContextFeatureFactory.createAddedProductContextFeatureList(productContextFeatureAggrList,oldProductContextFeatureList,featureList,featureOptionMap,modelCode);
             ProductContextFactory.createAddedProductContextList(productContextAggrList,oldProductContextList,featureList,oxoListQry);
             //单独处理AF00
             ProductContextFeatureFactory.createAddedModelYearProductContextFeature(productContextFeatureAggrList,featureModelYearAggr,modelCode,modelYearMap,oldProductContextFeatureList,addedModelYearList);

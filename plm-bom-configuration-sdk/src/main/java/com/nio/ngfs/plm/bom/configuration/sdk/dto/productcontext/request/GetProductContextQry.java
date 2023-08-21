@@ -19,8 +19,8 @@ public class GetProductContextQry implements Qry {
     //feature code / option code / displayName
     private String feature;
 
-    //group数据库Id
-    private List<Long> featureGroup;
+    //group code
+    private List<String> groupCode;
 
     private String cataLog;
 }

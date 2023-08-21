@@ -20,23 +20,20 @@ public class ProductContextFeatureFactory {
      * @param featureList
      * @param featureOptionMap
      * @param modelCode
-     * @param featureGroupMap
      * @return
      */
-    public static void createProductContextFeatureList(List<ProductContextFeatureAggr> productContextFeatureAggrList,List<OxoRowsQry> featureList, Map<OxoRowsQry,List<OxoRowsQry>> featureOptionMap, String modelCode,Map<String,Long> featureGroupMap){
+    public static void createProductContextFeatureList(List<ProductContextFeatureAggr> productContextFeatureAggrList,List<OxoRowsQry> featureList, Map<OxoRowsQry,List<OxoRowsQry>> featureOptionMap, String modelCode){
         featureList.forEach(feature->{
             if (!Objects.equals(feature.getFeatureCode().substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO),ConfigConstants.FEATURE_CODE_AF00.substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO))){
                 ProductContextFeatureAggr productContextFeatureAggr = new ProductContextFeatureAggr();
                 productContextFeatureAggr.setModelCode(modelCode);
                 productContextFeatureAggr.setFeatureCode(feature.getFeatureCode());
-                productContextFeatureAggr.setFeatureGroup(featureGroupMap.get(feature.getGroup()));
                 productContextFeatureAggr.setType(ProductContextFeatureEnum.FEATURE.getType());
                 productContextFeatureAggrList.add(productContextFeatureAggr);
                 featureOptionMap.get(feature).forEach(option->{
                     ProductContextFeatureAggr aggr = new ProductContextFeatureAggr();
                     aggr.setModelCode(modelCode);
                     aggr.setFeatureCode(option.getFeatureCode());
-                    aggr.setFeatureGroup(featureGroupMap.get(option.getGroup()));
                     aggr.setType(ProductContextFeatureEnum.OPTION.getType());
                     productContextFeatureAggrList.add(aggr);
                 });
@@ -50,10 +47,9 @@ public class ProductContextFeatureFactory {
      * @param featureList
      * @param featureOptionMap
      * @param modelCode
-     * @param featureGroupMap
      * @return
      */
-    public static void createAddedProductContextFeatureList(List<ProductContextFeatureAggr> productContextFeatureAggrList,List<ProductContextFeatureAggr> oldProductContextFeatureList,List<OxoRowsQry> featureList, Map<OxoRowsQry,List<OxoRowsQry>> featureOptionMap, String modelCode,Map<String,Long> featureGroupMap){
+    public static void createAddedProductContextFeatureList(List<ProductContextFeatureAggr> productContextFeatureAggrList,List<ProductContextFeatureAggr> oldProductContextFeatureList,List<OxoRowsQry> featureList, Map<OxoRowsQry,List<OxoRowsQry>> featureOptionMap, String modelCode){
         Set<String> existFeatureCodeSet = new HashSet<>();
         //先记录已有行
         oldProductContextFeatureList.forEach(aggr->{
@@ -66,7 +62,6 @@ public class ProductContextFeatureFactory {
                     ProductContextFeatureAggr productContextFeatureAggr = new ProductContextFeatureAggr();
                     productContextFeatureAggr.setModelCode(modelCode);
                     productContextFeatureAggr.setFeatureCode(feature.getFeatureCode());
-                    productContextFeatureAggr.setFeatureGroup(featureGroupMap.get(feature.getGroup()));
                     productContextFeatureAggr.setType(ProductContextFeatureEnum.FEATURE.getType());
                     productContextFeatureAggrList.add(productContextFeatureAggr);
                 }
@@ -75,7 +70,6 @@ public class ProductContextFeatureFactory {
                         ProductContextFeatureAggr aggr = new ProductContextFeatureAggr();
                         aggr.setModelCode(modelCode);
                         aggr.setFeatureCode(option.getFeatureCode());
-                        aggr.setFeatureGroup(featureGroupMap.get(option.getGroup()));
                         aggr.setType(ProductContextFeatureEnum.OPTION.getType());
                         productContextFeatureAggrList.add(aggr);
                     }
@@ -92,12 +86,10 @@ public class ProductContextFeatureFactory {
      */
     public static void createModelYearProductContextFeature(List<ProductContextFeatureAggr> productContextFeatureAggrList, FeatureAggr featureModelYearAggr,String modelCode,Map<String,String> modelYearMap){
         List<FeatureAggr> optionAggrList = featureModelYearAggr.getChildrenList();
-        Long modelYearFeatureGroupId = featureModelYearAggr.getParent().getId();
         //先添加AF00
         ProductContextFeatureAggr productContextFeatureAggr = new ProductContextFeatureAggr();
         productContextFeatureAggr.setModelCode(modelCode);
         productContextFeatureAggr.setFeatureCode(featureModelYearAggr.getFeatureCode());
-        productContextFeatureAggr.setFeatureGroup(modelYearFeatureGroupId);
         productContextFeatureAggr.setType(ProductContextFeatureEnum.FEATURE.getType());
         productContextFeatureAggrList.add(productContextFeatureAggr);
         //再添加AF00下面的option
@@ -105,7 +97,6 @@ public class ProductContextFeatureFactory {
             ProductContextFeatureAggr aggr = new ProductContextFeatureAggr();
             aggr.setModelCode(modelCode);
             aggr.setFeatureCode(option.getFeatureCode());
-            aggr.setFeatureGroup(modelYearFeatureGroupId);
             aggr.setType(ProductContextFeatureEnum.OPTION.getType());
             productContextFeatureAggrList.add(aggr);
             //记录modelYear的displayname与optionCode的对应关系，用于后续打勾
@@ -115,7 +106,6 @@ public class ProductContextFeatureFactory {
 
     public static void createAddedModelYearProductContextFeature(List<ProductContextFeatureAggr> productContextFeatureAggrList, FeatureAggr featureModelYearAggr,String modelCode,Map<String,String> modelYearMap,List<ProductContextFeatureAggr> oldProductContextFeatureList,List<String> addedModelYearList){
         List<FeatureAggr> optionAggrList = featureModelYearAggr.getChildrenList();
-        Long modelYearFeatureGroupId = featureModelYearAggr.getParent().getId();
         Set<String> existModelYearSet = new HashSet<>();
         //记录原有所有modelYear相关行的model Code
         oldProductContextFeatureList.forEach(row->{
@@ -128,7 +118,6 @@ public class ProductContextFeatureFactory {
                 ProductContextFeatureAggr aggr = new ProductContextFeatureAggr();
                 aggr.setModelCode(modelCode);
                 aggr.setFeatureCode(option.getFeatureCode());
-                aggr.setFeatureGroup(modelYearFeatureGroupId);
                 aggr.setType(ProductContextFeatureEnum.OPTION.getType());
                 productContextFeatureAggrList.add(aggr);
                 addedModelYearList.add(option.getFeatureCode());

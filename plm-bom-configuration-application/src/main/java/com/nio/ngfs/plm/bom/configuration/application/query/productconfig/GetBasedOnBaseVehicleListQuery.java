@@ -50,7 +50,7 @@ public class GetBasedOnBaseVehicleListQuery extends AbstractQuery<GetBasedOnBase
             return Collections.emptyList();
         }
         List<BomsBaseVehicleEntity> baseVehicleEntityList = Lists.newArrayList();
-        if (Objects.equals(OxoSnapshotEnum.FORMAL.getCode(), oxoVersionSnapshotEntity.getVersion())) {
+        if (Objects.equals(OxoSnapshotEnum.FORMAL.getCode(), oxoVersionSnapshotEntity.getType())) {
             // 最新Release OXO版本为Formal版本
             BomsOxoVersionSnapshotEntity informalOxoVersionSnapshotEntity = oxoVersionSnapshotDao.queryLastReleaseSnapshotByModel(qry.getModel(),
                     OxoSnapshotEnum.INFORMAL.getCode());
@@ -83,7 +83,7 @@ public class GetBasedOnBaseVehicleListQuery extends AbstractQuery<GetBasedOnBase
      */
     private List<BomsBaseVehicleEntity> getBaseVehicleFromOxoRelease(BomsOxoVersionSnapshotEntity oxoVersionSnapshotEntity, BaseVehicleMaturityEnum maturityEnum) {
         if (oxoVersionSnapshotEntity == null) {
-            return Collections.emptyList();
+            return Lists.newArrayList();
         }
         OxoListQry oxoListQry = OxoQueryUtil.resolveSnapShot(oxoVersionSnapshotEntity.getOxoSnapshot());
         List<Long> baseVehicleIdList = OxoQueryUtil.getBaseVehicleIdListFromOxoRelease(oxoListQry);

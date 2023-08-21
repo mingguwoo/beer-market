@@ -21,8 +21,6 @@ public class BomsProductContextFeatureEntity extends BaseEntity {
 
     private String featureCode;
 
-    private String featureGroup;
-
     private String type;
 
     private int featureSeq;

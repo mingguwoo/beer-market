@@ -39,6 +39,8 @@ public class OxoEditCommand extends AbstractLockCommand<OxoEditInfoCmd, List<Str
 
         String userName = cmd.getUserName();
 
+        String modelCode= cmd.getModelCode();
+
         // 更新备注 和 ruleCheck
         if (CollectionUtils.isNotEmpty(cmd.getEditOxoRows())) {
             List<OxoFeatureOptionAggr> oxoFeatureOptionAggrs = Lists.newArrayList();
@@ -68,7 +70,13 @@ public class OxoEditCommand extends AbstractLockCommand<OxoEditInfoCmd, List<Str
             //更新 打点信息
             oxoOptionPackageRepository.insertOxoOptionPackages(
                     OxoOptionPackageFactory.createOxoOptionPackageAggrList(cmd.getEditCmds(), userName));
+
+            //更新 软删除
+            featureOptionApplicationService.updateSoftDelete(modelCode);
         }
+
+
+
 
 
         // 教研数据

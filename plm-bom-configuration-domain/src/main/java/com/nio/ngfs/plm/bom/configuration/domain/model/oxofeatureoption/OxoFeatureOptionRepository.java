@@ -48,7 +48,7 @@ public interface OxoFeatureOptionRepository extends Repository<OxoFeatureOptionA
      * @param modelCode
      * @return
      */
-    List<OxoFeatureOptionAggr>  queryFeatureListsByModelAndSortDelete(String modelCode);
+    List<OxoFeatureOptionAggr>  queryFeatureListsByModelAndSortDelete(String modelCode,Boolean isSoftDelete);
 
 
     /**
@@ -63,6 +63,15 @@ public interface OxoFeatureOptionRepository extends Repository<OxoFeatureOptionA
      * @param oxoFeatureOptionAggrs
      */
     void updateOxoFeatureOptions(List<OxoFeatureOptionAggr> oxoFeatureOptionAggrs);
+
+
+
+    /**
+     * 恢复软删除
+     * @param ids
+     * @param isDelete
+     */
+    void restoreOxoFeatureOptionByIds(List<Long> ids, Integer isDelete);
 
 
 }

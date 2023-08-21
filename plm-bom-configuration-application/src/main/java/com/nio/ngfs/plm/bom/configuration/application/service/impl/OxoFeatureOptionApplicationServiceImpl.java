@@ -23,7 +23,9 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.enums.
 import com.nio.ngfs.plm.bom.configuration.domain.service.basevehicle.BaseVehicleDomainService;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoFeatureOptionDomainService;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoVersionSnapshotDomainService;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsBaseVehicleDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsProductConfigModelOptionDao;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsBaseVehicleEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductConfigModelOptionEntity;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoHeadQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
@@ -56,6 +58,7 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
     private final OxoVersionSnapshotDomainService versionSnapshotDomainService;
     private final OxoVersionSnapshotRepository oxoVersionSnapshotRepository;
     private final BomsProductConfigModelOptionDao bomsProductConfigModelOptionDao;
+    private final BomsBaseVehicleDao bomsBaseVehicleDao;
 
 
     @Override
@@ -358,6 +361,73 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
         }
 
         return messages;
+    }
+
+
+    /**
+     * 更新 软删除 标识
+     *
+     * @param modelCode
+     */
+    @Override
+    public void updateSoftDelete(String modelCode) {
+
+
+        // 查询 is_delete数据
+        List<OxoFeatureOptionAggr> oxoFeatureOptions = oxoFeatureOptionRepository.queryFeatureListsByModelAndSortDelete(modelCode, false);
+
+
+        if (CollectionUtils.isEmpty(oxoFeatureOptions)) {
+            return;
+        }
+
+        List<Long> rowIds = oxoFeatureOptions.stream().map(OxoFeatureOptionAggr::getId).distinct().toList();
+
+
+        List<OxoOptionPackageAggr> oxoOptionPackageAggrs =
+                oxoOptionPackageRepository.queryByBaseVehicleIds(rowIds);
+
+
+        // 根据 行id 查询
+        if (CollectionUtils.isNotEmpty(oxoOptionPackageAggrs)) {
+            List<Long> headIds = oxoOptionPackageAggrs.stream().map(OxoOptionPackageAggr::getBaseVehicleId).distinct().toList();
+
+
+            // 查询车型行 信息
+            List<BomsBaseVehicleEntity> baseVehicleEntities = bomsBaseVehicleDao.queryByModelCodeAndIdsAndActive(headIds, modelCode);
+
+
+            if (CollectionUtils.isEmpty(baseVehicleEntities)) {
+                return;
+            }
+
+            List<Long> ids = baseVehicleEntities.stream().map(BomsBaseVehicleEntity::getId).distinct().toList();
+
+
+            // 获取 headId 信息
+            Map<Long, List<OxoOptionPackageAggr>> packageMaps =
+                    oxoOptionPackageAggrs.stream().collect(Collectors.groupingBy(OxoOptionPackageAggr::getFeatureOptionId));
+
+            List<Long> deleteIds = Lists.newArrayList();
+
+            packageMaps.forEach((k, v) -> {
+
+                // 如果不为- 则去除软删除
+                if (v.stream().anyMatch(x -> ids.contains(x.getBaseVehicleId()) &&
+                        !StringUtils.equals(x.getPackageCode(), OxoOptionPackageTypeEnum.UNAVAILABLE.getType()))) {
+
+                    deleteIds.add(k);
+                }
+            });
+
+
+            if (CollectionUtils.isNotEmpty(deleteIds)) {
+                oxoFeatureOptionRepository.restoreOxoFeatureOptionByIds(deleteIds, 0);
+            }
+
+        }
+
+
     }
 
 }

@@ -91,7 +91,7 @@ public class OxoFeatureOptionDomainServiceImpl implements OxoFeatureOptionDomain
     public List<String> checkOxoBasicVehicleOptions(String modelCode) {
 
         List<OxoFeatureOptionAggr> oxoFeatureOptionAggrs =
-                oxoFeatureOptionRepository.queryFeatureListsByModelAndSortDelete(modelCode);
+                oxoFeatureOptionRepository.queryFeatureListsByModelAndSortDelete(modelCode,true);
 
         if (CollectionUtils.isEmpty(oxoFeatureOptionAggrs)) {
             return Lists.newArrayList();

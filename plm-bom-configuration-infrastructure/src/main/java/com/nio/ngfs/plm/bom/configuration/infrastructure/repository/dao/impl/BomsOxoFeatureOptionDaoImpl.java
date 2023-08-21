@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author xiaozhou.tu
@@ -28,17 +29,19 @@ public class BomsOxoFeatureOptionDaoImpl extends AbstractDao<BomsOxoFeatureOptio
     @Override
     public List<BomsOxoFeatureOptionEntity> getBaseVehicleOptions(List<String> featureList, String modelCode) {
         LambdaQueryWrapper<BomsOxoFeatureOptionEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.in(BomsOxoFeatureOptionEntity::getFeatureCode,featureList);
-        lambdaQueryWrapper.in(BomsOxoFeatureOptionEntity::getModelCode,modelCode);
+        lambdaQueryWrapper.in(BomsOxoFeatureOptionEntity::getFeatureCode, featureList);
+        lambdaQueryWrapper.in(BomsOxoFeatureOptionEntity::getModelCode, modelCode);
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 
     @Override
-    public List<BomsOxoFeatureOptionEntity> queryOxoFeatureOptionByModel(String modelCode,Boolean sortDelete) {
+    public List<BomsOxoFeatureOptionEntity> queryOxoFeatureOptionByModel(String modelCode, Boolean sortDelete) {
         LambdaQueryWrapper<BomsOxoFeatureOptionEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.in(BomsOxoFeatureOptionEntity::getModelCode,modelCode);
-        if(sortDelete){
-            lambdaQueryWrapper.eq(BomsOxoFeatureOptionEntity::getSoftDelete,0);
+        lambdaQueryWrapper.in(BomsOxoFeatureOptionEntity::getModelCode, modelCode);
+        if (Objects.nonNull(sortDelete) && sortDelete) {
+            lambdaQueryWrapper.eq(BomsOxoFeatureOptionEntity::getSoftDelete, 0);
+        } else if (Objects.nonNull(sortDelete)) {
+            lambdaQueryWrapper.eq(BomsOxoFeatureOptionEntity::getSoftDelete, 1);
         }
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }
@@ -47,18 +50,30 @@ public class BomsOxoFeatureOptionDaoImpl extends AbstractDao<BomsOxoFeatureOptio
     @Override
     public void updateOxoFeatureOptions(List<OxoFeatureOptionAggr> oxoRowInfoAggrs) {
         oxoRowInfoAggrs.forEach(oxoFeatureOptionAggr -> {
-            BomsOxoFeatureOptionEntity entity=new BomsOxoFeatureOptionEntity();
-            if(StringUtils.isNotBlank(oxoFeatureOptionAggr.getComment())) {
+            BomsOxoFeatureOptionEntity entity = new BomsOxoFeatureOptionEntity();
+            if (StringUtils.isNotBlank(oxoFeatureOptionAggr.getComment())) {
                 entity.setComment(oxoFeatureOptionAggr.getComment());
             }
 
-            if(StringUtils.isNotBlank(oxoFeatureOptionAggr.getRuleCheck())) {
+            if (StringUtils.isNotBlank(oxoFeatureOptionAggr.getRuleCheck())) {
                 entity.setRuleCheck(oxoFeatureOptionAggr.getRuleCheck());
             }
+
             entity.setId(oxoFeatureOptionAggr.getId());
+
             entity.setUpdateUser(oxoFeatureOptionAggr.getUpdateUser());
             //更新 oxo row
             getBaseMapper().updateById(entity);
+        });
+    }
+
+    @Override
+    public void restoreOxoFeatureOptionByIds(List<Long> ids, Integer isDelete) {
+        ids.forEach(id -> {
+            BomsOxoFeatureOptionEntity oxoFeatureOption = new BomsOxoFeatureOptionEntity();
+            oxoFeatureOption.setId(id);
+            oxoFeatureOption.setSoftDelete(isDelete);
+            getBaseMapper().updateById(oxoFeatureOption);
         });
     }
 
@@ -71,7 +86,7 @@ public class BomsOxoFeatureOptionDaoImpl extends AbstractDao<BomsOxoFeatureOptio
     public List<BomsOxoFeatureOptionEntity> queryByModelAndFeatureCodeList(String model, List<String> featureCodeList) {
         LambdaQueryWrapper<BomsOxoFeatureOptionEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(BomsOxoFeatureOptionEntity::getModelCode, model);
-        if(CollectionUtils.isNotEmpty(featureCodeList)) {
+        if (CollectionUtils.isNotEmpty(featureCodeList)) {
             lambdaQueryWrapper.in(BomsOxoFeatureOptionEntity::getFeatureCode, featureCodeList);
         }
         return getBaseMapper().selectList(lambdaQueryWrapper);

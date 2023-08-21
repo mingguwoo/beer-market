@@ -19,4 +19,10 @@ public class OxoBasicVehicleDto {
     private String regionCode;
 
 
+    private String modelCode;
+
+
+    private String year;
+
+
 }

@@ -11,6 +11,8 @@ import com.nio.ngfs.plm.bom.configuration.domain.facade.EmailFacade;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.MatrixRuleFacade;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.EmailParamDto;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.MatrixRuleQueryDto;
+import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.OxoBasicVehicleDto;
+import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.domainobject.CompareOxoFeatureModel;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.enums.CompareChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.enums.OxoOptionPackageTypeEnum;
@@ -524,17 +526,20 @@ public class OxoCompareDomainServiceImpl implements OxoCompareDomainService {
 
         List<OxoRowsQry> features = compareOxoListQry.getOxoRowsResps();
 
+        List<OxoBasicVehicleDto> oxoBasicVehicleDtos =
+                BaseVehicleFactory.buildOxoBasicVehicles(compareInfos, null, null);
+
         int finalTitleSize = titleSize;
         features.forEach(feature -> {
 
-            List<OxoEditCmd> oxoEditCmds = new ArrayList<>();
-            feature.getOptions().forEach(x -> {
-                oxoEditCmds.addAll(x.getPackInfos());
-            });
-
-            if (CollectionUtils.isEmpty(oxoEditCmds)) {
-                return;
-            }
+//            List<OxoEditCmd> oxoEditCmds = new ArrayList<>();
+//            feature.getOptions().forEach(x -> {
+//                oxoEditCmds.addAll(x.getPackInfos());
+//            });
+//
+//            if (CollectionUtils.isEmpty(oxoEditCmds)) {
+//                return;
+//            }
 
             OxoTemplateRequestCmd.OxoInfo oxoInfo = new OxoTemplateRequestCmd.OxoInfo();
             oxoInfo.setName(feature.getChineseName());
@@ -552,7 +557,7 @@ public class OxoCompareDomainServiceImpl implements OxoCompareDomainService {
                 childrenOxo.setName(y.getChineseName());
                 childrenOxo.setDisPlayName(y.getDisplayName());
                 childrenOxo.setFeatureCode(y.getFeatureCode());
-                childrenOxo.setPackageOptions(convertPackageOptionAll(finalTitleSize, y, oxoEditCmds));
+                childrenOxo.setPackageOptions(convertPackageOptionAll(finalTitleSize, y, oxoBasicVehicleDtos));
                 if (childrenOxo.getPackageOptions().stream().allMatch(x -> StringUtils.isBlank(x.getPackageOption()))) {
                     childrenOxo.setChangeType(null);
                 } else if (childrenOxo.getPackageOptions().stream().noneMatch(x -> StringUtils.isNotBlank(x.getPackageOption())
@@ -563,7 +568,7 @@ public class OxoCompareDomainServiceImpl implements OxoCompareDomainService {
                     childrenOxo.setChangeType(StringUtils.equals(y.getChangeType(), CompareChangeTypeEnum.DEL.getName()) ? null : y.getChangeType());
                 }
 
-                childrenOxo.setColor("#fffaf0"); //白色
+                //childrenOxo.setColor("#fffaf0"); //白色
                 oxoInfos.add(childrenOxo);
             });
         });
@@ -617,9 +622,9 @@ public class OxoCompareDomainServiceImpl implements OxoCompareDomainService {
         for (String user : users) {
             EmailParamDto emailParamDto = new EmailParamDto();
             emailParamDto.setTemplateNo(oxoEmailTemplateNo);
-            if(!StringUtils.contains(user,"@nio.com")) {
+            if (!StringUtils.contains(user, "@nio.com")) {
                 emailParamDto.setReceiverEmail(user + "@nio.com");
-            }else{
+            } else {
                 emailParamDto.setReceiverEmail(user);
             }
             emailParamDto.setVariables(JSON.parseObject(JSONObject.toJSONString(templateRequest), Map.class));
@@ -632,13 +637,14 @@ public class OxoCompareDomainServiceImpl implements OxoCompareDomainService {
         }
     }
 
-    public List<OxoTemplateRequestCmd.PackageOption> convertPackageOptionAll(int titleSize, OxoRowsQry option, List<OxoEditCmd> oxoEditCmds) {
+    public List<OxoTemplateRequestCmd.PackageOption> convertPackageOptionAll(int titleSize, OxoRowsQry option,
+                                                                             List<OxoBasicVehicleDto> oxoBasicVehicleDtos) {
 
         List<OxoTemplateRequestCmd.PackageOption> options = new ArrayList<>();
 
 
         // 设置 feature
-        if (Objects.isNull(option) || CollectionUtils.isEmpty(option.getOptions())) {
+        if (Objects.isNull(option) || CollectionUtils.isEmpty(option.getPackInfos())) {
             for (int i = 0; i < titleSize; i++) {
                 OxoTemplateRequestCmd.PackageOption packageOption = new OxoTemplateRequestCmd.PackageOption();
                 if (Objects.isNull(option)) {
@@ -650,35 +656,38 @@ public class OxoCompareDomainServiceImpl implements OxoCompareDomainService {
             return options;
         }
 
-        oxoEditCmds.forEach(x -> {
+        option.getPackInfos().forEach(x -> {
 
-            List<OxoEditCmd> ipdOXOOutputs1 = option.getPackInfos().stream().filter(y ->
-                    StringUtils.equals(y.getModelCode(),x.getModelCode()) && StringUtils.equals(y.getModelYear(),x.getModelYear()) &&
-                    StringUtils.equals(y.getSalesCode(), x.getSalesCode()) && StringUtils.equals(y.getDriveHandCode(), x.getDriveHandCode())
-                    && StringUtils.equals(y.getRegionCode(), x.getRegionCode()) &&
-                    !StringUtils.equals(y.getChangeType(), CompareChangeTypeEnum.DELETE.getName())).toList();
-            //delete 列需要删除
-            if (ipdOXOOutputs1.size() > 0 && !StringUtils.equals(x.getChangeType(), CompareChangeTypeEnum.DELETE.getName())) {
-                OxoEditCmd ipdOXOOutput = ipdOXOOutputs1.get(0);
+            if (oxoBasicVehicleDtos.stream().anyMatch(y ->
+                    StringUtils.equals(y.getYear(), x.getModelYear()) &&
+                            StringUtils.equals(y.getSalesOptionCode(), x.getSalesCode()) && StringUtils.equals(y.getDriverOptionCode(), x.getDriveHandCode())
+                            && StringUtils.equals(y.getRegionCode(), x.getRegionCode()))) {
+
                 //todo
                 OxoTemplateRequestCmd.PackageOption packageOption = new OxoTemplateRequestCmd.PackageOption();
-                if (Objects.nonNull(ipdOXOOutput.getCompareOxoEdit())) {
-                    packageOption.setPackageOption(OxoOptionPackageTypeEnum.getByType(ipdOXOOutput.getCompareOxoEdit().getPackageCode())+
-                            ipdOXOOutput.getDescription()+ " > " +
-                            OxoOptionPackageTypeEnum.getByType(ipdOXOOutput.getPackageCode()));
-                } else {
-                    packageOption.setPackageOption(OxoOptionPackageTypeEnum.getByType(ipdOXOOutput.getPackageCode())+ipdOXOOutput.getDescription());
-                }
-                packageOption.setPackSize(titleSize);
-                if (!StringUtils.equals(CompareChangeTypeEnum.NO_CHANGE.getName(), ipdOXOOutput.getChangeType()) &&
-                        !StringUtils.equals(CompareChangeTypeEnum.DEL.getName(), ipdOXOOutput.getChangeType())) {
-                    packageOption.setColor("#f0e68c");  //黄色
-                }
-                options.add(packageOption);
+                packageOption.setPackSize(oxoBasicVehicleDtos.size());
 
-            } else {
-                OxoTemplateRequestCmd.PackageOption packageOption = new OxoTemplateRequestCmd.PackageOption();
-                packageOption.setPackSize(titleSize);
+                List<OxoEditCmd> ipdOXOOutputs1 = option.getPackInfos().stream().filter(y -> StringUtils.equals(y.getModelYear(), x.getModelYear()) &&
+                        StringUtils.equals(y.getSalesCode(), x.getSalesCode()) && StringUtils.equals(y.getDriveHandCode(), x.getDriveHandCode())
+                        && StringUtils.equals(y.getRegionCode(), x.getRegionCode()) &&
+                        !StringUtils.equals(y.getChangeType(), CompareChangeTypeEnum.DELETE.getName())).toList();
+                //delete 列需要删除
+                if (ipdOXOOutputs1.size() > 0 && !StringUtils.equals(x.getChangeType(), CompareChangeTypeEnum.DELETE.getName())) {
+
+                    if (Objects.nonNull(x.getCompareOxoEdit())) {
+                        packageOption.setPackageOption(OxoOptionPackageTypeEnum.getByType(x.getCompareOxoEdit().getPackageCode()).getCode() +
+                                x.getCompareOxoEdit().getDescription() + " > " +
+                                OxoOptionPackageTypeEnum.getByType(x.getPackageCode()).getCode() + x.getDescription());
+                    }
+                    if (!StringUtils.equals(CompareChangeTypeEnum.NO_CHANGE.getName(), x.getChangeType()) &&
+                            !StringUtils.equals(CompareChangeTypeEnum.DEL.getName(), x.getChangeType())) {
+                        packageOption.setColor("#f0e68c");  //黄色
+                    }
+                }
+
+                if (StringUtils.isBlank(packageOption.getPackageOption())) {
+                    packageOption.setPackageOption(OxoOptionPackageTypeEnum.getByType(x.getPackageCode()).getCode() + x.getDescription());
+                }
                 options.add(packageOption);
             }
         });

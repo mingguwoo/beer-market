@@ -62,4 +62,10 @@ public interface BomsBaseVehicleDao extends IService<BomsBaseVehicleEntity> {
      */
     List<BomsBaseVehicleEntity> queryByIdList(List<Long> idList);
 
+    /**
+     * 根据id列表 active查询
+     * @param headIds
+     * @return
+     */
+    List<BomsBaseVehicleEntity>  queryByModelCodeAndIdsAndActive(List<Long> headIds,String modelCode);
 }

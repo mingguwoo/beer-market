@@ -35,18 +35,16 @@
     </tr>
 
     <#list templates as item>
-    <tr>
-        <td style="text-align: left"><span style="font-size: 10pt;text-align: left">${item.changeType?default('')}</span></td>
-        <td style="text-align: left;background-color:${item.color?default('')}"><span style="font-size: 10pt;text-align:left">${item.featureCode?default('')}</span></td>
-        <td style="text-align: left;background-color:${item.color?default('')}"><span style="font-size: 10pt;text-align:left">${item.disPlayName?default('')}</span></td>
-        <td style="text-align: left;background-color:${item.color?default('')}"><span style="font-size: 10pt;text-align:left">${item.name?default('')}</span></td>
-        <td style="text-align: left;background-color:${item.color?default('')}"><span style="font-size: 10pt;text-align:left">${item.library?default('')}</span></td>
-        <#if item.packageOptions?? && (item.packageOptions?size > 0) >
-        <#list item.packageOptions as pack>
-        <td style="text-align: center;background-color:${pack.color?default('')}"><span style="font-size: 10pt;text-align:center" colspan=${pack.packSize}>${pack.packageOption?default('')}</span></td>
-    </#if>
-    </#list>
-    </tr>
+<tr>
+    <td style="text-align: left"><span style="font-size: 10pt;text-align: left">${item.changeType?default('')}</span></td>
+    <td style="text-align: left;background-color:${item.color?default('')}"><span style="font-size: 10pt;text-align:left">${item.featureCode?default('')}</span></td>
+    <td style="text-align: left;background-color:${item.color?default('')}"><span style="font-size: 10pt;text-align:left">${item.disPlayName?default('')}</span></td>
+    <td style="text-align: left;background-color:${item.color?default('')}"><span style="font-size: 10pt;text-align:left">${item.name?default('')}</span></td>
+    <td style="text-align: left;background-color:${item.color?default('')}"><span style="font-size: 10pt;text-align:left">${item.library?default('')}</span></td>
+    <#list item.packageOptions as pack>
+    <td style="text-align: center;background-color:${pack.color?default('')}"><span style="font-size: 10pt;text-align:center" colspan=${pack.packSize}>${pack.packageOption?default('')}</span></td>
+</#list>
+</tr>
 </#list>
 </tbody>
 </table>

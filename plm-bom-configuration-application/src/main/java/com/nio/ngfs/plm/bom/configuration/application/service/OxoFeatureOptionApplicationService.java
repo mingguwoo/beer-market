@@ -73,4 +73,11 @@ public interface OxoFeatureOptionApplicationService {
      * @return
      */
     List<String> checkRules(String modelCode);
+
+
+    /**
+     * 更新软删除
+     * @param modelCode
+     */
+    void updateSoftDelete(String modelCode);
 }

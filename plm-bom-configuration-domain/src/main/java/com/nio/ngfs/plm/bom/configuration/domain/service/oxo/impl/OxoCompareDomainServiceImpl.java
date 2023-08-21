@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.nio.bom.share.enums.BrandEnum;
+import com.nio.bom.share.utils.GZIPUtils;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.EmailFacade;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.MatrixRuleFacade;
@@ -23,6 +24,7 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoRowsQry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.compress.compressors.gzip.GzipUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -460,7 +462,7 @@ public class OxoCompareDomainServiceImpl implements OxoCompareDomainService {
         String modelCode = oxoVersionSnapshot.getModelCode();
 
         //最新oxo版本
-        OxoListQry newOxoListOry = JSONObject.parseObject(JSONArray.parse(oxoVersionSnapshot.getOxoSnapshot()).toString(), OxoListQry.class);
+        OxoListQry newOxoListOry = JSONObject.parseObject(JSONArray.parse(GZIPUtils.uncompress(oxoVersionSnapshot.getOxoSnapshot())).toString(), OxoListQry.class);
 
         List<OxoHeadQry> compareInfos = compareOxoListQry.getOxoHeadResps();
 
@@ -616,7 +618,11 @@ public class OxoCompareDomainServiceImpl implements OxoCompareDomainService {
         for (String user : users) {
             EmailParamDto emailParamDto = new EmailParamDto();
             emailParamDto.setTemplateNo(oxoEmailTemplateNo);
-            emailParamDto.setReceiverEmail(user + "@nio.com");
+            if(!StringUtils.contains(user,"@nio.com")) {
+                emailParamDto.setReceiverEmail(user + "@nio.com");
+            }else{
+                emailParamDto.setReceiverEmail(user);
+            }
             emailParamDto.setVariables(JSON.parseObject(JSONObject.toJSONString(templateRequest), Map.class));
             try {
                 log.info("sendEmail request:{},user:{}", JSONObject.toJSONString(templateRequest), user);

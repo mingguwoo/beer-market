@@ -65,7 +65,7 @@ public class OxoFeatureOptionRepositoryImpl implements OxoFeatureOptionRepositor
     public List<OxoFeatureOptionAggr> queryFeatureListsByModel(String modelCode) {
 
         List<BomsOxoFeatureOptionEntity> bomsOxoFeatureOptionEntities =
-                bomsOxoFeatureOptionDao.queryOxoFeatureOptionByModel(modelCode, false);
+                bomsOxoFeatureOptionDao.queryOxoFeatureOptionByModel(modelCode, null);
 
         if (CollectionUtils.isEmpty(bomsOxoFeatureOptionEntities)) {
             return Lists.newArrayList();
@@ -106,11 +106,11 @@ public class OxoFeatureOptionRepositoryImpl implements OxoFeatureOptionRepositor
     }
 
     @Override
-    public List<OxoFeatureOptionAggr> queryFeatureListsByModelAndSortDelete(String modelCode) {
+    public List<OxoFeatureOptionAggr> queryFeatureListsByModelAndSortDelete(String modelCode, Boolean isSoftDelete) {
 
 
         List<BomsOxoFeatureOptionEntity> entities =
-                bomsOxoFeatureOptionDao.queryOxoFeatureOptionByModel(modelCode, true);
+                bomsOxoFeatureOptionDao.queryOxoFeatureOptionByModel(modelCode, isSoftDelete);
 
         return BeanConvertUtils.convertListTo(entities, OxoFeatureOptionAggr::new);
     }
@@ -124,6 +124,11 @@ public class OxoFeatureOptionRepositoryImpl implements OxoFeatureOptionRepositor
     @Override
     public void updateOxoFeatureOptions(List<OxoFeatureOptionAggr> oxoFeatureOptionAggrs) {
         bomsOxoFeatureOptionDao.updateOxoFeatureOptions(oxoFeatureOptionAggrs);
+    }
+
+    @Override
+    public void restoreOxoFeatureOptionByIds(List<Long> ids, Integer isDelete) {
+        bomsOxoFeatureOptionDao.restoreOxoFeatureOptionByIds(ids, isDelete);
     }
 
 

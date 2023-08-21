@@ -49,6 +49,14 @@ public interface BomsOxoFeatureOptionDao extends IService<BomsOxoFeatureOptionEn
 
 
     /**
+     * 恢复软删除
+     * @param ids
+     * @param isDelete
+     */
+    void restoreOxoFeatureOptionByIds(List<Long> ids, Integer isDelete);
+
+
+    /**
      * 批量新增更新 防止重复
      * @param entities
      */

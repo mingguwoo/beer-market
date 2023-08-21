@@ -87,6 +87,21 @@ public class BomsBaseVehicleDaoImpl extends AbstractDao<BomsBaseVehicleMapper, B
     }
 
     @Override
+    public List<BomsBaseVehicleEntity> queryByModelCodeAndIdsAndActive(List<Long> headIds,String modelCode) {
+
+
+        if (CollectionUtils.isEmpty(headIds)) {
+            return Lists.newArrayList();
+        }
+
+        LambdaQueryWrapper<BomsBaseVehicleEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.in(BomsBaseVehicleEntity::getId, headIds);
+        lambdaQueryWrapper.eq(BomsBaseVehicleEntity::getModelCode,modelCode);
+        lambdaQueryWrapper.eq(BomsBaseVehicleEntity::getStatus, StatusEnum.ACTIVE.getStatus());
+        return getBaseMapper().selectList(lambdaQueryWrapper);
+    }
+
+    @Override
     protected void fuzzyConditions(WherePageRequest<BomsBaseVehicleEntity> bomsBasicVehicleEntityWherePageRequest, LambdaQueryWrapper<BomsBaseVehicleEntity> queryWrapper) {
     }
 

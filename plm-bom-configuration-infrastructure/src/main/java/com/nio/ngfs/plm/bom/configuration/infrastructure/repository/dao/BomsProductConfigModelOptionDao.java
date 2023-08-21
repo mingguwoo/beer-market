@@ -11,14 +11,29 @@ import java.util.List;
  */
 public interface BomsProductConfigModelOptionDao extends IService<BomsProductConfigModelOptionEntity> {
 
+    /**
+     * 根据车型和Option Code查询
+     *
+     * @param modelCode  车型
+     * @param optionCode Option Code
+     * @return BomsProductConfigModelOptionEntity
+     */
+    BomsProductConfigModelOptionEntity getByModelAndOptionCode(String modelCode, String optionCode);
 
     /**
+     * 根据车型查询
      *
+     * @param modelCode 车型
+     * @return BomsProductConfigModelOptionEntity列表
+     */
+    List<BomsProductConfigModelOptionEntity> queryByModel(String modelCode);
+
+    /**
      * @param modelCode
      * @param featureCode
      * @param optionCode
      * @return
      */
-    List<BomsProductConfigModelOptionEntity>  queryProductConfigModelOptionByModelOrFeatureOrOptionCode(String modelCode, String featureCode,
-                                                                                                        String optionCode,List<String> optionCodes);
+    List<BomsProductConfigModelOptionEntity> queryProductConfigModelOptionByModelOrFeatureOrOptionCode(String modelCode, String featureCode,
+                                                                                                       String optionCode, List<String> optionCodes);
 }

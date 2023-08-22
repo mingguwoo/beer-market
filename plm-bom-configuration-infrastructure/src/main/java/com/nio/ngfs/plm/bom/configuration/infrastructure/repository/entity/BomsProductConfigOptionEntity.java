@@ -32,6 +32,11 @@ public class BomsProductConfigOptionEntity extends BaseEntity {
     private String optionCode;
 
     /**
+     * Feature Code
+     */
+    private String featureCode;
+
+    /**
      * 勾选状态，取值Select、Unselect
      */
     private String selectStatus;
@@ -52,6 +57,7 @@ public class BomsProductConfigOptionEntity extends BaseEntity {
                 "id = " + getId() +
                 ", pcId = " + pcId +
                 ", optionCode = " + optionCode +
+                ", featureCode = " + featureCode +
                 ", selectStatus = " + selectStatus +
                 ", selectCanEdit = " + selectCanEdit +
                 ", type = " + type +

@@ -13,15 +13,17 @@ public class ProductConfigOptionFactory {
     public static ProductConfigOptionAggr createFromPc(String pcId, ProductConfigOptionAggr copyFromAggr) {
         return ProductConfigOptionAggr.builder()
                 .productConfigOptionId(new ProductConfigOptionId(pcId, copyFromAggr.getOptionCode()))
+                .featureCode(copyFromAggr.getFeatureCode())
                 .selectStatus(copyFromAggr.getSelectStatus())
                 .selectCanEdit(CommonConstants.YES)
                 .type(ProductConfigOptionTypeEnum.FROM_PC.getType())
                 .build();
     }
 
-    public static ProductConfigOptionAggr createFromBaseVehicle(String pcId, String optionCode, boolean select, boolean selectCanEdit) {
+    public static ProductConfigOptionAggr createFromBaseVehicle(String pcId, String optionCode, String featureCode, boolean select, boolean selectCanEdit) {
         return ProductConfigOptionAggr.builder()
                 .productConfigOptionId(new ProductConfigOptionId(pcId, optionCode))
+                .featureCode(featureCode)
                 .selectStatus(select ? ProductConfigOptionSelectStatusEnum.SELECT.getStatus() : ProductConfigOptionSelectStatusEnum.UNSELECT.getStatus())
                 .selectCanEdit(selectCanEdit ? CommonConstants.YES : CommonConstants.NO)
                 .type(ProductConfigOptionTypeEnum.FROM_BASE_VEHICLE.getType())

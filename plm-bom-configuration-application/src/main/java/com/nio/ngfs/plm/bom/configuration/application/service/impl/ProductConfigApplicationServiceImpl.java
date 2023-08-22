@@ -80,6 +80,7 @@ public class ProductConfigApplicationServiceImpl implements ProductConfigApplica
             baseVehicleFeature.setOptionList(LambdaUtil.map(row.getOptions(), option -> {
                 BasedOnBaseVehicleOption baseVehicleOption = new BasedOnBaseVehicleOption();
                 baseVehicleOption.setOptionCode(option.getFeatureCode());
+                baseVehicleOption.setFeatureCode(row.getFeatureCode());
                 // 筛选指定BaseVehicleId
                 baseVehicleOption.setPackageCode(option.getPackInfos().stream()
                         .filter(i -> Objects.equals(i.getHeadId(), productConfigAggr.getBasedOnBaseVehicleId()))

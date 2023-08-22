@@ -12,6 +12,8 @@ public class BasedOnBaseVehicleOption {
 
     private String optionCode;
 
+    private String featureCode;
+
     private String packageCode;
 
     public boolean isDefault() {

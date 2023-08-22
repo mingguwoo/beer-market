@@ -23,6 +23,11 @@ public class ProductConfigOptionAggr extends AbstractDo implements AggrRoot<Prod
     private ProductConfigOptionId productConfigOptionId;
 
     /**
+     * Feature Code
+     */
+    private String featureCode;
+
+    /**
      * 勾选状态，取值Select、Unselect
      */
     private String selectStatus;

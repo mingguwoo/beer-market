@@ -3,6 +3,7 @@ CREATE TABLE `boms_product_config_option`
     `id`              bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
     `pc_id`           varchar(128)    NOT NULL DEFAULT '' COMMENT 'PC id',
     `option_code`     varchar(128)    NOT NULL DEFAULT '' COMMENT 'Option Code',
+    `feature_code`    varchar(128)    NOT NULL DEFAULT '' COMMENT 'Feature Code',
     `select_status`   varchar(16)     NOT NULL DEFAULT '' COMMENT '勾选状态，取值Select、Unselect',
     `select_can_edit` varchar(4)      NOT NULL DEFAULT '' COMMENT '勾选是否可编辑，取值Yes、No',
     `type`            tinyint(4)      NOT NULL DEFAULT 0 COMMENT '类型，0-正常，1-From Base Vehicle，2-From PC',

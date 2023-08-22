@@ -34,16 +34,16 @@ public class ProductConfigOptionDomainServiceImpl implements ProductConfigOption
             baseVehicleFeature.getOptionList().forEach(option -> {
                 if (ALL_Default == basedOnBaseVehicleTypeEnum) {
                     // 所有Option自动勾选，不可编辑
-                    productConfigOptionAggrList.add(ProductConfigOptionFactory.createFromBaseVehicle(pcId, option.getOptionCode(), true, false));
+                    productConfigOptionAggrList.add(ProductConfigOptionFactory.createFromBaseVehicle(pcId, option.getOptionCode(), option.getFeatureCode(), true, false));
                 } else if (ALL_Default_AND_Unavailable == basedOnBaseVehicleTypeEnum) {
                     // 实心圆的Option自动勾选，不可编辑
-                    productConfigOptionAggrList.add(ProductConfigOptionFactory.createFromBaseVehicle(pcId, option.getOptionCode(), option.isDefault(), false));
+                    productConfigOptionAggrList.add(ProductConfigOptionFactory.createFromBaseVehicle(pcId, option.getOptionCode(), option.getFeatureCode(), option.isDefault(), false));
                 } else if (ALL_Unavailable == basedOnBaseVehicleTypeEnum) {
                     // 所有Option都不勾选，不可编辑
-                    productConfigOptionAggrList.add(ProductConfigOptionFactory.createFromBaseVehicle(pcId, option.getOptionCode(), false, false));
+                    productConfigOptionAggrList.add(ProductConfigOptionFactory.createFromBaseVehicle(pcId, option.getOptionCode(), option.getFeatureCode(), false, false));
                 } else if (EXIST_Available == basedOnBaseVehicleTypeEnum) {
                     // 所有Option都不勾选，仅实心圆和空心圆的Option可编辑
-                    productConfigOptionAggrList.add(ProductConfigOptionFactory.createFromBaseVehicle(pcId, option.getOptionCode(), false, option.isDefault() || option.isAvailable()));
+                    productConfigOptionAggrList.add(ProductConfigOptionFactory.createFromBaseVehicle(pcId, option.getOptionCode(), option.getFeatureCode(), false, option.isDefault() || option.isAvailable()));
                 }
             });
         });

@@ -1,6 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.productconfig;
 
 import com.nio.bom.share.constants.CommonConstants;
+import com.nio.bom.share.enums.YesOrNoEnum;
 import com.nio.bom.share.domain.model.AggrRoot;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
@@ -101,6 +102,15 @@ public class ProductConfigAggr extends AbstractDo implements AggrRoot<String> {
         if (basedOnBaseVehicleId != null && oxoVersionSnapshotId == null) {
             throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_OXO_VERSION_SNAPSHOT_ID_IS_NULL);
         }
+        // 设置completeInitSelect
+        if (basedOnBaseVehicleId != null) {
+            // Copy From Base Vehicle，默认未完成初始化勾选
+            setCompleteInitSelect(YesOrNoEnum.NO.getCode());
+        } else {
+            // 其它情况，默认完成初始化勾选
+            setCompleteInitSelect(YesOrNoEnum.YES.getCode());
+        }
+        // 设置Skip Check开关，默认关闭
         setSkipCheck(CommonConstants.CLOSE);
     }
 

@@ -4,6 +4,7 @@ package com.nio.ngfs.plm.bom.configuration.application.query.oxo;
 import com.google.common.collect.Lists;
 import com.nio.ngfs.plm.bom.configuration.application.query.oxo.common.OxoExcelUtil;
 import com.nio.ngfs.plm.bom.configuration.application.service.OxoFeatureOptionApplicationService;
+import com.nio.ngfs.plm.bom.configuration.application.service.OxoQueryApplicationService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoBaseCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ import java.util.List;
 public class OxoInfoExportQuery {
 
 
-    private final OxoFeatureOptionApplicationService oxoFeatureOptionApplicationService;
+    private final OxoQueryApplicationService oxoQueryApplicationService;
 
 
     /**
@@ -50,7 +51,7 @@ public class OxoInfoExportQuery {
         String version = oxoBaseCmd.getVersion();
 
         //查询oxo  info数据
-        OxoListQry qry = oxoFeatureOptionApplicationService.queryOxoInfoByModelCode(modelCode, version,false);
+        OxoListQry qry = oxoQueryApplicationService.queryOxoInfoByModelCode(modelCode, version,false);
 
 
         //导出数据

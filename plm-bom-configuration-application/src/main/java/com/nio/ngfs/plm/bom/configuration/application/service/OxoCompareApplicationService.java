@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.domain.service.oxo;
+package com.nio.ngfs.plm.bom.configuration.application.service;
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotAggr;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
@@ -6,7 +6,7 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
 /**
  * @author wangchao.wang
  */
-public interface OxoCompareDomainService {
+public interface OxoCompareApplicationService {
 
 
     /**

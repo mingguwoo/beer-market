@@ -44,6 +44,9 @@ public class  OxoController {
     private final OxoInfoQuery oxoInfoQuery;
     private final OxoFeatureOptionQuery oxoFeatureOptionQuery;
     private final OxoQueryGroupQuery oxoQueryGroupQuery;
+    private final OxoCompareQuery oxoCompareQuery;
+
+    private final OxoChangeLogQuery oxoChangeLogQuery;
 
 
 
@@ -157,16 +160,16 @@ public class  OxoController {
     }
 
 
-//    /**
-//     * 版本对比
-//     * @param compareCmd
-//     * @return
-//     */
-//    @PostMapping("/compare")
-//    public ResultInfo<OxoListsRespDto> compare(@Valid @RequestBody OxoCompareCmd compareCmd) {
-//        return ResultInfo.success(oxoDomainService.compare(compareCmd));
-//    }
-//
+    /**
+     * 版本对比
+     * @param compareCmd
+     * @return
+     */
+    @PostMapping("/compare")
+    public ResultInfo<OxoListQry> compare(@Valid @RequestBody OxoCompareQry oxoCompareQry) {
+        return ResultInfo.success(oxoCompareQuery.execute(oxoCompareQry));
+    }
+
     /**
      * oxo 导出
      * @param cmd
@@ -185,7 +188,7 @@ public class  OxoController {
     @NeedAuthorization
     @NotLogResult
     @PostMapping("/compareExport")
-    public void compareExport(@Valid @RequestBody OxoCompareCmd compareCmd,HttpServletResponse response) {
+    public void compareExport(@Valid @RequestBody OxoCompareQry compareCmd,HttpServletResponse response) {
         //oxoDomainService.compareExport(compareCmd,response);
 
 
@@ -196,11 +199,10 @@ public class  OxoController {
      * @param oxoBaseCmd
      * @return
      */
-    @NeedAuthorization
+    //@NeedAuthorization
     @NotLogResult
     @PostMapping("/queryChangeLog")
     public ResultInfo<PageData<OxoChangeLogRespDto>> queryChangeLog(@Valid @RequestBody OxoBaseCmd oxoBaseCmd) {
-        //return ResultInfo.success(oxoDomainService.queryChangeLog(oxoBaseCmd));
-        return null;
+        return ResultInfo.success(oxoChangeLogQuery.execute(oxoBaseCmd));
     }
 }

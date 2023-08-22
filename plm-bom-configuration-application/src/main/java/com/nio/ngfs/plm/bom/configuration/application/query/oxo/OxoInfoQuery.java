@@ -2,6 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.application.query.oxo;
 
 import com.nio.ngfs.plm.bom.configuration.application.query.Query;
 import com.nio.ngfs.plm.bom.configuration.application.service.OxoFeatureOptionApplicationService;
+import com.nio.ngfs.plm.bom.configuration.application.service.OxoQueryApplicationService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoBaseCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
 import lombok.RequiredArgsConstructor;
@@ -17,12 +18,12 @@ public class OxoInfoQuery implements Query<OxoBaseCmd, OxoListQry> {
 
 
 
-    private final OxoFeatureOptionApplicationService featureOptionApplicationService;
+    private final OxoQueryApplicationService oxoQueryApplicationService;
 
 
     @Override
     public OxoListQry execute(OxoBaseCmd oxoListQry) {
-        return featureOptionApplicationService.queryOxoInfoByModelCode(
+        return oxoQueryApplicationService.queryOxoInfoByModelCode(
                 oxoListQry.getModelCode(),oxoListQry.getVersion(),false);
     }
 }

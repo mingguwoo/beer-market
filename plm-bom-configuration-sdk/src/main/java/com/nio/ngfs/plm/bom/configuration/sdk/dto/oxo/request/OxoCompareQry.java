@@ -7,7 +7,7 @@ import lombok.Data;
  * @author wangchao.wang
  */
 @Data
-public class OxoCompareCmd extends OxoBaseCmd{
+public class OxoCompareQry extends OxoBaseCmd{
 
     private String baseVersion;
 

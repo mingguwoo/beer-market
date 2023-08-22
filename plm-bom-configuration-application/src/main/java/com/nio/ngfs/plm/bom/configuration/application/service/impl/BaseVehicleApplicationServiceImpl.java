@@ -45,7 +45,6 @@ public class BaseVehicleApplicationServiceImpl implements BaseVehicleApplication
         List<Long> regionList = new ArrayList<>();
         List<Long> driveList= new ArrayList<>();
         List<Long> salesList= new ArrayList<>();
-        Map<String,Long> pointRecord = new HashMap<>();
         Map<String,Long> rowRecord = new HashMap<>();
         rows.forEach(row->{
             //将行分类
@@ -58,8 +57,7 @@ public class BaseVehicleApplicationServiceImpl implements BaseVehicleApplication
             if (row.getFeatureCode().substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO).equals(ConfigConstants.BASE_VEHICLE_DRIVE_HAND_FEATURE.substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO))){
                 driveList.add(row.getId());
             }
-            pointRecord.put(row.getFeatureCode(),row.getId());
-            rowRecord.put(row.getDisplayName(),row.getId());
+            rowRecord.put(row.getFeatureCode(),row.getId());
         });
         //确定要更新的点
         aggrs.forEach(aggr->{

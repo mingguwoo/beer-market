@@ -130,6 +130,10 @@ public class BaseVehicleApplicationServiceImpl implements BaseVehicleApplication
         //base vehicle增加记录
         baseVehicleRepository.save(baseVehicleAggr);
         //oxo打点
+        packages = packages.stream().map(point->{
+            point.setBaseVehicleId(baseVehicleAggr.getId());
+            return point;
+        }).toList();
         oxoOptionPackageRepository.inserOxoOptionPackagesByOxoOptionPackages(packages);
         //copyFrom打点
         addCopyFromPoints(cmd,baseVehicleAggr);

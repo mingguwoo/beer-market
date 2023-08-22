@@ -1,8 +1,11 @@
 package com.nio.ngfs.plm.bom.configuration.application.command.basevehicle;
 
 import com.nio.ngfs.plm.bom.configuration.application.service.BaseVehicleApplicationService;
+import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleFactory;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageAggr;
@@ -26,13 +29,15 @@ public class AddBaseVehicleCommand {
     private final BaseVehicleDomainService baseVehicleDomainService;
     private final OxoFeatureOptionRepository oxoFeatureOptionRepository;
     private final BaseVehicleApplicationService baseVehicleApplicationService;
+    private final FeatureRepository featureRepository;
 
     public AddBaseVehicleRespDto execute(AddBaseVehicleCmd cmd){
         BaseVehicleAggr baseVehicleAggr = BaseVehicleFactory.createBaseVehicle(cmd);
         baseVehicleDomainService.checkBaseVehicleUnique(baseVehicleAggr);
         baseVehicleAggr.addBaseVehicle(cmd);
-        //获取oxo行id(region,driveHand,salesVersion三个点)
-        List<OxoFeatureOptionAggr> oxoFeatureOptionAggrList = oxoFeatureOptionRepository.queryByModelAndFeatureCodeList(baseVehicleAggr.getModelCode(),baseVehicleAggr.buildCodeList());
+        List<String> codeList = featureRepository.queryByParentFeatureCodeListAndType(ConfigConstants.BASE_VEHICLE_FEATURE_CODE_LIST, FeatureTypeEnum.OPTION.getType()).stream().map(option->option.getFeatureCode()).toList();
+        //获取oxo行id(region,driveHand,salesVersion相关行)
+        List<OxoFeatureOptionAggr> oxoFeatureOptionAggrList = oxoFeatureOptionRepository.queryByModelAndFeatureCodeList(baseVehicleAggr.getModelCode(),codeList);
         //构建打点用的聚合根
         List<OxoOptionPackageAggr> packages = OxoOptionPackageFactory.createOxoOptionPackageAggrList(oxoFeatureOptionAggrList,baseVehicleAggr);
         baseVehicleApplicationService.addBaseVehicleSaveToDb(baseVehicleAggr,packages,cmd);

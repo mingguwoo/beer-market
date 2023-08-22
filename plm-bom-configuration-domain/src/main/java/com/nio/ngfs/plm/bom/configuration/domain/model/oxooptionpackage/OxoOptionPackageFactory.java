@@ -59,9 +59,9 @@ public class OxoOptionPackageFactory {
             oxoPackageInfoAggr.setFeatureOptionId(oxoFeatureOptionAggr.getId());
             oxoPackageInfoAggr.setBaseVehicleId(baseVehicleAggr.getId());
             //如果是被选中的点
-            if (Objects.equals(oxoFeatureOptionAggr.getDisplayName(),baseVehicleAggr.getDriveHand())
-            || Objects.equals(oxoFeatureOptionAggr.getDisplayName(),baseVehicleAggr.getRegionOptionCode())
-            || Objects.equals(oxoFeatureOptionAggr.getDisplayName(),baseVehicleAggr.getSalesVersion())){
+            if (Objects.equals(oxoFeatureOptionAggr.getFeatureCode(),baseVehicleAggr.getDriveHand())
+            || Objects.equals(oxoFeatureOptionAggr.getFeatureCode(),baseVehicleAggr.getRegionOptionCode())
+            || Objects.equals(oxoFeatureOptionAggr.getFeatureCode(),baseVehicleAggr.getSalesVersion())){
                 oxoPackageInfoAggr.setPackageCode("Default");
             }
             else{
@@ -69,7 +69,6 @@ public class OxoOptionPackageFactory {
             }
             oxoPackageInfoAggr.setBrand(ConfigConstants.brandName.get());
             oxoPackageInfoAggr.setCreateUser(baseVehicleAggr.getCreateUser());
-            oxoPackageInfoAggr.setBrand(ConfigConstants.brandName.get());
             return oxoPackageInfoAggr;
         }).toList();
         return resList;

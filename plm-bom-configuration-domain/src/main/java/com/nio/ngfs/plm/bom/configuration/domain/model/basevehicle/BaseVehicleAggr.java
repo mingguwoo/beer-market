@@ -15,8 +15,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -130,12 +128,5 @@ public class BaseVehicleAggr extends AbstractDo implements AggrRoot<String>, Clo
         if (Objects.isNull(StatusEnum.getByStatus(cmd.getStatus()))){
             throw new BusinessException(ConfigErrorCode.BASE_VEHICLE_STATUS_INVALID);
         }
-    }
-
-    /**
-     * 将BaseVehicle的regionOptionCode，salesVersion，driveHand组成一个codeList并返回
-     */
-    public List<String> buildCodeList(){
-        return Arrays.asList(getRegionOptionCode(),getDriveHand(),getSalesVersion());
     }
 }

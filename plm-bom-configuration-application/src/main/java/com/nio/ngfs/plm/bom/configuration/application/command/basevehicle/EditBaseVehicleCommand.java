@@ -24,7 +24,7 @@ public class EditBaseVehicleCommand {
         baseVehicleDomainService.checkBaseVehicleExist(baseVehicleAggr);
         baseVehicleAggr.editBaseVehicle(cmd);
         baseVehicleDomainService.checkBaseVehicleUnique(baseVehicleAggr);
-        baseVehicleApplicationService.editBaseVehicleSaveToDb(baseVehicleAggr,cmd);
+        baseVehicleApplicationService.editBaseVehicleAndOxo(baseVehicleAggr,cmd);
         return new EditBaseVehicleRespDto();
     }
 

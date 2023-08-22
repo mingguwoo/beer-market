@@ -7,6 +7,7 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.request.AddBaseVeh
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.request.EditBaseVehicleCmd;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author bill.wang
@@ -14,7 +15,7 @@ import java.util.List;
  */
 public interface BaseVehicleApplicationService {
 
-    List<OxoOptionPackageAggr> EditBaseVehicleFilter (BaseVehicleAggr baseVehicleAggr, List<OxoOptionPackageAggr> aggrs, List<OxoFeatureOptionAggr> rows);
+    void EditBaseVehicleFilter(BaseVehicleAggr baseVehicleAggr, List<OxoOptionPackageAggr> aggrs, List<OxoFeatureOptionAggr> rows,List<OxoOptionPackageAggr> editPoints,EditBaseVehicleCmd cmd);
 
     List<OxoFeatureOptionAggr> queryRegionSalesDrivePoints(String modelCode);
 
@@ -24,6 +25,6 @@ public interface BaseVehicleApplicationService {
 
     void deleteBaseVehicleSaveToDb(BaseVehicleAggr baseVehicleAggr);
 
-    void editBaseVehicleSaveToDb(BaseVehicleAggr baseVehicleAggr, EditBaseVehicleCmd cmd);
+    void editBaseVehicleAndOxo(BaseVehicleAggr baseVehicleAggr, EditBaseVehicleCmd cmd);
 
 }

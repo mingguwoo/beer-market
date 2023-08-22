@@ -35,7 +35,6 @@ public class ProductContextApplicationServiceImpl implements ProductContextAppli
 
     private final OxoVersionSnapshotDomainService oxoVersionSnapshotDomainService;
     private final FeatureDomainService featureDomainService;
-    private final FeatureRepository featureRepository;
     private final ProductContextRepository productContextRepository;
     private final ProductContextFeatureRepository productContextFeatureRepository;
     private final ModelFacade modelFacade;

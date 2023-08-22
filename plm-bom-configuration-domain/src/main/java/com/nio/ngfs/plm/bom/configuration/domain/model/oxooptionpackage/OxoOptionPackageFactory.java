@@ -2,6 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage;
 
 
 import com.google.common.collect.Lists;
+import com.nio.bom.share.constants.CommonConstants;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
@@ -9,6 +10,7 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoEditCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoHeadQry;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author xiaozhou.tu
@@ -53,11 +55,19 @@ public class OxoOptionPackageFactory {
 
     public static List<OxoOptionPackageAggr> createOxoOptionPackageAggrList (List<OxoFeatureOptionAggr> oxoFeatureOptionAggrList, BaseVehicleAggr baseVehicleAggr){
         List<OxoOptionPackageAggr> resList =
-                oxoFeatureOptionAggrList.stream().map(oxoFeatureOptionAggr -> {
-                    OxoOptionPackageAggr oxoPackageInfoAggr = new OxoOptionPackageAggr();
+            oxoFeatureOptionAggrList.stream().map(oxoFeatureOptionAggr -> {
+            OxoOptionPackageAggr oxoPackageInfoAggr = new OxoOptionPackageAggr();
             oxoPackageInfoAggr.setFeatureOptionId(oxoFeatureOptionAggr.getId());
             oxoPackageInfoAggr.setBaseVehicleId(baseVehicleAggr.getId());
-            oxoPackageInfoAggr.setPackageCode("Default");
+            //如果是被选中的点
+            if (Objects.equals(oxoFeatureOptionAggr.getDisplayName(),baseVehicleAggr.getDriveHand())
+            || Objects.equals(oxoFeatureOptionAggr.getDisplayName(),baseVehicleAggr.getRegionOptionCode())
+            || Objects.equals(oxoFeatureOptionAggr.getDisplayName(),baseVehicleAggr.getSalesVersion())){
+                oxoPackageInfoAggr.setPackageCode("Default");
+            }
+            else{
+                oxoPackageInfoAggr.setPackageCode("Unavailable");
+            }
             oxoPackageInfoAggr.setBrand(ConfigConstants.brandName.get());
             oxoPackageInfoAggr.setCreateUser(baseVehicleAggr.getCreateUser());
             oxoPackageInfoAggr.setBrand(ConfigConstants.brandName.get());

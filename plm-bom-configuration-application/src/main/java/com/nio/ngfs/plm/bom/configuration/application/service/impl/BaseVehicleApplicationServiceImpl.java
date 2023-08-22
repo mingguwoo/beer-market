@@ -16,13 +16,11 @@ import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoFeatureOptionDom
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.request.AddBaseVehicleCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.request.EditBaseVehicleCmd;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -30,6 +28,7 @@ import java.util.stream.Stream;
  * @author bill.wang
  * @date 2023/8/3
  */
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class BaseVehicleApplicationServiceImpl implements BaseVehicleApplicationService {
@@ -41,12 +40,13 @@ public class BaseVehicleApplicationServiceImpl implements BaseVehicleApplication
     private final BaseVehicleRepository baseVehicleRepository;
 
     @Override
-    public List<OxoOptionPackageAggr> EditBaseVehicleFilter(BaseVehicleAggr baseVehicleAggr, List<OxoOptionPackageAggr> aggrs, List<OxoFeatureOptionAggr> rows) {
+    public void EditBaseVehicleFilter(BaseVehicleAggr baseVehicleAggr, List<OxoOptionPackageAggr> aggrs, List<OxoFeatureOptionAggr> rows,List<OxoOptionPackageAggr> editPoints,EditBaseVehicleCmd cmd) {
         //先筛选所有行，将他们分成三类
         List<Long> regionList = new ArrayList<>();
         List<Long> driveList= new ArrayList<>();
         List<Long> salesList= new ArrayList<>();
         Map<String,Long> pointRecord = new HashMap<>();
+        Map<String,Long> rowRecord = new HashMap<>();
         rows.forEach(row->{
             //将行分类
             if (row.getFeatureCode().substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO).equals(ConfigConstants.BASE_VEHICLE_SALES_VERSION_FEATURE.substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO))){
@@ -59,20 +59,39 @@ public class BaseVehicleApplicationServiceImpl implements BaseVehicleApplication
                 driveList.add(row.getId());
             }
             pointRecord.put(row.getFeatureCode(),row.getId());
+            rowRecord.put(row.getDisplayName(),row.getId());
         });
-        //修改点
-        return aggrs.stream().map(point->{
-            if (salesList.contains(point.getFeatureOptionId())){
-                point.setFeatureOptionId(pointRecord.get(baseVehicleAggr.getSalesVersion()));
+        //确定要更新的点
+        aggrs.forEach(aggr->{
+            if (salesList.contains(aggr.getFeatureOptionId())){
+                //如果是需要修改为空心圈的点
+                if (Objects.equals(rowRecord.get(baseVehicleAggr.getSalesVersion()),aggr.getFeatureOptionId())){
+                    aggr.setPackageCode("Default");
+                }
+                else {
+                    aggr.setPackageCode("Unavailable");
+                }
+                editPoints.add(aggr);
             }
-            if (driveList.contains(point.getFeatureOptionId())){
-                point.setFeatureOptionId(pointRecord.get(baseVehicleAggr.getDriveHand()));
+            if (driveList.contains(aggr.getFeatureOptionId())){
+                if (Objects.equals(rowRecord.get(baseVehicleAggr.getDriveHand()),aggr.getFeatureOptionId())){
+                    aggr.setPackageCode("Default");
+                }
+                else {
+                    aggr.setPackageCode("Unavailable");
+                }
+                editPoints.add(aggr);
             }
-            if (regionList.contains(point.getFeatureOptionId())){
-                point.setFeatureOptionId(pointRecord.get(baseVehicleAggr.getRegionOptionCode()));
+            if (regionList.contains(aggr.getFeatureOptionId())){
+                if (Objects.equals(rowRecord.get(baseVehicleAggr.getRegionOptionCode()),aggr.getFeatureOptionId())){
+                    aggr.setPackageCode("Default");
+                }
+                else {
+                    aggr.setPackageCode("Unavailable");
+                }
+                editPoints.add(aggr);
             }
-            return point;
-        }).collect(Collectors.toList());
+        });
     }
 
     @Override
@@ -126,15 +145,21 @@ public class BaseVehicleApplicationServiceImpl implements BaseVehicleApplication
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void editBaseVehicleSaveToDb(BaseVehicleAggr baseVehicleAggr, EditBaseVehicleCmd cmd) {
-        baseVehicleRepository.save(baseVehicleAggr);
+
+    public void editBaseVehicleAndOxo(BaseVehicleAggr baseVehicleAggr, EditBaseVehicleCmd cmd) {
+        //记录option的display name与option code的关系
         //获取该baseVehicle下所有点
         List<OxoOptionPackageAggr> oxoOptionPackageAggrs = oxoOptionPackageRepository.queryByBaseVehicleId(baseVehicleAggr.getId());
         //获取和region,salesVersion,driveHand，modelCode有关的所有行信息，用于筛选
         List<OxoFeatureOptionAggr> driveHandRegionSalesVersionRows = queryRegionSalesDrivePoints(cmd.getModelCode());
         //筛选得到相关的打点信息(region,salesVersion,driveHand)
-        List<OxoOptionPackageAggr> newPoints = EditBaseVehicleFilter(baseVehicleAggr, oxoOptionPackageAggrs,driveHandRegionSalesVersionRows);
-        oxoOptionPackageRepository.saveOrUpdatebatch(newPoints);
+        List<OxoOptionPackageAggr> editPoints = new ArrayList<>();
+        EditBaseVehicleFilter(baseVehicleAggr, oxoOptionPackageAggrs,driveHandRegionSalesVersionRows,editPoints,cmd);
+        editBaseVehicleAndOxoSaveToDb(baseVehicleAggr,editPoints);
+    }
+    @Transactional(rollbackFor = Exception.class)
+    void editBaseVehicleAndOxoSaveToDb(BaseVehicleAggr baseVehicleAggr, List<OxoOptionPackageAggr> editPoints){
+        baseVehicleRepository.save(baseVehicleAggr);
+        oxoOptionPackageRepository.saveOrUpdatebatch(editPoints);
     }
 }

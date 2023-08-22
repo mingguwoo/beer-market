@@ -59,7 +59,7 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
     }
 
     @Override
-    @NeedAuthorization
+//    @NeedAuthorization
     @NotLogResult
     public ResultInfo<EditBaseVehicleRespDto> editBaseVehicle(@Valid @RequestBody EditBaseVehicleCmd cmd) {
         return ResultInfo.success(editBaseVehicleCommand.execute(cmd));

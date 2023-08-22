@@ -7,7 +7,6 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.request.AddBaseVeh
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.request.EditBaseVehicleCmd;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author bill.wang

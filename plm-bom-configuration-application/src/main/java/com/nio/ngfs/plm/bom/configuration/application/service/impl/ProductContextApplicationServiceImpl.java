@@ -5,7 +5,6 @@ import com.nio.ngfs.plm.bom.configuration.application.service.ProductContextAppl
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.ModelFacade;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.ProductContextAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.ProductContextFactory;

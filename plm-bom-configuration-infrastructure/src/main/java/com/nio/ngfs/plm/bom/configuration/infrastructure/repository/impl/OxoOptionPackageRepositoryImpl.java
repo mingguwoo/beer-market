@@ -87,4 +87,5 @@ public class OxoOptionPackageRepositoryImpl implements OxoOptionPackageRepositor
     public void removeByBaseVehicleIds(Long baseVehicleId) {
         bomsOxoOptionPackageDao.removeByBaseVehicleIds(baseVehicleId);
     }
+
 }

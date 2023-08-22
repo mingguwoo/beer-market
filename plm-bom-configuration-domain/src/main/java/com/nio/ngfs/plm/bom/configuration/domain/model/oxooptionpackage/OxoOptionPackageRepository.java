@@ -63,4 +63,5 @@ public interface OxoOptionPackageRepository extends Repository<OxoOptionPackageA
      * 根据basevehicleId删除Oxo
      */
     void removeByBaseVehicleIds(Long baseVehicleId);
+
 }

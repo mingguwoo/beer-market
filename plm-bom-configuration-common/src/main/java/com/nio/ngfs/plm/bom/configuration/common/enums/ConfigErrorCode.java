@@ -90,6 +90,18 @@ public enum ConfigErrorCode implements ErrorCode {
     BOM_MIDDLE_PLATFORM_MODEL_NOT_EXIST(89000, "Model Not Exist In Bom Middle Platform!"),
     BOM_MIDDLE_PLATFORM_GET_MODEL_FAIL(89001, "Get Model From Bom Middle Platform Fail!"),
 
+
+
+    EMAIL_ERROR(89002,"send email error!"),
+
+
+
+
+    BASIC_VERSION_ERROR(89003,"对比版本号不能一样"),
+
+
+
+    VERSION_ERROR(89004,"版本{0}没有数据"),
     ;
 
     /**

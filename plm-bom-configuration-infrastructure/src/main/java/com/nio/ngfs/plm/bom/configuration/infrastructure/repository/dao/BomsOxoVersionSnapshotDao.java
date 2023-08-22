@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsOxoVersionSnapshotEntity;
 
@@ -36,5 +37,10 @@ public interface BomsOxoVersionSnapshotDao extends IService<BomsOxoVersionSnapsh
     void insertBomsOxoVersionSnapshot(BomsOxoVersionSnapshotEntity entity);
 
 
-
+    /**
+     * 根据 车型 分页查找
+     * @param modelCode
+     * @return
+     */
+    Page<BomsOxoVersionSnapshotEntity> querySnapshotByModel(String modelCode,String type,Integer pageSize,Integer pageNum);
 }

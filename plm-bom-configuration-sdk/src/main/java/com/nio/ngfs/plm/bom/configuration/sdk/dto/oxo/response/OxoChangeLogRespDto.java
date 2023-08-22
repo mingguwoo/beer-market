@@ -2,6 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response;
 
 
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.Dto;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.Qry;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.domain.service.oxo.impl;
+package com.nio.ngfs.plm.bom.configuration.application.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.nio.bom.share.enums.BrandEnum;
 import com.nio.bom.share.utils.GZIPUtils;
+import com.nio.ngfs.plm.bom.configuration.application.service.OxoCompareApplicationService;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.EmailFacade;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.MatrixRuleFacade;
@@ -17,7 +18,6 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.domainobject.CompareO
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.enums.CompareChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.enums.OxoOptionPackageTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotAggr;
-import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoCompareDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoEditCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoTemplateRequestCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoHeadQry;
@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class OxoCompareDomainServiceImpl implements OxoCompareDomainService {
+public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationService {
 
 
     @Value("${oxo.email.changeLog.url}")
@@ -628,12 +628,8 @@ public class OxoCompareDomainServiceImpl implements OxoCompareDomainService {
                 emailParamDto.setReceiverEmail(user);
             }
             emailParamDto.setVariables(JSON.parseObject(JSONObject.toJSONString(templateRequest), Map.class));
-            try {
-                log.info("sendEmail request:{},user:{}", JSONObject.toJSONString(templateRequest), user);
-                emailFacade.sendEmail(emailParamDto);
-            } catch (Exception e) {
-                log.error("sendBatchEmails failed", e);
-            }
+            emailFacade.sendEmail(emailParamDto);
+
         }
     }
 

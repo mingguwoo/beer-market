@@ -1,6 +1,8 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.nio.ngfs.common.model.page.WherePageRequest;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoVersionSnapshotDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsOxoVersionSnapshotEntity;
@@ -52,5 +54,17 @@ public class BomsOxoVersionSnapshotDaoImpl extends AbstractDao<BomsOxoVersionSna
     @Override
     public void insertBomsOxoVersionSnapshot(BomsOxoVersionSnapshotEntity entity) {
         getBaseMapper().insert(entity);
+    }
+
+    @Override
+    public Page<BomsOxoVersionSnapshotEntity> querySnapshotByModel(String modelCode,String type,Integer pageSize,Integer pageNum) {
+
+
+        LambdaQueryWrapper<BomsOxoVersionSnapshotEntity> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(BomsOxoVersionSnapshotEntity::getModelCode, modelCode);
+        queryWrapper.eq(BomsOxoVersionSnapshotEntity::getType,type);
+
+        Page<BomsOxoVersionSnapshotEntity> page = new Page<>(pageNum, pageSize);
+        return getBaseMapper().selectPage(page, queryWrapper);
     }
 }

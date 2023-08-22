@@ -1,6 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.application.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.nio.bom.share.exception.BusinessException;
@@ -30,6 +31,7 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsP
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoHeadQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoRowsQry;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.compress.utils.Sets;
@@ -148,15 +150,17 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
         // Option的打点置为-
         List<OxoOptionPackageAggr> updateOptionPackageAggrList = optionPackageAggrList.stream().filter(OxoOptionPackageAggr::deleteOptionPackage).toList();
         Map<Long, OxoFeatureOptionAggr> featureOptionMapById = LambdaUtil.toKeyMap(optionAggrList, OxoFeatureOptionAggr::getId);
-        List<String> messageList = checkDeleteOptionPackage(optionPackageAggrList, featureOptionMapById, modelCode);
+        Map<DeleteFeatureOptionCheckTypeEnum, Set<String>> messageTypeMap = checkDeleteOptionPackage(optionPackageAggrList, featureOptionMapById, modelCode);
+        // 组装结果提示信息
+        List<String> messageList = LambdaUtil.map(messageTypeMap.entrySet(), entry -> String.format(entry.getKey().getMessageFormat(),
+                Joiner.on(",").join(entry.getValue())));
         return Pair.of(updateOptionPackageAggrList, messageList);
     }
 
 
-
-    private List<String> checkDeleteOptionPackage(List<OxoOptionPackageAggr> optionPackageAggrList, Map<Long, OxoFeatureOptionAggr> featureOptionMapById,
-                                                  String modelCode) {
-        Map<String, String> messageMap = Maps.newHashMap();
+    private Map<DeleteFeatureOptionCheckTypeEnum, Set<String>> checkDeleteOptionPackage(List<OxoOptionPackageAggr> optionPackageAggrList, Map<Long, OxoFeatureOptionAggr> featureOptionMapById,
+                                                                                        String modelCode) {
+        Map<DeleteFeatureOptionCheckTypeEnum, Set<String>> messageTypeMap = Maps.newHashMap();
         // 打点按Option行分组
         Map<Long, List<OxoOptionPackageAggr>> optionPackageAggrMap = LambdaUtil.groupBy(optionPackageAggrList, OxoOptionPackageAggr::getFeatureOptionId);
         optionPackageAggrMap.forEach((featureOptionId, aggrList) -> {
@@ -168,20 +172,20 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
             OxoFeatureOptionAggr parent = featureOptionAggr.getParent();
             if (parent != null) {
                 // 勾选Feature的提示
-                messageMap.putIfAbsent(parent.getFeatureCode(), "The Options In Feature " + parent.getFeatureCode() + " Has Valid Assignment(Not \"-\")!");
+                messageTypeMap.getOrDefault(DeleteFeatureOptionCheckTypeEnum.WORKING_FEATURE, Sets.newHashSet()).add(parent.getFeatureCode());
             } else {
                 // 勾选Option的提示
-                messageMap.putIfAbsent(featureOptionAggr.getFeatureCode(), "Option " + featureOptionAggr.getFeatureCode() + " Has Valid Assignment(Not \"-\")!");
+                messageTypeMap.getOrDefault(DeleteFeatureOptionCheckTypeEnum.WORKING_OPTION, Sets.newHashSet()).add(featureOptionAggr.getFeatureCode());
             }
         });
         // 判断Option行在当前最新Formal版本OXO是否不全为"-"
         OxoVersionSnapshotAggr oxoVersionSnapshotAggr = oxoVersionSnapshotRepository.queryLastReleaseSnapshotByModel(modelCode, OxoSnapshotEnum.FORMAL);
         if (oxoVersionSnapshotAggr == null) {
-            return Lists.newArrayList(messageMap.values());
+            return messageTypeMap;
         }
         OxoListQry oxoListQry = versionSnapshotDomainService.resolveSnapShot(oxoVersionSnapshotAggr.getOxoSnapshot());
         if (oxoListQry == null || CollectionUtils.isEmpty(oxoListQry.getOxoRowsResps())) {
-            return Lists.newArrayList(messageMap.values());
+            return messageTypeMap;
         }
         oxoListQry.getOxoRowsResps().forEach(feature -> {
             if (CollectionUtils.isEmpty(feature.getOptions())) {
@@ -198,14 +202,14 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
                 OxoFeatureOptionAggr parent = featureOptionAggr.getParent();
                 if (parent != null) {
                     // 勾选Feature的提示
-                    messageMap.putIfAbsent(parent.getFeatureCode(), "The Options In Feature " + parent.getFeatureCode() + " Has Valid Assignment(Not \"-\") In Latest Formal OXO!");
+                    messageTypeMap.getOrDefault(DeleteFeatureOptionCheckTypeEnum.RELEASE_FEATURE, Sets.newHashSet()).add(parent.getFeatureCode());
                 } else {
                     // 勾选Option的提示
-                    messageMap.putIfAbsent(featureOptionAggr.getFeatureCode(), "Option " + featureOptionAggr.getFeatureCode() + " Has Valid Assignment(Not \"-\") In Latest Formal OXO!");
+                    messageTypeMap.getOrDefault(DeleteFeatureOptionCheckTypeEnum.RELEASE_OPTION, Sets.newHashSet()).add(featureOptionAggr.getFeatureCode());
                 }
             });
         });
-        return Lists.newArrayList(messageMap.values());
+        return messageTypeMap;
     }
 
 
@@ -336,6 +340,25 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
 
         }
 
+
+    }
+
+    private enum DeleteFeatureOptionCheckTypeEnum {
+
+        /**
+         * 删除Feature/Option行校验类型
+         */
+        WORKING_FEATURE("The Options In Feature %s Has Valid Assignment(Not \"-\")!"),
+        WORKING_OPTION("Option %s Has Valid Assignment(Not \"-\")!"),
+        RELEASE_FEATURE("The Options In Feature %s Has Valid Assignment(Not \"-\") In Latest Formal OXO!"),
+        RELEASE_OPTION("Option %s Has Valid Assignment(Not \"-\") In Latest Formal OXO!");
+
+        @Getter
+        private final String messageFormat;
+
+        DeleteFeatureOptionCheckTypeEnum(String messageFormat) {
+            this.messageFormat = messageFormat;
+        }
 
     }
 

@@ -20,101 +20,65 @@ public class ProductContextFactory {
 
     /**
      * 初始化product context时构建product context打勾信息
-     * @param productContextAggrList
+     * @param productContextList
      * @param featureList
      * @param oxoListQry
      * @return
      */
-    public static void createProductContextList(List<ProductContextAggr> productContextAggrList,List<OxoRowsQry> featureList, OxoListQry oxoListQry){
+    public static void createProductContextList(List<ProductContextAggr> productContextList,List<OxoRowsQry> featureList, OxoListQry oxoListQry){
         Map<Long,OxoRowsQry> rowMap = new HashMap<>();
         Map<Long,OxoHeadQry> headMap = new HashMap<>();
         Map<String,String> optionFeatureMap = new HashMap<>();
         List<OxoEditCmd> pointRecord = new ArrayList<>();
+        Set<ProductContextAggr> existProductContextSet = new HashSet<>();
+        if (Objects.nonNull(productContextList)){
+            productContextList.forEach(aggr->{
+                existProductContextSet.add(aggr);
+            });
+        }
         recordOxoRelationship(oxoListQry,featureList,rowMap,headMap,optionFeatureMap,pointRecord);
         pointRecord.forEach(point->{
             //将AF00以外的所有信息打勾
-            if (!Objects.equals(rowMap.get(point.getHeadId()).getFeatureCode().substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO),ConfigConstants.FEATURE_CODE_AF00.substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO))){
+            if (!Objects.equals(rowMap.get(point.getRowId()).getFeatureCode().substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO),ConfigConstants.FEATURE_CODE_AF00.substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO))){
                 ProductContextAggr productContextAggr = new ProductContextAggr();
                 productContextAggr.setModelCode(headMap.get(point.getHeadId()).getModelCode());
                 productContextAggr.setModelYear(headMap.get(point.getHeadId()).getModelYear());
                 productContextAggr.setOptionCode(rowMap.get(point.getRowId()).getFeatureCode());
                 productContextAggr.setFeatureCode(optionFeatureMap.get(rowMap.get(point.getRowId()).getFeatureCode()));
-                productContextAggrList.add(productContextAggr);
-            }
-        });
-    }
-
-    /**
-     * 更新product context时构建新增的product context打勾信息
-     * @param oldProductContextAggrList
-     * @param featureList
-     * @param oxoListQry
-     * @return
-     */
-    public static void createAddedProductContextList(List<ProductContextAggr> productContextAggrList,List<ProductContextAggr> oldProductContextAggrList,List<OxoRowsQry> featureList, OxoListQry oxoListQry){
-        Map<Long,OxoRowsQry> rowMap = new HashMap<>();
-        Map<Long,OxoHeadQry> headMap = new HashMap<>();
-        Map<String,String> optionFeatureMap = new HashMap<>();
-        List<OxoEditCmd> pointRecord = new ArrayList<>();
-        recordOxoRelationship(oxoListQry,featureList,rowMap,headMap,optionFeatureMap,pointRecord);
-        Set<String> existProductContextSet = new HashSet<>();
-        oldProductContextAggrList.forEach(aggr->{
-            existProductContextSet.add(aggr.getOptionCode());
-        });
-        pointRecord.forEach(point->{
-            if (!existProductContextSet.contains(rowMap.get(point.getRowId()).getFeatureCode())){
-                ProductContextAggr productContextAggr = new ProductContextAggr();
-                productContextAggr.setModelCode(headMap.get(point.getHeadId()).getModelCode());
-                productContextAggr.setModelYear(headMap.get(point.getHeadId()).getModelYear());
-                productContextAggr.setOptionCode(rowMap.get(point.getRowId()).getFeatureCode());
-                productContextAggr.setFeatureCode(optionFeatureMap.get(rowMap.get(point.getRowId()).getFeatureCode()));
-                productContextAggrList.add(productContextAggr);
+                if (!existProductContextSet.contains(productContextAggr)){
+                    productContextList.add(productContextAggr);
+                }
             }
         });
     }
 
     /**
      * 初始化product context时构建model year相关打勾信息
-     * @param productContextAggrList
+     * @param productContextList
      * @param modelCode
      * @param modelYearList
      * @param modelYearMap
      */
-    public static void createModelYearProductContext(List<ProductContextAggr> productContextAggrList, String modelCode,List<String> modelYearList,Map<String,String> modelYearMap){
+    public static void createModelYearProductContext(List<ProductContextAggr> productContextList, String modelCode,List<String> modelYearList,Map<String,String> modelYearMap){
+        Set<ProductContextAggr> oldModelYearSet = new HashSet<>();
+        //获取所有原先model year的option code
+        if (Objects.nonNull(productContextList)) {
+            productContextList.forEach(oldProductContext->{
+                oldModelYearSet.add(oldProductContext);
+            });
+        }
         modelYearList.forEach(modelYear->{
             ProductContextAggr productContextAggr = new ProductContextAggr();
             productContextAggr.setModelCode(modelCode);
             productContextAggr.setModelYear(modelYear);
             productContextAggr.setOptionCode(modelYearMap.get(modelYear));
             productContextAggr.setFeatureCode(ConfigConstants.FEATURE_CODE_AF00);
-            productContextAggrList.add(productContextAggr);
-        });
-    }
-
-    /**
-     * 更新product context时新增model year相关打勾信息
-     * @param productContextAggrList
-     * @param modelCode
-     * @param modelYearList
-     * @param modelYearMap
-     */
-    public static void createAddedModelYearProductContextFeature(List<ProductContextAggr> productContextAggrList,List<ProductContextAggr> oldProductContextList, String modelCode,List<String> modelYearList,Map<String,String> modelYearMap){
-        Set<String> oldModelYearSet = new HashSet<>();
-        //获取所有原先model year的option code
-        oldProductContextList.forEach(oldProductContext->{
-            oldModelYearSet.add(oldProductContext.getOptionCode());
-        });
-        modelYearList.forEach(modelYear->{
-            if (oldModelYearSet.contains(modelYearMap.get(modelYear))){
-                ProductContextAggr productContextAggr = new ProductContextAggr();
-                productContextAggr.setModelCode(modelCode);
-                productContextAggr.setModelYear(modelYear);
-                productContextAggr.setOptionCode(modelYearMap.get(modelYear));
-                productContextAggr.setFeatureCode(ConfigConstants.FEATURE_CODE_AF00);
-                productContextAggrList.add(productContextAggr);
+            if (!oldModelYearSet.contains(productContextAggr)){
+                productContextList.add(productContextAggr);
             }
         });
     }
+
 
     /**
      * 记录oxo中各行各列的关系
@@ -142,12 +106,14 @@ public class ProductContextFactory {
                 rowMap.put(option.getRowId(),option);
                 //记录option的父级feature的code
                 optionFeatureMap.put(option.getFeatureCode(),feature.getFeatureCode());
-            });
-            //记录要生成的点
-            feature.getPackInfos().forEach(packageInfo->{
-                //空心或实心圈则需要生成product context
-                if (Objects.equals(packageInfo.getPackageCode(), OxoOptionPackageTypeEnum.DEFALUT.getType())|| Objects.equals(packageInfo.getPackageCode(),OxoOptionPackageTypeEnum.AVAILABLE.getType())){
-                    pointRecord.add(packageInfo);
+                //记录要生成的点
+                if (Objects.nonNull(option.getPackInfos())){
+                    option.getPackInfos().forEach(packageInfo->{
+                        //空心或实心圈则需要生成product context
+                        if (Objects.equals(packageInfo.getPackageCode(), OxoOptionPackageTypeEnum.DEFALUT.getType())|| Objects.equals(packageInfo.getPackageCode(),OxoOptionPackageTypeEnum.AVAILABLE.getType())){
+                            pointRecord.add(packageInfo);
+                        }
+                    });
                 }
             });
         });

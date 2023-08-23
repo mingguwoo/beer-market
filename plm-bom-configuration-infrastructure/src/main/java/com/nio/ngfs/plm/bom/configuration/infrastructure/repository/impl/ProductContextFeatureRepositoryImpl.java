@@ -18,8 +18,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductContextFeatureRepositoryImpl implements ProductContextFeatureRepository {
 
-    private ProductContextFeatureConverter productContextFeatureConverter;
-    private BomsProductContextFeatureDao productContextFeatureDao;
+    private final ProductContextFeatureConverter productContextFeatureConverter;
+    private final BomsProductContextFeatureDao productContextFeatureDao;
 
     @Override
     public void save(ProductContextFeatureAggr productContextFeatureAggr) {
@@ -27,13 +27,13 @@ public class ProductContextFeatureRepositoryImpl implements ProductContextFeatur
     }
 
     @Override
-    public ProductContextFeatureAggr find(Long aLong) {
+    public ProductContextFeatureAggr find(Long id) {
         return null;
     }
 
     @Override
-    public void batchSave(List<ProductContextFeatureAggr> productContextFeatureAggrList) {
-        productContextFeatureDao.saveBatch(productContextFeatureConverter.convertDoListToEntityList(productContextFeatureAggrList));
+    public void saveOrUpdateBatch(List<ProductContextFeatureAggr> productContextFeatureAggrList) {
+        productContextFeatureDao.saveOrUpdateBatch(productContextFeatureConverter.convertDoListToEntityList(productContextFeatureAggrList));
     }
 
     @Override

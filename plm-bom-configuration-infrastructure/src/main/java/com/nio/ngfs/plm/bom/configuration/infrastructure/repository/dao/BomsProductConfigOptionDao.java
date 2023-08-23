@@ -28,4 +28,12 @@ public interface BomsProductConfigOptionDao extends IService<BomsProductConfigOp
      */
     List<BomsProductConfigOptionEntity> queryByPcId(String pcId);
 
+    /**
+     * 根据PC Id列表查询
+     *
+     * @param pcIdList PC Id列表
+     * @return BomsProductConfigOptionEntity列表
+     */
+    List<BomsProductConfigOptionEntity> queryByPcIdList(List<String> pcIdList);
+
 }

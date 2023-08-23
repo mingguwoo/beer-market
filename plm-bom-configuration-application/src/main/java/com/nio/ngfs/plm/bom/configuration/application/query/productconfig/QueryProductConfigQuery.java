@@ -30,8 +30,6 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public class QueryProductConfigQuery extends AbstractQuery<QueryProductConfigQry, QueryProductConfigRespDto> {
 
-    private static final ModelYearComparator MODEL_YEAR_COMPARATOR = new ModelYearComparator();
-
     private final BomsProductConfigDao productConfigDao;
     private final BomsProductConfigModelOptionDao productConfigModelOptionDao;
     private final BomsFeatureLibraryDao featureLibraryDao;
@@ -113,7 +111,7 @@ public class QueryProductConfigQuery extends AbstractQuery<QueryProductConfigQry
             productConfigEntityList = LambdaUtil.map(productConfigEntityList, i -> filterPcIdSet.contains(i.getPcId()), Function.identity());
         }
         // 排序，先按Model Year排序，再按创建时间正排
-        productConfigEntityList = productConfigEntityList.stream().sorted(Comparator.comparing(BomsProductConfigEntity::getModelYear, MODEL_YEAR_COMPARATOR)
+        productConfigEntityList = productConfigEntityList.stream().sorted(Comparator.comparing(BomsProductConfigEntity::getModelYear, ModelYearComparator.INSTANCE)
                 .thenComparing(BomsProductConfigEntity::getCreateTime)).toList();
         // 组装结果
         List<QueryProductConfigRespDto.PcDto> pcList = LambdaUtil.map(productConfigEntityList, QueryProductConfigAssembler::assemble);

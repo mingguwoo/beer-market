@@ -36,8 +36,6 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class GetBasedOnBaseVehicleListQuery extends AbstractQuery<GetBasedOnBaseVehicleListQry, List<GetBasedOnBaseVehicleListRespDto>> {
 
-    private static final ModelYearComparator MODEL_YEAR_COMPARATOR = new ModelYearComparator();
-
     private final BomsOxoVersionSnapshotDao oxoVersionSnapshotDao;
     private final BomsBaseVehicleDao baseVehicleDao;
     private final BomsFeatureLibraryDao bomsFeatureLibraryDao;
@@ -74,7 +72,7 @@ public class GetBasedOnBaseVehicleListQuery extends AbstractQuery<GetBasedOnBase
         ));
         // 按Model Year排序
         return respDtoList.stream()
-                .sorted((i1, i2) -> MODEL_YEAR_COMPARATOR.compare(i1.getModelYear(), i2.getModelYear()))
+                .sorted(Comparator.comparing(GetBasedOnBaseVehicleListRespDto::getModelYear, ModelYearComparator.INSTANCE))
                 .toList();
     }
 

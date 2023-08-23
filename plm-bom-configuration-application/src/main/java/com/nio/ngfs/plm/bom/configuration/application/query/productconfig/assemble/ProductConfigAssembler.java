@@ -28,7 +28,7 @@ public class ProductConfigAssembler {
         GetModelListRespDto respDto = new GetModelListRespDto();
         respDto.setModel(model);
         respDto.setModelYearList(entityList.stream().map(BomsModelYearConfigEntity::getModelYear)
-                .sorted(new ModelYearComparator()).toList());
+                .sorted(ModelYearComparator.INSTANCE).toList());
         return respDto;
     }
 

@@ -8,6 +8,7 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsF
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductConfigEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductConfigOptionEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductContextEntity;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.GetPcOptionListRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.QueryProductConfigRespDto;
 
 import java.util.Objects;
@@ -64,6 +65,13 @@ public class QueryProductConfigAssembler {
             }
         }
         return configDto;
+    }
+
+    public static GetPcOptionListRespDto assembleOptionList(BomsProductConfigEntity entity) {
+        GetPcOptionListRespDto respDto = new GetPcOptionListRespDto();
+        respDto.setPcId(entity.getPcId());
+        respDto.setPcName(entity.getName());
+        return respDto;
     }
 
 }

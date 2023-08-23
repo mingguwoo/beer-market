@@ -87,4 +87,13 @@ public interface PlmProductConfigClient {
     @PostMapping("/productConfig/queryProductConfig")
     ResultInfo<QueryProductConfigRespDto> queryProductConfig(QueryProductConfigQry qry);
 
+    /**
+     * 查询PC选项列表
+     *
+     * @param qry 查询
+     * @return 响应
+     */
+    @PostMapping("/productConfig/getPcOptionList")
+    ResultInfo<List<GetPcOptionListRespDto>> getPcOptionList(GetPcOptionListQry qry);
+
 }

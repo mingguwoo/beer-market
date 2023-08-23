@@ -35,6 +35,7 @@ public class ProductConfigController implements PlmProductConfigClient {
     private final QueryPcQuery queryPcQuery;
     private final ExportPcQuery exportPcQuery;
     private final QueryProductConfigQuery queryProductConfigQuery;
+    private final GetPcOptionListQuery getPcOptionListQuery;
 
     @Override
     @NotLogResult
@@ -82,6 +83,12 @@ public class ProductConfigController implements PlmProductConfigClient {
     @NotLogResult
     public ResultInfo<QueryProductConfigRespDto> queryProductConfig(@Valid @RequestBody QueryProductConfigQry qry) {
         return ResultInfo.success(queryProductConfigQuery.execute(qry));
+    }
+
+    @Override
+    @NotLogResult
+    public ResultInfo<List<GetPcOptionListRespDto>> getPcOptionList(@Valid @RequestBody GetPcOptionListQry qry) {
+        return ResultInfo.success(getPcOptionListQuery.execute(qry));
     }
 
     @NotLogResult

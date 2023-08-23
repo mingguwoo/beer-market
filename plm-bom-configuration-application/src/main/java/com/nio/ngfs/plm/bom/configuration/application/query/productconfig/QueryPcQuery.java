@@ -6,6 +6,7 @@ import com.nio.ngfs.plm.bom.configuration.application.query.AbstractQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.productconfig.assemble.ProductConfigAssembler;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
+import com.nio.ngfs.plm.bom.configuration.common.util.ModelYearComparator;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsBaseVehicleDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsFeatureLibraryDao;
@@ -39,13 +40,16 @@ public class QueryPcQuery extends AbstractQuery<QueryPcQry, List<QueryPcRespDto>
     private final BomsFeatureLibraryDao bomsFeatureLibraryDao;
 
     @Override
+    protected void validate(QueryPcQry qry) {
+        if (qry.getSearch() != null) {
+            qry.setSearch(qry.getSearch().trim());
+        }
+    }
+
+    @Override
     protected List<QueryPcRespDto> executeQuery(QueryPcQry qry) {
-        // 查询PC列表
-        List<BomsProductConfigEntity> pcList = bomsProductConfigDao.queryByModelAndModelYearList(qry.getModel(), qry.getModelYearList());
-        // 模糊搜索
-        pcList = search(pcList, qry.getSearch());
-        // 排序，按创建时间倒排
-        pcList = pcList.stream().sorted(Comparator.comparing(BomsProductConfigEntity::getCreateTime).reversed()).toList();
+        // 搜索PC并排序
+        List<BomsProductConfigEntity> pcList = searchAndSortPc(qry);
         // 查询Based On Base Vehicle
         List<BomsBaseVehicleEntity> basedOnBaseVehicleList = bomsBaseVehicleDao.queryByIdList(LambdaUtil.map(pcList, i -> i.getBasedOnBaseVehicleId() > 0,
                 BomsProductConfigEntity::getBasedOnBaseVehicleId));
@@ -65,15 +69,20 @@ public class QueryPcQuery extends AbstractQuery<QueryPcQry, List<QueryPcRespDto>
     /**
      * 模糊搜索
      */
-    private List<BomsProductConfigEntity> search(List<BomsProductConfigEntity> pcList, String search) {
-        if (StringUtils.isBlank(search)) {
-            return pcList;
-        }
-        String keyword = search.trim();
-        return pcList.stream().filter(i -> i.getPcId().contains(keyword) ||
-                        i.getModelCode().contains(keyword) ||
-                        i.getModelYear().contains(keyword) ||
-                        i.getName().contains(keyword))
+    private List<BomsProductConfigEntity> searchAndSortPc(QueryPcQry qry) {
+        // 查询PC列表
+        List<BomsProductConfigEntity> pcList = bomsProductConfigDao.queryByModelAndModelYearList(qry.getModel(), qry.getModelYearList());
+        return pcList.stream()
+                // 模糊搜索
+                .filter(i -> StringUtils.isBlank(qry.getSearch()) || (
+                        i.getPcId().contains(qry.getSearch()) ||
+                                i.getModelCode().contains(qry.getSearch()) ||
+                                i.getModelYear().contains(qry.getSearch()) ||
+                                i.getName().contains(qry.getSearch())
+                ))
+                // 按Model Year、创建时间（倒排）排序
+                .sorted(Comparator.comparing(BomsProductConfigEntity::getModelYear, ModelYearComparator.INSTANCE)
+                        .thenComparing(Comparator.comparing(BomsProductConfigEntity::getCreateTime).reversed()))
                 .toList();
     }
 

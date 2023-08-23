@@ -2,6 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature;
 
 import com.nio.bom.share.domain.model.AggrRoot;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.ProductContextAggr;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,5 +28,16 @@ public class ProductContextFeatureAggr extends AbstractDo implements AggrRoot<Lo
     @Override
     public Long getUniqId() {
         return id;
+    }
+
+    @Override
+    public int hashCode(){
+        return (modelCode+featureCode+type).hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        ProductContextFeatureAggr aggr = (ProductContextFeatureAggr) obj;
+        return modelCode.equals(aggr.modelCode) && featureCode.equals(aggr.featureCode) && type.equals(aggr.type);
     }
 }

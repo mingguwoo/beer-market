@@ -28,4 +28,14 @@ public class ProductContextAggr extends AbstractDo implements AggrRoot<Long>{
     public Long getUniqId() {
         return id;
     }
+
+    @Override
+    public int hashCode(){
+        return (modelCode+modelYear+optionCode+featureCode).hashCode();
+    }
+    @Override
+    public boolean equals(final Object obj){
+        ProductContextAggr aggr = (ProductContextAggr) obj;
+        return modelCode.equals(aggr.modelCode) && modelYear.equals(aggr.modelYear) && optionCode.equals(aggr.optionCode) && featureCode.equals(aggr.getFeatureCode());
+    }
 }

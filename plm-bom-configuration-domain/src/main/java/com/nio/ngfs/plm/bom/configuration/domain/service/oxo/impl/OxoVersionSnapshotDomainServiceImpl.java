@@ -1,6 +1,8 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service.oxo.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.GZIPUtils;
 import com.nio.bom.share.utils.VersionUtils;
@@ -131,7 +133,7 @@ public class OxoVersionSnapshotDomainServiceImpl implements OxoVersionSnapshotDo
 
     @Override
     public OxoListQry resolveSnapShot(String oxoSnapShot) {
-        return JSON.parseObject(GZIPUtils.uncompress(oxoSnapShot), OxoListQry.class);
+        return JSONObject.parseObject(JSONArray.parse(GZIPUtils.uncompress(oxoSnapShot)).toString(), OxoListQry.class);
     }
 
 }

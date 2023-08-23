@@ -11,7 +11,16 @@ import java.util.List;
  */
 public interface ProductContextFeatureRepository extends Repository<ProductContextFeatureAggr,Long> {
 
-    public void batchSave(List<ProductContextFeatureAggr> productContextFeatureAggrList);
+    /**
+     *  批量保存或更新
+     * @param productContextFeatureAggrList
+     */
+    void saveOrUpdateBatch(List<ProductContextFeatureAggr> productContextFeatureAggrList);
 
-    public List<ProductContextFeatureAggr> queryByModelCode(String modelCode);
+    /**
+     * 根据model code查询已有行
+     * @param modelCode
+     * @return
+     */
+    List<ProductContextFeatureAggr> queryByModelCode(String modelCode);
 }

@@ -2,6 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.application.query.productconfig;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.nio.bom.share.constants.CommonConstants;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.application.query.AbstractQuery;
@@ -55,6 +56,8 @@ public class QueryProductConfigQuery extends AbstractQuery<QueryProductConfigQry
         queryModelFeatureOptionList(qry, response);
         // 查询单车Option配置
         queryPcOptionConfig(qry, response, pcList);
+        // 比较Option行的PC勾选差异
+        handlePcOptionConfigDiff(qry, response);
         return response;
     }
 
@@ -171,6 +174,38 @@ public class QueryProductConfigQuery extends AbstractQuery<QueryProductConfigQry
             throw new BusinessException(ConfigErrorCode.FEATURE_OPTION_NOT_EXISTS);
         }
         return QueryProductConfigAssembler.assemble(featureLibraryEntity, group);
+    }
+
+    /**
+     * 比较Option行的PC勾选差异
+     */
+    private void handlePcOptionConfigDiff(QueryProductConfigQry qry, QueryProductConfigRespDto response) {
+        if (!qry.isShowDiff()) {
+            return;
+        }
+        if (CollectionUtils.isEmpty(response.getFeatureList()) || CollectionUtils.isEmpty(response.getPcList())) {
+            return;
+        }
+        // PC列表小于等于1，不处理
+        if (response.getPcList().size() <= CommonConstants.INT_ONE) {
+            return;
+        }
+        response.setFeatureList(response.getFeatureList().stream()
+                .peek(feature ->
+                        feature.setOptionList(
+                                feature.getOptionList().stream().filter(this::isAllPcOptionConfigNotTheSame).toList()
+                        )
+                )
+                .filter(feature -> CollectionUtils.isNotEmpty(feature.getOptionList()))
+                .toList());
+    }
+
+    /**
+     * Option行的PC勾选是否有差异
+     */
+    private boolean isAllPcOptionConfigNotTheSame(QueryProductConfigRespDto.OptionDto optionDto) {
+        boolean select = optionDto.getConfigList().get(0).isSelect();
+        return optionDto.getConfigList().stream().anyMatch(i -> select != i.isSelect());
     }
 
 }

@@ -29,4 +29,9 @@ public class QueryProductConfigQry implements Qry {
      */
     private boolean edit = false;
 
+    /**
+     * 是否Show Diff模式
+     */
+    private boolean showDiff = false;
+
 }

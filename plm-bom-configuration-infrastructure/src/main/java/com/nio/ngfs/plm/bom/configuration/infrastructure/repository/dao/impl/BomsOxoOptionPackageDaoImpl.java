@@ -40,12 +40,18 @@ public class BomsOxoOptionPackageDaoImpl extends AbstractDao<BomsOxoOptionPackag
     }
 
     @Override
-    public List<BomsOxoOptionPackageEntity> queryByFeatureOptionIdList(List<Long> featureOptionIdList) {
+    public List<BomsOxoOptionPackageEntity> queryByFeatureOptionIdList(List<Long> featureOptionIdList,List<Long> headIds) {
         if (CollectionUtils.isEmpty(featureOptionIdList)) {
             return Lists.newArrayList();
         }
         LambdaQueryWrapper<BomsOxoOptionPackageEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.in(BomsOxoOptionPackageEntity::getFeatureOptionId, featureOptionIdList);
+        if(CollectionUtils.isNotEmpty(featureOptionIdList)) {
+            lambdaQueryWrapper.in(BomsOxoOptionPackageEntity::getFeatureOptionId, featureOptionIdList);
+        }
+
+        if(CollectionUtils.isNotEmpty(headIds)) {
+            lambdaQueryWrapper.in(BomsOxoOptionPackageEntity::getBaseVehicleId, headIds);
+        }
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 

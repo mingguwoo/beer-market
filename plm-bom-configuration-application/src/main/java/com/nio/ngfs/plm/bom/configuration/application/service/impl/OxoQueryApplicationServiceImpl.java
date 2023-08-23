@@ -22,10 +22,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -99,8 +96,9 @@ public class OxoQueryApplicationServiceImpl implements OxoQueryApplicationServic
              */
             Map<String, List<OxoFeatureOptionAggr>> oxoInfoDoMaps =
                     oxoFeatureOptions.stream().filter(x -> StringUtils.equals(x.getType(), FeatureTypeEnum.FEATURE.getType()))
-                            .sorted(Comparator.comparing(OxoFeatureOptionAggr::getCatalog).thenComparing(OxoFeatureOptionAggr::getParentFeatureCode))
-                            .collect(Collectors.groupingBy(OxoFeatureOptionAggr::getParentFeatureCode));
+                            .sorted(Comparator.comparing(OxoFeatureOptionAggr::getCatalog).thenComparing(OxoFeatureOptionAggr::getParentFeatureCode)
+                                    .thenComparing(OxoFeatureOptionAggr::getSort).thenComparing(OxoFeatureOptionAggr::getFeatureCode))
+                            .collect(Collectors.groupingBy(OxoFeatureOptionAggr::getParentFeatureCode,LinkedHashMap::new,Collectors.toList()));
 
             qry.setOxoHeadResps(oxoLists);
 

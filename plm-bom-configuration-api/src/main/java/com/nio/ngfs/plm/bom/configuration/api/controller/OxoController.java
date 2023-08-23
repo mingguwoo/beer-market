@@ -45,13 +45,7 @@ public class  OxoController {
     private final OxoFeatureOptionQuery oxoFeatureOptionQuery;
     private final OxoQueryGroupQuery oxoQueryGroupQuery;
     private final OxoCompareQuery oxoCompareQuery;
-
     private final OxoChangeLogQuery oxoChangeLogQuery;
-
-
-
-
-
     /**
      * 根据车型查询快照版本
      * @param cmd

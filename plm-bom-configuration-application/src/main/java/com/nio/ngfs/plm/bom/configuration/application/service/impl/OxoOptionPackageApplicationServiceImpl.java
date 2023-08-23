@@ -2,9 +2,13 @@ package com.nio.ngfs.plm.bom.configuration.application.service.impl;
 
 import com.nio.ngfs.plm.bom.configuration.application.service.OxoOptionPackageApplicationService;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
+import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.enums.OxoOptionPackageTypeEnum;
@@ -15,6 +19,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author xiaozhou.tu
@@ -32,6 +38,8 @@ public class OxoOptionPackageApplicationServiceImpl implements OxoOptionPackageA
     private final OxoOptionPackageRepository oxoOptionPackageRepository;
 
 
+
+    private final BaseVehicleRepository baseVehicleRepository;
 
     @Override
     public void insertOxoOptionPackageDefault(List<OxoFeatureOptionAggr> oxoFeatureOptions,String modelCode,String userName) {
@@ -54,5 +62,35 @@ public class OxoOptionPackageApplicationServiceImpl implements OxoOptionPackageA
                 entityList.stream().map(OxoFeatureOptionAggr::getId).distinct().toList(),
                 OxoOptionPackageTypeEnum.DEFALUT.getType(), brandName, userName));
 
+    }
+
+    @Override
+    public List<String> checkOxoCompleteBaseVehicle(String modelCode) {
+
+        //查询头
+        List<BaseVehicleAggr> baseVehicles=  baseVehicleRepository.queryByModelCodeAndModelYear(modelCode,null);
+
+
+        //查询行信息
+        List<OxoFeatureOptionAggr>  oxoFeatureOptions= oxoFeatureOptionRepository.queryFeatureListsByModelAndSortDelete(modelCode,null);
+
+
+        List<Long> rowIds = oxoFeatureOptions.stream().map(OxoFeatureOptionAggr::getId).distinct().toList();
+
+        List<Long> headIds = baseVehicles.stream().map(BaseVehicleAggr::getId).distinct().toList();
+
+
+        //查询打点信息
+        List<OxoOptionPackageAggr> oxoOptionPackages=  oxoOptionPackageRepository.queryByFeatureOptionIdsAndHeadIdsList(rowIds,headIds);
+
+
+        //根据modelYear
+//        Map<String,List<BaseVehicleAggr>> basicVehicles = baseVehicles.stream().collect
+//                (Collectors.toMap(BaseVehicleAggr::getModelYear, x -> x.getFeatureId().getFeatureCode()));
+
+
+
+
+        return null;
     }
 }

@@ -62,9 +62,6 @@ public class LogTraceAppender extends AppenderBase<ILoggingEvent> {
     private final static int SKIP_END_TIME = 21;
     private final static int SKIP_BEGIN_TIME = 9;
 
-    private final static Calendar CALENDAR = Calendar.getInstance();
-
-
     //添加特定错误的过滤
     static {
         IGNORE_ALARM_WORD_LIST.add("date format error");
@@ -136,8 +133,9 @@ public class LogTraceAppender extends AppenderBase<ILoggingEvent> {
         }
 
         //test/stg 非工作时间忽略告警
+        Calendar calendar = Calendar.getInstance();
         if (ENV_TEST.equals(env) || ENV_STG.equals(env)) {
-            return CALENDAR.get(Calendar.HOUR_OF_DAY) > SKIP_END_TIME || CALENDAR.get(Calendar.HOUR_OF_DAY) < SKIP_BEGIN_TIME;
+            return calendar.get(Calendar.HOUR_OF_DAY) > SKIP_END_TIME || calendar.get(Calendar.HOUR_OF_DAY) < SKIP_BEGIN_TIME;
         }
         return false;
     }

@@ -16,8 +16,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 /**
  * @author xiaozhou.tu
@@ -118,7 +116,7 @@ public class BomsFeatureLibraryDaoImpl extends AbstractDao<BomsFeatureLibraryMap
     @Override
     public List<BomsFeatureLibraryEntity> findFeatureLibraryNotFeatureCodes(List<String> featureCodes) {
         LambdaQueryWrapper<BomsFeatureLibraryEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        if(CollectionUtils.isNotEmpty(featureCodes)) {
+        if (CollectionUtils.isNotEmpty(featureCodes)) {
             lambdaQueryWrapper.notIn(BomsFeatureLibraryEntity::getFeatureCode, featureCodes);
         }
         lambdaQueryWrapper.eq(BomsFeatureLibraryEntity::getType, FeatureTypeEnum.OPTION.getType());
@@ -145,19 +143,6 @@ public class BomsFeatureLibraryDaoImpl extends AbstractDao<BomsFeatureLibraryMap
         lambdaQueryWrapper.eq(BomsFeatureLibraryEntity::getFeatureCode, featureOptionCode);
         lambdaQueryWrapper.in(BomsFeatureLibraryEntity::getType, FEATURE_OPTION_TYPE_LIST);
         return getBaseMapper().selectOne(lambdaQueryWrapper);
-    }
-
-    /**
-     * 测试动态线程池使用
-     */
-    public List<BomsFeatureLibraryEntity> batchQuery() {
-        Future<List<BomsFeatureLibraryEntity>> queryFuture = ioThreadPool.submit(() -> getBaseMapper().selectList(new LambdaQueryWrapper<>()));
-        try {
-            return queryFuture.get();
-        } catch (ExecutionException | InterruptedException ex) {
-            log.error("Encountered exception: {} ", ex.getMessage());
-        }
-        return Lists.newArrayList();
     }
 
 }

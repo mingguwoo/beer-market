@@ -38,7 +38,7 @@ public interface OxoOptionPackageRepository extends Repository<OxoOptionPackageA
      * @param featureOptionIdList featureOptionId列表
      * @return OxoOptionPackageAggr列表
      */
-    List<OxoOptionPackageAggr> queryByFeatureOptionIdList(List<Long> featureOptionIdList);
+    List<OxoOptionPackageAggr> queryByFeatureOptionIdsAndHeadIdsList(List<Long> featureOptionIdList,List<Long> headIds);
 
     /**
      * 批量新增oxo点

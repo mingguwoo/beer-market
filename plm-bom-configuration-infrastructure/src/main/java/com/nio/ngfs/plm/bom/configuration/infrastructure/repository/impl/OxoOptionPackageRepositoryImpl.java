@@ -54,8 +54,8 @@ public class OxoOptionPackageRepositoryImpl implements OxoOptionPackageRepositor
     }
 
     @Override
-    public List<OxoOptionPackageAggr> queryByFeatureOptionIdList(List<Long> featureOptionIdList) {
-        return oxoOptionPackageConverter.convertEntityListToDoList(bomsOxoOptionPackageDao.queryByFeatureOptionIdList(featureOptionIdList));
+    public List<OxoOptionPackageAggr> queryByFeatureOptionIdsAndHeadIdsList(List<Long> featureOptionIdList,List<Long> headIds) {
+        return oxoOptionPackageConverter.convertEntityListToDoList(bomsOxoOptionPackageDao.queryByFeatureOptionIdList(featureOptionIdList,headIds));
     }
 
     @Override

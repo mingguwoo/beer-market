@@ -9,6 +9,7 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsB
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsBaseVehicleMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -73,7 +74,10 @@ public class BomsBaseVehicleDaoImpl extends AbstractDao<BomsBaseVehicleMapper, B
     public List<BomsBaseVehicleEntity> queryByModelCodeAndModelYear(String modelCode, String modelYear) {
         LambdaQueryWrapper<BomsBaseVehicleEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(BomsBaseVehicleEntity::getModelCode, modelCode);
-        lambdaQueryWrapper.eq(BomsBaseVehicleEntity::getModelYear, modelYear);
+        if(StringUtils.isNotBlank(modelYear)) {
+            lambdaQueryWrapper.eq(BomsBaseVehicleEntity::getModelYear, modelYear);
+        }
+        lambdaQueryWrapper.eq(BomsBaseVehicleEntity::getStatus, StatusEnum.ACTIVE.getStatus());
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 

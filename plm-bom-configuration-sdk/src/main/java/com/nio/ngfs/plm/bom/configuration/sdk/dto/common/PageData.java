@@ -22,7 +22,7 @@ public class PageData<T> {
     private int pageSize;
 
     /**一共多少条*/
-    private long totalItems;
+    private int totalItems;
     
     /**查询集合*/
     private List<T> dataList;

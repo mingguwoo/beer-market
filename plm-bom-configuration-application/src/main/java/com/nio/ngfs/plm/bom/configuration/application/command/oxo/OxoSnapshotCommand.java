@@ -20,9 +20,13 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoSnapshotCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
+
+import java.util.List;
 
 /**
  * @author wangchao.wang
@@ -30,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, Boolean> {
+public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, List<String>> {
 
 
     private final OxoVersionSnapshotDomainService oxoVersionSnapshotDomainService;
@@ -50,6 +54,8 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, Bool
 
     private final ProductContextApplicationService productContextApplicationService;
 
+    private final TransactionTemplate transactionTemplate;
+
 
     @Override
     protected String getLockKey(OxoSnapshotCmd editGroupCmd) {
@@ -57,8 +63,7 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, Bool
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    protected Boolean executeWithLock(OxoSnapshotCmd editGroupCmd) {
+    protected List<String> executeWithLock(OxoSnapshotCmd editGroupCmd) {
 
 
         String modelCode = editGroupCmd.getModelCode();
@@ -87,44 +92,47 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, Bool
         OxoVersionSnapshotAggr oxoVersionSnapshot = OxoVersionSnapshotFactory.buildOxoFeatureOptions(oxoListQry, version, editGroupCmd);
 
 
-        //添加 oxo快照信息
-        bomsOxoVersionSnapshotDao.insertBomsOxoVersionSnapshot(BeanConvertUtils.convertTo(
-                oxoVersionSnapshot, BomsOxoVersionSnapshotEntity::new));
+        //开启事务
+        transactionTemplate.execute(status -> {
+            //添加 oxo快照信息
+            bomsOxoVersionSnapshotDao.insertBomsOxoVersionSnapshot(BeanConvertUtils.convertTo(
+                    oxoVersionSnapshot, BomsOxoVersionSnapshotEntity::new));
 
 
-        //同步product context
-        try {
-            productContextApplicationService.addProductContext(oxoVersionSnapshot.getOxoSnapshot());
-        }catch (Exception e){
-            throw new BusinessException("Sync Product Context Fail!");
-        }
+            //同步product context
+            try {
+                productContextApplicationService.addProductContext(oxoVersionSnapshot.getOxoSnapshot());
+            } catch (Exception e) {
+                throw new BusinessException("Sync Product Context Fail!");
+            }
 
-        //同步product config
-        try {
-            productConfigModelOptionApplicationService.syncFeatureOptionFromOxoRelease(oxoVersionSnapshot);
-        }catch (Exception e){
-            throw new BusinessException("Sync Product Configuration Fail!");
-        }
+            //同步product config
+            try {
+                productConfigModelOptionApplicationService.syncFeatureOptionFromOxoRelease(oxoVersionSnapshot);
+            } catch (Exception e) {
+                throw new BusinessException("Sync Product Configuration Fail!");
+            }
 
 
-        //发送对比邮件  FORMAL版本邮件，版本号 AA
-        if (StringUtils.equals(type, OxoSnapshotEnum.FORMAL.getCode())
-                && !StringUtils.equals(version, ConfigConstants.VERSION_AA)
-                && StringUtils.isNotBlank(oxoVersionSnapshotAggr.getPreOxoSnapshot())) {
+            //发送对比邮件  FORMAL版本邮件，版本号 AA
+            if (StringUtils.equals(type, OxoSnapshotEnum.FORMAL.getCode())
+                    && !StringUtils.equals(version, ConfigConstants.VERSION_AA)
+                    && StringUtils.isNotBlank(oxoVersionSnapshotAggr.getPreOxoSnapshot())) {
 
-            //获取对比信息
-            OxoListQry preOxoListQry = JSONObject.parseObject(JSONArray.parse(oxoVersionSnapshotAggr.getPreOxoSnapshot()).toString(), OxoListQry.class);
+                //获取对比信息
+                OxoListQry preOxoListQry = JSONObject.parseObject(JSONArray.parse(oxoVersionSnapshotAggr.getPreOxoSnapshot()).toString(), OxoListQry.class);
 
-            // 对比
-            OxoListQry compareOxoListQry = oxoCompareDomainService.compareVersion(oxoListQry, preOxoListQry, true);
+                // 对比
+                OxoListQry compareOxoListQry = oxoCompareDomainService.compareVersion(oxoListQry, preOxoListQry, true);
 
-            oxoVersionSnapshot.setPreOxoSnapshot(oxoVersionSnapshotAggr.getPreOxoSnapshot());
-            oxoVersionSnapshot.setPreVersion(oxoVersionSnapshotAggr.getPreVersion());
-            //发送邮件
-            oxoCompareDomainService.sendCompareEmail(compareOxoListQry, oxoVersionSnapshot);
+                oxoVersionSnapshot.setPreOxoSnapshot(oxoVersionSnapshotAggr.getPreOxoSnapshot());
+                oxoVersionSnapshot.setPreVersion(oxoVersionSnapshotAggr.getPreVersion());
+                //发送邮件
+                oxoCompareDomainService.sendCompareEmail(compareOxoListQry, oxoVersionSnapshot);
+            }
+            return true;
+        });
 
-        }
-
-        return true;
+        return Lists.newArrayList();
     }
 }

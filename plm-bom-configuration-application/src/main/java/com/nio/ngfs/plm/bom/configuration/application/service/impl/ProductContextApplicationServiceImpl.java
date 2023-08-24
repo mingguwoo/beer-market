@@ -63,6 +63,7 @@ public class ProductContextApplicationServiceImpl implements ProductContextAppli
         //单独处理AF00
         ProductContextFeatureFactory.createModelYearProductContextFeature(productContextFeatureList,featureModelYearAggr,modelCode,modelYearMap);
         ProductContextFactory.createModelYearProductContext(productContextList,modelCode,modelYearList,modelYearMap);
+        productContextList = productContextList.stream().distinct().toList();
         //去重后存库
         productContextRepository.saveOrUpdateBatch(productContextList.stream().distinct().toList());
         productContextFeatureRepository.saveOrUpdateBatch(productContextFeatureList.stream().distinct().toList());

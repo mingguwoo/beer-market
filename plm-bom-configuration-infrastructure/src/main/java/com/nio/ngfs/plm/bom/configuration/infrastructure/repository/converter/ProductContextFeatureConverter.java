@@ -12,9 +12,10 @@ import org.springframework.stereotype.Component;
  * @date 2023/8/15
  */
 @Component
-public class ProductContextFeatureConverter implements MapStructDataConverter<ProductContextFeatureAggr, BomsProductContextFeatureEntity> {
+public class ProductContextFeatureConverter implements MapStructDataConverter<ProductContextFeatureAggr, BomsProductContextFeatureEntity>{
     @Override
     public MapstructMapper<ProductContextFeatureAggr, BomsProductContextFeatureEntity> getMapper() {
         return ProductContextFeatureMapper.INSTANCE;
     }
 }
+

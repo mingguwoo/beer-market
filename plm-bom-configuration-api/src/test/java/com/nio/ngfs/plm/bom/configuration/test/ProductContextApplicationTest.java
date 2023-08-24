@@ -1,18 +1,39 @@
 package com.nio.ngfs.plm.bom.configuration.test;
 
 import com.nio.ngfs.plm.bom.configuration.application.service.ProductContextApplicationService;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.ProductContextAggr;
 import org.junit.Test;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author bill.wang
  * @date 2023/8/23
  */
-public class ProductContextApplicationTest extends AbstractTest{
+public class ProductContextApplicationTest extends AbstractTest {
 
     @Resource
     private ProductContextApplicationService productContextApplicationService;
+@Test
+    public void test(){
+        List<ProductContextAggr> testList = new ArrayList<>();
+        ProductContextAggr one = new ProductContextAggr();
+        one.setModelYear("G1.5");
+        one.setOptionCode("19aa");
+        one.setModelCode("es5");
+        one.setFeatureCode("1900");
+    ProductContextAggr two = new ProductContextAggr();
+    two.setModelYear("G1.5");
+    two.setOptionCode("19aa");
+    two.setModelCode("es5");
+    two.setFeatureCode("1900");
+    testList.add(one);
+        testList.add(two);
+        testList = testList.stream().distinct().toList();
+        System.out.println(testList.size());
+    }
 
     @Test
     public void execute(){

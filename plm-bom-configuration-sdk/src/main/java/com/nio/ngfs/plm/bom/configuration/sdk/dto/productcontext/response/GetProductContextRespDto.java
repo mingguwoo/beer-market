@@ -1,9 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.response;
 
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.Dto;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;

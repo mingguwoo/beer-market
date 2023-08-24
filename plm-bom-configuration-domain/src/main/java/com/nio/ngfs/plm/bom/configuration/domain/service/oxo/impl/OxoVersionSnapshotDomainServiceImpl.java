@@ -1,6 +1,5 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service.oxo.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.nio.bom.share.exception.BusinessException;

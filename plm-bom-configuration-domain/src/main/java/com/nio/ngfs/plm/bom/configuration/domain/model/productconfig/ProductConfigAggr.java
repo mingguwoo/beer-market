@@ -1,8 +1,8 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.productconfig;
 
 import com.nio.bom.share.constants.CommonConstants;
-import com.nio.bom.share.enums.YesOrNoEnum;
 import com.nio.bom.share.domain.model.AggrRoot;
+import com.nio.bom.share.enums.YesOrNoEnum;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.common.util.RegexUtil;

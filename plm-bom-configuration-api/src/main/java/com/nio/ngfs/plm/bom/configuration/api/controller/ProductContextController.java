@@ -1,6 +1,5 @@
 package com.nio.ngfs.plm.bom.configuration.api.controller;
 
-import com.nio.bom.share.annotation.NeedAuthorization;
 import com.nio.bom.share.annotation.NotLogResult;
 import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.application.query.productcontext.GetProductContextQuery;
@@ -26,7 +25,7 @@ public class ProductContextController implements PlmProductContextClient {
     private final GetProductContextQuery getProductContextQuery;
 
     @Override
-//    @NeedAuthorization
+    @NeedAuthorization
     @NotLogResult
     public ResultInfo<GetProductContextRespDto> getProductContext(@Valid @RequestBody GetProductContextQry qry) {
         return ResultInfo.success(getProductContextQuery.execute(qry));

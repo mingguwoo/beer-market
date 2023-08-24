@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption;
 
+import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoAddCmd;
 import org.apache.commons.compress.utils.Lists;
@@ -31,6 +32,7 @@ public class OxoFeatureOptionFactory {
             rowInfoAggr.setRuleCheck(featureOption.getRuleCheck());
             rowInfoAggr.setType(FeatureTypeEnum.FEATURE.getType());
             rowInfoAggr.setFeatureCode(featureOption.getFeatureCode());
+            rowInfoAggr.setSort(ConfigConstants.OXO_FEATURE_OPTION_SORT_DEFAULT);
             oxoRowInfoAggrs.add(rowInfoAggr);
 
             featureOption.getOptionCodes().forEach(optionCode->{
@@ -42,6 +44,7 @@ public class OxoFeatureOptionFactory {
                 optionRowInfo.setRuleCheck(optionCode.getRuleCheck());
                 optionRowInfo.setType(FeatureTypeEnum.OPTION.getType());
                 optionRowInfo.setFeatureCode(optionCode.getOptionCode());
+                rowInfoAggr.setSort(ConfigConstants.OXO_FEATURE_OPTION_SORT_DEFAULT);
                 oxoRowInfoAggrs.add(optionRowInfo);
             });
 

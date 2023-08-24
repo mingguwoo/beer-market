@@ -105,6 +105,7 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, List
             try {
                 productContextApplicationService.addProductContext(oxoVersionSnapshot.getOxoSnapshot());
             } catch (Exception e) {
+                log.error("addProductContext error",e);
                 throw new BusinessException("Sync Product Context Fail!");
             }
 
@@ -112,6 +113,7 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, List
             try {
                 productConfigModelOptionApplicationService.syncFeatureOptionFromOxoRelease(oxoVersionSnapshot);
             } catch (Exception e) {
+                log.error("syncFeatureOptionFromOxoRelease error",e);
                 throw new BusinessException("Sync Product Configuration Fail!");
             }
 

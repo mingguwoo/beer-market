@@ -35,15 +35,12 @@ public class OxoOptionPackageRepositoryImpl implements OxoOptionPackageRepositor
 
     @Override
     public void batchSave(List<OxoOptionPackageAggr> aggrList) {
-        if (CollectionUtils.isEmpty(aggrList)) {
-            return;
-        }
-        bomsOxoOptionPackageDao.saveBatch(oxoOptionPackageConverter.convertDoListToEntityList(aggrList));
+        DaoSupport.batchSaveOrUpdate(bomsOxoOptionPackageDao, oxoOptionPackageConverter.convertDoListToEntityList(aggrList));
     }
 
     @Override
     public void insertOxoOptionPackages(List<OxoOptionPackageAggr> oxoPackages) {
-        if(CollectionUtils.isNotEmpty(oxoPackages)) {
+        if (CollectionUtils.isNotEmpty(oxoPackages)) {
             bomsOxoOptionPackageDao.insertOxoOptionPackages(oxoPackages);
         }
     }
@@ -54,8 +51,8 @@ public class OxoOptionPackageRepositoryImpl implements OxoOptionPackageRepositor
     }
 
     @Override
-    public List<OxoOptionPackageAggr> queryByFeatureOptionIdsAndHeadIdsList(List<Long> featureOptionIdList,List<Long> headIds) {
-        return oxoOptionPackageConverter.convertEntityListToDoList(bomsOxoOptionPackageDao.queryByFeatureOptionIdList(featureOptionIdList,headIds));
+    public List<OxoOptionPackageAggr> queryByFeatureOptionIdsAndHeadIdsList(List<Long> featureOptionIdList, List<Long> headIds) {
+        return oxoOptionPackageConverter.convertEntityListToDoList(bomsOxoOptionPackageDao.queryByFeatureOptionIdList(featureOptionIdList, headIds));
     }
 
     @Override
@@ -65,12 +62,12 @@ public class OxoOptionPackageRepositoryImpl implements OxoOptionPackageRepositor
 
     @Override
     public List<OxoOptionPackageAggr> queryByBaseVehicleIds(List<Long> rowIds) {
-        List<OxoOptionPackageAggr> oxoOptionPackageAggrs=
+        List<OxoOptionPackageAggr> oxoOptionPackageAggrs =
                 oxoOptionPackageConverter.convertEntityListToDoList(bomsOxoOptionPackageDao.queryOxoOptionPackageByRowIds(rowIds));
 
-        if(CollectionUtils.isNotEmpty(oxoOptionPackageAggrs)){
-            oxoOptionPackageAggrs.forEach(x->{
-                if(StringUtils.isBlank(x.getDescription())){
+        if (CollectionUtils.isNotEmpty(oxoOptionPackageAggrs)) {
+            oxoOptionPackageAggrs.forEach(x -> {
+                if (StringUtils.isBlank(x.getDescription())) {
                     x.setDescription(StringUtils.EMPTY);
                 }
             });

@@ -7,7 +7,6 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.Pr
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsProductConfigOptionDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.common.DaoSupport;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -44,10 +43,7 @@ public class ProductConfigOptionRepositoryImpl implements ProductConfigOptionRep
 
     @Override
     public void batchSave(List<ProductConfigOptionAggr> aggrList) {
-        if (CollectionUtils.isEmpty(aggrList)) {
-            return;
-        }
-        bomsProductConfigOptionDao.saveBatch(productConfigOptionConverter.convertDoListToEntityList(aggrList));
+        DaoSupport.batchSaveOrUpdate(bomsProductConfigOptionDao, productConfigOptionConverter.convertDoListToEntityList(aggrList));
     }
 
 }

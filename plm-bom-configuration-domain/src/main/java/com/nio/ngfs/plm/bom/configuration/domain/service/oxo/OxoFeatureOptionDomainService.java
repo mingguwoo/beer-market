@@ -23,9 +23,10 @@ public interface OxoFeatureOptionDomainService {
     /**
      * 检查Feature/Option是否可删除
      *
+     * @param featureCodeList featureCode列表
      * @param featureOptionAggrList featureOptionAggr列表
      */
-    void checkFeatureOptionDelete(List<OxoFeatureOptionAggr> featureOptionAggrList);
+    void checkFeatureOptionDelete(List<String> featureCodeList, List<OxoFeatureOptionAggr> featureOptionAggrList);
 
     /**
      * 筛选掉重复/有冲突的无需打的点

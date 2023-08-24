@@ -28,7 +28,7 @@ public class BomsOxoVersionSnapshotDaoImpl extends AbstractDao<BomsOxoVersionSna
     public BomsOxoVersionSnapshotEntity queryLastReleaseSnapshotByModel(String modelCode, String type) {
         LambdaQueryWrapper<BomsOxoVersionSnapshotEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(BomsOxoVersionSnapshotEntity::getModelCode, modelCode);
-        lambdaQueryWrapper.eq(BomsOxoVersionSnapshotEntity::getType, type);
+        lambdaQueryWrapper.eq(type != null, BomsOxoVersionSnapshotEntity::getType, type);
         lambdaQueryWrapper.orderByDesc(BomsOxoVersionSnapshotEntity::getVersion);
         lambdaQueryWrapper.last("limit 1");
         return getBaseMapper().selectOne(lambdaQueryWrapper);
@@ -56,12 +56,12 @@ public class BomsOxoVersionSnapshotDaoImpl extends AbstractDao<BomsOxoVersionSna
     }
 
     @Override
-    public Page<BomsOxoVersionSnapshotEntity> querySnapshotByModel(String modelCode,String type,Integer pageSize,Integer pageNum) {
+    public Page<BomsOxoVersionSnapshotEntity> querySnapshotByModel(String modelCode, String type, Integer pageSize, Integer pageNum) {
 
 
         LambdaQueryWrapper<BomsOxoVersionSnapshotEntity> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(BomsOxoVersionSnapshotEntity::getModelCode, modelCode);
-        queryWrapper.eq(BomsOxoVersionSnapshotEntity::getType,type);
+        queryWrapper.eq(BomsOxoVersionSnapshotEntity::getType, type);
 
         Page<BomsOxoVersionSnapshotEntity> page = new Page<>(pageNum, pageSize);
         return getBaseMapper().selectPage(page, queryWrapper);

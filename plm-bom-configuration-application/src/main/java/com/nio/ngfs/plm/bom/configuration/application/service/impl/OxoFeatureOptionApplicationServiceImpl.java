@@ -111,13 +111,16 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
         if (CollectionUtils.isEmpty(featureOptionAggrList)) {
             return;
         }
-        // 车型
-        String modelCode = featureOptionAggrList.get(0).getModelCode();
         List<String> featureCodeList = LambdaUtil.map(featureOptionAggrList, OxoFeatureOptionAggr::isFeature, OxoFeatureOptionAggr::getFeatureCode);
         // 查询Feature的Option列表
         List<FeatureAggr> featureAggrList = featureRepository.queryByParentFeatureCodeListAndType(featureCodeList, FeatureTypeEnum.OPTION.getType());
+        if (CollectionUtils.isEmpty(featureAggrList)) {
+            return;
+        }
         List<String> optionCodeList = LambdaUtil.map(featureAggrList, FeatureAggr::getFeatureCode);
         Map<String, String> optionFeatureCodeMap = LambdaUtil.toKeyValueMap(featureAggrList, FeatureAggr::getFeatureCode, FeatureAggr::getParentFeatureCode);
+        // 车型
+        String modelCode = featureOptionAggrList.get(0).getModelCode();
         // 查询Option行列表
         List<OxoFeatureOptionAggr> optionAggrList = oxoFeatureOptionRepository.queryByModelAndFeatureCodeList(modelCode, optionCodeList);
         Map<String, List<OxoFeatureOptionAggr>> optionAggrByFeatureMap = LambdaUtil.groupBy(optionAggrList, i -> optionFeatureCodeMap.get(i.getFeatureCode()));
@@ -141,14 +144,14 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
                 optionAggrList.addAll(featureAggr.getChildren())
         );
         List<Long> featureOptionIdList = LambdaUtil.map(optionAggrList, OxoFeatureOptionAggr::getId);
-        List<OxoOptionPackageAggr> optionPackageAggrList = oxoOptionPackageRepository.queryByFeatureOptionIdsAndHeadIdsList(featureOptionIdList,Lists.newArrayList());
-        // Option的打点置为-
-        List<OxoOptionPackageAggr> updateOptionPackageAggrList = optionPackageAggrList.stream().filter(OxoOptionPackageAggr::deleteOptionPackage).toList();
+        List<OxoOptionPackageAggr> optionPackageAggrList = oxoOptionPackageRepository.queryByFeatureOptionIdsAndHeadIdsList(featureOptionIdList, Lists.newArrayList());
         Map<Long, OxoFeatureOptionAggr> featureOptionMapById = LambdaUtil.toKeyMap(optionAggrList, OxoFeatureOptionAggr::getId);
         Map<DeleteFeatureOptionCheckTypeEnum, Set<String>> messageTypeMap = checkDeleteOptionPackage(optionPackageAggrList, featureOptionMapById, modelCode);
         // 组装结果提示信息
         List<String> messageList = LambdaUtil.map(messageTypeMap.entrySet(), entry -> String.format(entry.getKey().getMessageFormat(),
                 Joiner.on(",").join(entry.getValue())));
+        // Option的打点置为-
+        List<OxoOptionPackageAggr> updateOptionPackageAggrList = optionPackageAggrList.stream().filter(OxoOptionPackageAggr::deleteOptionPackage).toList();
         return Pair.of(updateOptionPackageAggrList, messageList);
     }
 
@@ -167,10 +170,10 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
             OxoFeatureOptionAggr parent = featureOptionAggr.getParent();
             if (parent != null) {
                 // 勾选Feature的提示
-                messageTypeMap.getOrDefault(DeleteFeatureOptionCheckTypeEnum.WORKING_FEATURE, Sets.newHashSet()).add(parent.getFeatureCode());
+                messageTypeMap.computeIfAbsent(DeleteFeatureOptionCheckTypeEnum.WORKING_FEATURE, k -> Sets.newHashSet()).add(parent.getFeatureCode());
             } else {
                 // 勾选Option的提示
-                messageTypeMap.getOrDefault(DeleteFeatureOptionCheckTypeEnum.WORKING_OPTION, Sets.newHashSet()).add(featureOptionAggr.getFeatureCode());
+                messageTypeMap.computeIfAbsent(DeleteFeatureOptionCheckTypeEnum.WORKING_OPTION, k -> Sets.newHashSet()).add(featureOptionAggr.getFeatureCode());
             }
         });
         // 判断Option行在当前最新Formal版本OXO是否不全为"-"
@@ -197,10 +200,10 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
                 OxoFeatureOptionAggr parent = featureOptionAggr.getParent();
                 if (parent != null) {
                     // 勾选Feature的提示
-                    messageTypeMap.getOrDefault(DeleteFeatureOptionCheckTypeEnum.RELEASE_FEATURE, Sets.newHashSet()).add(parent.getFeatureCode());
+                    messageTypeMap.computeIfAbsent(DeleteFeatureOptionCheckTypeEnum.RELEASE_FEATURE, k -> Sets.newHashSet()).add(parent.getFeatureCode());
                 } else {
                     // 勾选Option的提示
-                    messageTypeMap.getOrDefault(DeleteFeatureOptionCheckTypeEnum.RELEASE_OPTION, Sets.newHashSet()).add(featureOptionAggr.getFeatureCode());
+                    messageTypeMap.computeIfAbsent(DeleteFeatureOptionCheckTypeEnum.RELEASE_OPTION, k -> Sets.newHashSet()).add(featureOptionAggr.getFeatureCode());
                 }
             });
         });

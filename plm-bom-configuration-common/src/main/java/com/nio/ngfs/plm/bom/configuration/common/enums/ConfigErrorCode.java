@@ -70,6 +70,7 @@ public enum ConfigErrorCode implements ErrorCode {
     AF_ERROR(82002, "Please Add AF00 In OXO!"),
     OXO_RENEW_SORT_FEATURE_NOT_THE_SAME_GROUP(82003, "The Select Features Not All In The Same Group And Catalog!"),
     OXO_RENEW_SORT_OPTION_NOT_THE_SAME_GROUP(82004, "The Select Options Not All In The Same Feature!"),
+    OXO_FEATURE_OPTION_IS_ALREADY_DELETE(82005, "Some Of The Selected Feature/Option Is Already Deleted!"),
 
     /**
      * Product Config

@@ -47,10 +47,7 @@ public class OxoFeatureOptionRepositoryImpl implements OxoFeatureOptionRepositor
 
     @Override
     public void batchSave(List<OxoFeatureOptionAggr> aggrList) {
-        if (CollectionUtils.isEmpty(aggrList)) {
-            return;
-        }
-        bomsOxoFeatureOptionDao.updateBatchById(oxoFeatureOptionConverter.convertDoListToEntityList(aggrList));
+        DaoSupport.batchSaveOrUpdate(bomsOxoFeatureOptionDao, oxoFeatureOptionConverter.convertDoListToEntityList(aggrList));
     }
 
     @Override

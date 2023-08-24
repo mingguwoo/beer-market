@@ -47,7 +47,7 @@ public class DeleteFeatureOptionCommand extends AbstractLockCommand<DeleteFeatur
         // 查询删除的Feature/Option行
         List<OxoFeatureOptionAggr> featureOptionAggrList = featureOptionRepository.queryByModelAndFeatureCodeList(cmd.getModelCode(), cmd.getFeatureCodeList());
         // 检查Feature/Option是否可删除
-        featureOptionDomainService.checkFeatureOptionDelete(featureOptionAggrList);
+        featureOptionDomainService.checkFeatureOptionDelete(cmd.getFeatureCodeList(), featureOptionAggrList);
         // 构建Feature/Option行的子节点列表
         featureOptionApplicationService.buildFeatureOptionWithChildren(featureOptionAggrList);
         // 在最新Release版本OXO中查询存在的Feature/Option

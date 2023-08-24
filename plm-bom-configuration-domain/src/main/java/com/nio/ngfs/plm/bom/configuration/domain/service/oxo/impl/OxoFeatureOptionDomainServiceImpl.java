@@ -72,7 +72,10 @@ public class OxoFeatureOptionDomainServiceImpl implements OxoFeatureOptionDomain
     }
 
     @Override
-    public void checkFeatureOptionDelete(List<OxoFeatureOptionAggr> featureOptionAggrList) {
+    public void checkFeatureOptionDelete(List<String> featureCodeList, List<OxoFeatureOptionAggr> featureOptionAggrList) {
+        if (featureCodeList.size() != featureOptionAggrList.size()) {
+            throw new BusinessException(ConfigErrorCode.OXO_FEATURE_OPTION_IS_ALREADY_DELETE);
+        }
         featureOptionAggrList.forEach(featureOptionAggr -> {
             if (!featureOptionAggr.canDelete()) {
                 throw new BusinessException(ConfigErrorCode.OXO_FEATURE_OPTION_CAN_NOT_DELETE);

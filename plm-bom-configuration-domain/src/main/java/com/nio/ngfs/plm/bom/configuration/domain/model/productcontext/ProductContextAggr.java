@@ -4,6 +4,7 @@ import com.nio.bom.share.domain.model.AggrRoot;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 /**
@@ -14,6 +15,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 public class ProductContextAggr extends AbstractDo implements AggrRoot<Long>{
 
     private String modelCode;
@@ -29,13 +31,13 @@ public class ProductContextAggr extends AbstractDo implements AggrRoot<Long>{
         return id;
     }
 
-    @Override
-    public int hashCode(){
-        return (modelCode+modelYear+optionCode+featureCode).hashCode();
-    }
-    @Override
-    public boolean equals(final Object obj){
-        ProductContextAggr aggr = (ProductContextAggr) obj;
-        return modelCode.equals(aggr.modelCode) && modelYear.equals(aggr.modelYear) && optionCode.equals(aggr.optionCode) && featureCode.equals(aggr.getFeatureCode());
-    }
+//    @Override
+//    public int hashCode(){
+//        return (modelCode+modelYear+optionCode+featureCode).hashCode();
+//    }
+//    @Override
+//    public boolean equals(final Object obj){
+//        ProductContextAggr aggr = (ProductContextAggr) obj;
+//        return modelCode.equals(aggr.modelCode) && modelYear.equals(aggr.modelYear) && optionCode.equals(aggr.optionCode) && featureCode.equals(aggr.getFeatureCode());
+//    }
 }

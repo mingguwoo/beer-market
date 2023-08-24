@@ -52,62 +52,51 @@ public class OxoVersionSnapshotDomainServiceImpl implements OxoVersionSnapshotDo
         OxoVersionSnapshotAggr oxoVersionSnapshotAggr = new OxoVersionSnapshotAggr();
 
 
-        // 根据 车型获取 oxo版本
-        if (CollectionUtils.isNotEmpty(oxoVersionSnapshots)) {
+        if (CollectionUtils.isEmpty(oxoVersionSnapshots)) {
 
-            List<OxoVersionSnapshotAggr> formalVersions = oxoVersionSnapshots.stream().filter(x -> StringUtils.equals(x.getType(), OxoSnapshotEnum.FORMAL.getCode()))
-                    .sorted(Comparator.comparing(OxoVersionSnapshotAggr::getVersion).reversed()).toList();
-
-
-            // 如果FORMAL版本 为空
-            if (CollectionUtils.isEmpty(formalVersions) && StringUtils.equals(type, OxoSnapshotEnum.FORMAL.getCode())) {
-
-                oxoVersionSnapshotAggr.setVersion(ConfigConstants.VERSION_AA);
-
-            } else if (CollectionUtils.isEmpty(formalVersions) && StringUtils.equals(type, OxoSnapshotEnum.INFORMAL.getCode())) {
-
-                List<OxoVersionSnapshotAggr> informalVersions =
-                        oxoVersionSnapshots.stream().filter(x -> StringUtils.equals(x.getType(), OxoSnapshotEnum.INFORMAL.getCode()))
-                                .sorted(Comparator.comparing(OxoVersionSnapshotAggr::getVersion).reversed()).toList();
-
-                if (CollectionUtils.isNotEmpty(informalVersions)) {
-                    oxoVersionSnapshotAggr.setVersion(VersionUtils.getNextMajorRev(informalVersions.get(0).getVersion()));
-                }
-            } else if (CollectionUtils.isNotEmpty(formalVersions)) {
-
-                OxoVersionSnapshotAggr oxoVersionSnapshot = formalVersions.get(0);
-                String version = oxoVersionSnapshot.getVersion();
-
-                if (StringUtils.equals(type, OxoSnapshotEnum.FORMAL.getCode())) {
-                    //如果包含小版本
-                    if (version.contains(ConfigConstants.REG_DOT)) {
-                        //则系统基于最新已发布版本号去除后缀，保留前两个大写字母，生成新版本号
-                        oxoVersionSnapshotAggr.setVersion(VersionUtils.getMajorRev(version));
-                    } else {
-                        //则系统基于最新已发布版本号往后顺延自动生成新版本号
-                        oxoVersionSnapshotAggr.setVersion(VersionUtils.findNextRev(version));
-                    }
-                    oxoVersionSnapshotAggr.setPreVersion(VersionUtils.findPrevRev(oxoVersionSnapshotAggr.getVersion()));
-                    oxoVersionSnapshotAggr.setPreOxoSnapshot(
-                            formalVersions.stream().filter(x -> StringUtils.equals(x.getVersion(), oxoVersionSnapshotAggr.getPreVersion())).findFirst()
-                                    .orElse(new OxoVersionSnapshotAggr()).getOxoSnapshot());
-                } else {
-                    if (version.contains(ConfigConstants.REG_DOT)) {
-                        oxoVersionSnapshotAggr.setVersion(VersionUtils.getNextMajorRev(version));
-                    }else{
-                        oxoVersionSnapshotAggr.setVersion(version+".1");
-                    }
-                }
-
-            }
-        } else {
             if (StringUtils.equals(type, OxoSnapshotEnum.FORMAL.getCode())) {
                 oxoVersionSnapshotAggr.setVersion(ConfigConstants.VERSION_AA);
             } else {
                 oxoVersionSnapshotAggr.setVersion(ConfigConstants.VERSION_AA_1);
             }
-        }
+        } else {
+            List<OxoVersionSnapshotAggr> oxoSortedVersionSnapshot = oxoVersionSnapshots.stream()
+                    .sorted(Comparator.comparing(OxoVersionSnapshotAggr::getVersion).reversed()).toList();
 
+
+            //版本
+            String version = oxoSortedVersionSnapshot.get(0).getVersion();
+
+            if (version.contains(ConfigConstants.REG_DOT)) {
+                if (StringUtils.equals(type, OxoSnapshotEnum.INFORMAL.getCode())) {
+                    oxoVersionSnapshotAggr.setVersion(VersionUtils.getNextMajorRev(version));
+                } else {
+
+                    String nextVersion = VersionUtils.getMajorRev(version);
+
+                    if(oxoSortedVersionSnapshot.stream().anyMatch(x-> StringUtils.equals(x.getVersion(),nextVersion))) {
+                        oxoVersionSnapshotAggr.setVersion(VersionUtils.findNextRev(nextVersion));
+                    }else{
+                        oxoVersionSnapshotAggr.setVersion(nextVersion);
+                    }
+                }
+            } else {
+                if (StringUtils.equals(type, OxoSnapshotEnum.INFORMAL.getCode())) {
+                    oxoVersionSnapshotAggr.setVersion(VersionUtils.findNextRev(version) + ".1");
+                } else {
+                    oxoVersionSnapshotAggr.setVersion(VersionUtils.findNextRev(version));
+                }
+            }
+
+            List<OxoVersionSnapshotAggr> formalVersionSnapshots = oxoSortedVersionSnapshot.stream().filter(x -> StringUtils.equals(x.getType(),
+                    OxoSnapshotEnum.FORMAL.getCode())).sorted(Comparator.comparing(OxoVersionSnapshotAggr::getVersion).reversed()).toList();
+
+            if (CollectionUtils.isNotEmpty(formalVersionSnapshots)) {
+                oxoVersionSnapshotAggr.setPreVersion(formalVersionSnapshots.get(0).getVersion());
+                oxoVersionSnapshotAggr.setPreOxoSnapshot(formalVersionSnapshots.get(0).getOxoSnapshot());
+            }
+
+        }
         return oxoVersionSnapshotAggr;
     }
 

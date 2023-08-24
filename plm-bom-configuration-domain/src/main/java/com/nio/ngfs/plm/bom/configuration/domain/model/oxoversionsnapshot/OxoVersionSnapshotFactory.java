@@ -5,6 +5,8 @@ import com.nio.bom.share.utils.GZIPUtils;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoSnapshotCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author xiaozhou.tu
@@ -26,7 +28,8 @@ public class OxoVersionSnapshotFactory {
         oxoFeatureOptionAggr.setBrand(ConfigConstants.brandName.get());
         oxoFeatureOptionAggr.setTitle(editGroupCmd.getTitle());
         oxoFeatureOptionAggr.setChangeContent(editGroupCmd.getChangeContent());
-        oxoFeatureOptionAggr.setEmailGroup(String.join(",",editGroupCmd.getEmailUsers()));
+        oxoFeatureOptionAggr.setEmailGroup(CollectionUtils.isNotEmpty(editGroupCmd.getEmailUsers()) ?
+                String.join(",",editGroupCmd.getEmailUsers()) : StringUtils.EMPTY);
         oxoFeatureOptionAggr.setCreateUser(editGroupCmd.getUserName());
         oxoFeatureOptionAggr.setUpdateUser(editGroupCmd.getUserName());
 

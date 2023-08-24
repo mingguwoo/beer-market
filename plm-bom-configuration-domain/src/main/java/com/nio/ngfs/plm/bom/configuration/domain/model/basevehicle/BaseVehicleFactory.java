@@ -65,9 +65,7 @@ public class BaseVehicleFactory {
                 });
             });
         });
-        return oxoBasicVehicleDtos.stream().sorted(Comparator.comparing(OxoBasicVehicleDto::getModelYear).thenComparing(OxoBasicVehicleDto::getRegionCode)
-                .thenComparing(OxoBasicVehicleDto::getDriverOptionCode).thenComparing(OxoBasicVehicleDto::getSalesOptionCode)).toList();
-
+        return oxoBasicVehicleDtos;
     }
 
 }

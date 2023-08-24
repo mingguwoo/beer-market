@@ -43,7 +43,11 @@ public class OxoFeatureOptionDomainServiceImpl implements OxoFeatureOptionDomain
         }
         Set<String> existFeatureCodeSet = oxoFeatureOptionAggrList.stream().map(OxoFeatureOptionAggr::getFeatureCode).collect(Collectors.toSet());
         if (!existFeatureCodeSet.containsAll(moveFeatureCodeList)) {
-            throw new BusinessException(ConfigErrorCode.FEATURE_FEATURE_NOT_EXISTS);
+            if (oxoFeatureOptionAggrList.get(0).isFeature()) {
+                throw new BusinessException(ConfigErrorCode.OXO_RENEW_SORT_FEATURE_NOT_THE_SAME_GROUP);
+            } else {
+                throw new BusinessException(ConfigErrorCode.OXO_RENEW_SORT_OPTION_NOT_THE_SAME_GROUP);
+            }
         }
         // 排序
         oxoFeatureOptionAggrList = oxoFeatureOptionAggrList.stream().sorted(OxoFeatureOptionAggr::compareTo).toList();
@@ -91,7 +95,7 @@ public class OxoFeatureOptionDomainServiceImpl implements OxoFeatureOptionDomain
     public List<String> checkOxoBasicVehicleOptions(String modelCode) {
 
         List<OxoFeatureOptionAggr> oxoFeatureOptionAggrs =
-                oxoFeatureOptionRepository.queryFeatureListsByModelAndSortDelete(modelCode,true);
+                oxoFeatureOptionRepository.queryFeatureListsByModelAndSortDelete(modelCode, true);
 
         if (CollectionUtils.isEmpty(oxoFeatureOptionAggrs)) {
             return Lists.newArrayList();

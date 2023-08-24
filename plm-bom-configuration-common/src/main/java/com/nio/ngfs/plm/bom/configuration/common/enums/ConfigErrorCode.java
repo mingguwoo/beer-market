@@ -68,6 +68,8 @@ public enum ConfigErrorCode implements ErrorCode {
     OXO_VERSION_SNAPSHOT_NOT_EXIST(82000, "OXO Version Snapshot Not Exist!"),
     OXO_FEATURE_OPTION_CAN_NOT_DELETE(82001, "The Feature/Option Can Not Delete!"),
     AF_ERROR(82002, "Please Add AF00 In OXO!"),
+    OXO_RENEW_SORT_FEATURE_NOT_THE_SAME_GROUP(82003, "The Select Features Not All In The Same Group And Catalog!"),
+    OXO_RENEW_SORT_OPTION_NOT_THE_SAME_GROUP(82004, "The Select Options Not All In The Same Feature!"),
 
     /**
      * Product Config
@@ -91,17 +93,13 @@ public enum ConfigErrorCode implements ErrorCode {
     BOM_MIDDLE_PLATFORM_GET_MODEL_FAIL(89001, "Get Model From Bom Middle Platform Fail!"),
 
 
-
-    EMAIL_ERROR(89002,"send email error!"),
-
+    EMAIL_ERROR(89002, "send email error!"),
 
 
-
-    BASIC_VERSION_ERROR(89003,"对比版本号不能一样"),
-
+    BASIC_VERSION_ERROR(89003, "对比版本号不能一样"),
 
 
-    VERSION_ERROR(89004,"版本{0}没有数据"),
+    VERSION_ERROR(89004, "版本{0}没有数据"),
     ;
 
     /**

@@ -16,4 +16,5 @@ public class ProductContextColumnDto implements Dto {
 
     private String modelYear;
 
+
 }

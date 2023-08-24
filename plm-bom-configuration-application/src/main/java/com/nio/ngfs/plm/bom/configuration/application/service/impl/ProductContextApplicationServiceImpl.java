@@ -56,7 +56,7 @@ public class ProductContextApplicationServiceImpl implements ProductContextAppli
         featureList.forEach(featureRow->featureOptionMap.put(featureRow,featureRow.getOptions()));
 
         //更新
-            //先处理其他的
+        //先处理其他的
         ProductContextFeatureFactory.createProductContextFeatureList(productContextFeatureList,featureList,featureOptionMap,modelCode);
         ProductContextFactory.createProductContextList(productContextList,featureList,oxoListQry);
         //单独处理AF00

@@ -3,6 +3,7 @@ package com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.response;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.Dto;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,4 +22,9 @@ public class ProductContextFeatureRowDto implements Dto {
     private String catalog;
 
     private List<ProductContextOptionRowDto> optionRowList;
+
+
+    public ProductContextFeatureRowDto() {
+        optionRowList = new ArrayList<>();
+    }
 }

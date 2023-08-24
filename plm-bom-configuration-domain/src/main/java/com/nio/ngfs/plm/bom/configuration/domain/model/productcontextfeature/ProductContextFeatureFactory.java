@@ -37,19 +37,18 @@ public class ProductContextFeatureFactory {
                 productContextFeatureAggr.setModelCode(modelCode);
                 productContextFeatureAggr.setFeatureCode(feature.getFeatureCode());
                 productContextFeatureAggr.setType(ProductContextFeatureEnum.FEATURE.getType());
-                if (!existFeatureSet.contains(productContextFeatureAggr)){
+                if (!existFeatureSet.contains(productContextFeatureAggr)) {
                     ProductContextFeatureList.add(productContextFeatureAggr);
-                    featureOptionMap.get(feature).forEach(option->{
-                        ProductContextFeatureAggr aggr = new ProductContextFeatureAggr();
-                        aggr.setModelCode(modelCode);
-                        aggr.setFeatureCode(option.getFeatureCode());
-                        aggr.setType(ProductContextFeatureEnum.OPTION.getType());
-                        if (!existFeatureSet.contains(aggr)){
-                            ProductContextFeatureList.add(aggr);
-                        }
-                    });
                 }
-
+                featureOptionMap.get(feature).forEach(option->{
+                    ProductContextFeatureAggr aggr = new ProductContextFeatureAggr();
+                    aggr.setModelCode(modelCode);
+                    aggr.setFeatureCode(option.getFeatureCode());
+                    aggr.setType(ProductContextFeatureEnum.OPTION.getType());
+                    if (!existFeatureSet.contains(aggr)){
+                        ProductContextFeatureList.add(aggr);
+                    }
+                });
             }
         });
     }

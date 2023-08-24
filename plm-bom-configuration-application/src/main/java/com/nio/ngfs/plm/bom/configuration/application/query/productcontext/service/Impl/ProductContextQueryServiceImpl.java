@@ -9,6 +9,7 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsP
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.request.GetProductContextQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.response.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -18,6 +19,7 @@ import java.util.*;
  * @date 2023/8/11
  */
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class ProductContextQueryServiceImpl implements ProductContextQueryService {
 
@@ -28,7 +30,7 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
         Map<String,BomsProductContextFeatureEntity> rowMap = new HashMap<>();
         Map<ProductContextDto,BomsProductContextFeatureEntity> pointMap = new HashMap<>();
         Map<String,String> groupRecordMap = new HashMap<>();
-        Map<String,BomsFeatureLibraryEntity> featureAggrMap = buildOptionCodeFeatureAggrMap(pointList,groupRecordMap);
+        Map<String,BomsFeatureLibraryEntity> featureAggrMap = buildOptionCodeFeatureAggrMap(pointList,rowList,groupRecordMap);
         //将featureCode和行对应上
         rowList.forEach(row->rowMap.put(row.getFeatureCode(),row));
         //将点与行对应上
@@ -50,10 +52,12 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
             pointList = pointList.stream().filter(point-> finalRowList.contains(pointMap.get(point))).toList();
         }
         //模糊搜索，筛选optionCode featureCode
-        pointList = pointList.stream().filter(point-> matchSearch(point.getOptionCode(), qry.getFeature()) ||
-                matchSearch(point.getFeatureCode(),qry.getFeature()) ||
-                matchSearch(featureAggrMap.get(point.getFeatureCode()).getDisplayName(),qry.getFeature())).toList();
-        rowList = pointList.stream().map(point->pointMap.get(point)).toList();
+        if (Objects.nonNull(qry.getFeature())){
+            pointList = pointList.stream().filter(point-> matchSearch(point.getOptionCode(), qry.getFeature()) ||
+                    matchSearch(point.getFeatureCode(),qry.getFeature()) ||
+                    matchSearch(featureAggrMap.get(point.getFeatureCode()).getDisplayName(),qry.getFeature()) ||
+                    matchSearch(featureAggrMap.get(point.getOptionCode()).getDisplayName(),qry.getFeature())).toList();
+        }
         //组装Dto
         return buildResponseDto(pointList,rowList,featureAggrMap);
     }
@@ -72,6 +76,7 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
     private GetProductContextRespDto buildResponseDto(List<ProductContextDto> pointList, List<BomsProductContextFeatureEntity> rowList,Map<String,BomsFeatureLibraryEntity> featureAggrMap){
         Map<String,ProductContextFeatureRowDto> featureRowDtoMap = new HashMap<>();
         GetProductContextRespDto getProductContextRespDto = new GetProductContextRespDto();
+        Map<String,Long> featureCodeRowIdMap = new HashMap<>();
         //组装行
             //先存Feature
         rowList.forEach(row-> {
@@ -86,7 +91,7 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
                 featureRowDtoMap.put(row.getFeatureCode(),productContextFeatureRowDto);
             }
         });
-            //再存Option
+        //再存Option
         rowList.forEach(row->{
             if (Objects.equals(row.getType(), ProductContextFeatureEnum.OPTION.getType())) {
                 ProductContextOptionRowDto productContextOptionRowDto = new ProductContextOptionRowDto();
@@ -96,10 +101,12 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
                 productContextOptionRowDto.setRowId(row.getId());
                 productContextOptionRowDto.setCatalog(featureAggrMap.get(row.getFeatureCode()).getCatalog());
                 productContextOptionRowDto.setFeatureCode(row.getFeatureCode());
+                featureCodeRowIdMap.put(row.getFeatureCode(),row.getId());
                 //记下optionCode对应的行信息
                 featureRowDtoMap.get(parentCode).getOptionRowList().add(productContextOptionRowDto);
             }
         });
+
 
         //组装列和列行记录表
         //  先处理列id
@@ -119,21 +126,22 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
             productContextColumnDto.setModelCode(point.getModelCode());
             productContextColumnDto.setModelYear(point.getModelYear());
             productContextPointDto.setColumnId(pointColumnIdMap.get(point));
-            productContextPointDto.setRowId(featureRowDtoMap.get(point.getOptionCode()).getRowId());
+            productContextPointDto.setRowId(featureCodeRowIdMap.get(point.getOptionCode()));
             getProductContextRespDto.getProductContextColumnDtoList().add(productContextColumnDto);
             getProductContextRespDto.getProductContextPointDtoList().add(productContextPointDto);
         });
+        getProductContextRespDto.setProductContextColumnDtoList(getProductContextRespDto.getProductContextColumnDtoList().stream().distinct().toList());
         return getProductContextRespDto;
     };
 
     /**
-     * 获取所有相关的featureEntity并将optionCode与featureEntity对应上
+     * 获取所有相关的featureEntity并将optionCode与featureEntity,groupEntity对应上
      * @param pointList
      * @return
      */
-    private Map<String,BomsFeatureLibraryEntity> buildOptionCodeFeatureAggrMap(List<ProductContextDto> pointList,Map<String,String> groupRecordMap){
+    private Map<String,BomsFeatureLibraryEntity> buildOptionCodeFeatureAggrMap(List<ProductContextDto> pointList,List<BomsProductContextFeatureEntity> rowList,Map<String,String> groupRecordMap){
         Set<String> codeRecord = new HashSet<>();
-        Map<String,BomsFeatureLibraryEntity> featureMap = new HashMap<>();
+        Map<String,BomsFeatureLibraryEntity> featureAggrMap = new HashMap<>();
         pointList.forEach(dto->{
             if (Objects.nonNull(dto.getFeatureCode())){
                 codeRecord.add(dto.getFeatureCode());
@@ -141,23 +149,28 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
             if (Objects.nonNull(dto.getOptionCode())){
                 codeRecord.add(dto.getOptionCode());
             }
-        });List<BomsFeatureLibraryEntity> featureList = bomsFeatureLibraryDao.queryAll();
+        });
+        //需要考虑可能oxo行中有，但没被选中为点的情况
+        rowList.forEach(entity->{
+            codeRecord.add(entity.getFeatureCode());
+        });
+        List<BomsFeatureLibraryEntity> featureList = bomsFeatureLibraryDao.queryAll();
         featureList.forEach(feature->{
             if (codeRecord.contains(feature.getFeatureCode())){
-                featureMap.put(feature.getFeatureCode(),feature);
+                featureAggrMap.put(feature.getFeatureCode(),feature);
                 //先存一遍feature与group的对应关系
-                if (Objects.equals(feature.getType(),FeatureTypeEnum.FEATURE)){
+                if (Objects.equals(feature.getType(),FeatureTypeEnum.FEATURE.getType())){
                     groupRecordMap.put(feature.getFeatureCode(),feature.getParentFeatureCode());
                 }
             }
         });
         //再遍历一遍，存下option对应的group
         featureList.forEach(feature->{
-            if (codeRecord.contains(feature.getFeatureCode()) && Objects.equals(feature.getType(),FeatureTypeEnum.OPTION)){
+            if (codeRecord.contains(feature.getFeatureCode()) && Objects.equals(feature.getType(),FeatureTypeEnum.OPTION.getType())){
                 groupRecordMap.put(feature.getFeatureCode(),groupRecordMap.get(feature.getParentFeatureCode()));
             }
         });
 
-        return featureMap;
+        return featureAggrMap;
     }
 }

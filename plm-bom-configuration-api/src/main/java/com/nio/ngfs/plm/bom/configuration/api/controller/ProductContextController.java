@@ -9,7 +9,10 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.request.GetProd
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.response.GetProductContextRespDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 /**
  * @author bill.wang
@@ -23,9 +26,9 @@ public class ProductContextController implements PlmProductContextClient {
     private final GetProductContextQuery getProductContextQuery;
 
     @Override
-    @NeedAuthorization
+//    @NeedAuthorization
     @NotLogResult
-    public ResultInfo<GetProductContextRespDto> getProductContext(GetProductContextQry qry) {
+    public ResultInfo<GetProductContextRespDto> getProductContext(@Valid @RequestBody GetProductContextQry qry) {
         return ResultInfo.success(getProductContextQuery.execute(qry));
     }
 }

@@ -16,5 +16,4 @@ public interface PlmProductContextClient {
     @PostMapping("/productContext/getProductContext")
     ResultInfo<GetProductContextRespDto> getProductContext(GetProductContextQry qry);
 
-
 }

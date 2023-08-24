@@ -62,7 +62,7 @@ public class ExportBaseVehicleQuery {
         XSSFSheet sheet = workbook.createSheet();
         configSheetStyle(sheet);
         setSheetTitle(workbook, sheet, qry);
-        writeBaseVehicleRow(qry, baseVehicleRespDtoList, workbook, sheet);
+        writeBaseVehicleRow(baseVehicleRespDtoList, workbook, sheet);
     }
 
     /**
@@ -91,11 +91,11 @@ public class ExportBaseVehicleQuery {
     /**
      * 写Feature和Option行数据
      */
-    private void writeBaseVehicleRow(ExportBaseVehicleQry qry, List<BaseVehicleRespDto> baseVehicleRespDtoList, XSSFWorkbook workbook, XSSFSheet sheet) {
+    private void writeBaseVehicleRow(List<BaseVehicleRespDto> baseVehicleRespDtoList, XSSFWorkbook workbook, XSSFSheet sheet) {
         int rowIndex = 1;
         XSSFCellStyle featureCellStyle = createBaseVehicleCellStyle(workbook);
         for (BaseVehicleRespDto baseVehicle : baseVehicleRespDtoList) {
-            createBaseVehicleRow(qry,baseVehicle,sheet, rowIndex++, featureCellStyle);
+            createBaseVehicleRow(baseVehicle,sheet, rowIndex++, featureCellStyle);
         }
     }
 
@@ -112,7 +112,7 @@ public class ExportBaseVehicleQuery {
     /**
      * 创建BaseVehicle行
      */
-    private void createBaseVehicleRow(ExportBaseVehicleQry qry, BaseVehicleRespDto baseVehicle, XSSFSheet sheet, int rowIndex, XSSFCellStyle cellStyle) {
+    private void createBaseVehicleRow( BaseVehicleRespDto baseVehicle, XSSFSheet sheet, int rowIndex, XSSFCellStyle cellStyle) {
         int columnIndex = -1;
         XSSFRow row = sheet.createRow(rowIndex);
         createCell(row, ++columnIndex, baseVehicle.getBaseVehicleId(), cellStyle);

@@ -42,13 +42,13 @@ public class ProductContextController implements PlmProductContextClient {
     }
 
     @Override
-//    @NeedAuthorization
+    @NeedAuthorization
     @NotLogResult
     public ResultInfo<ProductContextOptionsRespDto> queryProductContextOptions(QueryProductContextOptionsQry qry) {
         return ResultInfo.success(queryProductContextOptionsQuery.execute(qry));
     }
 
-    //    @NeedAuthorization
+    @NeedAuthorization
     @NotLogResult
     @PostMapping("productContext/exportProductContext")
     public void exportProductContext(@Valid @RequestBody ExportProductContextQry qry, HttpServletResponse response){

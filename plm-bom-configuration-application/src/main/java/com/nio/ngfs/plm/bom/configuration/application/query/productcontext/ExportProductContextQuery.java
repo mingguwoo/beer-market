@@ -9,14 +9,11 @@ import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.request.ExportBaseVehicleQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.request.ExportProductContextQry;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.response.GetProductContextRespDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.response.ProductContextColumnDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.response.ProductContextFeatureRowDto;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.response.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.*;
 import org.checkerframework.checker.units.qual.C;
@@ -25,7 +22,7 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -41,25 +38,54 @@ public class ExportProductContextQuery extends AbstractExportQuery {
         "Feature Code", "Feature Display name", "Option Code", "Option Display Name"
     );
 
+    private static Map<String,List<String>> optionCodeModelYearMap = new HashMap<>();
+    private static Map<String,Integer> modelYearColumnMap = new HashMap<>();
+
     private final GetProductContextQuery getProductContextQuery;
 
     public void execute(ExportProductContextQry qry, HttpServletResponse response){
 
         GetProductContextRespDto productContextRespDto = getProductContextQuery.execute(qry);
         String fileName = qry.getModelCode() + "_ModelYear_Option_" + DateUtils.dateTimeNow("yyyyMMddHHmm") + ".xlsx";
-        export(response, fileName, workbook -> exportProductContext(qry,productContextRespDto,workbook));
+        export(response, fileName, workBook -> exportProductContext(qry,productContextRespDto,workBook));
     }
 
     /**
      * Product Context导出到Excel
      */
-    private void exportProductContext(ExportProductContextQry qry,GetProductContextRespDto productContextRespDto,XSSFWorkbook workbook){
-        XSSFSheet sheet = workbook.createSheet();
+    private void exportProductContext(ExportProductContextQry qry,GetProductContextRespDto productContextRespDto,XSSFWorkbook workBook){
+        XSSFSheet sheet = workBook.createSheet();
         configSheetStyle(sheet);
-        //动态表头值
+        initialOptionCodeModelYearMap(productContextRespDto);
+        //获取动态表头值
         List<ProductContextColumnDto> productContextHeads = productContextRespDto.getProductContextColumnDtoList();
-        setSheetTitle(workbook,sheet,qry,productContextHeads);
-        writeProductContextRow(productContextRespDto,workbook,sheet);
+        //设置表头
+        setSheetTitle(workBook,sheet,qry,productContextHeads);
+        //写入行
+        writeProductContextRow(productContextRespDto,workBook,sheet);
+    }
+
+    private void initialOptionCodeModelYearMap(GetProductContextRespDto productContextRespDto){
+        Map<Long, ProductContextOptionRowDto> rowMap = new HashMap<>();
+        Map<Long, ProductContextColumnDto> columnMap = new HashMap<>();
+        productContextRespDto.getProductContextFeatureRowDtoList().forEach(featureRow->{
+                featureRow.getOptionRowList().forEach(optionRow->{
+                    rowMap.put(optionRow.getRowId(),optionRow);
+                });
+        });
+        productContextRespDto.getProductContextColumnDtoList().forEach(column->{
+            columnMap.put(column.getColumnId(),column);
+        });
+        productContextRespDto.getProductContextPointDtoList().forEach(point->{
+            if (optionCodeModelYearMap.containsKey(rowMap.get(point.getRowId()).getFeatureCode())){
+                optionCodeModelYearMap.get(rowMap.get(point.getRowId()).getFeatureCode()).add(columnMap.get(point.getColumnId()).getModelYear());
+            }
+            else{
+                List<String> selectedModelYearList = new ArrayList<>();
+                selectedModelYearList.add(columnMap.get(point.getColumnId()).getModelYear());
+                optionCodeModelYearMap.put(rowMap.get(point.getRowId()).getFeatureCode(),selectedModelYearList);
+            }
+        });
     }
 
     /**
@@ -76,67 +102,134 @@ public class ExportProductContextQuery extends AbstractExportQuery {
         XSSFCellStyle style = workbook.createCellStyle();
         style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         style.setFillForegroundColor(HSSFColor.HSSFColorPredefined.SKY_BLUE.getIndex());
+        style.setVerticalAlignment(VerticalAlignment.CENTER);    //上下居中
         int columnIndex = 0;
-        XSSFRow row = sheet.createRow(0);
+        XSSFRow rowOne = sheet.createRow(0);
+        XSSFRow rowTwo = sheet.createRow(1);
         for (String title : TITLE_LIST) {
-            XSSFCell cell = row.createCell(columnIndex);
+            XSSFCell cell = rowOne.createCell(columnIndex);
             cell.setCellValue(title);
             cell.setCellStyle(style);
             sheet.addMergedRegion(new CellRangeAddress(0,1,columnIndex,columnIndex));
             columnIndex++;
         }
-        CellRangeAddress firstMergeRegion = new CellRangeAddress(0,1,0,columnIndex-1);
-        sheet.addMergedRegion(firstMergeRegion);
         //动态表头
-        XSSFCell cell = row.createCell(columnIndex++);
-        cell.setCellValue(productContextHeads.get(CommonConstants.INT_ZERO).getModelCode());
-        cell.setCellStyle(style);
-//        for (int i = 0; i < productContextHeads.size();i++){
-//            XSSFCell dynamicCell = row.createCell(columnIndex++);
-//            ProductContextColumnDto columnDto = productContextHeads.get(i);
-//            dynamicCell.setCellStyle(style);
-//            dynamicCell.setCellValue(columnDto.getModelCode()+" "+columnDto.getModelYear());
-//        }
-//        //合并单元格
-//        CellRangeAddress secondMergeRegion = new CellRangeAddress(0,0,4,columnIndex);
-//        sheet.addMergedRegion(secondMergeRegion);
+        XSSFCell modelCell = rowOne.createCell(columnIndex);
+        modelCell.setCellValue(productContextHeads.get(CommonConstants.INT_ZERO).getModelCode());
+        XSSFCellStyle modelStyle = workbook.createCellStyle();
+        modelStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        modelStyle.setFillForegroundColor(HSSFColor.HSSFColorPredefined.SKY_BLUE.getIndex());
+        modelStyle.setAlignment(HorizontalAlignment.CENTER);    //左右居中
+        style.setVerticalAlignment(VerticalAlignment.CENTER);    //上下居中
+        modelCell.setCellStyle(modelStyle);
+        for (int i = 0; i < productContextHeads.size();i++){
+            XSSFCell dynamicCell = rowTwo.createCell(columnIndex++);
+            ProductContextColumnDto columnDto = productContextHeads.get(i);
+            dynamicCell.setCellStyle(style);
+            dynamicCell.setCellValue(columnDto.getModelCode()+" "+columnDto.getModelYear());
+            modelYearColumnMap.put(productContextHeads.get(i).getModelYear(),columnIndex-1);
+        }
+        sheet.addMergedRegion(new CellRangeAddress(0,0,4,columnIndex-1));
     }
 
     private void writeProductContextRow(GetProductContextRespDto productContextRespDto,XSSFWorkbook workbook, XSSFSheet sheet){
-        int rowIndex = 1;
-        XSSFCellStyle productContextCellStyle = createProductContextCellStyle(workbook);
+        int rowIndex = 2;
+        boolean colorFlag = true;
         for (ProductContextFeatureRowDto productContextRow : productContextRespDto.getProductContextFeatureRowDtoList()){
-            createProductContextRow(productContextRow,sheet,++rowIndex,productContextCellStyle);
+            XSSFCellStyle productContextCellStyle = createProductContextCellStyle(workbook,colorFlag);
+            productContextCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+            createProductContextRow(productContextRow,sheet,rowIndex,productContextCellStyle,workbook);
+            colorFlag = !colorFlag;
+            rowIndex = rowIndex+productContextRow.getOptionRowList().size();
         }
     }
 
     /**
      * 创建ProductContext样式
      */
-    private XSSFCellStyle createProductContextCellStyle(XSSFWorkbook workbook) {
+    private XSSFCellStyle createProductContextCellStyle(XSSFWorkbook workbook,boolean colorFlag) {
         XSSFCellStyle cellStyle = workbook.createCellStyle();
         cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        cellStyle.setFillForegroundColor(HSSFColor.HSSFColorPredefined.GREY_25_PERCENT.getIndex());
+        if (colorFlag){
+            cellStyle.setFillForegroundColor(HSSFColor.HSSFColorPredefined.GREY_25_PERCENT.getIndex());
+        }
+        else {
+            cellStyle.setFillForegroundColor(HSSFColor.HSSFColorPredefined.WHITE.getIndex());
+        }
         return cellStyle;
     }
 
     /**
-     * 创建Product Context行
+     * 创建Product Context 行
      */
-    private void createProductContextRow(ProductContextFeatureRowDto productContextRow,XSSFSheet sheet, int rowIndex, XSSFCellStyle cellStyle){
-        int columnIndex = -1;
+    private void createProductContextRow(ProductContextFeatureRowDto productContextRow,XSSFSheet sheet, int rowIndex, XSSFCellStyle cellStyle,XSSFWorkbook workbook){
         XSSFRow row = sheet.createRow(rowIndex);
-        createCell(row, ++columnIndex,productContextRow.getFeatureCode(),cellStyle);
-        createCell(row,++columnIndex,productContextRow.getDisplayName(),cellStyle);
-//        for (int i = 0; i  < productContextRow.getOptionRowList().size();i++){
-//            createCell(row,++columnIndex,productContextRow.getOptionRowList().get(i).getFeatureCode(),cellStyle);
-//            createCell(row,++columnIndex,productContextRow.getOptionRowList().get(i).getDisplayName(),cellStyle);
-//        }
-        rowIndex = rowIndex + productContextRow.getOptionRowList().size()-1;
-        CellRangeAddress firstMergeRegion = new CellRangeAddress(rowIndex,rowIndex,0,0);
-        CellRangeAddress secondMergeRegion = new  CellRangeAddress(rowIndex,rowIndex,0,0);
-        sheet.addMergedRegion(firstMergeRegion);
-        sheet.addMergedRegion(secondMergeRegion);
+        //先弄Feature
+        createCell(row, 0,productContextRow.getFeatureCode(),cellStyle);
+        createCell(row,1,productContextRow.getDisplayName(),cellStyle);
+        //再弄Option
+        for (int i = 0; i  < productContextRow.getOptionRowList().size();i++){
+            Set<Integer> selectedCell = new HashSet<>();
+            ProductContextOptionRowDto optionRowDto = productContextRow.getOptionRowList().get(i);
+            //如果是和feature同一行，就先用原先的row
+            if (i == 0){
+                createCell(row,2,optionRowDto.getFeatureCode(),cellStyle);
+                createCell(row,3,optionRowDto.getDisplayName(),cellStyle);
+                //打勾
+                if(Objects.nonNull(optionCodeModelYearMap.get(optionRowDto.getFeatureCode()))){
+                    optionCodeModelYearMap.get(optionRowDto.getFeatureCode()).forEach(modelYear->{
+                        createCell(row,modelYearColumnMap.get(modelYear),"\u2714",cellStyle);
+                        selectedCell.add(modelYearColumnMap.get(modelYear));
+                    });
+                    modelYearColumnMap.forEach((key,value)->{
+                        if (!selectedCell.contains(value)){
+                            createCell(row,value,null,cellStyle);
+                        }
+                    });
+                }
+
+                //如果一个option 完全没有被选中，也需要同步样式（除了AF00外理论上不存在这种情况，实际可能因数据错误出现）
+                else{
+                    modelYearColumnMap.forEach((key,value)->{
+                        createCell(row,value,null,cellStyle);
+                    });
+                }
+            }
+            else{
+                XSSFRow  optionRow = sheet.createRow(rowIndex+i);
+                createCell(optionRow,2,optionRowDto.getFeatureCode(),cellStyle);
+                createCell(optionRow,3,optionRowDto.getDisplayName(),cellStyle);
+                //打勾
+                if(Objects.nonNull(optionCodeModelYearMap.get(optionRowDto.getFeatureCode()))){
+                    optionCodeModelYearMap.get(optionRowDto.getFeatureCode()).forEach(modelYear->{
+                        createCell(optionRow,modelYearColumnMap.get(modelYear),"\u2714",cellStyle);
+                        selectedCell.add(modelYearColumnMap.get(modelYear));
+                    });
+                    modelYearColumnMap.forEach((key,value)->{
+                        if (!selectedCell.contains(value)){
+                            createCell(optionRow,value,null,cellStyle);
+                        }
+                    });
+                }
+                //如果一个option 完全没有被选中，也需要同步样式（除了AF00外理论上不存在这种情况，实际可能因数据错误出现）
+                else{
+                    modelYearColumnMap.forEach((key,value)->{
+                        createCell(optionRow,value,null,cellStyle);
+                    });
+                }
+
+            }
+
+        }
+
+
+        //如果有超过一个option的， 需要合并feature部分
+        if (productContextRow.getOptionRowList().size()>1){
+            CellRangeAddress firstMergeRegion = new CellRangeAddress(rowIndex,rowIndex+productContextRow.getOptionRowList().size()-1,0,0);
+            CellRangeAddress secondMergeRegion = new  CellRangeAddress(rowIndex,rowIndex+productContextRow.getOptionRowList().size()-1,1,1);
+            sheet.addMergedRegion(firstMergeRegion);
+            sheet.addMergedRegion(secondMergeRegion);
+        }
 
     }
 

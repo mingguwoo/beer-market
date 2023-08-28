@@ -179,7 +179,7 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
     @Override
     public ProductContextOptionsRespDto queryProductContextOptions() {
         ProductContextOptionsRespDto productContextOptionsRespDto = new ProductContextOptionsRespDto();
-        productContextOptionsRespDto.setModelCode(bomsOxoVersionSnapshotDao.queryAll().stream().map(snapShot->snapShot.getModelCode()).toList());
+        productContextOptionsRespDto.setModelCode(bomsOxoVersionSnapshotDao.queryAll().stream().map(snapShot->snapShot.getModelCode()).distinct().toList());
         productContextOptionsRespDto.setGroupCode(bomsFeatureLibraryDao.getGroupList().stream().map(group->group.getFeatureCode()).toList());
         return productContextOptionsRespDto;
     }

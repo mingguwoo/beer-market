@@ -134,7 +134,8 @@ public class OxoQueryApplicationServiceImpl implements OxoQueryApplicationServic
 
             });
 
-            qry.setOxoRowsResps(rowsQryList);
+            qry.setOxoRowsResps(rowsQryList.stream().sorted(Comparator.comparing(OxoRowsQry::getCatalog).thenComparing(OxoRowsQry::getGroup)
+                    .thenComparing(OxoRowsQry::getSort).thenComparing(OxoRowsQry::getFeatureCode)).collect(Collectors.toList()));
         }
         return qry;
     }

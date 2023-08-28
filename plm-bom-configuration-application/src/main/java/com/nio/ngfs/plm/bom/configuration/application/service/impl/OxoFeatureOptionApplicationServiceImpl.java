@@ -19,16 +19,22 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.enums.Ox
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.enums.OxoSnapshotEnum;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.enums.ProductConfigOptionSelectStatusEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoFeatureOptionDomainService;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoVersionSnapshotDomainService;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsBaseVehicleDao;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsProductConfigDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsProductConfigModelOptionDao;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsProductConfigOptionDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsBaseVehicleEntity;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductConfigEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductConfigModelOptionEntity;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductConfigOptionEntity;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.compress.utils.Sets;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -54,6 +60,8 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
     private final OxoVersionSnapshotDomainService versionSnapshotDomainService;
     private final OxoVersionSnapshotRepository oxoVersionSnapshotRepository;
     private final BomsProductConfigModelOptionDao bomsProductConfigModelOptionDao;
+    private final BomsProductConfigOptionDao bomsProductConfigOptionDao;
+    private final BomsProductConfigDao bomsProductConfigDao;
     private final BomsBaseVehicleDao bomsBaseVehicleDao;
 
 
@@ -339,6 +347,153 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
         }
 
 
+    }
+
+
+    /**
+     * 场景1.OXO中某个Option在Model Year下的所有Base Vehicle中全都为实心圈
+     * --若该Option在Model Year相应的Product Configuration单车中没有全都勾选
+     * --则提示：Option xxx Is Not Consistent With Product Configuration【Model Year:xxx】!
+     * 场景2.OXO中某个Option在Model Year下的所有Base Vehicle中全都为"-"
+     * --若该Option在Model Year相应的Product Configuration单车中存在勾选
+     *
+     * @param modelCode
+     * @return
+     */
+    @Override
+    public List<String> checkOxoFeatureCode(String modelCode) {
+
+
+        //根据modelCode查询 oxo_feature_option
+        List<OxoFeatureOptionAggr> oxoFeatureOptions =
+                oxoFeatureOptionRepository.queryFeatureListsByModelAndSortDelete(modelCode, null);
+
+
+        //查询active head
+        List<BomsBaseVehicleEntity> baseVehicleEntities =
+                bomsBaseVehicleDao.queryByModel(modelCode, null);
+
+
+        Map<String, List<BomsBaseVehicleEntity>> bomBaseVehicles =
+                baseVehicleEntities.stream().collect(Collectors.groupingBy(BomsBaseVehicleEntity::getModelYear));
+
+
+        List<Long> rowIds = oxoFeatureOptions.stream().map(OxoFeatureOptionAggr::getId).distinct().toList();
+
+        List<Long> headIds = baseVehicleEntities.stream().map(BomsBaseVehicleEntity::getId).distinct().toList();
+
+
+        //查询 打点信息
+        List<OxoOptionPackageAggr> oxoOptionPackageAggrs =
+                oxoOptionPackageRepository.queryByFeatureOptionIdsAndHeadIdsList(rowIds, headIds);
+
+        Map<String, List<String>> defalutMap = new HashMap<>();
+
+        Map<String, List<String>> unavailableMap = new HashMap<>();
+
+        bomBaseVehicles.forEach((modelYear, v) -> {
+
+            List<Long> heads = v.stream().map(BomsBaseVehicleEntity::getId).distinct().toList();
+
+            List<String> defaultOptions = Lists.newArrayList();
+
+            List<String> unavailableOptions = Lists.newArrayList();
+
+            rowIds.forEach(rowId -> {
+
+                // 每一行的 列信息
+                List<OxoOptionPackageAggr> oxoOptionPackages =
+                        oxoOptionPackageAggrs.stream().filter(x -> Objects.equals(x.getFeatureOptionId(), rowId) && heads.contains(x.getBaseVehicleId())).toList();
+
+                /**
+                 * OXO中某个Option在Model Year下的所有Base Vehicle中全都为实心圈
+                 * 若该Option在Model Year相应的Product Configuration单车中没有全都勾选
+                 */
+                if (oxoOptionPackages.stream().allMatch(x -> StringUtils.equals(x.getPackageCode(),
+                        OxoOptionPackageTypeEnum.DEFALUT.getCode()))) {
+
+                    defaultOptions.add(oxoFeatureOptions.stream().filter(x -> Objects.equals(x.getId(), rowId)).toList().get(0).getFeatureCode());
+
+                }
+
+                /**
+                 * OXO中某个Option在Model Year下的所有Base Vehicle中全都为"-"
+                 */
+                if (oxoOptionPackages.stream().allMatch(x -> StringUtils.equals(x.getPackageCode(),
+                        OxoOptionPackageTypeEnum.UNAVAILABLE.getCode()))) {
+                    unavailableOptions.add(oxoFeatureOptions.stream().filter(x -> Objects.equals(x.getId(), rowId)).toList().get(0).getFeatureCode());
+                }
+
+
+            });
+            if (CollectionUtils.isNotEmpty(defaultOptions)) {
+                defalutMap.put(modelYear, defaultOptions);
+            }
+            if (CollectionUtils.isNotEmpty(unavailableOptions)) {
+                unavailableMap.put(modelYear, unavailableOptions);
+            }
+        });
+
+        List<String> messages = Lists.newArrayList();
+
+        if (MapUtils.isNotEmpty(defalutMap)) {
+            messages.addAll(getErrorMessages(modelCode, defalutMap.keySet().stream().toList(), defalutMap));
+        }
+
+        if (MapUtils.isNotEmpty(unavailableMap)) {
+            messages.addAll(getErrorMessages(modelCode, unavailableMap.keySet().stream().toList(), unavailableMap));
+        }
+        return messages.stream().distinct().toList();
+    }
+
+
+    public List<String> getErrorMessages(String modelCode, List<String> modelYears, Map<String, List<String>> defalutMap) {
+
+        List<BomsProductConfigEntity> bomsProductConfigEntities =
+                bomsProductConfigDao.queryByModelAndModelYearList(modelCode, modelYears.stream().distinct().toList());
+
+        if (CollectionUtils.isEmpty(bomsProductConfigEntities)) {
+            return Lists.newArrayList();
+        }
+
+        List<String> pcIds = bomsProductConfigEntities.stream().map(BomsProductConfigEntity::getPcId).distinct().toList();
+
+
+        Map<String, List<String>> pcIdMapByModelYear = bomsProductConfigEntities.stream().collect(Collectors.toMap(BomsProductConfigEntity::getModelYear, s -> {
+            List<String> list = new ArrayList<>();
+            list.add(s.getPcId());
+            return list;
+        }, (_old, _new) -> {
+            _old.addAll(_new);
+            return _old;
+        }));
+
+        // 获取 已经选择 的 option
+        List<BomsProductConfigOptionEntity> productConfigOptions =
+                bomsProductConfigOptionDao.queryByPcIdList(pcIds, ProductConfigOptionSelectStatusEnum.SELECT.getStatus());
+
+        if (CollectionUtils.isEmpty(bomsProductConfigEntities)) {
+            return Lists.newArrayList();
+        }
+
+
+        List<String> messages = Lists.newArrayList();
+
+        pcIdMapByModelYear.forEach((modelYear, pcIdsByModelYear) -> {
+
+            List<String> optionCodes = productConfigOptions.stream().filter(x -> pcIdsByModelYear.contains(x.getPcId())).map(BomsProductConfigOptionEntity::getOptionCode)
+                    .distinct().toList();
+
+            List<String> filterOptionCodes = defalutMap.get(modelYear).stream().filter(x -> !optionCodes.contains(x)).toList();
+
+            if (CollectionUtils.isNotEmpty(filterOptionCodes)) {
+
+                filterOptionCodes.forEach(optionCode -> {
+                    messages.add(MessageFormat.format(ConfigErrorCode.OPTION_ERROR.getMessage(), optionCode, modelYear));
+                });
+            }
+        });
+        return messages;
     }
 
     private enum DeleteFeatureOptionCheckTypeEnum {

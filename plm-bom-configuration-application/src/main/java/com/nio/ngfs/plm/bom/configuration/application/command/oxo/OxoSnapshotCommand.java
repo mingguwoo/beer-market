@@ -5,10 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.ngfs.common.utils.BeanConvertUtils;
 import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockCommand;
-import com.nio.ngfs.plm.bom.configuration.application.service.OxoCompareApplicationService;
-import com.nio.ngfs.plm.bom.configuration.application.service.OxoQueryApplicationService;
-import com.nio.ngfs.plm.bom.configuration.application.service.ProductConfigModelOptionApplicationService;
-import com.nio.ngfs.plm.bom.configuration.application.service.ProductContextApplicationService;
+import com.nio.ngfs.plm.bom.configuration.application.service.*;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
@@ -58,6 +55,8 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, List
 
     private final TransactionTemplate transactionTemplate;
 
+    private final OxoFeatureOptionApplicationService oxoFeatureOptionApplicationService;
+
 
     @Override
     protected String getLockKey(OxoSnapshotCmd editGroupCmd) {
@@ -105,7 +104,7 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, List
             try {
                 productContextApplicationService.addProductContext(oxoVersionSnapshot.getOxoSnapshot());
             } catch (Exception e) {
-                log.error("addProductContext error",e);
+                log.error("addProductContext error", e);
                 throw new BusinessException("Sync Product Context Fail!");
             }
 
@@ -113,7 +112,7 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, List
             try {
                 productConfigModelOptionApplicationService.syncFeatureOptionFromOxoRelease(oxoVersionSnapshot);
             } catch (Exception e) {
-                log.error("syncFeatureOptionFromOxoRelease error",e);
+                log.error("syncFeatureOptionFromOxoRelease error", e);
                 throw new BusinessException("Sync Product Configuration Fail!");
             }
 
@@ -133,8 +132,9 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, List
                 oxoVersionSnapshot.setPreVersion(oxoVersionSnapshotAggr.getPreVersion());
                 //发送邮件
                 oxoCompareDomainService.sendCompareEmail(compareOxoListQry, oxoVersionSnapshot);
+
             }
-            return true;
+            return oxoFeatureOptionApplicationService.checkOxoFeatureCode(modelCode);
         });
 
         return Lists.newArrayList();

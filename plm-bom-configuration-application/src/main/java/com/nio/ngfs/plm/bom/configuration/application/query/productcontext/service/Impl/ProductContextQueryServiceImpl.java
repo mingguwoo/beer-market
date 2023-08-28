@@ -53,7 +53,7 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
             List<BomsProductContextFeatureEntity> finalRowList = rowList;
             pointList = pointList.stream().filter(point-> finalRowList.contains(pointMap.get(point))).toList();
         }
-        //模糊搜索，筛选optionCode featureCode
+        //模糊搜索，筛选optionCode, featureCode, optionDisplayName, featureDisplayName
         if (Objects.nonNull(qry.getFeature())){
             pointList = pointList.stream().filter(point-> matchSearch(point.getOptionCode(), qry.getFeature()) ||
                     matchSearch(point.getFeatureCode(),qry.getFeature()) ||
@@ -121,6 +121,8 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
             //记录下该点对应的列id
             pointColumnIdMap.put(point, (long) modelModelYearList.indexOf(point.getModelCode()+point.getModelYear()));
         });
+        Set<Long> rowIdSet = new HashSet<>();
+        Set<Long> columnIdSet = new HashSet<>();
         pointList.forEach(point->{
             ProductContextColumnDto productContextColumnDto = new ProductContextColumnDto();
             ProductContextPointDto productContextPointDto = new ProductContextPointDto();
@@ -133,6 +135,16 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
             getProductContextRespDto.getProductContextPointDtoList().add(productContextPointDto);
         });
         getProductContextRespDto.setProductContextColumnDtoList(getProductContextRespDto.getProductContextColumnDtoList().stream().distinct().toList());
+        //筛选掉没被选中掉行列
+        getProductContextRespDto.getProductContextPointDtoList().forEach(point->{
+            rowIdSet.add(point.getRowId());
+            columnIdSet.add(point.getColumnId());
+        });
+        getProductContextRespDto.setProductContextFeatureRowDtoList(getProductContextRespDto.getProductContextFeatureRowDtoList().stream().filter(featureRow->{
+            featureRow.setOptionRowList(featureRow.getOptionRowList().stream().filter(option->rowIdSet.contains(option.getRowId())).toList());
+            return featureRow.getOptionRowList().size() > 0;
+        }).toList());
+        getProductContextRespDto.setProductContextColumnDtoList(getProductContextRespDto.getProductContextColumnDtoList().stream().filter(column-> columnIdSet.contains(column.getColumnId())).toList());
         return getProductContextRespDto;
     };
 

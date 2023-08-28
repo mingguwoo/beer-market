@@ -22,5 +22,5 @@ public class GetProductContextQry implements Qry {
     //group code
     private List<String> groupCode;
 
-    private String cataLog;
+    private String catalog;
 }

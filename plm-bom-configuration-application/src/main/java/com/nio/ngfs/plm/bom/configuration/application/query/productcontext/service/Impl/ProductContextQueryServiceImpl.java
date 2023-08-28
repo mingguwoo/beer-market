@@ -40,10 +40,10 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
             pointMap.put(point,rowMap.get(point.getOptionCode()));
         });
         //筛选catalog
-        if (Objects.nonNull(qry.getCataLog())){
-            pointList = pointList.stream().filter(point-> Objects.equals(featureAggrMap.get(point.getFeatureCode()).getCatalog(),qry.getCataLog())
-                    || Objects.equals(featureAggrMap.get(point.getOptionCode()).getCatalog(),qry.getCataLog())).toList();
-            rowList = rowList.stream().filter(row->Objects.equals(featureAggrMap.get(row.getFeatureCode()).getCatalog(),qry.getCataLog())).toList();
+        if (Objects.nonNull(qry.getCatalog())){
+            pointList = pointList.stream().filter(point-> Objects.equals(featureAggrMap.get(point.getFeatureCode()).getCatalog(),qry.getCatalog())
+                    || Objects.equals(featureAggrMap.get(point.getOptionCode()).getCatalog(),qry.getCatalog())).toList();
+            rowList = rowList.stream().filter(row->Objects.equals(featureAggrMap.get(row.getFeatureCode()).getCatalog(),qry.getCatalog())).toList();
         }
         //筛选featureGroup
         if (Objects.nonNull(qry.getGroupCode()) && !qry.getGroupCode().isEmpty()){

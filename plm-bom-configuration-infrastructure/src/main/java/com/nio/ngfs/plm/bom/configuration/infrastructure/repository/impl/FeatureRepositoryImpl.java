@@ -131,9 +131,5 @@ public class FeatureRepositoryImpl implements FeatureRepository {
         return featureConverter.convertEntityListToDoList(bomsFeatureLibraryDao.findFeatureLibraryNotFeatureCodes(featureCodes));
     }
 
-    @Override
-    public List<FeatureAggr> getGroupList() {
-        return featureConverter.convertEntityListToDoList(bomsFeatureLibraryDao.getGroupList());
-    }
 
 }

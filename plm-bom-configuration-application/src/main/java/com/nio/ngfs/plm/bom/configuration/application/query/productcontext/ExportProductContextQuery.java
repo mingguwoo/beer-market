@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.nio.bom.share.constants.CommonConstants;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.DateUtils;
+import com.nio.ngfs.plm.bom.configuration.application.query.AbstractExportQuery;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.request.ExportBaseVehicleQry;
@@ -25,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author bill.wang
@@ -33,7 +35,7 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ExportProductContextQuery {
+public class ExportProductContextQuery extends AbstractExportQuery {
 
     private static final List<String> TITLE_LIST = Lists.newArrayList(
         "Feature Code", "Feature Display name", "Option Code", "Option Display Name"
@@ -44,18 +46,8 @@ public class ExportProductContextQuery {
     public void execute(ExportProductContextQry qry, HttpServletResponse response){
 
         GetProductContextRespDto productContextRespDto = getProductContextQuery.execute(qry);
-        try (XSSFWorkbook workbook = new XSSFWorkbook();
-        OutputStream output = response.getOutputStream()){
-        String fileName = qry.getModelCode()+"_ModelYear_Option"+ DateUtils.dateTimeNow("yyyyMMddHHmm") + ".xlsx";
-        response.reset();
-            response.setHeader(CommonConstants.HEADER_CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"");
-            response.setHeader(CommonConstants.HEADER_ACCESS_CONTROL_EXPOSE_HEADERS, CommonConstants.HEADER_CONTENT_DISPOSITION);
-            response.setContentType("application/octet-stream;charset=UTF-8");
-            exportProductContext(qry,productContextRespDto,workbook);
-            workbook.write(output);
-        } catch (IOException e){
-            throw new BusinessException(ConfigErrorCode.EXCEL_DOWNLOAD_ERROR, e.getMessage());
-        }
+        String fileName = qry.getModelCode() + "_ModelYear_Option_" + DateUtils.dateTimeNow("yyyyMMddHHmm") + ".xlsx";
+        export(response, fileName, workbook -> exportProductContext(qry,productContextRespDto,workbook));
     }
 
     /**
@@ -73,7 +65,7 @@ public class ExportProductContextQuery {
     /**
      * 设置Sheet样式
      */
-    private void configSheetStyle(XSSFSheet sheet) {
+    protected void configSheetStyle(XSSFSheet sheet) {
         sheet.setDefaultColumnWidth(15);
     }
 
@@ -93,19 +85,21 @@ public class ExportProductContextQuery {
             sheet.addMergedRegion(new CellRangeAddress(0,1,columnIndex,columnIndex));
             columnIndex++;
         }
+        CellRangeAddress firstMergeRegion = new CellRangeAddress(0,1,0,columnIndex-1);
+        sheet.addMergedRegion(firstMergeRegion);
         //动态表头
         XSSFCell cell = row.createCell(columnIndex++);
         cell.setCellValue(productContextHeads.get(CommonConstants.INT_ZERO).getModelCode());
         cell.setCellStyle(style);
-        for (int i = 0; i < productContextHeads.size();i++){
-            XSSFCell dynamicCell = row.createCell(columnIndex++);
-            ProductContextColumnDto columnDto = productContextHeads.get(i);
-            dynamicCell.setCellStyle(style);
-            dynamicCell.setCellValue(columnDto.getModelCode()+" "+columnDto.getModelYear());
-        }
-        //合并单元格
-        CellRangeAddress firstMergeRegion = new CellRangeAddress(0,0,4,columnIndex);
-        sheet.addMergedRegion(firstMergeRegion);
+//        for (int i = 0; i < productContextHeads.size();i++){
+//            XSSFCell dynamicCell = row.createCell(columnIndex++);
+//            ProductContextColumnDto columnDto = productContextHeads.get(i);
+//            dynamicCell.setCellStyle(style);
+//            dynamicCell.setCellValue(columnDto.getModelCode()+" "+columnDto.getModelYear());
+//        }
+//        //合并单元格
+//        CellRangeAddress secondMergeRegion = new CellRangeAddress(0,0,4,columnIndex);
+//        sheet.addMergedRegion(secondMergeRegion);
     }
 
     private void writeProductContextRow(GetProductContextRespDto productContextRespDto,XSSFWorkbook workbook, XSSFSheet sheet){
@@ -134,10 +128,10 @@ public class ExportProductContextQuery {
         XSSFRow row = sheet.createRow(rowIndex);
         createCell(row, ++columnIndex,productContextRow.getFeatureCode(),cellStyle);
         createCell(row,++columnIndex,productContextRow.getDisplayName(),cellStyle);
-        for (int i = 0; i  < productContextRow.getOptionRowList().size();i++){
-            createCell(row,++columnIndex,productContextRow.getOptionRowList().get(i).getFeatureCode(),cellStyle);
-            createCell(row,++columnIndex,productContextRow.getOptionRowList().get(i).getDisplayName(),cellStyle);
-        }
+//        for (int i = 0; i  < productContextRow.getOptionRowList().size();i++){
+//            createCell(row,++columnIndex,productContextRow.getOptionRowList().get(i).getFeatureCode(),cellStyle);
+//            createCell(row,++columnIndex,productContextRow.getOptionRowList().get(i).getDisplayName(),cellStyle);
+//        }
         rowIndex = rowIndex + productContextRow.getOptionRowList().size()-1;
         CellRangeAddress firstMergeRegion = new CellRangeAddress(rowIndex,rowIndex,0,0);
         CellRangeAddress secondMergeRegion = new  CellRangeAddress(rowIndex,rowIndex,0,0);
@@ -149,7 +143,7 @@ public class ExportProductContextQuery {
     /**
      * 创建product Context单元格
      */
-    private void createCell(XSSFRow row, int columnIndex, String value, XSSFCellStyle cellStyle) {
+    protected void createCell(XSSFRow row, int columnIndex, String value, XSSFCellStyle cellStyle) {
         XSSFCell cell = row.createCell(columnIndex);
         cell.setCellValue(value);
         cell.setCellType(CellType.STRING);

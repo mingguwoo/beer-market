@@ -4,6 +4,7 @@ import com.nio.ngfs.plm.bom.configuration.application.query.productcontext.servi
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature.enums.ProductContextFeatureEnum;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsFeatureLibraryDao;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoVersionSnapshotDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureLibraryEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductContextFeatureEntity;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.request.GetProductContextQry;
@@ -24,6 +25,7 @@ import java.util.*;
 public class ProductContextQueryServiceImpl implements ProductContextQueryService {
 
     private final BomsFeatureLibraryDao bomsFeatureLibraryDao;
+    private final BomsOxoVersionSnapshotDao bomsOxoVersionSnapshotDao;
 
     @Override
     public GetProductContextRespDto filterAndBuildResponse(List<ProductContextDto> pointList, List<BomsProductContextFeatureEntity> rowList, GetProductContextQry qry){
@@ -172,5 +174,13 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
         });
 
         return featureAggrMap;
+    }
+
+    @Override
+    public ProductContextOptionsRespDto queryProductContextOptions() {
+        ProductContextOptionsRespDto productContextOptionsRespDto = new ProductContextOptionsRespDto();
+        productContextOptionsRespDto.setModelCode(bomsOxoVersionSnapshotDao.queryAll().stream().map(snapShot->snapShot.getModelCode()).toList());
+        productContextOptionsRespDto.setGroupCode(bomsFeatureLibraryDao.getGroupList().stream().map(group->group.getFeatureCode()).toList());
+        return productContextOptionsRespDto;
     }
 }

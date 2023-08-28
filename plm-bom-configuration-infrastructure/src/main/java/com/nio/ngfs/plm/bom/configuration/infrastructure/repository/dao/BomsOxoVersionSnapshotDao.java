@@ -43,4 +43,10 @@ public interface BomsOxoVersionSnapshotDao extends IService<BomsOxoVersionSnapsh
      * @return
      */
     Page<BomsOxoVersionSnapshotEntity> querySnapshotByModel(String modelCode,String type,Integer pageSize,Integer pageNum);
+
+    /**
+     * 获取全部数据
+     * @return
+     */
+    List<BomsOxoVersionSnapshotEntity> queryAll();
 }

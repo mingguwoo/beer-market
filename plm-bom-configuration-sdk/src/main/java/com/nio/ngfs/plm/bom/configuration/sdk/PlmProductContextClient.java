@@ -2,7 +2,9 @@ package com.nio.ngfs.plm.bom.configuration.sdk;
 
 import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.request.GetProductContextQry;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.request.QueryProductContextOptionsQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.response.GetProductContextRespDto;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.response.ProductContextOptionsRespDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -16,4 +18,7 @@ public interface PlmProductContextClient {
     @PostMapping("/productContext/getProductContext")
     ResultInfo<GetProductContextRespDto> getProductContext(GetProductContextQry qry);
 
+
+    @PostMapping("/productContext/queryProductContextOptions")
+    ResultInfo<ProductContextOptionsRespDto> queryProductContextOptions(QueryProductContextOptionsQry qry);
 }

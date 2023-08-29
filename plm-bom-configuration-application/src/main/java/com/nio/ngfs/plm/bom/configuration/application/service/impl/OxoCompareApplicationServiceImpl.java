@@ -335,24 +335,25 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
                         oxo.setChangeType(CompareChangeTypeEnum.NO_CHANGE.getName());
                     }
                 });
-//                long count=option.getOptionOxoConfigration().stream().filter(s -> s.getPackageCode().equals(Constant.UN_AVAILABLE)
-//                        && oxoMap.containsKey(String.format("%s:%s:%s:%s:%s:%s", versionName, feature.getFeatureCode(), option.getOptionCode(),
-//                        s.getRegionOptionCode(), s.getDriveOptionCode(), s.getSalesOptionCode()))).count();
 
                 long count = option.getPackInfos().stream().filter(s -> compareOxoFeatureModel.getSalesOptionInfoMap().containsKey(
-                        String.format("%s:%s:%s:%s:%s:%s:%s", versionName, s.getModelCode(),
-                                s.getModelYear(), "AD00", s.getRegionCode(), s.getDriveHandCode(), s.getSalesCode()))).count();
+                        String.format("%s:%s:%s:%s:%s:%s", versionName, s.getModelCode(),
+                                s.getModelYear(), s.getRegionCode(), s.getDriveHandCode(), s.getSalesCode()))).count();
 
 
-                long unAvailableCount = option.getPackInfos().stream().filter(s -> compareOxoFeatureModel.getSalesOptionInfoMap().containsKey(String.format("%s:%s:%s:%s:%s:%s:%s", versionName,
-                        s.getModelCode(), s.getModelYear(), "AD00",
-                        s.getRegionCode(), s.getDriveHandCode(), s.getSalesCode())) && s.getPackageCode().equals(ConfigConstants.UN_AVAILABLE)).count();
+                long unAvailableCount = option.getPackInfos().stream().filter(s -> compareOxoFeatureModel.getSalesOptionInfoMap().containsKey(String.format("%s:%s:%s:%s:%s:%s", versionName,
+                        s.getModelCode(), s.getModelYear(), s.getRegionCode(), s.getDriveHandCode(), s.getSalesCode())) && s.getPackageCode().equals(ConfigConstants.UN_AVAILABLE)).count();
 
                 //2、check option所有的oxo是不是Unavailable，如果都是Unavailable，则设置option为Delete
                 log.info("option:{},delete count:{},unAvailableCount:{},changeType:{}", option.getFeatureCode(), count, unAvailableCount, option.getChangeType());
                 if (unAvailableCount == count && StringUtils.equals(option.getChangeType(), CompareChangeTypeEnum.MODIFY.getName()) && count > 0) {
                     option.setChangeType(CompareChangeTypeEnum.DELETE.getName());
                 }
+
+                // 系统判断Option行在所有基础车型下的赋值从全部为“-”改成部分不为“-”，则Change Type为Add
+               // if()
+
+
             });
         });
     }

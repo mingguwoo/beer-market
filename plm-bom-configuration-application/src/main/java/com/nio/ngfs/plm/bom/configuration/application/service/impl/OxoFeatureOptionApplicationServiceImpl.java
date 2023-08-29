@@ -293,7 +293,7 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
 
 
         // 查询 is_delete数据
-        List<OxoFeatureOptionAggr> oxoFeatureOptions = oxoFeatureOptionRepository.queryFeatureListsByModelAndSortDelete(modelCode, false);
+        List<OxoFeatureOptionAggr> oxoFeatureOptions = oxoFeatureOptionRepository.queryFeatureListsByModel(modelCode);
 
 
         if (CollectionUtils.isEmpty(oxoFeatureOptions)) {
@@ -341,12 +341,17 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
 
 
             if (CollectionUtils.isNotEmpty(deleteIds)) {
-                oxoFeatureOptionRepository.restoreOxoFeatureOptionByIds(deleteIds, 0);
+
+                //获取父节点
+                List<String> parentFeatureCodes =
+                        oxoFeatureOptions.stream().filter(x -> deleteIds.contains(x.getId())).map(OxoFeatureOptionAggr::getParentFeatureCode).distinct().toList();
+
+                List<Long> deleteParentIds = oxoFeatureOptions.stream().filter(x -> parentFeatureCodes.contains(x.getFeatureCode())).map(OxoFeatureOptionAggr::getId).distinct().toList();
+
+                deleteIds.addAll(deleteParentIds);
+                oxoFeatureOptionRepository.restoreOxoFeatureOptionByIds(deleteIds.stream().distinct().toList(), 0);
             }
-
         }
-
-
     }
 
 

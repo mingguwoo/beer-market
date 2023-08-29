@@ -2,28 +2,26 @@ package com.nio.ngfs.plm.bom.configuration.application.query.productcontext;
 
 import com.google.common.collect.Lists;
 import com.nio.bom.share.constants.CommonConstants;
-import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.DateUtils;
 import com.nio.ngfs.plm.bom.configuration.application.query.AbstractExportQuery;
-import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
-import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.request.ExportBaseVehicleQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.request.ExportProductContextQry;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.response.*;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.response.GetProductContextRespDto;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.response.ProductContextColumnDto;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.response.ProductContextFeatureRowDto;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.response.ProductContextOptionRowDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.*;
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.*;
-import java.util.function.Consumer;
 
 /**
  * @author bill.wang

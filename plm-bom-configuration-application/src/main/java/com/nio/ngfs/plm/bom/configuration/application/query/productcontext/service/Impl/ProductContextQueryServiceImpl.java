@@ -7,6 +7,7 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsFeat
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoVersionSnapshotDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureLibraryEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductContextFeatureEntity;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.comparator.ProductContextFeatureRowComparator;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.request.GetProductContextQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.response.*;
 import lombok.RequiredArgsConstructor;
@@ -61,7 +62,7 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
                     matchSearch(featureAggrMap.get(point.getOptionCode()).getDisplayName(),qry.getFeature())).toList();
         }
         //组装Dto
-        return buildResponseDto(pointList,rowList,featureAggrMap);
+        return buildResponseDto(pointList,rowList,featureAggrMap,groupRecordMap);
     }
 
     private boolean matchSearch(String content, String search){
@@ -75,7 +76,7 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
      * @param featureAggrMap
      * @return
      */
-    private GetProductContextRespDto buildResponseDto(List<ProductContextDto> pointList, List<BomsProductContextFeatureEntity> rowList,Map<String,BomsFeatureLibraryEntity> featureAggrMap){
+    private GetProductContextRespDto buildResponseDto(List<ProductContextDto> pointList, List<BomsProductContextFeatureEntity> rowList,Map<String,BomsFeatureLibraryEntity> featureAggrMap,Map<String,String> groupRecordMap){
         Map<String,ProductContextFeatureRowDto> featureRowDtoMap = new HashMap<>();
         GetProductContextRespDto getProductContextRespDto = new GetProductContextRespDto();
         Map<String,Long> featureCodeRowIdMap = new HashMap<>();
@@ -135,7 +136,7 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
             getProductContextRespDto.getProductContextPointDtoList().add(productContextPointDto);
         });
         getProductContextRespDto.setProductContextColumnDtoList(getProductContextRespDto.getProductContextColumnDtoList().stream().distinct().toList());
-        //筛选掉没被选中掉行列
+        //筛选掉没被选中的行列
         getProductContextRespDto.getProductContextPointDtoList().forEach(point->{
             rowIdSet.add(point.getRowId());
             columnIdSet.add(point.getColumnId());
@@ -145,9 +146,26 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
             return featureRow.getOptionRowList().size() > 0;
         }).toList());
         getProductContextRespDto.setProductContextColumnDtoList(getProductContextRespDto.getProductContextColumnDtoList().stream().filter(column-> columnIdSet.contains(column.getColumnId())).toList());
+        sortProductContextRow(getProductContextRespDto,groupRecordMap);
         return getProductContextRespDto;
     };
 
+    /**
+     * 对feature和option行进行排序
+     * @param productContext
+     * @param groupRecordMap
+     * @return
+     */
+    private void sortProductContextRow(GetProductContextRespDto productContext,Map<String,String> groupRecordMap){
+        ProductContextFeatureRowComparator comparator = new ProductContextFeatureRowComparator(groupRecordMap);
+        //先排option
+        productContext.setProductContextFeatureRowDtoList(productContext.getProductContextFeatureRowDtoList().stream().map(feature->{
+            feature.setOptionRowList(feature.getOptionRowList().stream().sorted(Comparator.comparing(ProductContextOptionRowDto::getFeatureCode)).toList());
+            return feature;
+        }).toList());
+        //排feature
+        productContext.setProductContextFeatureRowDtoList(productContext.getProductContextFeatureRowDtoList().stream().sorted(comparator).toList());
+    }
     /**
      * 获取所有相关的featureEntity并将optionCode与featureEntity,groupEntity对应上
      * @param pointList

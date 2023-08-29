@@ -2,12 +2,10 @@ package com.nio.ngfs.plm.bom.configuration.application.service.impl;
 
 import com.nio.ngfs.plm.bom.configuration.application.service.OxoOptionPackageApplicationService;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
-import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionRepository;
-import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.enums.OxoOptionPackageTypeEnum;

@@ -14,11 +14,8 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature.Pro
 import com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature.ProductContextFeatureRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.service.feature.FeatureDomainService;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoVersionSnapshotDomainService;
-import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsFeatureLibraryDao;
-import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoVersionSnapshotDao;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoRowsQry;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.response.ProductContextOptionsRespDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -50,7 +47,7 @@ public class ProductContextApplicationServiceImpl implements ProductContextAppli
         FeatureAggr featureModelYearAggr = featureDomainService.getAndCheckFeatureAggr(ConfigConstants.FEATURE_CODE_AF00, FeatureTypeEnum.FEATURE);
         Map<String,String> modelYearMap = new HashMap<>();
 
-        //获取已有记录已有记录
+        //获取已有记录
         List<ProductContextAggr> productContextList =  productContextRepository.queryByModelCode(modelCode);
         List<ProductContextFeatureAggr> productContextFeatureList = productContextFeatureRepository.queryByModelCode(modelCode);
 
@@ -66,7 +63,6 @@ public class ProductContextApplicationServiceImpl implements ProductContextAppli
         //单独处理AF00
         ProductContextFeatureFactory.createModelYearProductContextFeature(productContextFeatureList,featureModelYearAggr,modelCode,modelYearMap);
         ProductContextFactory.createModelYearProductContext(productContextList,modelCode,modelYearList,modelYearMap);
-        productContextList = productContextList.stream().distinct().toList();
         //去重后存库
         productContextRepository.saveOrUpdateBatch(productContextList.stream().distinct().toList());
         productContextFeatureRepository.saveOrUpdateBatch(productContextFeatureList.stream().distinct().toList());

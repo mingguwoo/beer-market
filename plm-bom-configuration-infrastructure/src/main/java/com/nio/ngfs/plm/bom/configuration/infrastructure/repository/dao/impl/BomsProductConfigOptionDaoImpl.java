@@ -2,7 +2,6 @@ package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.google.common.collect.Lists;
-import com.nio.bom.share.constants.CommonConstants;
 import com.nio.ngfs.common.model.page.WherePageRequest;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsProductConfigOptionDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductConfigOptionEntity;

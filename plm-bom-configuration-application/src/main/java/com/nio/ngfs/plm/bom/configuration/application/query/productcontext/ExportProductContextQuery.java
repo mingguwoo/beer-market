@@ -12,11 +12,9 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.response.Produc
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.stereotype.Component;
 
@@ -98,6 +96,10 @@ public class ExportProductContextQuery extends AbstractExportQuery {
      */
     private void setSheetTitle(XSSFWorkbook workbook, XSSFSheet sheet, ExportProductContextQry qry,List<ProductContextColumnDto> productContextHeads) {
         XSSFCellStyle style = workbook.createCellStyle();
+        style.setBorderBottom(BorderStyle.THIN);
+        style.setBorderLeft(BorderStyle.THIN);
+        style.setBorderRight(BorderStyle.THIN);
+        style.setBorderTop(BorderStyle.THIN);
         style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         style.setFillForegroundColor(HSSFColor.HSSFColorPredefined.SKY_BLUE.getIndex());
         style.setVerticalAlignment(VerticalAlignment.CENTER);    //上下居中
@@ -108,7 +110,9 @@ public class ExportProductContextQuery extends AbstractExportQuery {
             XSSFCell cell = rowOne.createCell(columnIndex);
             cell.setCellValue(title);
             cell.setCellStyle(style);
-            sheet.addMergedRegion(new CellRangeAddress(0,1,columnIndex,columnIndex));
+            CellRangeAddress range = new CellRangeAddress(0,1,columnIndex,columnIndex);
+            sheet.addMergedRegion(range);
+            addRegionBorder(range,sheet);
             columnIndex++;
         }
         //动态表头
@@ -127,7 +131,9 @@ public class ExportProductContextQuery extends AbstractExportQuery {
             dynamicCell.setCellValue(columnDto.getModelCode()+" "+columnDto.getModelYear());
             modelYearColumnMap.put(productContextHeads.get(i).getModelYear(),columnIndex-1);
         }
-        sheet.addMergedRegion(new CellRangeAddress(0,0,4,columnIndex-1));
+        CellRangeAddress dynamicRange = new CellRangeAddress(0,0,4,columnIndex-1);
+        sheet.addMergedRegion(dynamicRange);
+        addRegionBorder(dynamicRange,sheet);
     }
 
     private void writeProductContextRow(GetProductContextRespDto productContextRespDto,XSSFWorkbook workbook, XSSFSheet sheet){
@@ -136,7 +142,7 @@ public class ExportProductContextQuery extends AbstractExportQuery {
         for (ProductContextFeatureRowDto productContextRow : productContextRespDto.getProductContextFeatureRowDtoList()){
             XSSFCellStyle productContextCellStyle = createProductContextCellStyle(workbook,colorFlag);
             productContextCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-            createProductContextRow(productContextRow,sheet,rowIndex,productContextCellStyle,workbook);
+            createProductContextRow(productContextRow,sheet,rowIndex,productContextCellStyle);
             colorFlag = !colorFlag;
             rowIndex = rowIndex+productContextRow.getOptionRowList().size();
         }
@@ -148,6 +154,10 @@ public class ExportProductContextQuery extends AbstractExportQuery {
     private XSSFCellStyle createProductContextCellStyle(XSSFWorkbook workbook,boolean colorFlag) {
         XSSFCellStyle cellStyle = workbook.createCellStyle();
         cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        cellStyle.setBorderBottom(BorderStyle.THIN);
+        cellStyle.setBorderLeft(BorderStyle.THIN);
+        cellStyle.setBorderRight(BorderStyle.THIN);
+        cellStyle.setBorderTop(BorderStyle.THIN);
         if (colorFlag){
             cellStyle.setFillForegroundColor(HSSFColor.HSSFColorPredefined.GREY_25_PERCENT.getIndex());
         }
@@ -160,77 +170,80 @@ public class ExportProductContextQuery extends AbstractExportQuery {
     /**
      * 创建Product Context 行
      */
-    private void createProductContextRow(ProductContextFeatureRowDto productContextRow,XSSFSheet sheet, int rowIndex, XSSFCellStyle cellStyle,XSSFWorkbook workbook){
+    private void createProductContextRow(ProductContextFeatureRowDto productContextRow,XSSFSheet sheet, int rowIndex, XSSFCellStyle cellStyle){
         XSSFRow row = sheet.createRow(rowIndex);
         //先弄Feature
-        createCell(row, 0,productContextRow.getFeatureCode(),cellStyle);
-        createCell(row,1,productContextRow.getDisplayName(),cellStyle);
+        createFeatureCell(row,0,1,productContextRow.getFeatureCode(),productContextRow.getDisplayName(),cellStyle);
         //再弄Option
         for (int i = 0; i  < productContextRow.getOptionRowList().size();i++){
             Set<Integer> selectedCell = new HashSet<>();
             ProductContextOptionRowDto optionRowDto = productContextRow.getOptionRowList().get(i);
             //如果是和feature同一行，就先用原先的row
             if (i == 0){
-                createCell(row,2,optionRowDto.getFeatureCode(),cellStyle);
-                createCell(row,3,optionRowDto.getDisplayName(),cellStyle);
-                //打勾
-                if(Objects.nonNull(optionCodeModelYearMap.get(optionRowDto.getFeatureCode()))){
-                    optionCodeModelYearMap.get(optionRowDto.getFeatureCode()).forEach(modelYear->{
-                        createCell(row,modelYearColumnMap.get(modelYear),"\u2714",cellStyle);
-                        selectedCell.add(modelYearColumnMap.get(modelYear));
-                    });
-                    modelYearColumnMap.forEach((key,value)->{
-                        if (!selectedCell.contains(value)){
-                            createCell(row,value,null,cellStyle);
-                        }
-                    });
-                }
-
-                //如果一个option 完全没有被选中，也需要同步样式（除了AF00外理论上不存在这种情况，实际可能因数据错误出现）
-                else{
-                    modelYearColumnMap.forEach((key,value)->{
-                        createCell(row,value,null,cellStyle);
-                    });
-                }
+                tickOption(row,optionRowDto,cellStyle,selectedCell);
             }
             else{
                 XSSFRow  optionRow = sheet.createRow(rowIndex+i);
-                createCell(optionRow,2,optionRowDto.getFeatureCode(),cellStyle);
-                createCell(optionRow,3,optionRowDto.getDisplayName(),cellStyle);
-                //打勾
-                if(Objects.nonNull(optionCodeModelYearMap.get(optionRowDto.getFeatureCode()))){
-                    optionCodeModelYearMap.get(optionRowDto.getFeatureCode()).forEach(modelYear->{
-                        createCell(optionRow,modelYearColumnMap.get(modelYear),"\u2714",cellStyle);
-                        selectedCell.add(modelYearColumnMap.get(modelYear));
-                    });
-                    modelYearColumnMap.forEach((key,value)->{
-                        if (!selectedCell.contains(value)){
-                            createCell(optionRow,value,null,cellStyle);
-                        }
-                    });
-                }
-                //如果一个option 完全没有被选中，也需要同步样式（除了AF00外理论上不存在这种情况，实际可能因数据错误出现）
-                else{
-                    modelYearColumnMap.forEach((key,value)->{
-                        createCell(optionRow,value,null,cellStyle);
-                    });
-                }
-
+                tickOption(optionRow,optionRowDto,cellStyle,selectedCell);
             }
-
         }
-
-
         //如果有超过一个option的， 需要合并feature部分
         if (productContextRow.getOptionRowList().size()>1){
             CellRangeAddress firstMergeRegion = new CellRangeAddress(rowIndex,rowIndex+productContextRow.getOptionRowList().size()-1,0,0);
             CellRangeAddress secondMergeRegion = new  CellRangeAddress(rowIndex,rowIndex+productContextRow.getOptionRowList().size()-1,1,1);
             sheet.addMergedRegion(firstMergeRegion);
             sheet.addMergedRegion(secondMergeRegion);
+            addRegionBorder(firstMergeRegion,sheet);
+            addRegionBorder(secondMergeRegion,sheet);
         }
 
     }
 
+    /**
+     * 为区域增加边框
+     * @param range
+     * @param sheet
+     */
+    private void addRegionBorder(CellRangeAddress range,XSSFSheet sheet){
+        RegionUtil.setBorderBottom(BorderStyle.THIN,range,sheet);
+        RegionUtil.setBorderRight(BorderStyle.THIN,range,sheet);
+        RegionUtil.setBorderLeft(BorderStyle.THIN,range,sheet);
+        RegionUtil.setBorderTop(BorderStyle.THIN,range,sheet);
+    }
+
+    private void createFeatureCell(XSSFRow row,int firstColumn,int secondColumn,String featureCode,String displayName,XSSFCellStyle cellStyle){
+        createCell(row,firstColumn,featureCode,cellStyle);
+        createCell(row,secondColumn,displayName,cellStyle);
+    }
+    /**
+     * 打勾
+     * @param row
+     * @param optionRowDto
+     * @param cellStyle
+     * @param selectedCell
+     */
+    private void tickOption(XSSFRow row,ProductContextOptionRowDto optionRowDto,XSSFCellStyle cellStyle,Set<Integer> selectedCell){
+            createFeatureCell(row,2,3,optionRowDto.getFeatureCode(), optionRowDto.getDisplayName(), cellStyle);
+            //打勾
+            if(Objects.nonNull(optionCodeModelYearMap.get(optionRowDto.getFeatureCode()))){
+                optionCodeModelYearMap.get(optionRowDto.getFeatureCode()).forEach(modelYear->{
+                    createCell(row,modelYearColumnMap.get(modelYear),"\u2714",cellStyle);
+                    selectedCell.add(modelYearColumnMap.get(modelYear));
+                });
+                modelYearColumnMap.forEach((key,value)->{
+                    if (!selectedCell.contains(value)){
+                        createCell(row,value,null,cellStyle);
+                    }
+                });
+            }
+
+            //如果一个option 完全没有被选中，也需要同步样式（除了AF00外理论上不存在这种情况，实际可能因数据错误出现）
+            else{
+                modelYearColumnMap.forEach((key,value)->{
+                    createCell(row,value,null,cellStyle);
+                });
+            }
+    }
     /**
      * 创建product Context单元格
      */

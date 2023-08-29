@@ -109,8 +109,6 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
                 featureRowDtoMap.get(parentCode).getOptionRowList().add(productContextOptionRowDto);
             }
         });
-
-
         //组装列和列行记录表
         //  先处理列id
         List<String> modelModelYearList = new ArrayList<>();

@@ -69,7 +69,7 @@ public class QueryProductConfigQuery extends AbstractQuery<QueryProductConfigQry
         }
         // 查询Option勾选
         List<BomsProductConfigOptionEntity> optionEntityList = productConfigOptionDao.queryByPcIdList(LambdaUtil.map(response.getPcList(),
-                QueryProductConfigRespDto.PcDto::getPcId));
+                QueryProductConfigRespDto.PcDto::getPcId),null);
         // 查询Product Context勾选（只针对编辑模式下）
         List<BomsProductContextEntity> productContextEntityList = null;
         if (qry.isEdit()) {

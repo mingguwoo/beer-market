@@ -336,24 +336,36 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
                     }
                 });
 
-                long count = option.getPackInfos().stream().filter(s -> compareOxoFeatureModel.getSalesOptionInfoMap().containsKey(
-                        String.format("%s:%s:%s:%s:%s:%s", versionName, s.getModelCode(),
-                                s.getModelYear(), s.getRegionCode(), s.getDriveHandCode(), s.getSalesCode()))).count();
-
-
-                long unAvailableCount = option.getPackInfos().stream().filter(s -> compareOxoFeatureModel.getSalesOptionInfoMap().containsKey(String.format("%s:%s:%s:%s:%s:%s", versionName,
-                        s.getModelCode(), s.getModelYear(), s.getRegionCode(), s.getDriveHandCode(), s.getSalesCode())) && s.getPackageCode().equals(ConfigConstants.UN_AVAILABLE)).count();
-
                 //2、check option所有的oxo是不是Unavailable，如果都是Unavailable，则设置option为Delete
-                log.info("option:{},delete count:{},unAvailableCount:{},changeType:{}", option.getFeatureCode(), count, unAvailableCount, option.getChangeType());
-                if (unAvailableCount == count && StringUtils.equals(option.getChangeType(), CompareChangeTypeEnum.MODIFY.getName()) && count > 0) {
-                    option.setChangeType(CompareChangeTypeEnum.DELETE.getName());
+                if (StringUtils.equals(option.getChangeType(), CompareChangeTypeEnum.MODIFY.getName())) {
+                    long count = option.getPackInfos().stream().filter(s -> compareOxoFeatureModel.getSalesOptionInfoMap().containsKey(
+                            String.format("%s:%s:%s:%s:%s:%s", versionName, s.getModelCode(),
+                                    s.getModelYear(), s.getRegionCode(), s.getDriveHandCode(), s.getSalesCode()))).count();
+                    long unAvailableCount = option.getPackInfos().stream().filter(s -> compareOxoFeatureModel.getSalesOptionInfoMap().containsKey(String.format("%s:%s:%s:%s:%s:%s", versionName,
+                            s.getModelCode(), s.getModelYear(), s.getRegionCode(), s.getDriveHandCode(), s.getSalesCode())) && s.getPackageCode().equals(ConfigConstants.UN_AVAILABLE)).count();
+
+                    log.info("option:{},delete count:{},unAvailableCount:{},changeType:{}", option.getFeatureCode(), count, unAvailableCount, option.getChangeType());
+
+                    if (unAvailableCount == count && count > 0) {
+                        option.setChangeType(CompareChangeTypeEnum.DELETE.getName());
+                    }
+
+                    // 系统判断Option行在所有基础车型下的赋值从全部为“-”改成部分不为“-”，则Change Type为Add
+                    if (!option.getPackInfos().stream().allMatch(x -> StringUtils.equals(ConfigConstants.UN_AVAILABLE, x.getPackageCode()))) {
+                        List<String> packageCodes = Lists.newArrayList();
+                        option.getPackInfos().forEach(packageCode -> {
+                            if (Objects.nonNull(packageCode.getCompareOxoEdit())) {
+                                packageCodes.add(packageCode.getCompareOxoEdit().getPackageCode());
+                            } else {
+                                packageCodes.add(packageCode.getPackageCode());
+                            }
+                        });
+                        if (packageCodes.stream().allMatch(x -> StringUtils.equals(x, ConfigConstants.UN_AVAILABLE))) {
+                            option.setChangeType(CompareChangeTypeEnum.ADD.getName());
+                        }
+                    }
+
                 }
-
-                // 系统判断Option行在所有基础车型下的赋值从全部为“-”改成部分不为“-”，则Change Type为Add
-               // if()
-
-
             });
         });
     }

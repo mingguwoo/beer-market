@@ -376,7 +376,7 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
 
         //查询active head
         List<BomsBaseVehicleEntity> baseVehicleEntities =
-                bomsBaseVehicleDao.queryByModel(modelCode, null);
+                bomsBaseVehicleDao.queryByModel(modelCode, false);
 
 
         Map<String, List<BomsBaseVehicleEntity>> bomBaseVehicles =

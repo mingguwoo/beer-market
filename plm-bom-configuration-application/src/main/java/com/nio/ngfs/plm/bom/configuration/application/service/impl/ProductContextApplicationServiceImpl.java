@@ -1,8 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.application.service.impl;
 
 import com.nio.bom.share.constants.CommonConstants;
-import com.nio.ngfs.plm.bom.configuration.application.query.productcontext.GetProductContextQuery;
-import com.nio.ngfs.plm.bom.configuration.application.query.productcontext.QueryProductContextOptionsQuery;
 import com.nio.ngfs.plm.bom.configuration.application.service.ProductContextApplicationService;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.domain.event.EventPublisher;

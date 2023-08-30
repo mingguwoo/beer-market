@@ -1,7 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.remote.dto.enovia;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 

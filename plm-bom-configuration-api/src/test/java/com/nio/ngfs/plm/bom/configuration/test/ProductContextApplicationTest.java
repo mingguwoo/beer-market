@@ -1,6 +1,5 @@
 package com.nio.ngfs.plm.bom.configuration.test;
 
-import com.nio.ngfs.plm.bom.configuration.application.event.productcontext.SyncProductContextEventHandler;
 import com.nio.ngfs.plm.bom.configuration.application.service.ProductContextApplicationService;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.ProductContextFacade;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.ProductContextAggr;
@@ -9,7 +8,6 @@ import org.junit.Test;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**

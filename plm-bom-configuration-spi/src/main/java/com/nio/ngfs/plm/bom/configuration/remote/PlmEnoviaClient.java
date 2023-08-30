@@ -6,8 +6,6 @@ import com.nio.ngfs.plm.bom.configuration.remote.dto.feature.PlmFeatureOptionSyn
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.List;
-
 /**
  * @author xiaozhou.tu
  * @date 2023/7/25

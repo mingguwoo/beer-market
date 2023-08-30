@@ -7,9 +7,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncAddPcDto
 import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncDeletePcDto;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncUpdatePcDto;
 import com.nio.ngfs.plm.bom.configuration.remote.FeishuIntegrationClient;
-import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.PlmDeletePcDto;
-import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.PlmModifyPcDto;
-import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.PlmSyncProductConfigurationDto;
+import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.*;
 import com.nio.ngfs.plm.bom.configuration.remote.dto.feature.PlmFeatureOptionSyncDto;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -33,6 +31,7 @@ public class ConfigurationTo3deWarnSender {
     private static final String TITLE_FORMAT = "配置管理同步3DE告警（%s）";
     private static final String FEATURE_LIBRARY = "Feature Library";
     private static final String PRODUCT_CONFIGURATION = "Product Configuration";
+    private static final String PRODUCT_CONTEXT = "Product Context";
     private static final String CONTENT_TEMPLATE = """
             模块: %s\r
             失败信息: %s\r
@@ -101,6 +100,25 @@ public class ConfigurationTo3deWarnSender {
                 String.format("Model/Model Year %s Delete Base PC %s Fail!", dto.getModel() + " " + dto.getModelYear(), syncDto.getPcId()));
     }
 
+    /**
+     * 发送同步Prodcut Context Model Feature告警
+     * @param dto
+     * @param errorMsg
+     */
+    public void sendSyncProductContextFeatureModelWarn(SyncProductContextModelFeatureDto dto, String errorMsg) {
+        sendWarnMessage(PRODUCT_CONTEXT, dto, errorMsg, getProductConfigAtList(),
+                String.format("Model %s Sync Code %s Fail!", dto.getModelCodeList().get(0), dto.getFeatureCode()));
+    }
+
+    /**
+     * 发送同步Prodcut Context Model Feature Option告警
+     * @param dto
+     * @param errorMsg
+     */
+    public void sendSyncProductContextModelFeatureOptionWarn(SyncProductContextModelFeatureOptionDto dto, String errorMsg) {
+        sendWarnMessage(PRODUCT_CONTEXT,dto,errorMsg,getProductConfigAtList(),
+                String.format("Model % Sync Code %s Fail!", dto.getModel(),dto.getFeature().get(0).getOption().get(0).getOptionCode()));
+    }
     private <Req> void sendWarnMessage(String module, Req request, String errorMsg, List<String> atList, String failMsg) {
         String message = FeishuPostMessageBuilder.buildPostMessage(
                 getTitle(),

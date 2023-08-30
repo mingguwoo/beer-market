@@ -26,7 +26,7 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoRowsQry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -75,11 +75,12 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
 
         wrapBaseIpFeatureChangeType(compareIpFeatureModel, baseQry, true);
         wrapBaseIpFeatureChangeType(compareIpFeatureModel, compareQry, false);
-        //comPareOxoFeatureInfoRequest.setShowDiff(true);
         if (showDiff) {
             return filterDiffData(compareIpFeatureModel.getBaseIpFeature());
         }
-        return compareIpFeatureModel.getBaseIpFeature();
+        compareIpFeatureModel.getCompareIpFeature().getOxoRowsResps().sort(Comparator.comparing(OxoRowsQry::getCatalog).thenComparing(OxoRowsQry::getGroup)
+                .thenComparing(OxoRowsQry::getSort).thenComparing(OxoRowsQry::getFeatureCode));
+        return compareIpFeatureModel.getCompareIpFeature();
     }
 
 
@@ -98,7 +99,8 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
             return oxoListQry;
         }
         OxoListQry diffOxoFeatureEntity = new OxoListQry();
-        filterDiffFeature(diffOxoFeatureEntity, oxoListQry.getOxoRowsResps());
+        filterDiffFeature(diffOxoFeatureEntity, oxoListQry.getOxoRowsResps().stream().sorted(Comparator.comparing(OxoRowsQry::getCatalog).thenComparing(OxoRowsQry::getGroup)
+                .thenComparing(OxoRowsQry::getSort).thenComparing(OxoRowsQry::getFeatureCode)).toList());
         diffOxoFeatureEntity.setOxoHeadResps(oxoListQry.getOxoHeadResps());
         return diffOxoFeatureEntity;
     }
@@ -137,7 +139,7 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
                     option.setChangeType(null);
                 }
             });
-            feature.setOptions(optionList);
+            feature.setOptions(optionList.stream().sorted(Comparator.comparing(OxoRowsQry::getSort).thenComparing(OxoRowsQry::getFeatureCode)).toList());
         });
     }
 
@@ -198,11 +200,30 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
                     regionInfo.setChangeType(CompareChangeTypeEnum.DELETE.getName());
                     //todo
 //                    //基准添加删除的modelYearFeature
-//                    List<ModelYearFeatureOption> modelYearFeatureOptionList =
-//                            compareOxoFeatureModel.getBaseIpFeature().getOxoHeadResps()
+//                    List<OxoHeadQry> oxoHeads = Lists.newArrayList();
+//                    oxoHeads.addAll(compareOxoFeatureModel.getBaseIpFeature().getOxoHeadResps());
+//                    oxoHeads.add(modelYear);
 //                    modelYear.add(modelYearFeatureOption);
 //                    compareOxoFeatureModel.getBaseIpFeature().getOxoRowsResps().put(k, modelYearFeatureOptionList);
-                    compareOxoFeatureModel.getBaseIpFeature().getOxoHeadResps().add(modelYear);
+
+                    //  compareOxoFeatureModel.getBaseIpFeature().setOxoHeadResps(oxoHeads);
+
+                    List<OxoHeadQry> oxoHeadQries = compareOxoFeatureModel.getBaseIpFeature().getOxoHeadResps();
+
+                    for (OxoHeadQry oxoHeadQry : oxoHeadQries) {
+                        if (StringUtils.equals(oxoHeadQry.getModelYear(), modelYear.getModelYear())) {
+                            modelYear.getRegionInfos().forEach(region -> {
+                                if (oxoHeadQry.getRegionInfos().stream().noneMatch(x -> StringUtils.equals(x.getRegionCode(), region.getRegionCode()))) {
+                                    List<OxoHeadQry.RegionInfo> regionHeads = Lists.newArrayList();
+                                    regionHeads.addAll(oxoHeadQry.getRegionInfos());
+                                    regionHeads.add(region);
+                                    oxoHeadQry.setRegionInfos(regionHeads.stream().sorted(Comparator.comparing(OxoHeadQry.RegionInfo::getRegionCode)).toList());
+                                }
+                            });
+                        }
+                    }
+
+
                     //子级直接继承
                     setRegionChildrenChangeType(regionInfo.getDriveHands(), CompareChangeTypeEnum.DELETE.getName());
                     return;
@@ -317,8 +338,8 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
                 //option高低版本都存在
                 option.getPackInfos().forEach(oxo -> {
                     //比较所有低oxo打点
-                    String oxoKey = String.format("%s:%s:%s:%s:%s:%s:%s",
-                            versionName, oxo.getModelCode(), oxo.getModelYear(), feature.getFeatureCode(),
+                    String oxoKey = String.format("%s:%s:%s:%s:%s:%s:%s:%s",
+                            versionName, oxo.getModelCode(), oxo.getModelYear(), feature.getFeatureCode(), option.getFeatureCode(),
                             oxo.getRegionCode(), oxo.getDriveHandCode(), oxo.getSalesCode());
                     OxoEditCmd compareOxo = oxoMap.get(oxoKey);
                     if (oxoMap.containsKey(oxoKey) && !oxoMap.get(oxoKey).getPackageCode().equals(oxo.getPackageCode())) {
@@ -328,10 +349,12 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
                         option.setChangeType(CompareChangeTypeEnum.MODIFY.getName());
                     } else if (!oxoMap.containsKey(oxoKey) && (Objects.nonNull(oxo.getCompareOxoEdit()) || Objects.nonNull(compareOxo))) {
                         option.setChangeType(CompareChangeTypeEnum.MODIFY.getName());
-                    } else if (!oxoMap.containsKey(oxoKey) && (Objects.isNull(oxo.getCompareOxoEdit()) && Objects.isNull(compareOxo))
+                    }
+                    else if (!oxoMap.containsKey(oxoKey) && (Objects.isNull(oxo.getCompareOxoEdit()) && Objects.isNull(compareOxo))
                             && StringUtils.isBlank(option.getChangeType())) {
                         option.setChangeType(CompareChangeTypeEnum.DEL.getName());
-                    } else if (oxoMap.containsKey(oxoKey) && oxoMap.get(oxoKey).getPackageCode().equals(oxo.getPackageCode())) {
+                    }
+                    else if (oxoMap.containsKey(oxoKey) && oxoMap.get(oxoKey).getPackageCode().equals(oxo.getPackageCode())) {
                         oxo.setChangeType(CompareChangeTypeEnum.NO_CHANGE.getName());
                     }
                 });
@@ -417,8 +440,8 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
                     }
                     //OxoConfigration
                     child.getPackInfos().forEach(oxo -> {
-                        oxoMap.put(String.format("%s:%s:%s:%s:%s:%s:%s", versionName,
-                                oxo.getModelCode(), oxo.getModelYear(), feature.getFeatureCode(),
+                        oxoMap.put(String.format("%s:%s:%s:%s:%s:%s:%s:%s", versionName,
+                                oxo.getModelCode(), oxo.getModelYear(), feature.getFeatureCode(), child.getFeatureCode(),
                                 oxo.getRegionCode(), oxo.getDriveHandCode(), oxo.getSalesCode()), oxo);
                     });
                 });
@@ -545,15 +568,6 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
         int finalTitleSize = titleSize;
         features.forEach(feature -> {
 
-//            List<OxoEditCmd> oxoEditCmds = new ArrayList<>();
-//            feature.getOptions().forEach(x -> {
-//                oxoEditCmds.addAll(x.getPackInfos());
-//            });
-//
-//            if (CollectionUtils.isEmpty(oxoEditCmds)) {
-//                return;
-//            }
-
             OxoTemplateRequestCmd.OxoInfo oxoInfo = new OxoTemplateRequestCmd.OxoInfo();
             oxoInfo.setName(feature.getChineseName());
             oxoInfo.setChangeType(feature.getChangeType());
@@ -666,41 +680,40 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
             return options;
         }
 
-        option.getPackInfos().forEach(x -> {
+        for (OxoBasicVehicleDto oxoBasicVehicleDto : oxoBasicVehicleDtos) {
 
-            if (oxoBasicVehicleDtos.stream().anyMatch(y ->
-                    StringUtils.equals(y.getYear(), x.getModelYear()) &&
-                            StringUtils.equals(y.getSalesOptionCode(), x.getSalesCode()) && StringUtils.equals(y.getDriverOptionCode(), x.getDriveHandCode())
-                            && StringUtils.equals(y.getRegionCode(), x.getRegionCode()))) {
+            OxoEditCmd oxoEditCmd =
+                    option.getPackInfos().stream().filter(y -> Objects.equals(y.getHeadId(), oxoBasicVehicleDto.getId())).findFirst().orElse(null);
 
-                //todo
-                OxoTemplateRequestCmd.PackageOption packageOption = new OxoTemplateRequestCmd.PackageOption();
-                packageOption.setPackSize(oxoBasicVehicleDtos.size());
+            OxoTemplateRequestCmd.PackageOption packageOption = new OxoTemplateRequestCmd.PackageOption();
+            packageOption.setPackSize(titleSize);
 
-                List<OxoEditCmd> ipdOXOOutputs1 = option.getPackInfos().stream().filter(y -> StringUtils.equals(y.getModelYear(), x.getModelYear()) &&
-                        StringUtils.equals(y.getSalesCode(), x.getSalesCode()) && StringUtils.equals(y.getDriveHandCode(), x.getDriveHandCode())
-                        && StringUtils.equals(y.getRegionCode(), x.getRegionCode()) &&
-                        !StringUtils.equals(y.getChangeType(), CompareChangeTypeEnum.DELETE.getName())).toList();
-                //delete 列需要删除
-                if (ipdOXOOutputs1.size() > 0 && !StringUtils.equals(x.getChangeType(), CompareChangeTypeEnum.DELETE.getName())) {
-
-                    if (Objects.nonNull(x.getCompareOxoEdit())) {
-                        packageOption.setPackageOption(OxoOptionPackageTypeEnum.getByType(x.getCompareOxoEdit().getPackageCode()).getCode() +
-                                x.getCompareOxoEdit().getDescription() + " > " +
-                                OxoOptionPackageTypeEnum.getByType(x.getPackageCode()).getCode() + x.getDescription());
-                    }
-                    if (!StringUtils.equals(CompareChangeTypeEnum.NO_CHANGE.getName(), x.getChangeType()) &&
-                            !StringUtils.equals(CompareChangeTypeEnum.DEL.getName(), x.getChangeType())) {
-                        packageOption.setColor("#f0e68c");  //黄色
-                    }
-                }
-
-                if (StringUtils.isBlank(packageOption.getPackageOption())) {
-                    packageOption.setPackageOption(OxoOptionPackageTypeEnum.getByType(x.getPackageCode()).getCode() + x.getDescription());
-                }
+            if (Objects.isNull(oxoEditCmd)) {
                 options.add(packageOption);
+                continue;
             }
-        });
+
+            if (StringUtils.equals(oxoBasicVehicleDto.getChangeType(), CompareChangeTypeEnum.DELETE.getName())) {
+                options.add(packageOption);
+                continue;
+            }
+
+            String changeType = oxoEditCmd.getChangeType();
+
+//            if (StringUtils.equals(changeType, CompareChangeTypeEnum.MODIFY.getName())) {
+//                packageOption.setColor("#f0e68c");  //黄色
+//            }
+
+            if (Objects.nonNull(oxoEditCmd.getCompareOxoEdit())) {
+                packageOption.setPackageOption(OxoOptionPackageTypeEnum.getByType(oxoEditCmd.getCompareOxoEdit().getPackageCode()).getCode() +
+                         " > " + OxoOptionPackageTypeEnum.getByType(oxoEditCmd.getPackageCode()).getCode());
+                packageOption.setColor("#f0e68c");
+            }else{
+                packageOption.setPackageOption(OxoOptionPackageTypeEnum.getByType(oxoEditCmd.getPackageCode()).getCode());
+            }
+
+            options.add(packageOption);
+        }
 
         return options;
 

@@ -40,6 +40,7 @@ public class  OxoController {
     private final OxoVersionQuery oxoVersionQuery;
 
     private final OxoInfoExportQuery oxoInfoExportQuery;
+    private final OxoCompareExportInfoQuery compareExportQuery;
 
     private final OxoInfoQuery oxoInfoQuery;
     private final OxoFeatureOptionQuery oxoFeatureOptionQuery;

@@ -24,5 +24,6 @@ public class OxoBasicVehicleDto {
 
     private String year;
 
+    private Long id;
 
 }

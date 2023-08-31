@@ -39,8 +39,7 @@ public class ProductContextApplicationServiceImpl implements ProductContextAppli
     private final ModelFacade modelFacade;
     private final EventPublisher eventPublisher;
     @Override
-    public void addProductContext(String oxoSnapShot) {
-        OxoListQry oxoListQry = oxoVersionSnapshotDomainService.resolveSnapShot(oxoSnapShot);
+    public void addProductContext(OxoListQry oxoListQry, String owner) {
         String modelCode = oxoListQry.getOxoHeadResps().get(CommonConstants.INT_ZERO).getModelCode();
         List<String> modelYearList = modelFacade.getModelYearByModel(modelCode);
 

@@ -58,26 +58,27 @@ public interface ConfigConstants {
     String HEADER_CONTENT_DISPOSITION = "Content-Disposition";
 
 
-     String REG_DOT = ".";
+    String REG_DOT = ".";
 
 
-     String SPLIT_DOT = "\\.";
+    String SPLIT_DOT = "\\.";
 
 
-     String VERSION_AA="AA";
+    String VERSION_AA = "AA";
 
-     String VERSION_AA_1="AA.1";
-
-
-     String BASE_VERSION = "baseVersion";
+    String VERSION_AA_1 = "AA.1";
 
 
-     String UN_AVAILABLE = "Unavailable";
+    String BASE_VERSION = "baseVersion";
 
 
-      String LOW_VERSION = "lowVersion";
+    String UN_AVAILABLE = "Unavailable";
 
 
-      String PRODUCT_CONFIGURATION_ERROR ="Feature {0} Is Applied In Product Configuration!";
+    String LOW_VERSION = "lowVersion";
 
+
+    String PRODUCT_CONFIGURATION_ERROR = "Feature {0} Is Applied In Product Configuration!";
+
+    String OXO_EMAIL_GROUP_FY = "Engineering Config.OXO-Fy";
 }

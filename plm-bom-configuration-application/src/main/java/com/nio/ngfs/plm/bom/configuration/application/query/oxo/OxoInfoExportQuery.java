@@ -1,7 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.application.query.oxo;
 
 
-import com.google.common.collect.Lists;
 import com.nio.ngfs.plm.bom.configuration.application.query.oxo.common.OxoExcelUtil;
 import com.nio.ngfs.plm.bom.configuration.application.service.OxoQueryApplicationService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoBaseCmd;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 
 /**

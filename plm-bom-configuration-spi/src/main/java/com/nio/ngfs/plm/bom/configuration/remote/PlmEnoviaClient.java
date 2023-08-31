@@ -1,9 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.remote;
 
 import com.nio.ngfs.plm.bom.configuration.remote.dto.common.PlmEnoviaResult;
-import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.PlmDeletePcDto;
-import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.PlmModifyPcDto;
-import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.PlmSyncProductConfigurationDto;
+import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.*;
 import com.nio.ngfs.plm.bom.configuration.remote.dto.feature.PlmFeatureOptionSyncDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,4 +49,14 @@ public interface PlmEnoviaClient {
     @PostMapping("/resources/NioPlm/configuration/deletePc")
     PlmEnoviaResult<Object> deletePc(PlmDeletePcDto dto);
 
+    /**
+     * 同步新增Product Context行到3DE
+     * @param dto
+     * @return
+     */
+    @PostMapping("/resources/NioPlm/configuration/syncModelFeature")
+    PlmEnoviaResult<Object> syncProductContextModelFeature(SyncProductContextModelFeatureDto dto);
+
+    @PostMapping("/resources/NioPlm/configuration/syncModelFeatureOption")
+    PlmEnoviaResult<Object> syncProductContextModelFeatureOption(SyncProductContextModelFeatureOptionDto dto);
 }

@@ -3,12 +3,14 @@ package com.nio.ngfs.plm.bom.configuration.application.service.impl;
 import com.nio.bom.share.constants.CommonConstants;
 import com.nio.ngfs.plm.bom.configuration.application.service.ProductContextApplicationService;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
+import com.nio.ngfs.plm.bom.configuration.domain.event.EventPublisher;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.ModelFacade;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.ProductContextAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.ProductContextFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.ProductContextRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.event.SyncProductContextEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature.ProductContextFeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature.ProductContextFeatureFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature.ProductContextFeatureRepository;
@@ -18,10 +20,12 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoRowsQry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author bill.wang
@@ -36,7 +40,7 @@ public class ProductContextApplicationServiceImpl implements ProductContextAppli
     private final ProductContextRepository productContextRepository;
     private final ProductContextFeatureRepository productContextFeatureRepository;
     private final ModelFacade modelFacade;
-
+    private final EventPublisher eventPublisher;
     @Override
     public void addProductContext(String oxoSnapShot) {
         OxoListQry oxoListQry = oxoVersionSnapshotDomainService.resolveSnapShot(oxoSnapShot);
@@ -63,10 +67,21 @@ public class ProductContextApplicationServiceImpl implements ProductContextAppli
         //单独处理AF00
         ProductContextFeatureFactory.createModelYearProductContextFeature(productContextFeatureList,featureModelYearAggr,modelCode,modelYearMap);
         ProductContextFactory.createModelYearProductContext(productContextList,modelCode,modelYearList,modelYearMap);
-        //去重后存库
-        productContextRepository.saveOrUpdateBatch(productContextList.stream().distinct().toList());
-        productContextFeatureRepository.saveOrUpdateBatch(productContextFeatureList.stream().distinct().toList());
+        //去重
+        productContextList = productContextList.stream().distinct().toList();
+        productContextFeatureList = productContextFeatureList.stream().distinct().toList();
+        //存库
+        if (Objects.nonNull(productContextList)){
+            saveProductContextToDb(productContextList,productContextFeatureList);
+            //3de同步
+            eventPublisher.publish(new SyncProductContextEvent(productContextList));
+        }
+    }
 
+    @Transactional(rollbackFor = Exception.class)
+    public void saveProductContextToDb(List<ProductContextAggr> productContextList, List<ProductContextFeatureAggr> productContextFeatureList) {
+        productContextRepository.saveOrUpdateBatch(productContextList);
+        productContextFeatureRepository.saveOrUpdateBatch(productContextFeatureList);
     }
 
 }

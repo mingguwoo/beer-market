@@ -16,17 +16,17 @@ public class ProductContextFeatureFactory {
 
     /**
      * 初始化product context时新建product context行
-     * @param ProductContextFeatureList
+     * @param productContextFeatureList
      * @param featureList
      * @param featureOptionMap
      * @param modelCode
      * @return
      */
-    public static void createProductContextFeatureList(List<ProductContextFeatureAggr> ProductContextFeatureList,List<OxoRowsQry> featureList, Map<OxoRowsQry,List<OxoRowsQry>> featureOptionMap, String modelCode){
+    public static void createProductContextFeatureList(List<ProductContextFeatureAggr> productContextFeatureList,List<OxoRowsQry> featureList, Map<OxoRowsQry,List<OxoRowsQry>> featureOptionMap, String modelCode,List<ProductContextFeatureAggr> addProductContextFeatureAggrList){
         Set<ProductContextFeatureAggr> existFeatureSet = new HashSet<>();
         //先记录已有行
-        if (Objects.nonNull(ProductContextFeatureList)){
-            ProductContextFeatureList.forEach(aggr->{
+        if (Objects.nonNull(productContextFeatureList)){
+            productContextFeatureList.forEach(aggr->{
                 existFeatureSet.add(aggr);
             });
         }
@@ -38,7 +38,7 @@ public class ProductContextFeatureFactory {
                 productContextFeatureAggr.setFeatureCode(feature.getFeatureCode());
                 productContextFeatureAggr.setType(ProductContextFeatureEnum.FEATURE.getType());
                 if (!existFeatureSet.contains(productContextFeatureAggr)) {
-                    ProductContextFeatureList.add(productContextFeatureAggr);
+                    addProductContextFeatureAggrList.add(productContextFeatureAggr);
                 }
                 featureOptionMap.get(feature).forEach(option->{
                     ProductContextFeatureAggr aggr = new ProductContextFeatureAggr();
@@ -46,7 +46,7 @@ public class ProductContextFeatureFactory {
                     aggr.setFeatureCode(option.getFeatureCode());
                     aggr.setType(ProductContextFeatureEnum.OPTION.getType());
                     if (!existFeatureSet.contains(aggr)){
-                        ProductContextFeatureList.add(aggr);
+                        addProductContextFeatureAggrList.add(aggr);
                     }
                 });
             }
@@ -60,7 +60,7 @@ public class ProductContextFeatureFactory {
      * @param modelCode
      * @param modelYearMap
      */
-    public static void createModelYearProductContextFeature(List<ProductContextFeatureAggr> productContextFeatureAggrList, FeatureAggr featureModelYearAggr,String modelCode,Map<String,String> modelYearMap){
+    public static void createModelYearProductContextFeature(List<ProductContextFeatureAggr> productContextFeatureAggrList, FeatureAggr featureModelYearAggr,String modelCode,Map<String,String> modelYearMap,List<ProductContextFeatureAggr> addProductContextFeatureAggrList){
         List<FeatureAggr> optionAggrList = featureModelYearAggr.getChildrenList();
         Set<ProductContextFeatureAggr> existModelYearSet = new HashSet<>();
         //记录原有所有modelYear相关行
@@ -77,7 +77,7 @@ public class ProductContextFeatureFactory {
         productContextFeatureAggr.setFeatureCode(featureModelYearAggr.getFeatureCode());
         productContextFeatureAggr.setType(ProductContextFeatureEnum.FEATURE.getType());
         if (!existModelYearSet.contains(productContextFeatureAggr)){
-            productContextFeatureAggrList.add(productContextFeatureAggr);
+            addProductContextFeatureAggrList.add(productContextFeatureAggr);
         }
         //再添加AF00下面的option
         optionAggrList.forEach(option->{
@@ -86,11 +86,12 @@ public class ProductContextFeatureFactory {
             aggr.setFeatureCode(option.getFeatureCode());
             aggr.setType(ProductContextFeatureEnum.OPTION.getType());
             if (!existModelYearSet.contains(productContextFeatureAggr)) {
-                productContextFeatureAggrList.add(aggr);
+                addProductContextFeatureAggrList.add(aggr);
             }
-            //记录modelYear的displayname与optionCode的对应关系，用于后续打勾
+            //记录modelYear的displayName与optionCode的对应关系，用于后续打勾
             modelYearMap.put(option.getDisplayName(),option.getFeatureCode());
         });
+
     }
 
 

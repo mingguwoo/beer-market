@@ -25,7 +25,7 @@ public class ProductContextFactory {
      * @param oxoListQry
      * @return
      */
-    public static void createProductContextList(List<ProductContextAggr> productContextList,List<OxoRowsQry> featureList, OxoListQry oxoListQry){
+    public static void createProductContextList(List<ProductContextAggr> productContextList,List<OxoRowsQry> featureList, OxoListQry oxoListQry,List<ProductContextAggr> addProductContextAggrList){
         Map<Long,OxoRowsQry> rowMap = new HashMap<>();
         Map<Long,OxoHeadQry> headMap = new HashMap<>();
         Map<String,String> optionFeatureMap = new HashMap<>();
@@ -46,7 +46,7 @@ public class ProductContextFactory {
                 productContextAggr.setOptionCode(rowMap.get(point.getRowId()).getFeatureCode());
                 productContextAggr.setFeatureCode(optionFeatureMap.get(rowMap.get(point.getRowId()).getFeatureCode()));
                 if (!existProductContextSet.contains(productContextAggr)){
-                    productContextList.add(productContextAggr);
+                    addProductContextAggrList.add(productContextAggr);
                 }
             }
         });
@@ -59,7 +59,7 @@ public class ProductContextFactory {
      * @param modelYearList
      * @param modelYearMap
      */
-    public static void createModelYearProductContext(List<ProductContextAggr> productContextList, String modelCode,List<String> modelYearList,Map<String,String> modelYearMap){
+    public static void createModelYearProductContext(List<ProductContextAggr> productContextList, String modelCode,List<String> modelYearList,Map<String,String> modelYearMap,List<ProductContextAggr> addProductContextAggrList){
         Set<ProductContextAggr> oldModelYearSet = new HashSet<>();
         //获取所有原先model year的option code
         if (Objects.nonNull(productContextList)) {
@@ -74,7 +74,7 @@ public class ProductContextFactory {
             productContextAggr.setOptionCode(modelYearMap.get(modelYear));
             productContextAggr.setFeatureCode(ConfigConstants.FEATURE_CODE_AF00);
             if (!oldModelYearSet.contains(productContextAggr)){
-                productContextList.add(productContextAggr);
+                addProductContextAggrList.add(productContextAggr);
             }
         });
     }

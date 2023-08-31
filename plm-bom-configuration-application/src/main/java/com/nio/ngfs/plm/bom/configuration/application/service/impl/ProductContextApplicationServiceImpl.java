@@ -22,10 +22,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * @author bill.wang
@@ -60,19 +60,25 @@ public class ProductContextApplicationServiceImpl implements ProductContextAppli
         Map<OxoRowsQry,List<OxoRowsQry>> featureOptionMap = new HashMap<>();
         featureList.forEach(featureRow->featureOptionMap.put(featureRow,featureRow.getOptions()));
 
+        //由于只增不减，因此可以通过判断size是否变化来判断是否有新增数据，是否需要存库。
+        int originalProductContextSize = productContextList.size();
+        int originalProductContextFeatureSize = productContextFeatureList.size();
+
+        List<ProductContextAggr> addProductContextAggrList = new ArrayList<>();
+        List<ProductContextFeatureAggr> addProductContextFeatureAggrList = new ArrayList<>();
         //更新
         //先处理其他的
-        ProductContextFeatureFactory.createProductContextFeatureList(productContextFeatureList,featureList,featureOptionMap,modelCode);
-        ProductContextFactory.createProductContextList(productContextList,featureList,oxoListQry);
+        ProductContextFeatureFactory.createProductContextFeatureList(productContextFeatureList,featureList,featureOptionMap,modelCode,addProductContextFeatureAggrList);
+        ProductContextFactory.createProductContextList(productContextList,featureList,oxoListQry,addProductContextAggrList);
         //单独处理AF00
-        ProductContextFeatureFactory.createModelYearProductContextFeature(productContextFeatureList,featureModelYearAggr,modelCode,modelYearMap);
-        ProductContextFactory.createModelYearProductContext(productContextList,modelCode,modelYearList,modelYearMap);
+        ProductContextFeatureFactory.createModelYearProductContextFeature(productContextFeatureList,featureModelYearAggr,modelCode,modelYearMap,addProductContextFeatureAggrList);
+        ProductContextFactory.createModelYearProductContext(productContextList,modelCode,modelYearList,modelYearMap,addProductContextAggrList);
         //去重
-        productContextList = productContextList.stream().distinct().toList();
-        productContextFeatureList = productContextFeatureList.stream().distinct().toList();
+        addProductContextFeatureAggrList = addProductContextFeatureAggrList.stream().distinct().toList();
+        addProductContextAggrList = addProductContextAggrList.stream().distinct().toList();
         //存库
-        if (Objects.nonNull(productContextList)){
-            saveProductContextToDb(productContextList,productContextFeatureList);
+        if (!addProductContextAggrList.isEmpty() || !addProductContextFeatureAggrList.isEmpty() ){
+            saveProductContextToDb(addProductContextAggrList,addProductContextFeatureAggrList);
             //3de同步
             eventPublisher.publish(new SyncProductContextEvent(productContextList));
         }

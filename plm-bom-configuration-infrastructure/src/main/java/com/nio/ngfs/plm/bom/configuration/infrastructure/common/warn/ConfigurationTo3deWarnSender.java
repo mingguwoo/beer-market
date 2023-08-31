@@ -45,6 +45,8 @@ public class ConfigurationTo3deWarnSender {
     private String featureAts;
     @Value("${warn.3de.productConfig.ats:}")
     private String productConfigAts;
+    @Value("${warn.3de.productContext.ats:}")
+    private String productContextAts;
 
     private final FeishuIntegrationClient feishuIntegrationClient;
 
@@ -69,6 +71,13 @@ public class ConfigurationTo3deWarnSender {
         return Splitter.on(",").omitEmptyStrings().trimResults().splitToList(productConfigAts);
     }
 
+    /**
+     * 获取Product Context告警人列表
+     * @return
+     */
+    private List<String> getProductContextAtList() {
+        return Splitter.on(",").omitEmptyStrings().trimResults().splitToList(productContextAts);
+    }
     /**
      * 发送同步Feature/Option告警
      */
@@ -106,7 +115,7 @@ public class ConfigurationTo3deWarnSender {
      * @param errorMsg
      */
     public void sendSyncProductContextFeatureModelWarn(SyncProductContextModelFeatureDto dto, String errorMsg) {
-        sendWarnMessage(PRODUCT_CONTEXT, dto, errorMsg, getProductConfigAtList(),
+        sendWarnMessage(PRODUCT_CONTEXT, dto, errorMsg, getProductContextAtList(),
                 String.format("Model %s Sync Code %s Fail!", dto.getModelCodeList().get(0), dto.getFeatureCode()));
     }
 
@@ -116,7 +125,7 @@ public class ConfigurationTo3deWarnSender {
      * @param errorMsg
      */
     public void sendSyncProductContextModelFeatureOptionWarn(SyncProductContextModelFeatureOptionDto dto, String errorMsg) {
-        sendWarnMessage(PRODUCT_CONTEXT,dto,errorMsg,getProductConfigAtList(),
+        sendWarnMessage(PRODUCT_CONTEXT,dto,errorMsg,getProductContextAtList(),
                 String.format("Model % Sync Code %s Fail!", dto.getModel(),dto.getFeature().get(0).getOption().get(0).getOptionCode()));
     }
     private <Req> void sendWarnMessage(String module, Req request, String errorMsg, List<String> atList, String failMsg) {

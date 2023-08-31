@@ -26,15 +26,6 @@ public class OxoInfoExportQuery {
 
     private final OxoQueryApplicationService oxoQueryApplicationService;
 
-
-    /**
-     * Excel标题列表
-     */
-    private static final List<String> TITLE_LIST = Lists.newArrayList(
-            "Feature Code", "Display Name", "Chinese Name", "Group",
-            "Comments"
-    );
-
     /**
      * 页面导出
      *

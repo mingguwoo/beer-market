@@ -62,7 +62,7 @@ public class BomsOxoVersionSnapshotDaoImpl extends AbstractDao<BomsOxoVersionSna
         LambdaQueryWrapper<BomsOxoVersionSnapshotEntity> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(BomsOxoVersionSnapshotEntity::getModelCode, modelCode);
         queryWrapper.eq(BomsOxoVersionSnapshotEntity::getType, type);
-
+        queryWrapper.orderByDesc(BomsOxoVersionSnapshotEntity::getVersion);
         Page<BomsOxoVersionSnapshotEntity> page = new Page<>(pageNum, pageSize);
         return getBaseMapper().selectPage(page, queryWrapper);
     }

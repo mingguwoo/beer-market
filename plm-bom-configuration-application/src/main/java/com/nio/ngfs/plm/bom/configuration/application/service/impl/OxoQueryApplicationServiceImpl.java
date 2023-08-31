@@ -3,9 +3,12 @@ package com.nio.ngfs.plm.bom.configuration.application.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
+import com.nio.bom.share.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.application.query.oxo.assemble.OxoInfoAssembler;
+import com.nio.ngfs.plm.bom.configuration.application.service.OxoCompareApplicationService;
 import com.nio.ngfs.plm.bom.configuration.application.service.OxoQueryApplicationService;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
+import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionRepository;
@@ -14,6 +17,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptio
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.service.basevehicle.BaseVehicleDomainService;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoVersionSnapshotDomainService;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoCompareQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoHeadQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoRowsQry;
@@ -22,6 +26,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -35,6 +40,7 @@ public class OxoQueryApplicationServiceImpl implements OxoQueryApplicationServic
 
     private final BaseVehicleDomainService baseVehicleDomainService;
 
+
     private final OxoVersionSnapshotDomainService versionSnapshotDomainService;
 
 
@@ -43,6 +49,44 @@ public class OxoQueryApplicationServiceImpl implements OxoQueryApplicationServic
 
     private final OxoOptionPackageRepository oxoOptionPackageRepository;
 
+
+    private final OxoCompareApplicationService oxoCompareDomainService;
+
+
+    /**
+     * 对比版本
+     * @param oxoCompareQry
+     * @return
+     */
+    @Override
+    public OxoListQry compareVersion(OxoCompareQry oxoCompareQry) {
+
+
+        String modelCode = oxoCompareQry.getModelCode();
+
+        String baseVersion = oxoCompareQry.getBaseVersion();
+
+        String compareVersion = oxoCompareQry.getCompareVersion();
+
+        if (org.apache.commons.lang.StringUtils.containsIgnoreCase(baseVersion, compareVersion)) {
+            throw new BusinessException(ConfigErrorCode.BASIC_VERSION_ERROR);
+        }
+
+        //查询oxo  info数据
+        OxoListQry baseVersionQry = queryOxoInfoByModelCode(modelCode, baseVersion, false);
+
+        if (CollectionUtils.isEmpty(baseVersionQry.getOxoHeadResps()) || CollectionUtils.isEmpty(baseVersionQry.getOxoHeadResps())) {
+            throw new BusinessException(MessageFormat.format(ConfigErrorCode.VERSION_ERROR.getMessage(), baseVersion));
+        }
+
+        OxoListQry compareVersionQry = queryOxoInfoByModelCode(modelCode, compareVersion, false);
+
+        if (CollectionUtils.isEmpty(compareVersionQry.getOxoHeadResps()) || CollectionUtils.isEmpty(compareVersionQry.getOxoHeadResps())) {
+            throw new BusinessException(MessageFormat.format(ConfigErrorCode.VERSION_ERROR.getMessage(), compareVersion));
+        }
+
+        return oxoCompareDomainService.compareVersion(baseVersionQry, compareVersionQry, oxoCompareQry.isShowDiff());
+    }
 
 
     @Override
@@ -98,7 +142,7 @@ public class OxoQueryApplicationServiceImpl implements OxoQueryApplicationServic
                     oxoFeatureOptions.stream().filter(x -> StringUtils.equals(x.getType(), FeatureTypeEnum.FEATURE.getType()))
                             .sorted(Comparator.comparing(OxoFeatureOptionAggr::getCatalog).thenComparing(OxoFeatureOptionAggr::getParentFeatureCode)
                                     .thenComparing(OxoFeatureOptionAggr::getSort).thenComparing(OxoFeatureOptionAggr::getFeatureCode))
-                            .collect(Collectors.groupingBy(OxoFeatureOptionAggr::getParentFeatureCode,LinkedHashMap::new,Collectors.toList()));
+                            .collect(Collectors.groupingBy(OxoFeatureOptionAggr::getParentFeatureCode, LinkedHashMap::new, Collectors.toList()));
 
             qry.setOxoHeadResps(oxoLists);
 

@@ -45,9 +45,6 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
     @Value("${oxo.email.changeLog.url}")
     private String oxoEmailChangeLogUrl;
 
-    @Value("${oxo.email.alps.changeLog.url}")
-    private String oxoEmailAlpsChangeLogUrl;
-
 
     private final EmailFacade emailFacade;
 
@@ -603,11 +600,8 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
         OxoTemplateRequestCmd templateRequest = new OxoTemplateRequestCmd();
         templateRequest.setRegionOptionCodes(regionOptionCodes);
         templateRequest.setChangeContent(oxoVersionSnapshot.getChangeContent());
-        if (StringUtils.equals(oxoVersionSnapshot.getBrand(), BrandEnum.NIO.toString())) {
-            templateRequest.setUrl(oxoEmailChangeLogUrl + modelCode);
-        } else {
-            templateRequest.setUrl(oxoEmailAlpsChangeLogUrl + modelCode);
-        }
+        templateRequest.setUrl(oxoEmailChangeLogUrl.replace("nio", oxoVersionSnapshot.getBrand().toLowerCase()) + modelCode);
+
 
         templateRequest.setHeadTitles(headTitles);
         templateRequest.setSalesOptionNames(salesOptionNames);

@@ -21,6 +21,7 @@ public class ProductContextRepositoryImpl implements ProductContextRepository {
     private final BomsProductContextDao bomsProductContextDao;
     private final ProductContextConverter productContextConverter;
 
+    @Override
     public List<ProductContextAggr> queryByModelCode(String modelCode){
         return productContextConverter.convertEntityListToDoList(bomsProductContextDao.queryByModelCode(modelCode));
     }

@@ -18,9 +18,9 @@ public interface ProductContextApplicationService {
     void addProductContext(String oxoSnapShot);
 
     /**
-     * 将ProductContext数据存到数据库
+     * 更新Product Context打勾数据
      * @param productContextList
      * @param productContextFeatureList
      */
-    void saveProductContextToDb(List<ProductContextAggr> productContextList, List<ProductContextFeatureAggr> productContextFeatureList);
+    void saveProductContextToDb(List<ProductContextAggr> productContextList, List<ProductContextFeatureAggr> productContextFeatureList,List<ProductContextAggr> removeProductContextAggrList);
 }

@@ -32,7 +32,7 @@ public class ProductContextFeatureRepositoryImpl implements ProductContextFeatur
     }
 
     @Override
-    public void saveOrUpdateBatch(List<ProductContextFeatureAggr> productContextFeatureAggrList) {
+    public void saveBatch(List<ProductContextFeatureAggr> productContextFeatureAggrList) {
         productContextFeatureDao.saveOrUpdateBatch(productContextFeatureConverter.convertDoListToEntityList(productContextFeatureAggrList));
     }
 

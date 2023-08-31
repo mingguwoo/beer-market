@@ -27,6 +27,7 @@ public class ProductContextAggr extends AbstractDo implements AggrRoot<Long>{
 
     private String featureCode;
 
+
     @Override
     public Long getUniqId() {
         return id;

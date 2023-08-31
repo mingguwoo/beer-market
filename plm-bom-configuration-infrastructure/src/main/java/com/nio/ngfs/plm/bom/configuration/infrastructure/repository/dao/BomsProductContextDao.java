@@ -26,4 +26,9 @@ public interface BomsProductContextDao extends IService<BomsProductContextEntity
      */
     List<BomsProductContextEntity> queryByModelAndModelYearList(String modelCode, List<String> modelYearList);
 
+    /**
+     * 批量保存或更新delFlag
+     * @param entityList
+     */
+    void addOrUpdateBatch(List<BomsProductContextEntity> entityList);
 }

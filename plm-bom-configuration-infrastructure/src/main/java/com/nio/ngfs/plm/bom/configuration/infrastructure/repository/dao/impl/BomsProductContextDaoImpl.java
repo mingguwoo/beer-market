@@ -43,4 +43,10 @@ public class BomsProductContextDaoImpl extends AbstractDao<BomsProductContextMap
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 
+    @Override
+    public void addOrUpdateBatch(List<BomsProductContextEntity> entityList) {
+        getBaseMapper().addOrUpdateBatch(entityList);
+    }
+
+
 }

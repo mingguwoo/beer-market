@@ -22,10 +22,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author bill.wang
@@ -60,34 +57,42 @@ public class ProductContextApplicationServiceImpl implements ProductContextAppli
         Map<OxoRowsQry,List<OxoRowsQry>> featureOptionMap = new HashMap<>();
         featureList.forEach(featureRow->featureOptionMap.put(featureRow,featureRow.getOptions()));
 
-        //由于只增不减，因此可以通过判断size是否变化来判断是否有新增数据，是否需要存库。
-        int originalProductContextSize = productContextList.size();
-        int originalProductContextFeatureSize = productContextFeatureList.size();
-
         List<ProductContextAggr> addProductContextAggrList = new ArrayList<>();
         List<ProductContextFeatureAggr> addProductContextFeatureAggrList = new ArrayList<>();
+        List<ProductContextAggr> removeProductContextAggrList = new ArrayList<>();
+        Set<ProductContextAggr> existProductContextSet = new HashSet<>();
         //更新
         //先处理其他的
         ProductContextFeatureFactory.createProductContextFeatureList(productContextFeatureList,featureList,featureOptionMap,modelCode,addProductContextFeatureAggrList);
-        ProductContextFactory.createProductContextList(productContextList,featureList,oxoListQry,addProductContextAggrList);
+        ProductContextFactory.createProductContextList(productContextList,featureList,oxoListQry,addProductContextAggrList,removeProductContextAggrList,existProductContextSet);
         //单独处理AF00
         ProductContextFeatureFactory.createModelYearProductContextFeature(productContextFeatureList,featureModelYearAggr,modelCode,modelYearMap,addProductContextFeatureAggrList);
-        ProductContextFactory.createModelYearProductContext(productContextList,modelCode,modelYearList,modelYearMap,addProductContextAggrList);
+        ProductContextFactory.createModelYearProductContext(modelCode,modelYearList,modelYearMap,addProductContextAggrList,removeProductContextAggrList,existProductContextSet);
         //去重
         addProductContextFeatureAggrList = addProductContextFeatureAggrList.stream().distinct().toList();
         addProductContextAggrList = addProductContextAggrList.stream().distinct().toList();
+        removeProductContextAggrList = removeProductContextAggrList.stream().distinct().toList();
         //存库
-        if (!addProductContextAggrList.isEmpty() || !addProductContextFeatureAggrList.isEmpty() ){
-            saveProductContextToDb(addProductContextAggrList,addProductContextFeatureAggrList);
+        if (!addProductContextAggrList.isEmpty() || !addProductContextFeatureAggrList.isEmpty() || !removeProductContextAggrList.isEmpty()){
+            saveProductContextToDb(addProductContextAggrList,addProductContextFeatureAggrList,removeProductContextAggrList);
             //3de同步
-            eventPublisher.publish(new SyncProductContextEvent(productContextList));
+            if (!addProductContextAggrList.isEmpty()){
+                eventPublisher.publish(new SyncProductContextEvent(addProductContextAggrList));
+            }
         }
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void saveProductContextToDb(List<ProductContextAggr> productContextList, List<ProductContextFeatureAggr> productContextFeatureList) {
-        productContextRepository.saveOrUpdateBatch(productContextList);
-        productContextFeatureRepository.saveOrUpdateBatch(productContextFeatureList);
+    public void saveProductContextToDb(List<ProductContextAggr> productContextList, List<ProductContextFeatureAggr> productContextFeatureList,List<ProductContextAggr> removeProductContextAggrList) {
+        if (!productContextList.isEmpty()){
+            productContextRepository.addOrUpdateBatch(productContextList);
+        }
+        if (!productContextFeatureList.isEmpty()){
+            productContextFeatureRepository.saveBatch(productContextFeatureList);
+        }
+        if (!removeProductContextAggrList.isEmpty()){
+            productContextRepository.removeBatchByIds(removeProductContextAggrList);
+        }
     }
 
 }

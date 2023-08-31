@@ -15,7 +15,7 @@ import java.util.*;
 public class ProductContextFeatureFactory {
 
     /**
-     * 初始化product context时新建product context行
+     * 初始化product context时处理product context行
      * @param productContextFeatureList
      * @param featureList
      * @param featureOptionMap

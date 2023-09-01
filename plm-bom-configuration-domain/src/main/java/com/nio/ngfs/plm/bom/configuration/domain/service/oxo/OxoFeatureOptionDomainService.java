@@ -23,10 +23,18 @@ public interface OxoFeatureOptionDomainService {
     /**
      * 检查Feature/Option是否可删除
      *
-     * @param featureCodeList featureCode列表
+     * @param featureCodeList       featureCode列表
      * @param featureOptionAggrList featureOptionAggr列表
      */
     void checkFeatureOptionDelete(List<String> featureCodeList, List<OxoFeatureOptionAggr> featureOptionAggrList);
+
+    /**
+     * 去除重复的Feature/Option Code
+     *
+     * @param featureOptionAggrList featureOptionAggr列表
+     * @return featureOptionAggr列表
+     */
+    List<OxoFeatureOptionAggr> removeRepeatFeatureOption(List<OxoFeatureOptionAggr> featureOptionAggrList);
 
     /**
      * 筛选掉重复/有冲突的无需打的点
@@ -34,10 +42,6 @@ public interface OxoFeatureOptionDomainService {
     List<OxoOptionPackageAggr> filterRepeatCopyfromPoints(List<OxoOptionPackageAggr> points, List<OxoFeatureOptionAggr> driveHandRegionSalesVersionRows);
 
 
-    List<String>  checkOxoBasicVehicleOptions(String modelCode);
-
-
-
-
+    List<String> checkOxoBasicVehicleOptions(String modelCode);
 
 }

@@ -84,6 +84,21 @@ public class OxoFeatureOptionDomainServiceImpl implements OxoFeatureOptionDomain
     }
 
     @Override
+    public List<OxoFeatureOptionAggr> removeRepeatFeatureOption(List<OxoFeatureOptionAggr> featureOptionAggrList) {
+        if (CollectionUtils.isEmpty(featureOptionAggrList)) {
+            return Lists.newArrayList();
+        }
+        Set<String> childOptionCodeSet = Sets.newHashSet();
+        featureOptionAggrList.stream().filter(OxoFeatureOptionAggr::isFeature).forEach(feature -> {
+            if (CollectionUtils.isNotEmpty(feature.getChildren())) {
+                feature.getChildren().forEach(option -> childOptionCodeSet.add(option.getFeatureCode()));
+            }
+        });
+        // 去除重复的Option Code
+        return featureOptionAggrList.stream().filter(i -> i.isFeature() || !childOptionCodeSet.contains(i.getFeatureCode())).toList();
+    }
+
+    @Override
     public List<OxoOptionPackageAggr> filterRepeatCopyfromPoints(List<OxoOptionPackageAggr> points, List<OxoFeatureOptionAggr> driveHandRegionSalesVersionRows) {
         List<Long> repeatRows = driveHandRegionSalesVersionRows.stream().map(row -> row.getId()).collect(Collectors.toList());
         return points.stream().filter(point -> !repeatRows.contains(point.getFeatureOptionId())).toList();

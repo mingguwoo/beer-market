@@ -50,6 +50,8 @@ public class DeleteFeatureOptionCommand extends AbstractLockCommand<DeleteFeatur
         featureOptionDomainService.checkFeatureOptionDelete(cmd.getFeatureCodeList(), featureOptionAggrList);
         // 构建Feature/Option行的子节点列表
         featureOptionApplicationService.buildFeatureOptionWithChildren(featureOptionAggrList);
+        // 去除重复的Feature/Option Code
+        featureOptionAggrList = featureOptionDomainService.removeRepeatFeatureOption(featureOptionAggrList);
         // 在最新Release版本OXO中查询存在的Feature/Option
         Set<String> existFeatureOptionCodeSet = featureOptionApplicationService.queryExistFeatureOptionInLastedReleaseSnapshot(cmd.getModelCode(), featureOptionAggrList);
         // 逻辑删除

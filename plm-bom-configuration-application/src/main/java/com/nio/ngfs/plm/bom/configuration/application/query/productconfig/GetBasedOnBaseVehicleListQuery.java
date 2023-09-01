@@ -1,6 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.application.query.productconfig;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.nio.ngfs.plm.bom.configuration.application.query.AbstractQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.oxo.common.OxoQueryUtil;
 import com.nio.ngfs.plm.bom.configuration.application.query.productconfig.assemble.ProductConfigAssembler;
@@ -21,10 +22,7 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.GetBase
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * 查询Based On Base Vehicle列表
@@ -48,21 +46,23 @@ public class GetBasedOnBaseVehicleListQuery extends AbstractQuery<GetBasedOnBase
             return Collections.emptyList();
         }
         List<BomsBaseVehicleEntity> baseVehicleEntityList = Lists.newArrayList();
+        Map<Long, Long> baseVehicleOxoVersionSnapshotIdMap = Maps.newHashMap();
         if (Objects.equals(OxoSnapshotEnum.FORMAL.getCode(), oxoVersionSnapshotEntity.getType())) {
             // 最新Release OXO版本为Formal版本
             BomsOxoVersionSnapshotEntity informalOxoVersionSnapshotEntity = oxoVersionSnapshotDao.queryLastReleaseSnapshotByModel(qry.getModel(),
                     OxoSnapshotEnum.INFORMAL.getCode());
-            baseVehicleEntityList.addAll(getBaseVehicleFromOxoRelease(oxoVersionSnapshotEntity, BaseVehicleMaturityEnum.P));
-            baseVehicleEntityList.addAll(getBaseVehicleFromOxoRelease(informalOxoVersionSnapshotEntity, BaseVehicleMaturityEnum.U));
+            baseVehicleEntityList.addAll(getBaseVehicleFromOxoRelease(oxoVersionSnapshotEntity, BaseVehicleMaturityEnum.P, baseVehicleOxoVersionSnapshotIdMap));
+            baseVehicleEntityList.addAll(getBaseVehicleFromOxoRelease(informalOxoVersionSnapshotEntity, BaseVehicleMaturityEnum.U, baseVehicleOxoVersionSnapshotIdMap));
         } else {
             // 最新Release OXO版本为Informal版本
-            baseVehicleEntityList.addAll(getBaseVehicleFromOxoRelease(oxoVersionSnapshotEntity, null));
+            baseVehicleEntityList.addAll(getBaseVehicleFromOxoRelease(oxoVersionSnapshotEntity, null, baseVehicleOxoVersionSnapshotIdMap));
         }
         // 查询Feature Library
         List<BomsFeatureLibraryEntity> baseVehicleOptionList = bomsFeatureLibraryDao.queryByParentFeatureCodeListAndType(ConfigConstants.BASE_VEHICLE_FEATURE_CODE_LIST,
                 FeatureTypeEnum.OPTION.getType());
         // 组装结果
-        List<GetBasedOnBaseVehicleListRespDto> respDtoList = ProductConfigAssembler.assemble(qry.getModel(), baseVehicleEntityList, baseVehicleOptionList);
+        List<GetBasedOnBaseVehicleListRespDto> respDtoList = ProductConfigAssembler.assemble(qry.getModel(), baseVehicleEntityList, baseVehicleOptionList,
+                baseVehicleOxoVersionSnapshotIdMap);
         // 按Region、Drive Hand、Sales Version排序
         respDtoList.forEach(respDto -> respDto.setBaseVehicleList(
                 respDto.getBaseVehicleList().stream().sorted(Comparator.comparing(GetBasedOnBaseVehicleListRespDto.BasedOnBaseVehicleDto::getRegionCode)
@@ -79,7 +79,8 @@ public class GetBasedOnBaseVehicleListQuery extends AbstractQuery<GetBasedOnBase
     /**
      * 从OXO Release中获取Base Vehicle
      */
-    private List<BomsBaseVehicleEntity> getBaseVehicleFromOxoRelease(BomsOxoVersionSnapshotEntity oxoVersionSnapshotEntity, BaseVehicleMaturityEnum maturityEnum) {
+    private List<BomsBaseVehicleEntity> getBaseVehicleFromOxoRelease(BomsOxoVersionSnapshotEntity oxoVersionSnapshotEntity, BaseVehicleMaturityEnum maturityEnum,
+                                                                     Map<Long, Long> baseVehicleOxoVersionSnapshotIdMap) {
         if (oxoVersionSnapshotEntity == null) {
             return Lists.newArrayList();
         }
@@ -87,7 +88,9 @@ public class GetBasedOnBaseVehicleListQuery extends AbstractQuery<GetBasedOnBase
         List<Long> baseVehicleIdList = OxoQueryUtil.getBaseVehicleIdListFromOxoRelease(oxoListQry);
         List<BomsBaseVehicleEntity> baseVehicleEntityList = baseVehicleDao.queryByIdList(baseVehicleIdList);
         // 过滤maturity
-        return baseVehicleEntityList.stream().filter(i -> maturityEnum == null || Objects.equals(maturityEnum.getMaturity(), i.getMaturity())).toList();
+        return baseVehicleEntityList.stream().filter(i -> maturityEnum == null || Objects.equals(maturityEnum.getMaturity(), i.getMaturity()))
+                .peek(i -> baseVehicleOxoVersionSnapshotIdMap.put(i.getId(), oxoVersionSnapshotEntity.getId()))
+                .toList();
     }
 
 }

@@ -37,6 +37,8 @@ public class GetBasedOnBaseVehicleListRespDto implements Dto {
 
         private String salesVersionCn;
 
+        private Long oxoVersionSnapshotId;
+
     }
 
 }

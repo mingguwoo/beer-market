@@ -66,7 +66,8 @@ public class ProductConfigAssembler {
     }
 
     public static List<GetBasedOnBaseVehicleListRespDto> assemble(String modelCode, List<BomsBaseVehicleEntity> baseVehicleEntityList,
-                                                                  List<BomsFeatureLibraryEntity> baseVehicleOptionList) {
+                                                                  List<BomsFeatureLibraryEntity> baseVehicleOptionList,
+                                                                  Map<Long, Long> baseVehicleOxoVersionSnapshotIdMap) {
         Map<String, BomsFeatureLibraryEntity> baseVehicleOptionMap = LambdaUtil.toKeyMap(baseVehicleOptionList, BomsFeatureLibraryEntity::getFeatureCode);
         Map<String, List<BomsBaseVehicleEntity>> baseVehicleEntityGroup = LambdaUtil.groupBy(baseVehicleEntityList, BomsBaseVehicleEntity::getModelYear);
         return LambdaUtil.map(baseVehicleEntityGroup.entrySet(), entry -> {
@@ -83,6 +84,7 @@ public class ProductConfigAssembler {
                 baseVehicleDto.setDriveHandCn(getBomsFeatureLibraryEntity(baseVehicleOptionMap, baseVehicleEntity.getDriveHand()).getChineseName());
                 baseVehicleDto.setSalesVersionCode(baseVehicleEntity.getSalesVersion());
                 baseVehicleDto.setSalesVersionCn(getBomsFeatureLibraryEntity(baseVehicleOptionMap, baseVehicleEntity.getSalesVersion()).getChineseName());
+                baseVehicleDto.setOxoVersionSnapshotId(baseVehicleOxoVersionSnapshotIdMap.get(baseVehicleEntity.getId()));
                 return baseVehicleDto;
             }).toList());
             return respDto;

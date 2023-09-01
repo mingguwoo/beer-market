@@ -12,7 +12,6 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.request.ExportP
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.request.GetProductContextQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.request.QueryProductContextOptionsQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.response.GetProductContextRespDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.response.ImportProductContextRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.response.ProductContextOptionsRespDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,8 +36,6 @@ public class ProductContextController implements PlmProductContextClient {
     private final GetProductContextQuery getProductContextQuery;
     private final ExportProductContextQuery exportProductContextQuery;
     private final QueryProductContextOptionsQuery queryProductContextOptionsQuery;
-    private final ImportProductContextTask importProductContextTask;
-
     @Override
     @NeedAuthorization
     @NotLogResult
@@ -58,12 +55,6 @@ public class ProductContextController implements PlmProductContextClient {
     @PostMapping("productContext/exportProductContext")
     public void exportProductContext(@Valid @RequestBody ExportProductContextQry qry, HttpServletResponse response){
         exportProductContextQuery.execute(qry,response);
-    }
-
-    @NotLogResult
-    @PostMapping("/productContext/importProductContext")
-    public ResultInfo<ImportProductContextRespDto> importProductContext(@RequestPart("file") MultipartFile file) {
-        return ResultInfo.success(importProductContextTask.execute(file));
     }
 
 }

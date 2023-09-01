@@ -1,13 +1,12 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.facade;
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.nio.bom.share.utils.FeignInvokeUtils;
 import com.nio.bom.share.utils.GsonUtils;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.ProductContextFacade;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.event.SyncProductContextEvent;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.common.warn.ConfigurationTo3deWarnSender;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.facade.common.AbstractEnoviaFacade;
 import com.nio.ngfs.plm.bom.configuration.remote.PlmEnoviaClient;
-import com.nio.ngfs.plm.bom.configuration.remote.dto.common.PlmEnoviaResult;
 import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.ProductContextFeatureDto;
 import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.ProductContextOptionDto;
 import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.SyncProductContextModelFeatureDto;
@@ -17,9 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
 
 /**
  * @author bill.wang

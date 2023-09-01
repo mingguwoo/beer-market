@@ -62,11 +62,11 @@ public class ProductContextApplicationServiceImpl implements ProductContextAppli
         Set<ProductContextAggr> existProductContextSet = new HashSet<>();
         //更新
         //先处理其他的
-        ProductContextFeatureFactory.createProductContextFeatureList(productContextFeatureList,featureList,featureOptionMap,modelCode,addProductContextFeatureAggrList);
-        ProductContextFactory.createProductContextList(productContextList,featureList,oxoListQry,addProductContextAggrList,removeProductContextAggrList,existProductContextSet);
+        ProductContextFeatureFactory.createProductContextFeatureList(productContextFeatureList,featureList,featureOptionMap,modelCode,addProductContextFeatureAggrList,owner);
+        ProductContextFactory.createProductContextList(productContextList,featureList,oxoListQry,addProductContextAggrList,removeProductContextAggrList,existProductContextSet,owner);
         //单独处理AF00
-        ProductContextFeatureFactory.createModelYearProductContextFeature(productContextFeatureList,featureModelYearAggr,modelCode,modelYearMap,addProductContextFeatureAggrList);
-        ProductContextFactory.createModelYearProductContext(modelCode,modelYearList,modelYearMap,addProductContextAggrList,removeProductContextAggrList,existProductContextSet);
+        ProductContextFeatureFactory.createModelYearProductContextFeature(productContextFeatureList,featureModelYearAggr,modelCode,modelYearMap,addProductContextFeatureAggrList,owner);
+        ProductContextFactory.createModelYearProductContext(modelCode,modelYearList,modelYearMap,addProductContextAggrList,removeProductContextAggrList,existProductContextSet,owner);
         //去重
         addProductContextFeatureAggrList = addProductContextFeatureAggrList.stream().distinct().toList();
         addProductContextAggrList = addProductContextAggrList.stream().distinct().toList();
@@ -75,8 +75,8 @@ public class ProductContextApplicationServiceImpl implements ProductContextAppli
         if (!addProductContextAggrList.isEmpty() || !addProductContextFeatureAggrList.isEmpty() || !removeProductContextAggrList.isEmpty()){
             saveProductContextToDb(addProductContextAggrList,addProductContextFeatureAggrList,removeProductContextAggrList);
             //3de同步
-            if (!addProductContextAggrList.isEmpty()){
-                eventPublisher.publish(new SyncProductContextEvent(addProductContextAggrList));
+            if (!addProductContextAggrList.isEmpty() || !addProductContextFeatureAggrList.isEmpty()){
+               eventPublisher.publish(new SyncProductContextEvent(addProductContextAggrList,addProductContextFeatureAggrList));
             }
         }
     }

@@ -10,6 +10,7 @@ import com.nio.ngfs.plm.bom.configuration.remote.FeishuIntegrationClient;
 import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.*;
 import com.nio.ngfs.plm.bom.configuration.remote.dto.feature.PlmFeatureOptionSyncDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -25,6 +26,7 @@ import static com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstant
  * @date 2023/8/2
  */
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class ConfigurationTo3deWarnSender {
 

@@ -22,7 +22,7 @@ public class ProductContextFeatureFactory {
      * @param modelCode
      * @return
      */
-    public static void createProductContextFeatureList(List<ProductContextFeatureAggr> productContextFeatureList,List<OxoRowsQry> featureList, Map<OxoRowsQry,List<OxoRowsQry>> featureOptionMap, String modelCode,List<ProductContextFeatureAggr> addProductContextFeatureAggrList){
+    public static void createProductContextFeatureList(List<ProductContextFeatureAggr> productContextFeatureList,List<OxoRowsQry> featureList, Map<OxoRowsQry,List<OxoRowsQry>> featureOptionMap, String modelCode,List<ProductContextFeatureAggr> addProductContextFeatureAggrList,String owner){
         Set<ProductContextFeatureAggr> existFeatureSet = new HashSet<>();
         //先记录已有行
         if (Objects.nonNull(productContextFeatureList)){
@@ -32,20 +32,26 @@ public class ProductContextFeatureFactory {
         }
         featureList.forEach(feature->{
             //如果不是ad00下的且不存在
+                //feature
             if (!Objects.equals(feature.getFeatureCode().substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO),ConfigConstants.FEATURE_CODE_AF00.substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO))){
                 ProductContextFeatureAggr productContextFeatureAggr = new ProductContextFeatureAggr();
                 productContextFeatureAggr.setModelCode(modelCode);
                 productContextFeatureAggr.setFeatureCode(feature.getFeatureCode());
                 productContextFeatureAggr.setType(ProductContextFeatureEnum.FEATURE.getType());
                 if (!existFeatureSet.contains(productContextFeatureAggr)) {
+                    productContextFeatureAggr.setUpdateUser(owner);
+                    productContextFeatureAggr.setCreateUser(owner);
                     addProductContextFeatureAggrList.add(productContextFeatureAggr);
                 }
+                //option
                 featureOptionMap.get(feature).forEach(option->{
                     ProductContextFeatureAggr aggr = new ProductContextFeatureAggr();
                     aggr.setModelCode(modelCode);
                     aggr.setFeatureCode(option.getFeatureCode());
                     aggr.setType(ProductContextFeatureEnum.OPTION.getType());
                     if (!existFeatureSet.contains(aggr)){
+                        aggr.setCreateUser(owner);
+                        aggr.setUpdateUser(owner);
                         addProductContextFeatureAggrList.add(aggr);
                     }
                 });
@@ -59,8 +65,9 @@ public class ProductContextFeatureFactory {
      * @param featureModelYearAggr
      * @param modelCode
      * @param modelYearMap
+     * @param owner
      */
-    public static void createModelYearProductContextFeature(List<ProductContextFeatureAggr> productContextFeatureAggrList, FeatureAggr featureModelYearAggr,String modelCode,Map<String,String> modelYearMap,List<ProductContextFeatureAggr> addProductContextFeatureAggrList){
+    public static void createModelYearProductContextFeature(List<ProductContextFeatureAggr> productContextFeatureAggrList, FeatureAggr featureModelYearAggr,String modelCode,Map<String,String> modelYearMap,List<ProductContextFeatureAggr> addProductContextFeatureAggrList,String owner){
         List<FeatureAggr> optionAggrList = featureModelYearAggr.getChildrenList();
         Set<ProductContextFeatureAggr> existModelYearSet = new HashSet<>();
         //记录原有所有modelYear相关行
@@ -77,6 +84,8 @@ public class ProductContextFeatureFactory {
         productContextFeatureAggr.setFeatureCode(featureModelYearAggr.getFeatureCode());
         productContextFeatureAggr.setType(ProductContextFeatureEnum.FEATURE.getType());
         if (!existModelYearSet.contains(productContextFeatureAggr)){
+            productContextFeatureAggr.setUpdateUser(owner);
+            productContextFeatureAggr.setCreateUser(owner);
             addProductContextFeatureAggrList.add(productContextFeatureAggr);
         }
         //再添加AF00下面的option
@@ -86,6 +95,8 @@ public class ProductContextFeatureFactory {
             aggr.setFeatureCode(option.getFeatureCode());
             aggr.setType(ProductContextFeatureEnum.OPTION.getType());
             if (!existModelYearSet.contains(productContextFeatureAggr)) {
+                aggr.setCreateUser(owner);
+                aggr.setUpdateUser(owner);
                 addProductContextFeatureAggrList.add(aggr);
             }
             //记录modelYear的displayName与optionCode的对应关系，用于后续打勾

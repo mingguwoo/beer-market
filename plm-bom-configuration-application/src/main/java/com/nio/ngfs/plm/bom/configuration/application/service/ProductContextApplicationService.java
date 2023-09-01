@@ -14,7 +14,8 @@ public interface ProductContextApplicationService {
 
     /**
      * 同步oxo，生成product context
-     * @param oxoSnapShot
+     * @param oxoListQry
+     * @param owner
      */
     void addProductContext(OxoListQry oxoListQry, String owner);
 

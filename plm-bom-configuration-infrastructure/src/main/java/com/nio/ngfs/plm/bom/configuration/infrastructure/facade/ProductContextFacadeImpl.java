@@ -34,6 +34,7 @@ public class ProductContextFacadeImpl extends AbstractEnoviaFacade implements Pr
         List<SyncProductContextModelFeatureDto> modelFeatureList = new ArrayList<>();
         SyncProductContextModelFeatureOptionDto modelFeatureOption = new SyncProductContextModelFeatureOptionDto();
         buildSyncData(event,modelFeatureList,modelFeatureOption);
+
         modelFeatureList.forEach(modelFeature->{
             log.info("ProductContextFacade syncProductContextModelFeatureToEnovia data={}", GsonUtils.toJson(modelFeature));
             invokeEnovia(plmEnoviaClient::syncProductContextModelFeature,modelFeature,"PlmEnoviaClient.syncProductContextModelFeature",(response,e)->{
@@ -52,37 +53,46 @@ public class ProductContextFacadeImpl extends AbstractEnoviaFacade implements Pr
         Map<String, ProductContextFeatureDto> codeFeatureMap = new HashMap<>();
         List<ProductContextFeatureDto> featureList = new ArrayList<>();
         modelFeatureOption.setFeature(featureList);
+        if (event.getProductContextAggrlist().isEmpty()){
+            modelFeatureOption.setModel(event.getProductContextFeatureAggrList().get(0).getModelCode());
+        }
         modelFeatureOption.setModel(event.getProductContextAggrlist().get(0).getModelCode());
-        event.getProductContextAggrlist().forEach(aggr->{
-            //如果没有该feature，需要新建feature记录和featureOption中的featureList
-            if (!existFeature.contains(aggr.getFeatureCode())){
-                existFeature.add(aggr.getFeatureCode());
+        if (!event.getProductContextFeatureAggrList().isEmpty()){
+            event.getProductContextFeatureAggrList().forEach(aggr->{
                 //新建Feature行
                 SyncProductContextModelFeatureDto dto = new SyncProductContextModelFeatureDto();
                 dto.setFeatureCode(aggr.getFeatureCode());
                 List<String> modelCodeList = CollectionUtil.newArrayList(aggr.getModelCode());
                 dto.setModelCodeList(modelCodeList);
                 modelFeatureList.add(dto);
-                //新建打点中的Feature记录
-                ProductContextFeatureDto featureDto = new ProductContextFeatureDto();
-                List<ProductContextOptionDto> optionList = new ArrayList<>();
-                ProductContextOptionDto optionDto = new ProductContextOptionDto();
-                optionDto.setOptionCode(aggr.getOptionCode());
-                optionList.add(optionDto);
-                featureDto.setOption(optionList);
-                featureDto.setFeatureCode(aggr.getFeatureCode());
-                codeFeatureMap.put(aggr.getFeatureCode(),featureDto);
-                modelFeatureOption.getFeature().add(featureDto);
-                existFeature.add(aggr.getFeatureCode());
+            });
+        }
+        if (!event.getProductContextAggrlist().isEmpty()){
+            event.getProductContextAggrlist().forEach(aggr->{
+                //如果没有该feature，需要新建feature记录和featureOption中的featureList
+                if (!existFeature.contains(aggr.getFeatureCode())){
+                    existFeature.add(aggr.getFeatureCode());
+                    //新建打点中的Feature记录
+                    ProductContextFeatureDto featureDto = new ProductContextFeatureDto();
+                    List<ProductContextOptionDto> optionList = new ArrayList<>();
+                    ProductContextOptionDto optionDto = new ProductContextOptionDto();
+                    optionDto.setOptionCode(aggr.getOptionCode());
+                    optionList.add(optionDto);
+                    featureDto.setOption(optionList);
+                    featureDto.setFeatureCode(aggr.getFeatureCode());
+                    codeFeatureMap.put(aggr.getFeatureCode(),featureDto);
+                    modelFeatureOption.getFeature().add(featureDto);
+                    existFeature.add(aggr.getFeatureCode());
 
-            }
-            else{
-                ProductContextOptionDto dto = new ProductContextOptionDto();
-                dto.setOptionCode(aggr.getOptionCode());
-                codeFeatureMap.get(aggr.getFeatureCode()).getOption().add(dto);
-            }
-
-        });
+                }
+                else{
+                    //option记录
+                    ProductContextOptionDto dto = new ProductContextOptionDto();
+                    dto.setOptionCode(aggr.getOptionCode());
+                    codeFeatureMap.get(aggr.getFeatureCode()).getOption().add(dto);
+                }
+            });
+        }
     }
 
 }

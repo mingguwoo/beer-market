@@ -40,7 +40,7 @@ public class ProductContextController implements PlmProductContextClient {
     private final ImportProductContextTask importProductContextTask;
 
     @Override
-    @NeedAuthorization
+//    @NeedAuthorization
     @NotLogResult
     public ResultInfo<GetProductContextRespDto> getProductContext(@Valid @RequestBody GetProductContextQry qry) {
         return ResultInfo.success(getProductContextQuery.execute(qry));

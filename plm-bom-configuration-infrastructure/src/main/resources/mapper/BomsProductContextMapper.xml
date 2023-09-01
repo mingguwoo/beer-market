@@ -8,16 +8,19 @@
         model_code,
         model_year,
         option_code,
-        feature_code
+        feature_code,
+        create_user,
+        update_user
         )
         VALUES
         <foreach collection="entityList" item = "entity" index = "index" separator=",">
-            (#{entity.modelCode},#{entity.modelYear},#{entity.optionCode},#{entity.featureCode})
+            (#{entity.modelCode},#{entity.modelYear},#{entity.optionCode},#{entity.featureCode},#{entity.createUser},#{entity.updateUser})
         </foreach>
         ON DUPLICATE KEY UPDATE
         <trim prefix="" suffixOverrides=",">
             <foreach collection="entityList" item = "entity" separator=",">
-                    del_flag= 0
+                    del_flag = 0,
+                    update_user = #{entity.updateUser}
             </foreach>
         </trim>
     </insert>

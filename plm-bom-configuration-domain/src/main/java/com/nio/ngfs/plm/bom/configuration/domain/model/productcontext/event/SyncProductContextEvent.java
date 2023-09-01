@@ -2,6 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.event;
 
 import com.nio.ngfs.plm.bom.configuration.domain.event.DomainEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.ProductContextAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature.ProductContextFeatureAggr;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,8 +20,6 @@ public class SyncProductContextEvent extends DomainEvent {
 
     private List<ProductContextAggr> productContextAggrlist;
 
-//    private List<SyncProductContextModelFeatureDto> modelFeatureList;
-//
-//    private SyncProductContextModelFeatureOptionDto featureOptionList;
+    private List<ProductContextFeatureAggr> productContextFeatureAggrList;
 
 }

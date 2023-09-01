@@ -120,7 +120,6 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
             //记录下该点对应的列id
             pointColumnIdMap.put(point, (long) modelModelYearList.indexOf(point.getModelCode()+point.getModelYear()));
         });
-        Set<Long> rowIdSet = new HashSet<>();
         Set<Long> columnIdSet = new HashSet<>();
         pointList.forEach(point->{
             ProductContextColumnDto productContextColumnDto = new ProductContextColumnDto();
@@ -134,15 +133,10 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
             getProductContextRespDto.getProductContextPointDtoList().add(productContextPointDto);
         });
         getProductContextRespDto.setProductContextColumnDtoList(getProductContextRespDto.getProductContextColumnDtoList().stream().distinct().toList());
-        //筛选掉没被选中的行列
+        //筛选掉没被选中的列
         getProductContextRespDto.getProductContextPointDtoList().forEach(point->{
-            rowIdSet.add(point.getRowId());
             columnIdSet.add(point.getColumnId());
         });
-        getProductContextRespDto.setProductContextFeatureRowDtoList(getProductContextRespDto.getProductContextFeatureRowDtoList().stream().filter(featureRow->{
-            featureRow.setOptionRowList(featureRow.getOptionRowList().stream().filter(option->rowIdSet.contains(option.getRowId())).toList());
-            return featureRow.getOptionRowList().size() > 0;
-        }).toList());
         getProductContextRespDto.setProductContextColumnDtoList(getProductContextRespDto.getProductContextColumnDtoList().stream().filter(column-> columnIdSet.contains(column.getColumnId())).toList());
         sortProductContextRow(getProductContextRespDto,groupRecordMap);
         return getProductContextRespDto;

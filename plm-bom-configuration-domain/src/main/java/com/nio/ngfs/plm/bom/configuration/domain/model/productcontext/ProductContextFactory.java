@@ -25,7 +25,7 @@ public class ProductContextFactory {
      * @param oxoListQry
      * @return
      */
-    public static void createProductContextList(List<ProductContextAggr> productContextList,List<OxoRowsQry> featureList, OxoListQry oxoListQry,List<ProductContextAggr> addProductContextAggrList, List<ProductContextAggr> removeProductContextAggrList,Set<ProductContextAggr> existProductContextSet){
+    public static void createProductContextList(List<ProductContextAggr> productContextList,List<OxoRowsQry> featureList, OxoListQry oxoListQry,List<ProductContextAggr> addProductContextAggrList, List<ProductContextAggr> removeProductContextAggrList,Set<ProductContextAggr> existProductContextSet,String owner){
         Map<Long,OxoRowsQry> rowMap = new HashMap<>();
         Map<Long,OxoHeadQry> headMap = new HashMap<>();
         Map<String,String> optionFeatureMap = new HashMap<>();
@@ -53,6 +53,8 @@ public class ProductContextFactory {
         newProductContextAggrList.forEach(aggr->{
             //原本没有，现在有了，要新增
             if (!existProductContextSet.contains(aggr)){
+                aggr.setCreateUser(owner);
+                aggr.setUpdateUser(owner);
                 addProductContextAggrList.add(aggr);
             }
         });
@@ -72,8 +74,9 @@ public class ProductContextFactory {
      * @param modelYearList
      * @param modelYearMap
      * @param existProductContextSet
+     * @param owner
      */
-    public static void createModelYearProductContext(String modelCode,List<String> modelYearList,Map<String,String> modelYearMap,List<ProductContextAggr> addProductContextAggrList, List<ProductContextAggr> removeProductContextAggrList,Set<ProductContextAggr> existProductContextSet){
+    public static void createModelYearProductContext(String modelCode,List<String> modelYearList,Map<String,String> modelYearMap,List<ProductContextAggr> addProductContextAggrList, List<ProductContextAggr> removeProductContextAggrList,Set<ProductContextAggr> existProductContextSet,String owner){
         List<ProductContextAggr> newModelYearList = new ArrayList<>();
         modelYearList.forEach(modelYear->{
             ProductContextAggr productContextAggr = new ProductContextAggr();
@@ -88,6 +91,8 @@ public class ProductContextFactory {
         newModelYearList.forEach(aggr->{
             //原本没有，现在有，要新增
             if (!existProductContextSet.contains(aggr)){
+                aggr.setCreateUser(owner);
+                aggr.setUpdateUser(owner);
                 addProductContextAggrList.add(aggr);
             }
         });

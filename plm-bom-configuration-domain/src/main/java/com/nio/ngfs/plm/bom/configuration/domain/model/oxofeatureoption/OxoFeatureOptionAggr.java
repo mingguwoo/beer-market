@@ -130,4 +130,11 @@ public class OxoFeatureOptionAggr extends AbstractDo implements AggrRoot<Long>, 
         }
     }
 
+    /**
+     * 是否软删除
+     */
+    public boolean isSoftDelete() {
+        return Objects.equals(softDelete, CommonConstants.DEL_FLAG);
+    }
+
 }

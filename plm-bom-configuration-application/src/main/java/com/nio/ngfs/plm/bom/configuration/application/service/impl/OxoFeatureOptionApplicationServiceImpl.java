@@ -129,8 +129,9 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
         Map<String, String> optionFeatureCodeMap = LambdaUtil.toKeyValueMap(featureAggrList, FeatureAggr::getFeatureCode, FeatureAggr::getParentFeatureCode);
         // 车型
         String modelCode = featureOptionAggrList.get(0).getModelCode();
-        // 查询Option行列表
-        List<OxoFeatureOptionAggr> optionAggrList = oxoFeatureOptionRepository.queryByModelAndFeatureCodeList(modelCode, optionCodeList);
+        // 查询Option行列表（过滤软删除的Option行）
+        List<OxoFeatureOptionAggr> optionAggrList = oxoFeatureOptionRepository.queryByModelAndFeatureCodeList(modelCode, optionCodeList)
+                .stream().filter(i -> !i.isSoftDelete()).toList();
         Map<String, List<OxoFeatureOptionAggr>> optionAggrByFeatureMap = LambdaUtil.groupBy(optionAggrList, i -> optionFeatureCodeMap.get(i.getFeatureCode()));
         featureOptionAggrList.forEach(featureOptionAggr -> {
             if (!featureOptionAggr.isFeature()) {

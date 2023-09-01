@@ -66,7 +66,7 @@ public enum ConfigErrorCode implements ErrorCode {
      * OXO
      */
     OXO_VERSION_SNAPSHOT_NOT_EXIST(82000, "OXO Version Snapshot Not Exist!"),
-    OXO_FEATURE_OPTION_CAN_NOT_DELETE(82001, "The Feature/Option Can Not Delete!"),
+    OXO_FEATURE_OPTION_CAN_NOT_DELETE(82001, "The Feature/Option Is Already Deleted, Can Not Delete It Again!"),
     AF_ERROR(82002, "Please Add AF00 In OXO!"),
     OXO_RENEW_SORT_FEATURE_NOT_THE_SAME_GROUP(82003, "The Select Features Not All In The Same Group And Catalog!"),
     OXO_RENEW_SORT_OPTION_NOT_THE_SAME_GROUP(82004, "The Select Options Not All In The Same Feature!"),

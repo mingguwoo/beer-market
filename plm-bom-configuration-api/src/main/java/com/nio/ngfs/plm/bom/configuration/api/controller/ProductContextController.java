@@ -6,7 +6,6 @@ import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.application.query.productcontext.ExportProductContextQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.productcontext.GetProductContextQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.productcontext.QueryProductContextOptionsQuery;
-import com.nio.ngfs.plm.bom.configuration.application.task.productContext.ImportProductContextTask;
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmProductContextClient;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.request.ExportProductContextQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.request.GetProductContextQry;
@@ -17,9 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;

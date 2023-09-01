@@ -1,12 +1,10 @@
 package com.nio.ngfs.plm.bom.configuration.application.service.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
 import com.nio.bom.share.constants.CommonConstants;
 import com.nio.ngfs.plm.bom.configuration.application.service.ProductContextApplicationService;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.domain.event.EventPublisher;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.ModelFacade;
-import com.nio.ngfs.plm.bom.configuration.domain.facade.ProductContextFacade;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.ProductContextAggr;
@@ -17,10 +15,6 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature.Pro
 import com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature.ProductContextFeatureFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature.ProductContextFeatureRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.service.feature.FeatureDomainService;
-import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.ProductContextFeatureDto;
-import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.ProductContextOptionDto;
-import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.SyncProductContextModelFeatureDto;
-import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.SyncProductContextModelFeatureOptionDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoRowsQry;
 import lombok.RequiredArgsConstructor;

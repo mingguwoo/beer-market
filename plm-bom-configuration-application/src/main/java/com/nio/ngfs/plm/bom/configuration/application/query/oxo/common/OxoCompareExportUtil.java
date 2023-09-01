@@ -6,6 +6,7 @@ import com.google.common.collect.Maps;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.OxoBasicVehicleDto;
 import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.enums.CompareChangeTypeEnum;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.enums.OxoOptionPackageTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoCompareQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoEditCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
@@ -155,11 +156,11 @@ public class OxoCompareExportUtil {
                             if (!Objects.isNull(compareIpdOXOOutput)) {
                                 String compareIpdPackageNo = compareIpdOXOOutput.getPackageCode();
                                 if (StringUtils.isNotBlank(compareIpdPackageNo)) {
-                                    if ("Unavailable".equals(compareIpdPackageNo)) {
+                                    if (StringUtils.equals(OxoOptionPackageTypeEnum.UNAVAILABLE.getType(),compareIpdPackageNo)) {
                                         packageCellValue.append("->");
-                                    } else if ("Default".equals(compareIpdPackageNo)) {
+                                    } else if (StringUtils.equals(OxoOptionPackageTypeEnum.DEFALUT.getType(), compareIpdPackageNo)) {
                                         packageCellValue.append("●>");
-                                    } else if ("Available".equals(compareIpdPackageNo)) {
+                                    } else if (StringUtils.equals(OxoOptionPackageTypeEnum.AVAILABLE.getType(), compareIpdPackageNo)) {
                                         packageCellValue.append("○>");
                                     } else if (StringUtils.isNotBlank(compareIpdPackageNo)) {
                                         packageCellValue.append(compareIpdPackageNo + ">");
@@ -167,11 +168,11 @@ public class OxoCompareExportUtil {
                                 }
                             }
                             //设置打点属性值
-                            if ("Unavailable".equals(packageCode)) {
+                            if (StringUtils.equals(OxoOptionPackageTypeEnum.UNAVAILABLE.getType(),packageCode)) {
                                 cell.setCellValue(packageCellValue.append("-").toString());
-                            } else if ("Default".equals(packageCode)) {
+                            } else if (StringUtils.equals(OxoOptionPackageTypeEnum.DEFALUT.getType(),packageCode)) {
                                 cell.setCellValue(packageCellValue.append("●").toString());
-                            } else if ("Available".equals(packageCode)) {
+                            } else if (StringUtils.equals(OxoOptionPackageTypeEnum.AVAILABLE.getType(), packageCode)) {
                                 cell.setCellValue(packageCellValue.append("○").toString());
                             } else if (StringUtils.isNotBlank(packageCode)) {
                                 cell.setCellValue(packageCellValue.append(packageCode).toString());

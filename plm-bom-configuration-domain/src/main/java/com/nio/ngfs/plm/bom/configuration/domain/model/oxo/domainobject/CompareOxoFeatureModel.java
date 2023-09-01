@@ -7,7 +7,7 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoRowsQry;
 import lombok.Data;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Data
@@ -24,26 +24,26 @@ public class CompareOxoFeatureModel {
     /**
      * key=version+code
      */
-    private Map<String, OxoRowsQry> featureMap = new HashMap<>();
+    private Map<String, OxoRowsQry> featureMap = new LinkedHashMap<>();
     /**
      * key=version+featureCode+optionCode
      */
-    private Map<String, OxoRowsQry> optionMap = new HashMap<>();
+    private Map<String, OxoRowsQry> optionMap = new LinkedHashMap<>();
     /**
      * key=version+featureCode+optionCode+salesOptionCode
      */
-    private Map<String, OxoEditCmd> oxoMap = new HashMap<>();
+    private Map<String, OxoEditCmd> oxoMap = new LinkedHashMap<>();
     /**
      * key=version+modelYear+featureCode+optionCode
      */
-    private Map<String, OxoHeadQry.RegionInfo> modelYearFeatureOptionMap = new HashMap<>();
+    private Map<String, OxoHeadQry.RegionInfo> modelYearFeatureOptionMap = new LinkedHashMap<>();
     /**
      * key=version+modelYear+featureCode+optionCode+driveHardOptionCode
      */
-    private Map<String, OxoHeadQry.DriveHandInfo> driverOptionInfoMap = new HashMap<>();
+    private Map<String, OxoHeadQry.DriveHandInfo> driverOptionInfoMap = new LinkedHashMap<>();
     /**
      * key=version+modelYear+featureCode+optionCode+driveHardOptionCode+salesOptionCode
      */
-    private Map<String, OxoHeadQry.SalesVersionInfo> salesOptionInfoMap = new HashMap<>();
+    private Map<String, OxoHeadQry.SalesVersionInfo> salesOptionInfoMap = new LinkedHashMap<>();
 
 }

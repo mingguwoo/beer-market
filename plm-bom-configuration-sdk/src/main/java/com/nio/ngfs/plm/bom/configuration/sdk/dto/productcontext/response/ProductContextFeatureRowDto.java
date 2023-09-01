@@ -23,7 +23,6 @@ public class ProductContextFeatureRowDto implements Dto {
 
     private List<ProductContextOptionRowDto> optionRowList;
 
-
     public ProductContextFeatureRowDto() {
         optionRowList = new ArrayList<>();
     }

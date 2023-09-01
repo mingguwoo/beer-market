@@ -7,11 +7,10 @@ import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncAddPcDto
 import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncDeletePcDto;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncUpdatePcDto;
 import com.nio.ngfs.plm.bom.configuration.remote.FeishuIntegrationClient;
-import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.PlmDeletePcDto;
-import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.PlmModifyPcDto;
-import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.PlmSyncProductConfigurationDto;
+import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.*;
 import com.nio.ngfs.plm.bom.configuration.remote.dto.feature.PlmFeatureOptionSyncDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -27,12 +26,14 @@ import static com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstant
  * @date 2023/8/2
  */
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class ConfigurationTo3deWarnSender {
 
     private static final String TITLE_FORMAT = "配置管理同步3DE告警（%s）";
     private static final String FEATURE_LIBRARY = "Feature Library";
     private static final String PRODUCT_CONFIGURATION = "Product Configuration";
+    private static final String PRODUCT_CONTEXT = "Product Context";
     private static final String CONTENT_TEMPLATE = """
             模块: %s\r
             失败信息: %s\r
@@ -46,6 +47,8 @@ public class ConfigurationTo3deWarnSender {
     private String featureAts;
     @Value("${warn.3de.productConfig.ats:}")
     private String productConfigAts;
+    @Value("${warn.3de.productContext.ats:}")
+    private String productContextAts;
 
     private final FeishuIntegrationClient feishuIntegrationClient;
 
@@ -70,6 +73,13 @@ public class ConfigurationTo3deWarnSender {
         return Splitter.on(",").omitEmptyStrings().trimResults().splitToList(productConfigAts);
     }
 
+    /**
+     * 获取Product Context告警人列表
+     * @return
+     */
+    private List<String> getProductContextAtList() {
+        return Splitter.on(",").omitEmptyStrings().trimResults().splitToList(productContextAts);
+    }
     /**
      * 发送同步Feature/Option告警
      */
@@ -101,6 +111,25 @@ public class ConfigurationTo3deWarnSender {
                 String.format("Model/Model Year %s Delete Base PC %s Fail!", dto.getModel() + " " + dto.getModelYear(), syncDto.getPcId()));
     }
 
+    /**
+     * 发送同步Prodcut Context Model Feature告警
+     * @param dto
+     * @param errorMsg
+     */
+    public void sendSyncProductContextFeatureModelWarn(SyncProductContextModelFeatureDto dto, String errorMsg) {
+        sendWarnMessage(PRODUCT_CONTEXT, dto, errorMsg, getProductContextAtList(),
+                String.format("Model %s Sync Code %s Fail!", dto.getModelCodeList().get(0), dto.getFeatureCode()));
+    }
+
+    /**
+     * 发送同步Prodcut Context Model Feature Option告警
+     * @param dto
+     * @param errorMsg
+     */
+    public void sendSyncProductContextModelFeatureOptionWarn(SyncProductContextModelFeatureOptionDto dto, String errorMsg) {
+        sendWarnMessage(PRODUCT_CONTEXT,dto,errorMsg,getProductContextAtList(),
+                String.format("Model % Sync Code %s Fail!", dto.getModel(),dto.getFeature().get(0).getOption().get(0).getOptionCode()));
+    }
     private <Req> void sendWarnMessage(String module, Req request, String errorMsg, List<String> atList, String failMsg) {
         String message = FeishuPostMessageBuilder.buildPostMessage(
                 getTitle(),

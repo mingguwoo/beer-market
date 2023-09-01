@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("boms_product_context")
-public class BomsProductContextEntity extends BaseEntity {
+public class BomsProductContextEntity extends BaseEntity{
 
     private String modelCode;
 
@@ -24,4 +24,5 @@ public class BomsProductContextEntity extends BaseEntity {
     private String optionCode;
 
     private String featureCode;
+
 }

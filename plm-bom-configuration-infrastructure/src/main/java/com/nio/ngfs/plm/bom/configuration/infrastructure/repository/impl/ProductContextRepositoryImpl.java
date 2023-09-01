@@ -21,13 +21,19 @@ public class ProductContextRepositoryImpl implements ProductContextRepository {
     private final BomsProductContextDao bomsProductContextDao;
     private final ProductContextConverter productContextConverter;
 
+    @Override
     public List<ProductContextAggr> queryByModelCode(String modelCode){
         return productContextConverter.convertEntityListToDoList(bomsProductContextDao.queryByModelCode(modelCode));
     }
 
     @Override
-    public void saveOrUpdateBatch(List<ProductContextAggr> productContextAggrs) {
-        bomsProductContextDao.saveOrUpdateBatch(productContextConverter.convertDoListToEntityList(productContextAggrs));
+    public void addOrUpdateBatch(List<ProductContextAggr> productContextAggrList) {
+        bomsProductContextDao.addOrUpdateBatch(productContextConverter.convertDoListToEntityList(productContextAggrList));
+    }
+
+    @Override
+    public void removeBatchByIds(List<ProductContextAggr> productContextAggrList) {
+        bomsProductContextDao.removeBatchByIds(productContextAggrList.stream().map(aggr->aggr.getId()).toList());
     }
 
     @Override

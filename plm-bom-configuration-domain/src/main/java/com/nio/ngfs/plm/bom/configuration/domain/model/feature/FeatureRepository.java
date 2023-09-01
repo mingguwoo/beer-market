@@ -87,9 +87,4 @@ public interface FeatureRepository extends Repository<FeatureAggr, FeatureId> {
      */
     List<FeatureAggr> findFeatureLibraryNotFeatureCodes(List<String> featureCodes);
 
-    /**
-     * 获取全部group
-     * @return
-     */
-    List<FeatureAggr> getGroupList();
 }

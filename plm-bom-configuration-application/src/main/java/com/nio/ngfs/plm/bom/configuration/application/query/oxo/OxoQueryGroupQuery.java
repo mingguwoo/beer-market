@@ -31,8 +31,10 @@ public class OxoQueryGroupQuery implements Query<OxoBaseCmd,List<String>> {
         String brandName = ConfigConstants.brandName.get();
 
         String name = ConfigConstants.OXO_EMAIL_GROUP;
-        if (StringUtils.equals(brandName, BrandEnum.ALPS.name())) {
+        if (StringUtils.equalsAnyIgnoreCase(brandName, BrandEnum.ALPS.name())) {
             name = ConfigConstants.OXO_EMAIL_GROUP_ALPS;
+        }else if(StringUtils.equalsAnyIgnoreCase(brandName, BrandEnum.FY.name())){
+            name = ConfigConstants.OXO_EMAIL_GROUP_FY;
         }
 
         Map<String, String> map = matrixRuleFacade.queryMatrixRuleValuesByAbscissaOrOrdinate(new MatrixRuleQueryDto

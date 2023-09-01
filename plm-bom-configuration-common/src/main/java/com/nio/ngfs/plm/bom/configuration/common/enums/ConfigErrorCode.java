@@ -101,6 +101,9 @@ public enum ConfigErrorCode implements ErrorCode {
 
 
     VERSION_ERROR(89004, "版本{0}没有数据"),
+
+
+    OPTION_ERROR(89005,"Option {0} Is Not Consistent With Product Configuration【Model Year:{1}】!");
     ;
 
     /**

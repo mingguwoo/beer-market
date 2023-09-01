@@ -2,18 +2,17 @@ package com.nio.ngfs.plm.bom.configuration.application.service.impl;
 
 import com.nio.ngfs.plm.bom.configuration.application.service.OxoOptionPackageApplicationService;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
-import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionRepository;
-import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.enums.OxoOptionPackageTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.service.basevehicle.BaseVehicleDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoHeadQry;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -38,12 +37,22 @@ public class OxoOptionPackageApplicationServiceImpl implements OxoOptionPackageA
 
     private final BaseVehicleRepository baseVehicleRepository;
 
+
+    private List<String> optionCodes;
+
     @Override
     public void insertOxoOptionPackageDefault(List<OxoFeatureOptionAggr> oxoFeatureOptions,String modelCode,String userName) {
 
         //车型
-        List<String> optionCodes = oxoFeatureOptions.stream().filter(x -> StringUtils.equals(FeatureTypeEnum.OPTION.getType(),x.getType()))
+        List<String> optionCodes = oxoFeatureOptions.stream().filter(x ->
+                        !StringUtils.startsWithAny(x.getFeatureCode(),"AD","19","AN") &&
+                        StringUtils.equals(FeatureTypeEnum.OPTION.getType(),x.getType()))
                 .map(OxoFeatureOptionAggr::getFeatureCode).distinct().toList();
+
+        //过滤  AD00/AN00/19AA
+        if(CollectionUtils.isEmpty(optionCodes)){
+            return;
+        }
 
         //查询表头数据
         List<OxoHeadQry> oxoHeads = baseVehicleDomainService.queryByModel(modelCode,false);
@@ -59,35 +68,5 @@ public class OxoOptionPackageApplicationServiceImpl implements OxoOptionPackageA
                 entityList.stream().map(OxoFeatureOptionAggr::getId).distinct().toList(),
                 OxoOptionPackageTypeEnum.DEFALUT.getType(), brandName, userName));
 
-    }
-
-    @Override
-    public List<String> checkOxoCompleteBaseVehicle(String modelCode) {
-
-        //查询头
-        List<BaseVehicleAggr> baseVehicles=  baseVehicleRepository.queryByModelCodeAndModelYear(modelCode,null);
-
-
-        //查询行信息
-        List<OxoFeatureOptionAggr>  oxoFeatureOptions= oxoFeatureOptionRepository.queryFeatureListsByModelAndSortDelete(modelCode,null);
-
-
-        List<Long> rowIds = oxoFeatureOptions.stream().map(OxoFeatureOptionAggr::getId).distinct().toList();
-
-        List<Long> headIds = baseVehicles.stream().map(BaseVehicleAggr::getId).distinct().toList();
-
-
-        //查询打点信息
-        List<OxoOptionPackageAggr> oxoOptionPackages=  oxoOptionPackageRepository.queryByFeatureOptionIdsAndHeadIdsList(rowIds,headIds);
-
-
-        //根据modelYear
-//        Map<String,List<BaseVehicleAggr>> basicVehicles = baseVehicles.stream().collect
-//                (Collectors.toMap(BaseVehicleAggr::getModelYear, x -> x.getFeatureId().getFeatureCode()));
-
-
-
-
-        return null;
     }
 }

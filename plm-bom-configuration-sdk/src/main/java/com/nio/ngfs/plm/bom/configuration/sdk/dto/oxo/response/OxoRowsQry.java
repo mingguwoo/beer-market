@@ -30,6 +30,8 @@ public class OxoRowsQry implements Qry {
 
         private Integer isSortDelete;
 
+        private Integer sort;
+
 
         /**
          * 对比

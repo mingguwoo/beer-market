@@ -26,6 +26,7 @@ public class OxoInfoAssembler {
         qry.setComments(infoDo.getComment());
         qry.setRowId(infoDo.getId());
         qry.setIsSortDelete(infoDo.getSoftDelete());
+        qry.setSort(infoDo.getSort());
         return qry;
     }
 

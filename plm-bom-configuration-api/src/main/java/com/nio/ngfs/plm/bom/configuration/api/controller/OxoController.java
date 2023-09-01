@@ -30,7 +30,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/oxo")
-public class  OxoController {
+public class OxoController {
 
     private final OxoSnapshotCommand oxoSnapshotCommand;
     private final DeleteFeatureOptionCommand deleteFeatureOptionCommand;
@@ -40,14 +40,17 @@ public class  OxoController {
     private final OxoVersionQuery oxoVersionQuery;
 
     private final OxoInfoExportQuery oxoInfoExportQuery;
+    private final OxoCompareExportInfoQuery compareExportQuery;
 
     private final OxoInfoQuery oxoInfoQuery;
     private final OxoFeatureOptionQuery oxoFeatureOptionQuery;
     private final OxoQueryGroupQuery oxoQueryGroupQuery;
     private final OxoCompareQuery oxoCompareQuery;
     private final OxoChangeLogQuery oxoChangeLogQuery;
+
     /**
      * 根据车型查询快照版本
+     *
      * @param cmd
      * @return
      */
@@ -60,6 +63,7 @@ public class  OxoController {
 
     /**
      * 查询oxo列表
+     *
      * @param cmd
      * @return
      */
@@ -72,6 +76,7 @@ public class  OxoController {
 
     /**
      * 删除Feature/Option行
+     *
      * @param cmd 命令
      * @return 结果
      */
@@ -84,6 +89,7 @@ public class  OxoController {
 
     /**
      * 添加oxo信息
+     *
      * @param cmd
      * @return
      */
@@ -96,6 +102,7 @@ public class  OxoController {
 
     /**
      * 添加oxo 下拉code列表
+     *
      * @return
      */
     //@NeedAuthorization
@@ -107,6 +114,7 @@ public class  OxoController {
 
     /**
      * 编辑打点/Rule Check/填写备注
+     *
      * @param cmd
      * @return
      */
@@ -119,6 +127,7 @@ public class  OxoController {
 
     /**
      * 查询邮件group
+     *
      * @return
      */
     //@NeedAuthorization
@@ -130,6 +139,7 @@ public class  OxoController {
 
     /**
      * 保存快照
+     *
      * @param cmd
      * @return
      */
@@ -156,6 +166,7 @@ public class  OxoController {
 
     /**
      * 版本对比
+     *
      * @param compareCmd
      * @return
      */
@@ -166,30 +177,35 @@ public class  OxoController {
 
     /**
      * oxo 导出
+     *
      * @param cmd
      * @return
      */
     @PostMapping("/export")
-    public void export(@Valid @RequestBody OxoBaseCmd cmd,HttpServletResponse response, HttpServletRequest request) {
-        oxoInfoExportQuery.execute(cmd,request,response);
+    public void export(@Valid @RequestBody OxoBaseCmd cmd, HttpServletResponse response, HttpServletRequest request) {
+        oxoInfoExportQuery.execute(cmd, request, response);
     }
 
     /**
      * oxo 对比导出
+     *
      * @param compareCmd
      * @return
      */
-    @NeedAuthorization
+    //@NeedAuthorization
     @NotLogResult
     @PostMapping("/compareExport")
-    public void compareExport(@Valid @RequestBody OxoCompareQry compareCmd,HttpServletResponse response) {
-        //oxoDomainService.compareExport(compareCmd,response);
+    public void compareExport(@Valid @RequestBody OxoCompareQry compareCmd,
+                              HttpServletRequest request,
+                              HttpServletResponse response) {
+        compareExportQuery.execute(compareCmd, request, response);
 
 
     }
 
     /**
      * 查询changeLog
+     *
      * @param oxoBaseCmd
      * @return
      */

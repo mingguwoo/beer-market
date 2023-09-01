@@ -4,8 +4,10 @@ import com.nio.ngfs.plm.bom.configuration.application.query.productcontext.servi
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature.enums.ProductContextFeatureEnum;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsFeatureLibraryDao;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoVersionSnapshotDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureLibraryEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductContextFeatureEntity;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.comparator.ProductContextFeatureRowComparator;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.request.GetProductContextQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.response.*;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ import java.util.*;
 public class ProductContextQueryServiceImpl implements ProductContextQueryService {
 
     private final BomsFeatureLibraryDao bomsFeatureLibraryDao;
+    private final BomsOxoVersionSnapshotDao bomsOxoVersionSnapshotDao;
 
     @Override
     public GetProductContextRespDto filterAndBuildResponse(List<ProductContextDto> pointList, List<BomsProductContextFeatureEntity> rowList, GetProductContextQry qry){
@@ -38,10 +41,10 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
             pointMap.put(point,rowMap.get(point.getOptionCode()));
         });
         //筛选catalog
-        if (Objects.nonNull(qry.getCataLog())){
-            pointList = pointList.stream().filter(point-> Objects.equals(featureAggrMap.get(point.getFeatureCode()).getCatalog(),qry.getCataLog())
-                    || Objects.equals(featureAggrMap.get(point.getOptionCode()).getCatalog(),qry.getCataLog())).toList();
-            rowList = rowList.stream().filter(row->Objects.equals(featureAggrMap.get(row.getFeatureCode()).getCatalog(),qry.getCataLog())).toList();
+        if (Objects.nonNull(qry.getCatalog())){
+            pointList = pointList.stream().filter(point-> Objects.equals(featureAggrMap.get(point.getFeatureCode()).getCatalog(),qry.getCatalog())
+                    || Objects.equals(featureAggrMap.get(point.getOptionCode()).getCatalog(),qry.getCatalog())).toList();
+            rowList = rowList.stream().filter(row->Objects.equals(featureAggrMap.get(row.getFeatureCode()).getCatalog(),qry.getCatalog())).toList();
         }
         //筛选featureGroup
         if (Objects.nonNull(qry.getGroupCode()) && !qry.getGroupCode().isEmpty()){
@@ -51,7 +54,7 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
             List<BomsProductContextFeatureEntity> finalRowList = rowList;
             pointList = pointList.stream().filter(point-> finalRowList.contains(pointMap.get(point))).toList();
         }
-        //模糊搜索，筛选optionCode featureCode
+        //模糊搜索，筛选optionCode, featureCode, optionDisplayName, featureDisplayName
         if (Objects.nonNull(qry.getFeature())){
             pointList = pointList.stream().filter(point-> matchSearch(point.getOptionCode(), qry.getFeature()) ||
                     matchSearch(point.getFeatureCode(),qry.getFeature()) ||
@@ -59,7 +62,7 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
                     matchSearch(featureAggrMap.get(point.getOptionCode()).getDisplayName(),qry.getFeature())).toList();
         }
         //组装Dto
-        return buildResponseDto(pointList,rowList,featureAggrMap);
+        return buildResponseDto(pointList,rowList,featureAggrMap,groupRecordMap);
     }
 
     private boolean matchSearch(String content, String search){
@@ -73,7 +76,7 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
      * @param featureAggrMap
      * @return
      */
-    private GetProductContextRespDto buildResponseDto(List<ProductContextDto> pointList, List<BomsProductContextFeatureEntity> rowList,Map<String,BomsFeatureLibraryEntity> featureAggrMap){
+    private GetProductContextRespDto buildResponseDto(List<ProductContextDto> pointList, List<BomsProductContextFeatureEntity> rowList,Map<String,BomsFeatureLibraryEntity> featureAggrMap,Map<String,String> groupRecordMap){
         Map<String,ProductContextFeatureRowDto> featureRowDtoMap = new HashMap<>();
         GetProductContextRespDto getProductContextRespDto = new GetProductContextRespDto();
         Map<String,Long> featureCodeRowIdMap = new HashMap<>();
@@ -106,8 +109,6 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
                 featureRowDtoMap.get(parentCode).getOptionRowList().add(productContextOptionRowDto);
             }
         });
-
-
         //组装列和列行记录表
         //  先处理列id
         List<String> modelModelYearList = new ArrayList<>();
@@ -119,6 +120,7 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
             //记录下该点对应的列id
             pointColumnIdMap.put(point, (long) modelModelYearList.indexOf(point.getModelCode()+point.getModelYear()));
         });
+        Set<Long> columnIdSet = new HashSet<>();
         pointList.forEach(point->{
             ProductContextColumnDto productContextColumnDto = new ProductContextColumnDto();
             ProductContextPointDto productContextPointDto = new ProductContextPointDto();
@@ -131,9 +133,31 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
             getProductContextRespDto.getProductContextPointDtoList().add(productContextPointDto);
         });
         getProductContextRespDto.setProductContextColumnDtoList(getProductContextRespDto.getProductContextColumnDtoList().stream().distinct().toList());
+        //筛选掉没被选中的列
+        getProductContextRespDto.getProductContextPointDtoList().forEach(point->{
+            columnIdSet.add(point.getColumnId());
+        });
+        getProductContextRespDto.setProductContextColumnDtoList(getProductContextRespDto.getProductContextColumnDtoList().stream().filter(column-> columnIdSet.contains(column.getColumnId())).toList());
+        sortProductContextRow(getProductContextRespDto,groupRecordMap);
         return getProductContextRespDto;
     };
 
+    /**
+     * 对feature和option行进行排序
+     * @param productContext
+     * @param groupRecordMap
+     * @return
+     */
+    private void sortProductContextRow(GetProductContextRespDto productContext,Map<String,String> groupRecordMap){
+        ProductContextFeatureRowComparator comparator = new ProductContextFeatureRowComparator(groupRecordMap);
+        //先排option
+        productContext.setProductContextFeatureRowDtoList(productContext.getProductContextFeatureRowDtoList().stream().map(feature->{
+            feature.setOptionRowList(feature.getOptionRowList().stream().sorted(Comparator.comparing(ProductContextOptionRowDto::getFeatureCode)).toList());
+            return feature;
+        }).toList());
+        //排feature
+        productContext.setProductContextFeatureRowDtoList(productContext.getProductContextFeatureRowDtoList().stream().sorted(comparator).toList());
+    }
     /**
      * 获取所有相关的featureEntity并将optionCode与featureEntity,groupEntity对应上
      * @param pointList
@@ -172,5 +196,13 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
         });
 
         return featureAggrMap;
+    }
+
+    @Override
+    public ProductContextOptionsRespDto queryProductContextOptions() {
+        ProductContextOptionsRespDto productContextOptionsRespDto = new ProductContextOptionsRespDto();
+        productContextOptionsRespDto.setModelCode(bomsOxoVersionSnapshotDao.queryAll().stream().map(snapShot->snapShot.getModelCode()).distinct().toList());
+        productContextOptionsRespDto.setGroupCode(bomsFeatureLibraryDao.getGroupList().stream().map(group->group.getFeatureCode()).toList());
+        return productContextOptionsRespDto;
     }
 }

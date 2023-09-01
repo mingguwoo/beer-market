@@ -19,9 +19,14 @@ public interface ProductContextRepository extends Repository<ProductContextAggr,
     List<ProductContextAggr> queryByModelCode(String modelCode);
 
     /**
-     * 批量保存或更新
-     * @param productContextAggrs
+     * 批量保存
+     * @param productContextAggrList
      */
-    void saveOrUpdateBatch(List<ProductContextAggr> productContextAggrs);
+    void addOrUpdateBatch(List<ProductContextAggr> productContextAggrList);
 
+    /**
+     * 批量删除
+     * @param productContextAggrList
+     */
+    void removeBatchByIds(List<ProductContextAggr> productContextAggrList);
 }

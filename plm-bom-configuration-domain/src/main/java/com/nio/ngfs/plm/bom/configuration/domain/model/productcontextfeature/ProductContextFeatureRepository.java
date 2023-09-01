@@ -12,10 +12,10 @@ import java.util.List;
 public interface ProductContextFeatureRepository extends Repository<ProductContextFeatureAggr,Long> {
 
     /**
-     *  批量保存或更新
+     *  批量保存
      * @param productContextFeatureAggrList
      */
-    void saveOrUpdateBatch(List<ProductContextFeatureAggr> productContextFeatureAggrList);
+    void saveBatch(List<ProductContextFeatureAggr> productContextFeatureAggrList);
 
     /**
      * 根据model code查询已有行

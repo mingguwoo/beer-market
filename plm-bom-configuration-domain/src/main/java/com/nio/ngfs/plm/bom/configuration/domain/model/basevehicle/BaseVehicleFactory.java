@@ -5,7 +5,6 @@ import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.OxoBasicVehi
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.request.AddBaseVehicleCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoHeadQry;
 
-import java.util.Comparator;
 import java.util.List;
 
 
@@ -54,12 +53,13 @@ public class BaseVehicleFactory {
                         oxoBasicVehicleDto.setSalesOption(salesVersionInfo.getSalesName());
                         oxoBasicVehicleDto.setRegion(regionInfo.getRegionName());
                         oxoBasicVehicleDto.setDriverOption(driveHandInfo.getDriveHandName());
-
+                        oxoBasicVehicleDto.setId(salesVersionInfo.getHeadId());
                         oxoBasicVehicleDto.setRegionCode(regionInfo.getRegionCode());
                         oxoBasicVehicleDto.setDriverOptionCode(driveHandInfo.getDriveHandCode());
                         oxoBasicVehicleDto.setSalesOptionCode(salesVersionInfo.getSalesCode());
                         oxoBasicVehicleDto.setModelYear(modelCode + " " + oxoHeadQry.getModelYear() + " " + version);
                         oxoBasicVehicleDto.setYear(oxoHeadQry.getModelYear());
+                        oxoBasicVehicleDto.setChangeType(salesVersionInfo.getChangeType());
                         oxoBasicVehicleDtos.add(oxoBasicVehicleDto);
                     });
                 });

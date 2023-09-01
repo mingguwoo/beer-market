@@ -96,4 +96,13 @@ public interface PlmProductConfigClient {
     @PostMapping("/productConfig/getPcOptionList")
     ResultInfo<List<GetPcOptionListRespDto>> getPcOptionList(GetPcOptionListQry qry);
 
+    /**
+     * 编辑Product Config
+     *
+     * @param cmd 命令
+     * @return 响应
+     */
+    @PostMapping("/productConfig/editProductConfig")
+    ResultInfo<EditProductConfigRespDto> editProductConfig(EditProductConfigCmd cmd);
+
 }

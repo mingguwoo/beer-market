@@ -5,6 +5,7 @@ import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.application.command.productconfig.AddPcCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.productconfig.DeletePcCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.productconfig.EditPcCommand;
+import com.nio.ngfs.plm.bom.configuration.application.command.productconfig.EditProductConfigCommand;
 import com.nio.ngfs.plm.bom.configuration.application.query.productconfig.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmProductConfigClient;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.request.*;
@@ -36,6 +37,7 @@ public class ProductConfigController implements PlmProductConfigClient {
     private final ExportPcQuery exportPcQuery;
     private final QueryProductConfigQuery queryProductConfigQuery;
     private final GetPcOptionListQuery getPcOptionListQuery;
+    private final EditProductConfigCommand editProductConfigCommand;
 
     @Override
     @NotLogResult
@@ -89,6 +91,12 @@ public class ProductConfigController implements PlmProductConfigClient {
     @NotLogResult
     public ResultInfo<List<GetPcOptionListRespDto>> getPcOptionList(@Valid @RequestBody GetPcOptionListQry qry) {
         return ResultInfo.success(getPcOptionListQuery.execute(qry));
+    }
+
+    @Override
+    @NotLogResult
+    public ResultInfo<EditProductConfigRespDto> editProductConfig(@Valid @RequestBody EditProductConfigCmd cmd) {
+        return ResultInfo.success(editProductConfigCommand.execute(cmd));
     }
 
     @NotLogResult

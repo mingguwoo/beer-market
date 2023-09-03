@@ -8,7 +8,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigmodeloption.
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigmodeloption.ProductConfigModelOptionFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigmodeloption.ProductConfigModelOptionRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoVersionSnapshotDomainService;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListRespDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -37,9 +37,9 @@ public class ProductConfigModelOptionApplicationServiceImpl implements ProductCo
     public void syncFeatureOptionFromOxoRelease(OxoVersionSnapshotAggr oxoVersionSnapshotAggr) {
         // 查询Model下所有的Option行
         List<ProductConfigModelOptionAggr> modelOptionAggrList = productConfigModelOptionRepository.queryByModel(oxoVersionSnapshotAggr.getModelCode());
-        OxoListQry oxoListQry = oxoVersionSnapshotDomainService.resolveSnapShot(oxoVersionSnapshotAggr.getOxoSnapshot());
+        OxoListRespDto OxoListRespDto = oxoVersionSnapshotDomainService.resolveSnapShot(oxoVersionSnapshotAggr.getOxoSnapshot());
         // 过滤OXO Catalog为Engineering的Feature/Option
-        List<OptionSyncBo> optionSyncBoList = filterEngineeringFeatureOption(oxoListQry);
+        List<OptionSyncBo> optionSyncBoList = filterEngineeringFeatureOption(OxoListRespDto);
         // Product Config已存在的Option行
         Set<String> existOptionCodeSet = modelOptionAggrList.stream().map(ProductConfigModelOptionAggr::getOptionCode).collect(Collectors.toSet());
         List<ProductConfigModelOptionAggr> newModelOptionAggrList = optionSyncBoList.stream()
@@ -52,15 +52,15 @@ public class ProductConfigModelOptionApplicationServiceImpl implements ProductCo
     /**
      * 过滤OXO Catalog为Engineering的Feature/Option
      *
-     * @param oxoListQry OxoListQry
+     * @param OxoListRespDto OxoListRespDto
      * @return OptionSyncBo列表
      */
-    private List<OptionSyncBo> filterEngineeringFeatureOption(OxoListQry oxoListQry) {
-        if (oxoListQry == null || CollectionUtils.isEmpty(oxoListQry.getOxoRowsResps())) {
+    private List<OptionSyncBo> filterEngineeringFeatureOption(OxoListRespDto OxoListRespDto) {
+        if (OxoListRespDto == null || CollectionUtils.isEmpty(OxoListRespDto.getOxoRowsResps())) {
             return Collections.emptyList();
         }
         List<OptionSyncBo> optionSyncBoList = Lists.newArrayList();
-        oxoListQry.getOxoRowsResps().forEach(feature -> {
+        OxoListRespDto.getOxoRowsResps().forEach(feature -> {
             if (CollectionUtils.isNotEmpty(feature.getOptions())) {
                 feature.getOptions().forEach(option -> {
                     // 过滤Catalog为Engineering的Feature/Option

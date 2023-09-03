@@ -16,7 +16,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.domai
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoVersionSnapshotDomainService;
 import com.nio.ngfs.plm.bom.configuration.domain.service.productconfig.ProductConfigOptionDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoEditCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListRespDto;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -73,8 +73,8 @@ public class ProductConfigApplicationServiceImpl implements ProductConfigApplica
         if (oxoVersionSnapshotAggr == null) {
             throw new BusinessException(ConfigErrorCode.OXO_VERSION_SNAPSHOT_NOT_EXIST);
         }
-        OxoListQry oxoListQry = oxoVersionSnapshotDomainService.resolveSnapShot(oxoVersionSnapshotAggr.findOxoSnapshot());
-        return LambdaUtil.map(oxoListQry.getOxoRowsResps(), row -> {
+        OxoListRespDto OxoListRespDto = oxoVersionSnapshotDomainService.resolveSnapShot(oxoVersionSnapshotAggr.findOxoSnapshot());
+        return LambdaUtil.map(OxoListRespDto.getOxoRowsResps(), row -> {
             BasedOnBaseVehicleFeature baseVehicleFeature = new BasedOnBaseVehicleFeature();
             baseVehicleFeature.setFeatureCode(row.getFeatureCode());
             baseVehicleFeature.setOptionList(LambdaUtil.map(row.getOptions(), option -> {

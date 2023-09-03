@@ -1,7 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service.oxo;
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotAggr;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListRespDto;
 
 /**
  * @author xiaozhou.tu
@@ -35,7 +35,7 @@ public interface OxoVersionSnapshotDomainService {
     /**
      * 解析OxoSnapShot字符串
      */
-      OxoListQry resolveSnapShot(String oxoSnapShot);
+    OxoListRespDto resolveSnapShot(String oxoSnapShot);
 
 
 }

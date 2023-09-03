@@ -4,7 +4,7 @@ package com.nio.ngfs.plm.bom.configuration.application.query.oxo;
 import com.nio.ngfs.plm.bom.configuration.application.query.oxo.common.OxoExcelUtil;
 import com.nio.ngfs.plm.bom.configuration.application.service.OxoQueryApplicationService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoBaseCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListRespDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -39,7 +39,7 @@ public class OxoInfoExportQuery {
         String version = oxoBaseCmd.getVersion();
 
         //查询oxo  info数据
-        OxoListQry qry = oxoQueryApplicationService.queryOxoInfoByModelCode(modelCode, version,false);
+        OxoListRespDto qry = oxoQueryApplicationService.queryOxoInfoByModelCode(modelCode, version,false);
 
 
         //导出数据

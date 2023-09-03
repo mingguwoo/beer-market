@@ -9,7 +9,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.enums.CompareChangeTy
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.enums.OxoOptionPackageTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoCompareQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoEditCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoRowsQry;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -39,17 +39,17 @@ import java.util.stream.Collectors;
 public class OxoCompareExportUtil {
 
 
-    public static void compareExport(OxoListQry oxoListQry, OxoCompareQry compareCmd, HttpServletResponse response, HttpServletRequest request) {
+    public static void compareExport(OxoListRespDto OxoListRespDto, OxoCompareQry compareCmd, HttpServletResponse response, HttpServletRequest request) {
 
         String modelCode = compareCmd.getModelCode();
         String baseVersion = compareCmd.getBaseVersion();
         String compareVersion = compareCmd.getCompareVersion();
 
-        List<OxoBasicVehicleDto> oxoBasicVehicles = BaseVehicleFactory.buildOxoBasicVehicles(oxoListQry.getOxoHeadResps(), modelCode, "");
+        List<OxoBasicVehicleDto> oxoBasicVehicles = BaseVehicleFactory.buildOxoBasicVehicles(OxoListRespDto.getOxoHeadResps(), modelCode, "");
 
         XSSFWorkbook xssfWorkbook = buildHead(oxoBasicVehicles);
 
-        List<OxoRowsQry> dataList = oxoListQry.getOxoRowsResps();
+        List<OxoRowsQry> dataList = OxoListRespDto.getOxoRowsResps();
         AtomicInteger rowIndex = new AtomicInteger(4);
 
         //设置字体大小

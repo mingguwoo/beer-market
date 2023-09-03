@@ -5,7 +5,7 @@ import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.enums.OxoOptionPackageTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoEditCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoHeadQry;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoRowsQry;
 import org.springframework.stereotype.Component;
 
@@ -22,10 +22,10 @@ public class ProductContextFactory {
      * 初始化product context时构建product context打勾信息
      * @param productContextList
      * @param featureList
-     * @param oxoListQry
+     * @param OxoListRespDto
      * @return
      */
-    public static void createProductContextList(List<ProductContextAggr> productContextList,List<OxoRowsQry> featureList, OxoListQry oxoListQry,List<ProductContextAggr> addProductContextAggrList, List<ProductContextAggr> removeProductContextAggrList,Set<ProductContextAggr> existProductContextSet,String owner){
+    public static void createProductContextList(List<ProductContextAggr> productContextList,List<OxoRowsQry> featureList, OxoListRespDto OxoListRespDto,List<ProductContextAggr> addProductContextAggrList, List<ProductContextAggr> removeProductContextAggrList,Set<ProductContextAggr> existProductContextSet,String owner){
         Map<Long,OxoRowsQry> rowMap = new HashMap<>();
         Map<Long,OxoHeadQry> headMap = new HashMap<>();
         Map<String,String> optionFeatureMap = new HashMap<>();
@@ -37,7 +37,7 @@ public class ProductContextFactory {
                 existProductContextSet.add(aggr);
             });
         }
-        recordOxoRelationship(oxoListQry,featureList,rowMap,headMap,optionFeatureMap,pointRecord);
+        recordOxoRelationship(OxoListRespDto,featureList,rowMap,headMap,optionFeatureMap,pointRecord);
         pointRecord.forEach(point-> {
                     //将AF00以外的所有信息打勾
                 if (!Objects.equals(rowMap.get(point.getRowId()).getFeatureCode().substring(CommonConstants.INT_ZERO, CommonConstants.INT_TWO), ConfigConstants.FEATURE_CODE_AF00.substring(CommonConstants.INT_ZERO, CommonConstants.INT_TWO))) {
@@ -108,16 +108,16 @@ public class ProductContextFactory {
 
     /**
      * 记录oxo中各行各列的关系
-     * @param oxoListQry
+     * @param OxoListRespDto
      * @param featureList
      * @param rowMap
      * @param headMap
      * @param optionFeatureMap
      * @param pointRecord
      */
-    private static void recordOxoRelationship(OxoListQry oxoListQry,List<OxoRowsQry> featureList,Map<Long,OxoRowsQry> rowMap,Map<Long,OxoHeadQry> headMap,Map<String,String> optionFeatureMap,List<OxoEditCmd> pointRecord){
+    private static void recordOxoRelationship(OxoListRespDto OxoListRespDto, List<OxoRowsQry> featureList, Map<Long,OxoRowsQry> rowMap, Map<Long,OxoHeadQry> headMap, Map<String,String> optionFeatureMap, List<OxoEditCmd> pointRecord){
         //记录headId与head的对应关系
-        oxoListQry.getOxoHeadResps().forEach(head->{
+        OxoListRespDto.getOxoHeadResps().forEach(head->{
             head.getRegionInfos().forEach(regionInfo -> {
                 regionInfo.getDriveHands().forEach(driveHandInfo -> {
                     driveHandInfo.getSalesVersionInfos().forEach(salesVersionInfo -> {

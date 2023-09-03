@@ -11,7 +11,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVer
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.enums.OxoSnapshotEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoVersionSnapshotDomainService;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListRespDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -120,8 +120,8 @@ public class OxoVersionSnapshotDomainServiceImpl implements OxoVersionSnapshotDo
     }
 
     @Override
-    public OxoListQry resolveSnapShot(String oxoSnapShot) {
-        return JSONObject.parseObject(JSONArray.parse(GZIPUtils.uncompress(oxoSnapShot)).toString(), OxoListQry.class);
+    public OxoListRespDto resolveSnapShot(String oxoSnapShot) {
+        return JSONObject.parseObject(JSONArray.parse(GZIPUtils.uncompress(oxoSnapShot)).toString(), OxoListRespDto.class);
     }
 
 }

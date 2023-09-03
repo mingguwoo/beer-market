@@ -18,7 +18,7 @@ public interface BomsOxoOptionPackageDao extends IService<BomsOxoOptionPackageEn
 
 
 
-    void insertOxoOptionPackages(List<OxoOptionPackageAggr> oxoPackages);
+    void insertOxoOptionPackages(List<BomsOxoOptionPackageEntity> oxoPackages);
 
     /**
      * 根据featureOptionId列表查询

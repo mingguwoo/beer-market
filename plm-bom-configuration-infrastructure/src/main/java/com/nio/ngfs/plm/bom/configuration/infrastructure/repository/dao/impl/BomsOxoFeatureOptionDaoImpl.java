@@ -48,20 +48,8 @@ public class BomsOxoFeatureOptionDaoImpl extends AbstractDao<BomsOxoFeatureOptio
 
 
     @Override
-    public void updateOxoFeatureOptions(List<OxoFeatureOptionAggr> oxoRowInfoAggrs) {
-        oxoRowInfoAggrs.forEach(oxoFeatureOptionAggr -> {
-            BomsOxoFeatureOptionEntity entity = new BomsOxoFeatureOptionEntity();
-            if (StringUtils.isNotBlank(oxoFeatureOptionAggr.getComment())) {
-                entity.setComment(oxoFeatureOptionAggr.getComment());
-            }
-
-            if (StringUtils.isNotBlank(oxoFeatureOptionAggr.getRuleCheck())) {
-                entity.setRuleCheck(oxoFeatureOptionAggr.getRuleCheck());
-            }
-
-            entity.setId(oxoFeatureOptionAggr.getId());
-
-            entity.setUpdateUser(oxoFeatureOptionAggr.getUpdateUser());
+    public void updateOxoFeatureOptions(List<BomsOxoFeatureOptionEntity> entities) {
+        entities.forEach(entity -> {
             //更新 oxo row
             getBaseMapper().updateById(entity);
         });

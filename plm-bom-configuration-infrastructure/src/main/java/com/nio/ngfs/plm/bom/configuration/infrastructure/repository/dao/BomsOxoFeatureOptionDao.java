@@ -45,7 +45,7 @@ public interface BomsOxoFeatureOptionDao extends IService<BomsOxoFeatureOptionEn
      * 批量更新
      * @param oxoRowInfoAggrs
      */
-    void updateOxoFeatureOptions(List<OxoFeatureOptionAggr> oxoRowInfoAggrs);
+    void updateOxoFeatureOptions(List<BomsOxoFeatureOptionEntity> entities);
 
 
     /**

@@ -1,9 +1,9 @@
-package com.nio.ngfs.plm.bom.configuration.domain.model.oxo.domainobject;
+package com.nio.ngfs.plm.bom.configuration.domain.facade.dto.response;
 
 
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoEditCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoHeadQry;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoRowsQry;
 import lombok.Data;
 
@@ -11,16 +11,16 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Data
-public class CompareOxoFeatureModel {
+public class CompareOxoFeatureModelRespDto {
 
     /**
      * 基准Feature
      */
-    private OxoListQry baseIpFeature;
+    private OxoListRespDto baseIpFeature;
     /**
      * 被比较的Feature
      */
-    private OxoListQry compareIpFeature;
+    private OxoListRespDto compareIpFeature;
     /**
      * key=version+code
      */

@@ -9,7 +9,7 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.PageData;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.DeleteFeatureOptionRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoChangeLogRespDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.RenewSortFeatureOptionRespDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -70,7 +70,7 @@ public class OxoController {
     //@NeedAuthorization
     @NotLogResult
     @PostMapping("/queryList")
-    public ResultInfo<OxoListQry> queryList(@Valid @RequestBody OxoBaseCmd cmd) {
+    public ResultInfo<OxoListRespDto> queryList(@Valid @RequestBody OxoBaseCmd cmd) {
         return ResultInfo.success(oxoInfoQuery.execute(cmd));
     }
 
@@ -171,7 +171,7 @@ public class OxoController {
      * @return
      */
     @PostMapping("/compare")
-    public ResultInfo<OxoListQry> compare(@Valid @RequestBody OxoCompareQry oxoCompareQry) {
+    public ResultInfo<OxoListRespDto> compare(@Valid @RequestBody OxoCompareQry oxoCompareQry) {
         return ResultInfo.success(oxoCompareQuery.execute(oxoCompareQry));
     }
 

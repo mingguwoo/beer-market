@@ -1,7 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.application.service;
 
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoCompareQry;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListRespDto;
 
 /**
  * @author wangchao.wang
@@ -16,7 +16,7 @@ public interface OxoQueryApplicationService {
      * @para version
      * @return
      */
-    OxoListQry queryOxoInfoByModelCode(String modelCode, String version, Boolean isMaturity);
+    OxoListRespDto queryOxoInfoByModelCode(String modelCode, String version, Boolean isMaturity);
 
 
     /**
@@ -24,5 +24,5 @@ public interface OxoQueryApplicationService {
      * @param oxoCompareQry
      * @return
      */
-    OxoListQry compareVersion(OxoCompareQry oxoCompareQry);
+    OxoListRespDto compareVersion(OxoCompareQry oxoCompareQry);
 }

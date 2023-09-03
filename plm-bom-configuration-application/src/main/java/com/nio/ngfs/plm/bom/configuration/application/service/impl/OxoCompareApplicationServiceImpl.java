@@ -13,15 +13,15 @@ import com.nio.ngfs.plm.bom.configuration.domain.facade.MatrixRuleFacade;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.EmailParamDto;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.MatrixRuleQueryDto;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.OxoBasicVehicleDto;
+import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.response.CompareOxoFeatureModelRespDto;
 import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleFactory;
-import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.domainobject.CompareOxoFeatureModel;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.enums.CompareChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.enums.OxoOptionPackageTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotAggr;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoEditCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoTemplateRequestCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoHeadQry;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoRowsQry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -62,10 +62,10 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
      * @return
      */
     @Override
-    public OxoListQry compareVersion(OxoListQry baseQry, OxoListQry compareQry, boolean showDiff) {
+    public OxoListRespDto compareVersion(OxoListRespDto baseQry, OxoListRespDto compareQry, boolean showDiff) {
 
 
-        CompareOxoFeatureModel compareIpFeatureModel = buildCompareModel(Lists.newArrayList(baseQry, compareQry), Lists.newArrayList(
+        CompareOxoFeatureModelRespDto compareIpFeatureModel = buildCompareModel(Lists.newArrayList(baseQry, compareQry), Lists.newArrayList(
                 ConfigConstants.BASE_VERSION, ConfigConstants.LOW_VERSION));
         compareIpFeatureModel.setBaseIpFeature(baseQry);
         compareIpFeatureModel.setCompareIpFeature(compareQry);
@@ -91,14 +91,14 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
      *
      * @return IpFeatureEntity
      */
-    private OxoListQry filterDiffData(OxoListQry oxoListQry) {
-        if (oxoListQry == null) {
-            return oxoListQry;
+    private OxoListRespDto filterDiffData(OxoListRespDto OxoListRespDto) {
+        if (OxoListRespDto == null) {
+            return OxoListRespDto;
         }
-        OxoListQry diffOxoFeatureEntity = new OxoListQry();
-        filterDiffFeature(diffOxoFeatureEntity, oxoListQry.getOxoRowsResps().stream().sorted(Comparator.comparing(OxoRowsQry::getCatalog).thenComparing(OxoRowsQry::getGroup)
+        OxoListRespDto diffOxoFeatureEntity = new OxoListRespDto();
+        filterDiffFeature(diffOxoFeatureEntity, OxoListRespDto.getOxoRowsResps().stream().sorted(Comparator.comparing(OxoRowsQry::getCatalog).thenComparing(OxoRowsQry::getGroup)
                 .thenComparing(OxoRowsQry::getSort).thenComparing(OxoRowsQry::getFeatureCode)).toList());
-        diffOxoFeatureEntity.setOxoHeadResps(oxoListQry.getOxoHeadResps());
+        diffOxoFeatureEntity.setOxoHeadResps(OxoListRespDto.getOxoHeadResps());
         return diffOxoFeatureEntity;
     }
 
@@ -106,16 +106,16 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
     /**
      * 过滤Feature
      *
-     * @param oxoListQry
+     * @param OxoListRespDto
      * @param oxoRowsQries
      */
-    private void filterDiffFeature(OxoListQry oxoListQry, List<OxoRowsQry> oxoRowsQries) {
+    private void filterDiffFeature(OxoListRespDto OxoListRespDto, List<OxoRowsQry> oxoRowsQries) {
         if (CollectionUtils.isEmpty(oxoRowsQries)) {
             return;
         }
         List<OxoRowsQry> ipdList = Lists.newArrayList();
         ipdList.addAll(oxoRowsQries);
-        oxoListQry.setOxoRowsResps(ipdList);
+        OxoListRespDto.setOxoRowsResps(ipdList);
         //处理Feature
         oxoRowsQries.forEach(feature -> {
             //无变化的跳过
@@ -157,14 +157,14 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
      * wrapBaseIpFeatureChangeType
      *
      * @param compareOxoFeatureModel
-     * @param oxoListQry
+     * @param OxoListRespDto
      * @param baseVersion
      */
-    private void wrapBaseIpFeatureChangeType(CompareOxoFeatureModel compareOxoFeatureModel, OxoListQry oxoListQry, boolean baseVersion) {
+    private void wrapBaseIpFeatureChangeType(CompareOxoFeatureModelRespDto compareOxoFeatureModel, OxoListRespDto OxoListRespDto, boolean baseVersion) {
         //待比较待版本名称
         String versionName = baseVersion ? ConfigConstants.LOW_VERSION : ConfigConstants.BASE_VERSION;
-        wrapFeatureOptionChangeType(compareOxoFeatureModel, oxoListQry, baseVersion, versionName);
-        wrapHeaderChangeType(compareOxoFeatureModel, oxoListQry, baseVersion, versionName);
+        wrapFeatureOptionChangeType(compareOxoFeatureModel, OxoListRespDto, baseVersion, versionName);
+        wrapHeaderChangeType(compareOxoFeatureModel, OxoListRespDto, baseVersion, versionName);
     }
 
 
@@ -172,17 +172,17 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
      * 设置headerChangeType
      *
      * @param compareOxoFeatureModel
-     * @param oxoListQry
+     * @param OxoListRespDto
      * @param baseVersion
      * @param versionName
      */
-    private void wrapHeaderChangeType(CompareOxoFeatureModel compareOxoFeatureModel,
-                                      OxoListQry oxoListQry, boolean baseVersion, String versionName) {
+    private void wrapHeaderChangeType(CompareOxoFeatureModelRespDto compareOxoFeatureModel,
+                                      OxoListRespDto OxoListRespDto, boolean baseVersion, String versionName) {
         Map<String, OxoHeadQry.RegionInfo> modelYearFeatureOptionMap = compareOxoFeatureModel.getModelYearFeatureOptionMap();
         Map<String, OxoHeadQry.DriveHandInfo> driverOptionInfoMap = compareOxoFeatureModel.getDriverOptionInfoMap();
         Map<String, OxoHeadQry.SalesVersionInfo> salesOptionInfoMap = compareOxoFeatureModel.getSalesOptionInfoMap();
 
-        oxoListQry.getOxoHeadResps().forEach(modelYear -> {
+        OxoListRespDto.getOxoHeadResps().forEach(modelYear -> {
             modelYear.getRegionInfos().forEach(regionInfo -> {
                 String modelYearFeatureOptionKey = String.format("%s:%s:%s:%s", versionName, modelYear.getModelCode(), modelYear.getModelYear(), regionInfo.getRegionCode());
                 //不包含，子级直接继承
@@ -299,12 +299,12 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
      * 设置FeatureOptionChangeType
      *
      * @param compareOxoFeatureModel
-     * @param oxoListQry
+     * @param OxoListRespDto
      * @param baseVersion
      * @param versionName
      */
-    private void wrapFeatureOptionChangeType(CompareOxoFeatureModel compareOxoFeatureModel,
-                                             OxoListQry oxoListQry, boolean baseVersion, String versionName) {
+    private void wrapFeatureOptionChangeType(CompareOxoFeatureModelRespDto compareOxoFeatureModel,
+                                             OxoListRespDto OxoListRespDto, boolean baseVersion, String versionName) {
         Map<String, OxoRowsQry> featureMap = compareOxoFeatureModel.getFeatureMap();
         Map<String, OxoRowsQry> optionMap = compareOxoFeatureModel.getOptionMap();
         Map<String, OxoEditCmd> oxoMap = compareOxoFeatureModel.getOxoMap();
@@ -312,7 +312,7 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
         if (!baseVersion) {
             return;
         }
-        oxoListQry.getOxoRowsResps().forEach(feature -> {
+        OxoListRespDto.getOxoRowsResps().forEach(feature -> {
             String ipFeatureEntityKey = String.format("%s:%s", versionName, feature.getFeatureCode());
             if (!featureMap.containsKey(ipFeatureEntityKey)) {
                 //feature高版本和低版本比较(高版本有，低版本没有，则新增)
@@ -408,9 +408,9 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
     }
 
 
-    private CompareOxoFeatureModel buildCompareModel(List<OxoListQry> qryList, List<String> versionList) {
+    private CompareOxoFeatureModelRespDto buildCompareModel(List<OxoListRespDto> qryList, List<String> versionList) {
 
-        CompareOxoFeatureModel compareOxoFeatureModel = new CompareOxoFeatureModel();
+        CompareOxoFeatureModelRespDto compareOxoFeatureModel = new CompareOxoFeatureModelRespDto();
         Map<String, OxoRowsQry> featureMap = compareOxoFeatureModel.getFeatureMap();
         Map<String, OxoRowsQry> optionMap = compareOxoFeatureModel.getOptionMap();
         Map<String, OxoEditCmd> oxoMap = compareOxoFeatureModel.getOxoMap();
@@ -421,7 +421,7 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
 
         for (int i = 0; i < qryList.size(); i++) {
             String versionName = versionList.get(i);
-            OxoListQry ipFeatureEntity = qryList.get(i);
+            OxoListRespDto ipFeatureEntity = qryList.get(i);
 
             ipFeatureEntity.getOxoRowsResps().forEach(feature -> {
                 //ipFeature
@@ -481,7 +481,7 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
 
 
     @Override
-    public void sendCompareEmail(OxoListQry compareOxoListQry, OxoVersionSnapshotAggr oxoVersionSnapshot) {
+    public void sendCompareEmail(OxoListRespDto compareOxoListQry, OxoVersionSnapshotAggr oxoVersionSnapshot) {
 
         List<OxoTemplateRequestCmd.HeadTitle> headTitles = new LinkedList<>();
         List<OxoTemplateRequestCmd.OxoInfo> oxoInfos = new LinkedList<>();
@@ -496,7 +496,7 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
         String modelCode = oxoVersionSnapshot.getModelCode();
 
         //最新oxo版本
-        OxoListQry newOxoListOry = JSONObject.parseObject(JSONArray.parse(GZIPUtils.uncompress(oxoVersionSnapshot.getOxoSnapshot())).toString(), OxoListQry.class);
+        OxoListRespDto newOxoListOry = JSONObject.parseObject(JSONArray.parse(GZIPUtils.uncompress(oxoVersionSnapshot.getOxoSnapshot())).toString(), OxoListRespDto.class);
 
         List<OxoHeadQry> compareInfos = compareOxoListQry.getOxoHeadResps();
 
@@ -692,11 +692,6 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
                 continue;
             }
 
-            String changeType = oxoEditCmd.getChangeType();
-
-//            if (StringUtils.equals(changeType, CompareChangeTypeEnum.MODIFY.getName())) {
-//                packageOption.setColor("#f0e68c");  //黄色
-//            }
 
             if (Objects.nonNull(oxoEditCmd.getCompareOxoEdit())) {
                 packageOption.setPackageOption(OxoOptionPackageTypeEnum.getByType(oxoEditCmd.getCompareOxoEdit().getPackageCode()).getCode() +

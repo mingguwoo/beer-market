@@ -15,7 +15,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature.Pro
 import com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature.ProductContextFeatureFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature.ProductContextFeatureRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.service.feature.FeatureDomainService;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoRowsQry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,8 +40,8 @@ public class ProductContextApplicationServiceImpl implements ProductContextAppli
     private final EventPublisher eventPublisher;
 
     @Override
-    public void addProductContext(OxoListQry oxoListQry, String owner) {
-        String modelCode = oxoListQry.getOxoHeadResps().get(CommonConstants.INT_ZERO).getModelCode();
+    public void addProductContext(OxoListRespDto OxoListRespDto, String owner) {
+        String modelCode = OxoListRespDto.getOxoHeadResps().get(CommonConstants.INT_ZERO).getModelCode();
         List<String> modelYearList = modelFacade.getModelYearByModel(modelCode);
 
         //AF00相关信息初始化
@@ -53,7 +53,7 @@ public class ProductContextApplicationServiceImpl implements ProductContextAppli
         List<ProductContextFeatureAggr> productContextFeatureList = productContextFeatureRepository.queryByModelCode(modelCode);
 
         //记录feature和feature下的所有option
-        List<OxoRowsQry> featureList = oxoListQry.getOxoRowsResps();
+        List<OxoRowsQry> featureList = OxoListRespDto.getOxoRowsResps();
         Map<OxoRowsQry,List<OxoRowsQry>> featureOptionMap = new HashMap<>();
         featureList.forEach(featureRow->featureOptionMap.put(featureRow,featureRow.getOptions()));
 
@@ -64,7 +64,7 @@ public class ProductContextApplicationServiceImpl implements ProductContextAppli
         //更新
         //先处理其他的
         ProductContextFeatureFactory.createProductContextFeatureList(productContextFeatureList,featureList,featureOptionMap,modelCode,addProductContextFeatureAggrList,owner);
-        ProductContextFactory.createProductContextList(productContextList,featureList,oxoListQry,addProductContextAggrList,removeProductContextAggrList,existProductContextSet,owner);
+        ProductContextFactory.createProductContextList(productContextList,featureList,OxoListRespDto,addProductContextAggrList,removeProductContextAggrList,existProductContextSet,owner);
         //单独处理AF00
         ProductContextFeatureFactory.createModelYearProductContextFeature(productContextFeatureList,featureModelYearAggr,modelCode,modelYearMap,addProductContextFeatureAggrList,owner);
         ProductContextFactory.createModelYearProductContext(modelCode,modelYearList,modelYearMap,addProductContextAggrList,removeProductContextAggrList,existProductContextSet,owner);

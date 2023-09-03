@@ -3,7 +3,7 @@ package com.nio.ngfs.plm.bom.configuration.application.query.oxo;
 import com.nio.ngfs.plm.bom.configuration.application.query.Query;
 import com.nio.ngfs.plm.bom.configuration.application.service.OxoQueryApplicationService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoBaseCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListRespDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class OxoInfoQuery implements Query<OxoBaseCmd, OxoListQry> {
+public class OxoInfoQuery implements Query<OxoBaseCmd, OxoListRespDto> {
 
 
 
@@ -21,7 +21,7 @@ public class OxoInfoQuery implements Query<OxoBaseCmd, OxoListQry> {
 
 
     @Override
-    public OxoListQry execute(OxoBaseCmd oxoListQry) {
+    public OxoListRespDto execute(OxoBaseCmd oxoListQry) {
         return oxoQueryApplicationService.queryOxoInfoByModelCode(
                 oxoListQry.getModelCode(),oxoListQry.getVersion(),false);
     }

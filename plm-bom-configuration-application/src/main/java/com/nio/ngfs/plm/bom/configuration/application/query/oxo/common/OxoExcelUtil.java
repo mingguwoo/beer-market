@@ -7,7 +7,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleFa
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.enums.OxoOptionPackageTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoEditCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoHeadQry;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoRowsQry;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -35,15 +35,15 @@ import java.util.stream.Collectors;
 public class OxoExcelUtil {
 
 
-    public static void oxoExport(OxoListQry oxoListQry, String modelCode, String version, HttpServletResponse response, HttpServletRequest request) {
+    public static void oxoExport(OxoListRespDto OxoListRespDto, String modelCode, String version, HttpServletResponse response, HttpServletRequest request) {
         //动态表头值
-        List<OxoHeadQry> oxoHeads = oxoListQry.getOxoHeadResps();
+        List<OxoHeadQry> oxoHeads = OxoListRespDto.getOxoHeadResps();
 
         List<OxoBasicVehicleDto> oxoBasicVehicles = BaseVehicleFactory.buildOxoBasicVehicles(oxoHeads, modelCode, version);
 
         XSSFWorkbook xssfWorkbook = buildHead(oxoBasicVehicles);
 
-        List<OxoRowsQry> dataList = oxoListQry.getOxoRowsResps();
+        List<OxoRowsQry> dataList = OxoListRespDto.getOxoRowsResps();
         AtomicInteger rowIndex = new AtomicInteger(3);
 
         //设置字体大小

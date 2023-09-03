@@ -30,7 +30,7 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsB
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductConfigEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductConfigModelOptionEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductConfigOptionEntity;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListRespDto;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -94,11 +94,11 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
         if (oxoVersionSnapshotAggr == null) {
             return Collections.emptySet();
         }
-        OxoListQry oxoListQry = versionSnapshotDomainService.resolveSnapShot(oxoVersionSnapshotAggr.getOxoSnapshot());
+        OxoListRespDto OxoListRespDto = versionSnapshotDomainService.resolveSnapShot(oxoVersionSnapshotAggr.getOxoSnapshot());
         Set<String> existFeatureOptionCodeSet = Sets.newHashSet();
         Set<String> featureOptionCodeSet = featureOptionAggrList.stream().map(OxoFeatureOptionAggr::getFeatureCode).collect(Collectors.toSet());
-        if (oxoListQry != null && CollectionUtils.isNotEmpty(oxoListQry.getOxoRowsResps())) {
-            oxoListQry.getOxoRowsResps().forEach(feature -> {
+        if (OxoListRespDto != null && CollectionUtils.isNotEmpty(OxoListRespDto.getOxoRowsResps())) {
+            OxoListRespDto.getOxoRowsResps().forEach(feature -> {
                 if (featureOptionCodeSet.contains(feature.getFeatureCode())) {
                     existFeatureOptionCodeSet.add(feature.getFeatureCode());
                 }
@@ -190,11 +190,11 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
         if (oxoVersionSnapshotAggr == null) {
             return messageTypeMap;
         }
-        OxoListQry oxoListQry = versionSnapshotDomainService.resolveSnapShot(oxoVersionSnapshotAggr.getOxoSnapshot());
-        if (oxoListQry == null || CollectionUtils.isEmpty(oxoListQry.getOxoRowsResps())) {
+        OxoListRespDto OxoListRespDto = versionSnapshotDomainService.resolveSnapShot(oxoVersionSnapshotAggr.getOxoSnapshot());
+        if (OxoListRespDto == null || CollectionUtils.isEmpty(OxoListRespDto.getOxoRowsResps())) {
             return messageTypeMap;
         }
-        oxoListQry.getOxoRowsResps().forEach(feature -> {
+        OxoListRespDto.getOxoRowsResps().forEach(feature -> {
             if (CollectionUtils.isEmpty(feature.getOptions())) {
                 return;
             }
@@ -259,7 +259,31 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
          * OXO中是否存在
          * 在所有Base Vehicle下打点都为“-”的Option（通过Delete Code删除的Option排除在外）
          */
-        List<String> optionCodes = featureOptionDomainService.checkOxoBasicVehicleOptions(modelCode);
+
+        List<OxoFeatureOptionAggr> oxoFeatureOptionAggrs =
+                oxoFeatureOptionRepository.queryFeatureListsByModelAndSortDelete(modelCode, true);
+
+        if (CollectionUtils.isEmpty(oxoFeatureOptionAggrs)) {
+            return Lists.newArrayList();
+        }
+
+        //行信息
+        List<Long> rowIds = oxoFeatureOptionAggrs.stream().map(OxoFeatureOptionAggr::getId).distinct().toList();
+
+        // 获取打点信息
+        List<OxoOptionPackageAggr> optionPackages = oxoOptionPackageRepository.queryByBaseVehicleIds(rowIds);
+
+        List<String> optionCodes = Lists.newArrayList();
+
+        optionPackages.stream().collect(Collectors.groupingBy(OxoOptionPackageAggr::getFeatureOptionId)).forEach((k, v) -> {
+            if (v.stream().allMatch(x ->
+                    StringUtils.equals(x.getPackageCode(), OxoOptionPackageTypeEnum.UNAVAILABLE.getType()) &&
+                            Objects.equals(x.getFeatureOptionId(), k))) {
+                optionCodes.add(
+                        oxoFeatureOptionAggrs.stream().filter(x -> Objects.equals(x.getId(), k))
+                                .findFirst().orElse(new OxoFeatureOptionAggr()).getFeatureCode());
+            }
+        });
 
 
         /**

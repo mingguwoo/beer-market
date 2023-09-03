@@ -16,7 +16,7 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoV
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsBaseVehicleEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureLibraryEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsOxoVersionSnapshotEntity;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.request.GetBasedOnBaseVehicleListQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.GetBasedOnBaseVehicleListRespDto;
 import lombok.RequiredArgsConstructor;
@@ -84,8 +84,8 @@ public class GetBasedOnBaseVehicleListQuery extends AbstractQuery<GetBasedOnBase
         if (oxoVersionSnapshotEntity == null) {
             return Lists.newArrayList();
         }
-        OxoListQry oxoListQry = OxoQueryUtil.resolveSnapShot(oxoVersionSnapshotEntity.getOxoSnapshot());
-        List<Long> baseVehicleIdList = OxoQueryUtil.getBaseVehicleIdListFromOxoRelease(oxoListQry);
+        OxoListRespDto OxoListRespDto = OxoQueryUtil.resolveSnapShot(oxoVersionSnapshotEntity.getOxoSnapshot());
+        List<Long> baseVehicleIdList = OxoQueryUtil.getBaseVehicleIdListFromOxoRelease(OxoListRespDto);
         List<BomsBaseVehicleEntity> baseVehicleEntityList = baseVehicleDao.queryByIdList(baseVehicleIdList);
         // 过滤maturity
         return baseVehicleEntityList.stream().filter(i -> maturityEnum == null || Objects.equals(maturityEnum.getMaturity(), i.getMaturity()))

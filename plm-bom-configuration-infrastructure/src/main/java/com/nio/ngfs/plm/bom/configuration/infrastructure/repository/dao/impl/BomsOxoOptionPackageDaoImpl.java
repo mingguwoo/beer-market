@@ -35,8 +35,8 @@ public class BomsOxoOptionPackageDaoImpl extends AbstractDao<BomsOxoOptionPackag
     }
 
     @Override
-    public void insertOxoOptionPackages(List<OxoOptionPackageAggr> oxoPackages) {
-        getBaseMapper().insertOxoOptionPackages(BeanConvertUtils.convertListTo(oxoPackages,BomsOxoOptionPackageEntity::new));
+    public void insertOxoOptionPackages(List<BomsOxoOptionPackageEntity> oxoPackages) {
+        getBaseMapper().insertOxoOptionPackages(oxoPackages);
     }
 
     @Override

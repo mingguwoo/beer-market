@@ -19,7 +19,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.service.basevehicle.BaseVehicle
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoVersionSnapshotDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoCompareQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoHeadQry;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListQry;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoRowsQry;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -59,7 +59,7 @@ public class OxoQueryApplicationServiceImpl implements OxoQueryApplicationServic
      * @return
      */
     @Override
-    public OxoListQry compareVersion(OxoCompareQry oxoCompareQry) {
+    public OxoListRespDto compareVersion(OxoCompareQry oxoCompareQry) {
 
 
         String modelCode = oxoCompareQry.getModelCode();
@@ -73,13 +73,13 @@ public class OxoQueryApplicationServiceImpl implements OxoQueryApplicationServic
         }
 
         //查询oxo  info数据
-        OxoListQry baseVersionQry = queryOxoInfoByModelCode(modelCode, baseVersion, false);
+        OxoListRespDto baseVersionQry = queryOxoInfoByModelCode(modelCode, baseVersion, false);
 
         if (CollectionUtils.isEmpty(baseVersionQry.getOxoHeadResps()) || CollectionUtils.isEmpty(baseVersionQry.getOxoHeadResps())) {
             throw new BusinessException(MessageFormat.format(ConfigErrorCode.VERSION_ERROR.getMessage(), baseVersion));
         }
 
-        OxoListQry compareVersionQry = queryOxoInfoByModelCode(modelCode, compareVersion, false);
+        OxoListRespDto compareVersionQry = queryOxoInfoByModelCode(modelCode, compareVersion, false);
 
         if (CollectionUtils.isEmpty(compareVersionQry.getOxoHeadResps()) || CollectionUtils.isEmpty(compareVersionQry.getOxoHeadResps())) {
             throw new BusinessException(MessageFormat.format(ConfigErrorCode.VERSION_ERROR.getMessage(), compareVersion));
@@ -90,8 +90,8 @@ public class OxoQueryApplicationServiceImpl implements OxoQueryApplicationServic
 
 
     @Override
-    public OxoListQry queryOxoInfoByModelCode(String modelCode, String version, Boolean isMaturity) {
-        OxoListQry qry = new OxoListQry();
+    public OxoListRespDto queryOxoInfoByModelCode(String modelCode, String version, Boolean isMaturity) {
+        OxoListRespDto qry = new OxoListRespDto();
 
         // 快照版本查询
         if (StringUtils.isNotBlank(version) && !StringUtils.equals(version, ConfigConstants.WORKING)) {
@@ -100,8 +100,8 @@ public class OxoQueryApplicationServiceImpl implements OxoQueryApplicationServic
                     versionSnapshotDomainService.queryOxoInfoByModelAndVersion(modelCode, version);
 
             if (Objects.nonNull(oxoVersionSnapshot)) {
-                //return JSONObject.parseObject(oxoVersionSnapshot.getOxoSnapshot(), OxoListQry.class);
-                return JSONObject.parseObject(JSONArray.parse(oxoVersionSnapshot.getOxoSnapshot()).toString(), OxoListQry.class);
+                //return JSONObject.parseObject(oxoVersionSnapshot.getOxoSnapshot(), OxoListRespDto.class);
+                return JSONObject.parseObject(JSONArray.parse(oxoVersionSnapshot.getOxoSnapshot()).toString(), OxoListRespDto.class);
 
             }
 

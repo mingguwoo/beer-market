@@ -97,9 +97,10 @@ public class OxoCompareExportUtil {
             output = response.getOutputStream();
             response.reset();
             // 导出文件 Model_Version_高版本号 vs 低版本号_OXO_Compare（例：Aries_Version_AB vs AA_OXO_Compare）
-            String fileName = modelCode + "_Version_" + baseVersion + " vs " + compareVersion + "_OXO_Compare";
+            String fileName = modelCode + "_Version_" + baseVersion + " vs " + compareVersion + "_OXO_Compare.xlsx";
             response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
             response.setContentType("application/octet-stream;charset=UTF-8");
+            response.setHeader("access-control-expose-headers", "content-disposition");
             response.setHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
             response.setHeader("Access-Control-Allow-Credentials", "true");
             xssfWorkbook.write(output);

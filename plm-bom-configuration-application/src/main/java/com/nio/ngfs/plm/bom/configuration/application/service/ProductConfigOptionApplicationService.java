@@ -25,4 +25,12 @@ public interface ProductConfigOptionApplicationService {
     List<ProductConfigOptionAggr> editPcOptionConfig(List<EditProductConfigCmd.PcOptionConfigDto> updatePcOptionConfigList, List<ProductConfigAggr> productConfigAggrList,
                                                      List<ProductConfigOptionAggr> productConfigOptionAggrList, List<ProductContextAggr> productContextAggrList);
 
+    /**
+     * edit时skipCheck校验
+     *
+     * @param productConfigAggrList       PC列表
+     * @param productConfigOptionAggrList Product Config勾选列表
+     */
+    void skipCheckBeforeEdit(List<ProductConfigAggr> productConfigAggrList, List<ProductConfigOptionAggr> productConfigOptionAggrList);
+
 }

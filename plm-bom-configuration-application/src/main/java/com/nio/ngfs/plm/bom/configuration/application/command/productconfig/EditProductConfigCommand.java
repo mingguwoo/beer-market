@@ -54,9 +54,9 @@ public class EditProductConfigCommand extends AbstractLockCommand<EditProductCon
         // 编辑Product Config勾选
         List<ProductConfigOptionAggr> saveProductConfigOptionAggrList = productConfigOptionApplicationService.editPcOptionConfig(cmd.getUpdatePcOptionConfigList(),
                 productConfigAggrList, productConfigOptionAggrList, productContextAggrList);
-        // 打点是否可编辑校验（selectCanEdit、Product Context）
-        // skipCheck校验（skipCheck变更全量，skipCheck未变更按需）
-        // Feature在Product Context有勾选，PC下至少勾选一个Feature下的Option
+        // edit时skipCheck校验
+        productConfigOptionApplicationService.skipCheckBeforeEdit(productConfigAggrList, productConfigOptionAggrList);
+        // Product Context勾选校验
         // 保存到数据库
         ((EditProductConfigCommand) AopContext.currentProxy()).savePcAndPcOptionConfig(productConfigAggrList, saveProductConfigOptionAggrList);
         return new EditProductConfigRespDto();

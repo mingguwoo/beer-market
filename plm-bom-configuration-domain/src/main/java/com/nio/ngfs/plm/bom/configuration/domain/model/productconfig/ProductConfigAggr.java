@@ -14,6 +14,8 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Objects;
+
 /**
  * @author xiaozhou.tu
  * @date 2023/8/10
@@ -149,6 +151,20 @@ public class ProductConfigAggr extends AbstractDo implements AggrRoot<String> {
         if (!RegexUtil.isMatchPcName(name)) {
             throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_PC_NAME_FORMAT_ERROR);
         }
+    }
+
+    /**
+     * skipCheck是否打开
+     */
+    public boolean isSkipCheckOpen() {
+        return Objects.equals(skipCheck, CommonConstants.OPEN);
+    }
+
+    /**
+     * skipCheck是否关闭
+     */
+    public boolean isSkipCheckClose() {
+        return Objects.equals(skipCheck, CommonConstants.CLOSE);
     }
 
 }

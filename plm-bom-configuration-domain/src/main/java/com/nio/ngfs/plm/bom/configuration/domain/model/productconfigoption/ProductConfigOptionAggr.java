@@ -1,11 +1,15 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption;
 
+import com.nio.bom.share.constants.CommonConstants;
 import com.nio.bom.share.domain.model.AggrRoot;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.enums.ProductConfigOptionSelectStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+import java.util.Objects;
 
 /**
  * @author xiaozhou.tu
@@ -47,12 +51,25 @@ public class ProductConfigOptionAggr extends AbstractDo implements AggrRoot<Prod
         return productConfigOptionId;
     }
 
+    public void changeSelectStatus(boolean select) {
+        setSelectStatus(select ? ProductConfigOptionSelectStatusEnum.SELECT.getStatus() :
+                ProductConfigOptionSelectStatusEnum.UNSELECT.getStatus());
+    }
+
     public String getPcId() {
         return productConfigOptionId.getPcId();
     }
 
     public String getOptionCode() {
         return productConfigOptionId.getOptionCode();
+    }
+
+    public boolean isSelect() {
+        return Objects.equals(selectStatus, ProductConfigOptionSelectStatusEnum.SELECT.getStatus());
+    }
+
+    public boolean isSelectCanEdit() {
+        return Objects.equals(selectCanEdit, CommonConstants.YES);
     }
 
 }

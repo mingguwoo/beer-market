@@ -17,7 +17,7 @@ import java.util.Objects;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductContextAggr extends AbstractDo implements AggrRoot<Long>{
+public class ProductContextAggr extends AbstractDo implements AggrRoot<Long> {
 
     private String modelCode;
 
@@ -27,19 +27,26 @@ public class ProductContextAggr extends AbstractDo implements AggrRoot<Long>{
 
     private String featureCode;
 
-
     @Override
     public Long getUniqId() {
         return id;
     }
 
     @Override
-    public int hashCode(){
-        return Objects.hash(modelCode,modelYear,optionCode,featureCode);
+    public int hashCode() {
+        return Objects.hash(modelCode, modelYear, optionCode, featureCode);
     }
+
     @Override
-    public boolean equals(final Object obj){
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
         ProductContextAggr aggr = (ProductContextAggr) obj;
         return modelCode.equals(aggr.modelCode) && modelYear.equals(aggr.modelYear) && optionCode.equals(aggr.optionCode) && featureCode.equals(aggr.getFeatureCode());
     }
+
 }

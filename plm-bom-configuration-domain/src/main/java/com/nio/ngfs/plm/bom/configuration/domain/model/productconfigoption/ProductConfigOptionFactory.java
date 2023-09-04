@@ -10,6 +10,16 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.enums
  */
 public class ProductConfigOptionFactory {
 
+    public static ProductConfigOptionAggr create(String pcId, String optionCode, String featureCode) {
+        return ProductConfigOptionAggr.builder()
+                .productConfigOptionId(new ProductConfigOptionId(pcId, optionCode))
+                .featureCode(featureCode)
+                .selectStatus(ProductConfigOptionSelectStatusEnum.SELECT.getStatus())
+                .selectCanEdit(CommonConstants.YES)
+                .type(ProductConfigOptionTypeEnum.NORMAL.getType())
+                .build();
+    }
+
     public static ProductConfigOptionAggr createFromPc(String pcId, ProductConfigOptionAggr copyFromAggr) {
         return ProductConfigOptionAggr.builder()
                 .productConfigOptionId(new ProductConfigOptionId(pcId, copyFromAggr.getOptionCode()))

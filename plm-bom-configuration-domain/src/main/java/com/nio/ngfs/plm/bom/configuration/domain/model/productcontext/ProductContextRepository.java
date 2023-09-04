@@ -9,10 +9,11 @@ import java.util.List;
  * @author bill.wang
  * @date 2023/8/10
  */
-public interface ProductContextRepository extends Repository<ProductContextAggr,Long> {
+public interface ProductContextRepository extends Repository<ProductContextAggr, Long> {
 
     /**
      * modelCode获取Product Context数据
+     *
      * @param modelCode
      * @return
      */
@@ -20,13 +21,25 @@ public interface ProductContextRepository extends Repository<ProductContextAggr,
 
     /**
      * 批量保存
+     *
      * @param productContextAggrList
      */
     void addOrUpdateBatch(List<ProductContextAggr> productContextAggrList);
 
     /**
      * 批量删除
+     *
      * @param productContextAggrList
      */
     void removeBatchByIds(List<ProductContextAggr> productContextAggrList);
+
+    /**
+     * 根据modelCode和modelYear列表查询
+     *
+     * @param modelCode     modelCode
+     * @param modelYearList modelYear列表
+     * @return ProductContextAggr列表
+     */
+    List<ProductContextAggr> queryByModelAndModelYearList(String modelCode, List<String> modelYearList);
+
 }

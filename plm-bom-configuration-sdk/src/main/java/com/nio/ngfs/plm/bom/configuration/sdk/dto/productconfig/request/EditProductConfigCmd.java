@@ -23,6 +23,9 @@ public class EditProductConfigCmd implements Cmd {
     @NotEmpty(message = "Update PC Option Config List is empty")
     private List<PcOptionConfigDto> updatePcOptionConfigList;
 
+    @NotBlank(message = "Update User is blank")
+    private String updateUser;
+
     @Data
     public static class PcDto {
 
@@ -30,7 +33,7 @@ public class EditProductConfigCmd implements Cmd {
         private String pcId;
 
         @NotBlank(message = "Skip Check is blank")
-        private String skipCheck;
+        private boolean skipCheck;
 
     }
 
@@ -42,6 +45,9 @@ public class EditProductConfigCmd implements Cmd {
 
         @NotBlank(message = "Option Code is blank")
         private String optionCode;
+
+        @NotBlank(message = "Feature Code is blank")
+        private String featureCode;
 
         private boolean select;
 

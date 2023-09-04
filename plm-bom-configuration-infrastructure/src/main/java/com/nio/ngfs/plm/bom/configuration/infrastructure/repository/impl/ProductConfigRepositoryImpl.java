@@ -8,6 +8,8 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.common.D
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author xiaozhou.tu
  * @date 2023/8/10
@@ -42,6 +44,16 @@ public class ProductConfigRepositoryImpl implements ProductConfigRepository {
     @Override
     public ProductConfigAggr getByName(String name) {
         return productConfigConverter.convertEntityToDo(bomsProductConfigDao.getByName(name));
+    }
+
+    @Override
+    public List<ProductConfigAggr> queryByPcIdList(List<String> pcIdList) {
+        return productConfigConverter.convertEntityListToDoList(bomsProductConfigDao.queryByPcIdList(pcIdList));
+    }
+
+    @Override
+    public void batchSave(List<ProductConfigAggr> aggrList) {
+        DaoSupport.batchSaveOrUpdate(bomsProductConfigDao, productConfigConverter.convertDoListToEntityList(aggrList));
     }
 
 }

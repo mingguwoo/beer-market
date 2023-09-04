@@ -2,6 +2,9 @@ package com.nio.ngfs.plm.bom.configuration.domain.service.productconfig;
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigAggr;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author xiaozhou.tu
  * @date 2023/8/10
@@ -31,5 +34,14 @@ public interface ProductConfigDomainService {
      * @param productConfigAggr 聚合根
      */
     void checkPcNameUnique(ProductConfigAggr productConfigAggr);
+
+    /**
+     * 改变PC的skipCheck开关
+     *
+     * @param pcSkipCheckMap PC的skipCheck集合
+     * @param updateUser     更新人
+     * @return 聚合根列表
+     */
+    List<ProductConfigAggr> changePcSkipCheck(Map<String, Boolean> pcSkipCheckMap, String updateUser);
 
 }

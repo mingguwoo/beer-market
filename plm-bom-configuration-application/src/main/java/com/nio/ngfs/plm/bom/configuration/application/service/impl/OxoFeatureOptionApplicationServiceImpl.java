@@ -94,11 +94,11 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
         if (oxoVersionSnapshotAggr == null) {
             return Collections.emptySet();
         }
-        OxoListRespDto OxoListRespDto = versionSnapshotDomainService.resolveSnapShot(oxoVersionSnapshotAggr.getOxoSnapshot());
+        OxoListRespDto oxoListRespDto = versionSnapshotDomainService.resolveSnapShot(oxoVersionSnapshotAggr.getOxoSnapshot());
         Set<String> existFeatureOptionCodeSet = Sets.newHashSet();
         Set<String> featureOptionCodeSet = featureOptionAggrList.stream().map(OxoFeatureOptionAggr::getFeatureCode).collect(Collectors.toSet());
-        if (OxoListRespDto != null && CollectionUtils.isNotEmpty(OxoListRespDto.getOxoRowsResps())) {
-            OxoListRespDto.getOxoRowsResps().forEach(feature -> {
+        if (oxoListRespDto != null && CollectionUtils.isNotEmpty(oxoListRespDto.getOxoRowsResps())) {
+            oxoListRespDto.getOxoRowsResps().forEach(feature -> {
                 if (featureOptionCodeSet.contains(feature.getFeatureCode())) {
                     existFeatureOptionCodeSet.add(feature.getFeatureCode());
                 }
@@ -190,11 +190,11 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
         if (oxoVersionSnapshotAggr == null) {
             return messageTypeMap;
         }
-        OxoListRespDto OxoListRespDto = versionSnapshotDomainService.resolveSnapShot(oxoVersionSnapshotAggr.getOxoSnapshot());
-        if (OxoListRespDto == null || CollectionUtils.isEmpty(OxoListRespDto.getOxoRowsResps())) {
+        OxoListRespDto oxoListRespDto = versionSnapshotDomainService.resolveSnapShot(oxoVersionSnapshotAggr.getOxoSnapshot());
+        if (oxoListRespDto == null || CollectionUtils.isEmpty(oxoListRespDto.getOxoRowsResps())) {
             return messageTypeMap;
         }
-        OxoListRespDto.getOxoRowsResps().forEach(feature -> {
+        oxoListRespDto.getOxoRowsResps().forEach(feature -> {
             if (CollectionUtils.isEmpty(feature.getOptions())) {
                 return;
             }
@@ -203,7 +203,8 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
                 if (featureOptionAggr == null) {
                     return;
                 }
-                if (option.getPackInfos().stream().allMatch(i -> Objects.equals(i.getPackageCode(), OxoOptionPackageTypeEnum.UNAVAILABLE.getType()))) {
+                if (CollectionUtils.isEmpty(option.getPackInfos()) || option.getPackInfos().stream().allMatch(i -> Objects.equals(i.getPackageCode(),
+                        OxoOptionPackageTypeEnum.UNAVAILABLE.getType()))) {
                     return;
                 }
                 OxoFeatureOptionAggr parent = featureOptionAggr.getParent();

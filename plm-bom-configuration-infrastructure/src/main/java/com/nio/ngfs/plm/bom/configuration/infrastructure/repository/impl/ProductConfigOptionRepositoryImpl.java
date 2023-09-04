@@ -46,4 +46,11 @@ public class ProductConfigOptionRepositoryImpl implements ProductConfigOptionRep
         DaoSupport.batchSaveOrUpdate(bomsProductConfigOptionDao, productConfigOptionConverter.convertDoListToEntityList(aggrList));
     }
 
+    @Override
+    public List<ProductConfigOptionAggr> queryByPcIdList(List<String> pcIdList) {
+        return productConfigOptionConverter.convertEntityListToDoList(
+                bomsProductConfigOptionDao.queryByPcIdList(pcIdList, null)
+        );
+    }
+
 }

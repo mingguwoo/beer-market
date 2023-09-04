@@ -67,6 +67,8 @@ public class QueryProductConfigRespDto implements Dto {
     @Data
     public static class PcOptionConfigDto {
 
+        private Long id;
+
         private String pcId;
 
         /**
@@ -78,6 +80,11 @@ public class QueryProductConfigRespDto implements Dto {
          * 是否可编辑
          */
         private boolean selectCanEdit;
+
+        /**
+         * 是否置灰
+         */
+        private boolean setGray;
 
     }
 

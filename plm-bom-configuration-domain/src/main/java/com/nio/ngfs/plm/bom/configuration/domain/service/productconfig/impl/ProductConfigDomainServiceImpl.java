@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service.productconfig.impl;
 
+import com.google.common.collect.Lists;
 import com.nio.bom.share.constants.CommonConstants;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
@@ -10,6 +11,8 @@ import com.nio.ngfs.plm.bom.configuration.domain.service.productconfig.ProductCo
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -59,6 +62,13 @@ public class ProductConfigDomainServiceImpl implements ProductConfigDomainServic
             }
             throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_PC_NAME_REPEAT);
         }
+    }
+
+    @Override
+    public List<ProductConfigAggr> changePcSkipCheck(Map<String, Boolean> pcSkipCheckMap, String updateUser) {
+        List<ProductConfigAggr> productConfigAggrList = productConfigRepository.queryByPcIdList(Lists.newArrayList(pcSkipCheckMap.keySet()));
+        productConfigAggrList.forEach(aggr -> aggr.changeSkipCheck(pcSkipCheckMap.get(aggr.getPcId()), updateUser));
+        return productConfigAggrList;
     }
 
 }

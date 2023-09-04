@@ -50,18 +50,22 @@ public class QueryProductConfigAssembler {
     public static QueryProductConfigRespDto.PcOptionConfigDto assemble(BomsProductConfigEntity pc, BomsProductConfigOptionEntity optionEntity,
                                                                        BomsProductContextEntity productContextEntity, boolean edit) {
         QueryProductConfigRespDto.PcOptionConfigDto configDto = new QueryProductConfigRespDto.PcOptionConfigDto();
+        configDto.setId(optionEntity != null ? optionEntity.getId() : null);
         configDto.setPcId(pc.getPcId());
-        // 是否勾选，ProductConfig存在且为勾选状态
+        // 是否勾选，Product Config存在且为勾选状态
         configDto.setSelect(optionEntity != null && Objects.equals(ProductConfigOptionSelectStatusEnum.SELECT.getStatus(), optionEntity.getSelectStatus()));
-        // 是否可编辑
+        // 是否编辑模式
         if (edit) {
             if (optionEntity != null && Objects.equals(ProductConfigOptionTypeEnum.FROM_BASE_VEHICLE.getType(), optionEntity.getType())
                     && Objects.equals(YesOrNoEnum.NO.getCode(), pc.getCompleteInitSelect())) {
-                // 打点Copy From Base Vehicle，且未完成初始化勾选
+                // 1、打点Copy From Base Vehicle，且未完成初始化勾选
                 configDto.setSelectCanEdit(Objects.equals(CommonConstants.YES, optionEntity.getSelectCanEdit()));
+                configDto.setSetGray(true);
             } else {
-                // 其它情况，基于Product Context判断是否可编辑
-                configDto.setSelectCanEdit(productContextEntity != null);
+                // 2、其它情况，可勾选包括（Product Context勾选、Product Config勾选）
+                configDto.setSelectCanEdit(productContextEntity != null || configDto.isSelect());
+                // 是否置灰，Product Context未勾选时，置灰
+                configDto.setSetGray(productContextEntity == null);
             }
         }
         return configDto;

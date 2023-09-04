@@ -132,6 +132,14 @@ public class ProductConfigAggr extends AbstractDo implements AggrRoot<String> {
     }
 
     /**
+     * 改变Skip Check
+     */
+    public void changeSkipCheck(boolean skipCheck, String updateUser) {
+        setSkipCheck(skipCheck ? CommonConstants.OPEN : CommonConstants.CLOSE);
+        setUpdateUser(updateUser);
+    }
+
+    /**
      * 校验Name
      */
     private void checkName(String name) {

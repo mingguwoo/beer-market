@@ -37,6 +37,13 @@ public class ProductContextRepositoryImpl implements ProductContextRepository {
     }
 
     @Override
+    public List<ProductContextAggr> queryByModelAndModelYearList(String modelCode, List<String> modelYearList) {
+        return productContextConverter.convertEntityListToDoList(
+                bomsProductContextDao.queryByModelAndModelYearList(modelCode, modelYearList)
+        );
+    }
+
+    @Override
     public void save(ProductContextAggr productContextAggr) {
         DaoSupport.saveOrUpdate(bomsProductContextDao,productContextConverter.convertDoToEntity(productContextAggr));
     }

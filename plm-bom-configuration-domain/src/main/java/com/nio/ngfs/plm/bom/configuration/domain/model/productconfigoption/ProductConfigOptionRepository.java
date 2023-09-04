@@ -25,4 +25,12 @@ public interface ProductConfigOptionRepository extends Repository<ProductConfigO
      */
     void batchSave(List<ProductConfigOptionAggr> aggrList);
 
+    /**
+     * 根据PC Id列表查询
+     *
+     * @param pcIdList PC Id列表
+     * @return 聚合根列表
+     */
+    List<ProductConfigOptionAggr> queryByPcIdList(List<String> pcIdList);
+
 }

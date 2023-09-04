@@ -2,6 +2,8 @@ package com.nio.ngfs.plm.bom.configuration.domain.model.productconfig;
 
 import com.nio.bom.share.domain.repository.Repository;
 
+import java.util.List;
+
 /**
  * @author xiaozhou.tu
  * @date 2023/8/10
@@ -24,5 +26,20 @@ public interface ProductConfigRepository extends Repository<ProductConfigAggr, S
      * @return ProductConfigAggr
      */
     ProductConfigAggr getByName(String name);
+
+    /**
+     * 根据pcId列表查询
+     *
+     * @param pcIdList pcId列表
+     * @return ProductConfigAggr列表
+     */
+    List<ProductConfigAggr> queryByPcIdList(List<String> pcIdList);
+
+    /**
+     * 批量保存
+     *
+     * @param aggrList 聚合根列表
+     */
+    void batchSave(List<ProductConfigAggr> aggrList);
 
 }

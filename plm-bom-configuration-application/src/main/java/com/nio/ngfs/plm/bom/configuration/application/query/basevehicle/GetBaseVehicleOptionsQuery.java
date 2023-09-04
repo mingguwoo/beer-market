@@ -59,7 +59,7 @@ public class GetBaseVehicleOptionsQuery {
         ans.setSalesVersionList(new ArrayList<>());
         bomsFeatureLibraryEntities.forEach(entity->{
             //根据开头两个字母进行分类,只有三种：salesVersion/driveHand/regionOptionCode
-            if (entity.getFeatureCode().substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO).equals(ConfigConstants.BASE_VEHICLE_SALES_VERSION_FEATURE.substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO))){
+            if (entity.getParentFeatureCode().equals(ConfigConstants.BASE_VEHICLE_SALES_VERSION_FEATURE)){
                 BaseVehicleOptionsRespDto option = new BaseVehicleOptionsRespDto();
                 option.setOptionCode(entity.getFeatureCode());
                 option.setDescription(entity.getDescription());
@@ -67,7 +67,7 @@ public class GetBaseVehicleOptionsQuery {
                 option.setEnglishName(entity.getDisplayName());
                 ans.getSalesVersionList().add(option);
             }
-            else if (entity.getFeatureCode().substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO).equals(ConfigConstants.BASE_VEHICLE_DRIVE_HAND_FEATURE.substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO))){
+            else if (entity.getParentFeatureCode().equals(ConfigConstants.BASE_VEHICLE_DRIVE_HAND_FEATURE)){
                 BaseVehicleOptionsRespDto option = new BaseVehicleOptionsRespDto();
                 option.setOptionCode(entity.getFeatureCode());
                 option.setDescription(entity.getDescription());
@@ -76,7 +76,7 @@ public class GetBaseVehicleOptionsQuery {
                 ans.getDriveHandList().add(option);
             }
             //必须加上条件，否则会出现不符合规则的历史数据也放进去的情况
-            else if (entity.getFeatureCode().substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO).equals(ConfigConstants.BASE_VEHICLE_REGION_FEATURE.substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO))){
+            else if (entity.getParentFeatureCode().equals(ConfigConstants.BASE_VEHICLE_REGION_FEATURE)){
                 BaseVehicleOptionsRespDto option = new BaseVehicleOptionsRespDto();
                 option.setOptionCode(entity.getFeatureCode());
                 option.setDescription(entity.getDescription());

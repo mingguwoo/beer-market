@@ -87,7 +87,7 @@ public class GetBaseVehicleOptionsQuery {
         });
         ans.setSalesVersionList(ans.getSalesVersionList().stream().sorted(Comparator.comparing(BaseVehicleOptionsRespDto::getOptionCode)).toList());
         ans.setRegionOptionCodeList(ans.getRegionOptionCodeList().stream().sorted(Comparator.comparing(BaseVehicleOptionsRespDto::getOptionCode)).toList());
-        ans.setDriveHandList(ans.getSalesVersionList().stream().sorted(Comparator.comparing(BaseVehicleOptionsRespDto::getOptionCode)).toList());
+        ans.setDriveHandList(ans.getDriveHandList().stream().sorted(Comparator.comparing(BaseVehicleOptionsRespDto::getOptionCode)).toList());
         return ans;
     }
 }

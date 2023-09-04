@@ -33,6 +33,10 @@ public class OxoAddCmd extends OxoBaseCmd {
 
         private String chineseName;
 
+        private String catalog;
+
+
+
     }
 
 

@@ -38,30 +38,32 @@ public class OxoFeatureOptionQuery implements Query<OxoBaseCmd, OxoAddCmd> {
 
         Map<String, List<FeatureAggr>> stringListMap =
                 featureAggrs.stream().filter(x -> StringUtils.equals(x.getFeatureId().getType(),
-                                OxoFeatureOptionTypeEnum.OPTION.getType())).sorted(Comparator.comparing(FeatureAggr::getParentFeatureCode))
-                        .collect(Collectors.groupingBy(FeatureAggr::getParentFeatureCode));
+                                OxoFeatureOptionTypeEnum.FEATURE.getType()))
+                        .sorted(Comparator.comparing(FeatureAggr::getCatalog).thenComparing(FeatureAggr::getParentFeatureCode).thenComparing(FeatureAggr::getFeatureCode))
+                        .collect(Collectors.groupingBy(FeatureAggr::getFeatureCode, LinkedHashMap::new, Collectors.toList()));
 
         List<OxoAddCmd.OxoFeatureOption> optionList = new LinkedList<>();
 
         stringListMap.forEach((k, v) -> {
             OxoAddCmd.OxoFeatureOption oxoFeatureOption = new OxoAddCmd.OxoFeatureOption();
 
-            FeatureAggr featureAggr =
-                    featureAggrs.stream().filter(x -> StringUtils.equals(x.getFeatureId().getFeatureCode(), k)).findFirst().orElse(null);
 
-            if(Objects.nonNull(featureAggr)) {
-                oxoFeatureOption.setDisplayName(featureAggr.getDisplayName());
-                oxoFeatureOption.setChineseName(featureAggr.getChineseName());
-            }
+            FeatureAggr feature = featureAggrs.stream().filter(y-> StringUtils.equals(y.getFeatureCode(),k)).findFirst().orElse(new FeatureAggr());
+            oxoFeatureOption.setDisplayName(feature.getDisplayName());
+            oxoFeatureOption.setChineseName(feature.getChineseName());
+
             oxoFeatureOption.setFeatureCode(k);
 
-            oxoFeatureOption.setOptionCodes(v.stream().distinct().map(x -> {
+            List<FeatureAggr> optionFeatures =
+                    featureAggrs.stream().filter(x -> StringUtils.equals(x.getParentFeatureCode(), k)).toList();
+
+            oxoFeatureOption.setOptionCodes(optionFeatures.stream().map(x -> {
                 OxoAddCmd.OxoOption oxoOption = new OxoAddCmd.OxoOption();
                 oxoOption.setOptionCode(x.getFeatureCode());
                 oxoOption.setDisplayName(x.getDisplayName());
                 oxoOption.setChineseName(x.getChineseName());
                 return oxoOption;
-            }).toList());
+            }).sorted(Comparator.comparing(OxoAddCmd.OxoOption::getOptionCode)).toList());
             optionList.add(oxoFeatureOption);
         });
         OxoAddCmd addCmd = new OxoAddCmd();

@@ -116,7 +116,7 @@ public class ConfigurationTo3deWarnSender {
      * @param dto
      * @param errorMsg
      */
-    public void sendSyncProductContextFeatureModelWarn(SyncProductContextModelFeatureDto dto, String errorMsg) {
+    public void sendSyncProductContextFeatureModelWarn(PlmSyncProductContextModelFeatureDto dto, String errorMsg) {
         sendWarnMessage(PRODUCT_CONTEXT, dto, errorMsg, getProductContextAtList(),
                 String.format("Model %s Sync Code %s Fail!", dto.getModelCodeList().get(0), dto.getFeatureCode()));
     }
@@ -126,7 +126,7 @@ public class ConfigurationTo3deWarnSender {
      * @param dto
      * @param errorMsg
      */
-    public void sendSyncProductContextModelFeatureOptionWarn(SyncProductContextModelFeatureOptionDto dto, String errorMsg) {
+    public void sendSyncProductContextModelFeatureOptionWarn(PlmSyncProductContextModelFeatureOptionDto dto, String errorMsg) {
         sendWarnMessage(PRODUCT_CONTEXT,dto,errorMsg,getProductContextAtList(),
                 String.format("Model %s Sync Code %s Fail!", dto.getModel(),dto.getFeature().get(0).getOption().get(0).getOptionCode()));
     }

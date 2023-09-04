@@ -9,10 +9,9 @@ import java.util.List;
  * @date 2023/8/30
  */
 @Data
-public class SyncProductContextModelFeatureOptionDto {
+public class PlmProductContextFeatureDto {
 
-    private String model;
+    private String featureCode;
 
-    private List<ProductContextFeatureDto> feature;
-
+    List<PlmProductContextOptionDto> option;
 }

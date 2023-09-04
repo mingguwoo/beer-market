@@ -1,7 +1,8 @@
 package com.nio.ngfs.plm.bom.configuration.domain.facade;
 
-import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.SyncProductContextModelFeatureDto;
-import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.SyncProductContextModelFeatureOptionDto;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.event.SyncProductContextEvent;
+import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.PlmSyncProductContextModelFeatureDto;
+import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.PlmSyncProductContextModelFeatureOptionDto;
 
 /**
  * @author bill.wang
@@ -9,15 +10,17 @@ import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.SyncProductContextMo
  */
 public interface ProductContextFacade {
 
+    void syncAddProductContextToEnovia(SyncProductContextEvent event);
+
     /**
      * 下发model feature option到3de
      * @param modelFeatureOption
      */
-    void syncAddProductContextModelFeatureOptionToEnovia(SyncProductContextModelFeatureOptionDto modelFeatureOption);
+    void syncAddProductContextModelFeatureOptionToEnovia(PlmSyncProductContextModelFeatureOptionDto modelFeatureOption);
 
     /**
      * 下发model feature到3de
      * @param modelFeature
      */
-    void syncAddProductContextModelFeatureToEnovia(SyncProductContextModelFeatureDto modelFeature);
+    void syncAddProductContextModelFeatureToEnovia(PlmSyncProductContextModelFeatureDto modelFeature);
 }

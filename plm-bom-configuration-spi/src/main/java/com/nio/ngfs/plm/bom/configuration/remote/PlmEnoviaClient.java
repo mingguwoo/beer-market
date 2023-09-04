@@ -55,8 +55,8 @@ public interface PlmEnoviaClient {
      * @return
      */
     @PostMapping("/resources/NioPlm/configuration/syncModelFeature")
-    PlmEnoviaResult<Object> syncProductContextModelFeature(SyncProductContextModelFeatureDto dto);
+    PlmEnoviaResult<Object> syncProductContextModelFeature(PlmSyncProductContextModelFeatureDto dto);
 
     @PostMapping("/resources/NioPlm/configuration/syncModelFeatureOption")
-    PlmEnoviaResult<Object> syncProductContextModelFeatureOption(SyncProductContextModelFeatureOptionDto dto);
+    PlmEnoviaResult<Object> syncProductContextModelFeatureOption(PlmSyncProductContextModelFeatureOptionDto dto);
 }

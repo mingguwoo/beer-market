@@ -6,10 +6,10 @@ import java.util.List;
 
 /**
  * @author bill.wang
- * @date 2023/8/30
+ * @date 2023/9/4
  */
 @Data
-public class SyncProductContextModelFeatureDto {
+public class PlmSyncProductContextModelFeatureDto {
 
     private List<String> modelCodeList;
 
@@ -18,6 +18,4 @@ public class SyncProductContextModelFeatureDto {
     private String featureSeq;
 
     private String may;
-
-
 }

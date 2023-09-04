@@ -80,7 +80,7 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
     }
 
     @Override
-    //@NeedAuthorization
+    @NeedAuthorization
     @NotLogResult
     public ResultInfo<GetBaseVehicleOptionsRespDto> getBaseVehicleOptions(@Valid @RequestBody GetBaseVehicleOptionsQry qry) {
         return ResultInfo.success(getbaseVehicleOptionsQuery.execute(qry));

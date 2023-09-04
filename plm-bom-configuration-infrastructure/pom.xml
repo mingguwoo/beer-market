@@ -33,6 +33,11 @@
             <groupId>jakarta.validation</groupId>
             <artifactId>jakarta.validation-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.nio.ngfs</groupId>
+            <artifactId>plm-bom-configuration-spi</artifactId>
+            <version>${revision}</version>
+        </dependency>
     </dependencies>
 
     <build>

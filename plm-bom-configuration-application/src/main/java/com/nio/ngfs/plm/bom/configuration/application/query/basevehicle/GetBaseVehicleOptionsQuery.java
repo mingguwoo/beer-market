@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -35,7 +36,7 @@ public class GetBaseVehicleOptionsQuery {
         List<String> codeList = Stream.of(ConfigConstants.BASE_VEHICLE_SALES_VERSION_FEATURE,ConfigConstants.BASE_VEHICLE_REGION_FEATURE,ConfigConstants.BASE_VEHICLE_DRIVE_HAND_FEATURE).collect(Collectors.toList());
         List<BomsFeatureLibraryEntity> allFeatures = bomsFeatureLibraryDao.queryByParentFeatureCodeListAndType(codeList, FeatureTypeEnum.OPTION.getType());
         List<String> featureList = allFeatures.stream().map(feature->feature.getFeatureCode()).collect(Collectors.toList());
-        List<BomsFeatureLibraryEntity> bomsFeatureLibraryEntities = new ArrayList<>();
+        List<BomsFeatureLibraryEntity> bomsFeatureLibraryEntities;
         //如果有modelCode，说明是新增或者带着modelCode的搜索条件筛选，用modelCode去oxoFeatureOptionDao进行批量查询，看有哪些存在
         if (Objects.nonNull(qry.getModelCode())){
             List<BomsOxoFeatureOptionEntity> options = bomsOxoFeatureOptionDao.getBaseVehicleOptions(featureList,qry.getModelCode());
@@ -84,6 +85,9 @@ public class GetBaseVehicleOptionsQuery {
                 option.setEnglishName(entity.getDisplayName());
                 ans.getRegionOptionCodeList().add(option);            }
         });
+        ans.setSalesVersionList(ans.getSalesVersionList().stream().sorted(Comparator.comparing(BaseVehicleOptionsRespDto::getOptionCode)).toList());
+        ans.setRegionOptionCodeList(ans.getRegionOptionCodeList().stream().sorted(Comparator.comparing(BaseVehicleOptionsRespDto::getOptionCode)).toList());
+        ans.setDriveHandList(ans.getDriveHandList().stream().sorted(Comparator.comparing(BaseVehicleOptionsRespDto::getOptionCode)).toList());
         return ans;
     }
 }

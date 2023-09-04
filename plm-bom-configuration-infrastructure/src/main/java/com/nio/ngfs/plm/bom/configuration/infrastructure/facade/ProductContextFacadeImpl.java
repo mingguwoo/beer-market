@@ -7,10 +7,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.event.Sync
 import com.nio.ngfs.plm.bom.configuration.infrastructure.common.warn.ConfigurationTo3deWarnSender;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.facade.common.AbstractEnoviaFacade;
 import com.nio.ngfs.plm.bom.configuration.remote.PlmEnoviaClient;
-import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.PlmProductContextFeatureDto;
-import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.PlmProductContextOptionDto;
-import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.PlmSyncProductContextModelFeatureDto;
-import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.PlmSyncProductContextModelFeatureOptionDto;
+import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -40,15 +37,13 @@ public class ProductContextFacadeImpl extends AbstractEnoviaFacade implements Pr
         syncAddProductContextModelFeatureOptionToEnovia(productContextModelFeatureOptionDtoList);
     }
 
-    @Override
-    public void syncAddProductContextModelFeatureOptionToEnovia(PlmSyncProductContextModelFeatureOptionDto modelFeatureOption) {
+    private void syncAddProductContextModelFeatureOptionToEnovia(PlmSyncProductContextModelFeatureOptionDto modelFeatureOption) {
         invokeEnovia(plmEnoviaClient::syncProductContextModelFeatureOption,modelFeatureOption,"PlmEnoviaClient.syncProductContextModelFeatureOption",(response,e)->
             configurationTo3deWarnSender.sendSyncProductContextModelFeatureOptionWarn(modelFeatureOption, e != null ? e.getMessage() : GsonUtils.toJson(response))
         );
     }
 
-    @Override
-    public void syncAddProductContextModelFeatureToEnovia(PlmSyncProductContextModelFeatureDto modelFeature) {
+    private void syncAddProductContextModelFeatureToEnovia(PlmSyncProductContextModelFeatureDto modelFeature) {
         log.info("ProductContextFacade syncProductContextModelFeatureToEnovia data={}", GsonUtils.toJson(modelFeature));
         invokeEnovia(plmEnoviaClient::syncProductContextModelFeature,modelFeature,"PlmEnoviaClient.syncProductContextModelFeature",(response,e)->{
             configurationTo3deWarnSender.sendSyncProductContextFeatureModelWarn(modelFeature,e != null ? e.getMessage() : GsonUtils.toJson(response));

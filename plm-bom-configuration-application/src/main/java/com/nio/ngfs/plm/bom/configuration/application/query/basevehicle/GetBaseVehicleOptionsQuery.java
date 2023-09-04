@@ -35,17 +35,17 @@ public class GetBaseVehicleOptionsQuery {
         List<String> codeList = Stream.of(ConfigConstants.BASE_VEHICLE_SALES_VERSION_FEATURE,ConfigConstants.BASE_VEHICLE_REGION_FEATURE,ConfigConstants.BASE_VEHICLE_DRIVE_HAND_FEATURE).collect(Collectors.toList());
         List<BomsFeatureLibraryEntity> allFeatures = bomsFeatureLibraryDao.queryByParentFeatureCodeListAndType(codeList, FeatureTypeEnum.OPTION.getType());
         List<String> featureList = allFeatures.stream().map(feature->feature.getFeatureCode()).collect(Collectors.toList());
+        List<BomsFeatureLibraryEntity> bomsFeatureLibraryEntities = new ArrayList<>();
         //如果有modelCode，说明是新增或者带着modelCode的搜索条件筛选，用modelCode去oxoFeatureOptionDao进行批量查询，看有哪些存在
         if (Objects.nonNull(qry.getModelCode())){
             List<BomsOxoFeatureOptionEntity> options = bomsOxoFeatureOptionDao.getBaseVehicleOptions(featureList,qry.getModelCode());
-            List<BomsFeatureLibraryEntity> bomsFeatureLibraryEntities = bomsFeatureLibraryDao.queryByFeatureOptionCodeList((options.stream().map(option-> option.getFeatureCode()).toList()));
-            return sortBaseVehicleOptions(bomsFeatureLibraryEntities);
+            bomsFeatureLibraryEntities = bomsFeatureLibraryDao.queryByFeatureOptionCodeList((options.stream().map(option-> option.getFeatureCode()).toList()));
         }
         //如果没有modelCode，说明是全量搜索条件
         else {
-            List<BomsFeatureLibraryEntity> bomsFeatureLibraryEntities = allFeatures;
-            return sortBaseVehicleOptions(bomsFeatureLibraryEntities);
+            bomsFeatureLibraryEntities = allFeatures;
         }
+        return sortBaseVehicleOptions(bomsFeatureLibraryEntities);
         }
 
 
@@ -75,7 +75,8 @@ public class GetBaseVehicleOptionsQuery {
                 option.setEnglishName(entity.getDisplayName());
                 ans.getDriveHandList().add(option);
             }
-            else {
+            //必须加上条件，否则会出现不符合规则的历史数据也放进去的情况
+            else if (entity.getFeatureCode().substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO).equals(ConfigConstants.BASE_VEHICLE_REGION_FEATURE.substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO))){
                 BaseVehicleOptionsRespDto option = new BaseVehicleOptionsRespDto();
                 option.setOptionCode(entity.getFeatureCode());
                 option.setDescription(entity.getDescription());

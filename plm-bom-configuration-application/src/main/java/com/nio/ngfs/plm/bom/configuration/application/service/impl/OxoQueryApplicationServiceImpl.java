@@ -68,7 +68,7 @@ public class OxoQueryApplicationServiceImpl implements OxoQueryApplicationServic
 
         String compareVersion = oxoCompareQry.getCompareVersion();
 
-        if (org.apache.commons.lang.StringUtils.containsIgnoreCase(baseVersion, compareVersion)) {
+        if (StringUtils.equals(baseVersion, compareVersion)) {
             throw new BusinessException(ConfigErrorCode.BASIC_VERSION_ERROR);
         }
 

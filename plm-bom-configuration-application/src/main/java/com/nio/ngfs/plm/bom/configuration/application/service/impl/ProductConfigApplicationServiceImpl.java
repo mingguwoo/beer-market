@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.application.service.impl;
 
+import com.google.common.collect.Lists;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.application.service.ProductConfigApplicationService;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * @author xiaozhou.tu
@@ -73,8 +75,8 @@ public class ProductConfigApplicationServiceImpl implements ProductConfigApplica
         if (oxoVersionSnapshotAggr == null) {
             throw new BusinessException(ConfigErrorCode.OXO_VERSION_SNAPSHOT_NOT_EXIST);
         }
-        OxoListRespDto OxoListRespDto = oxoVersionSnapshotDomainService.resolveSnapShot(oxoVersionSnapshotAggr.findOxoSnapshot());
-        return LambdaUtil.map(OxoListRespDto.getOxoRowsResps(), row -> {
+        OxoListRespDto oxoListRespDto = oxoVersionSnapshotDomainService.resolveSnapShot(oxoVersionSnapshotAggr.findOxoSnapshot());
+        return LambdaUtil.map(oxoListRespDto.getOxoRowsResps(), row -> {
             BasedOnBaseVehicleFeature baseVehicleFeature = new BasedOnBaseVehicleFeature();
             baseVehicleFeature.setFeatureCode(row.getFeatureCode());
             baseVehicleFeature.setOptionList(LambdaUtil.map(row.getOptions(), option -> {
@@ -82,7 +84,7 @@ public class ProductConfigApplicationServiceImpl implements ProductConfigApplica
                 baseVehicleOption.setOptionCode(option.getFeatureCode());
                 baseVehicleOption.setFeatureCode(row.getFeatureCode());
                 // 筛选指定BaseVehicleId
-                baseVehicleOption.setPackageCode(option.getPackInfos().stream()
+                baseVehicleOption.setPackageCode(Optional.ofNullable(option.getPackInfos()).orElse(Lists.newArrayList()).stream()
                         .filter(i -> Objects.equals(i.getHeadId(), productConfigAggr.getBasedOnBaseVehicleId()))
                         .findFirst().map(OxoEditCmd::getPackageCode).orElse(null));
                 if (StringUtils.isBlank(baseVehicleOption.getPackageCode())) {

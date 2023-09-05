@@ -137,8 +137,23 @@ public class ProductConfigAggr extends AbstractDo implements AggrRoot<String> {
      * 改变Skip Check
      */
     public void changeSkipCheck(boolean skipCheck, String updateUser) {
+        // Skip Check未变更，不处理
+        if (skipCheck && isSkipCheckOpen()) {
+            return;
+        }
+        // Skip Check未变更，不处理
+        if (!skipCheck && isSkipCheckClose()) {
+            return;
+        }
         setSkipCheck(skipCheck ? CommonConstants.OPEN : CommonConstants.CLOSE);
         setUpdateUser(updateUser);
+    }
+
+    /**
+     * 完成初始化勾选
+     */
+    public void completeInitSelect() {
+        setCompleteInitSelect(YesOrNoEnum.YES.getCode());
     }
 
     /**
@@ -165,6 +180,20 @@ public class ProductConfigAggr extends AbstractDo implements AggrRoot<String> {
      */
     public boolean isSkipCheckClose() {
         return Objects.equals(skipCheck, CommonConstants.CLOSE);
+    }
+
+    /**
+     * 是否完成初始化勾选
+     */
+    public boolean isCompleteInitSelect() {
+        return Objects.equals(completeInitSelect, YesOrNoEnum.YES.getCode());
+    }
+
+    /**
+     * 是否From BaseVehicle
+     */
+    public boolean isFromBaseVehicle() {
+        return basedOnBaseVehicleId > 0;
     }
 
 }

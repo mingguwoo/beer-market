@@ -25,7 +25,7 @@ public class QueryProductConfigAssembler {
         pcDto.setPcName(entity.getName());
         pcDto.setModel(entity.getModelCode());
         pcDto.setModelYear(entity.getModelYear());
-        pcDto.setSkipCheck(entity.getSkipCheck());
+        pcDto.setSkipCheck(Objects.equals(entity.getSkipCheck(), CommonConstants.OPEN));
         return pcDto;
     }
 

@@ -57,6 +57,9 @@ public class EditProductConfigCommand extends AbstractLockCommand<EditProductCon
         // edit时skipCheck校验
         productConfigOptionApplicationService.skipCheckBeforeEdit(productConfigAggrList, productConfigOptionAggrList);
         // Product Context勾选校验
+        productConfigOptionApplicationService.checkEditByProductContextSelect(productConfigAggrList, productConfigOptionAggrList, productContextAggrList);
+        // From BaseVehicle初始化完成
+        productConfigDomainService.checkCompleteInitSelect(productConfigAggrList, productConfigOptionAggrList);
         // 保存到数据库
         ((EditProductConfigCommand) AopContext.currentProxy()).savePcAndPcOptionConfig(productConfigAggrList, saveProductConfigOptionAggrList);
         return new EditProductConfigRespDto();

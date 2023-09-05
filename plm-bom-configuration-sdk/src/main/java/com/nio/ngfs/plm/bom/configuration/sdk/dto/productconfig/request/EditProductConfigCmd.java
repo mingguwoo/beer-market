@@ -20,7 +20,6 @@ public class EditProductConfigCmd implements Cmd {
     @NotEmpty(message = "PC List is empty")
     private List<PcDto> pcList;
 
-    @NotEmpty(message = "Update PC Option Config List is empty")
     private List<PcOptionConfigDto> updatePcOptionConfigList;
 
     @NotBlank(message = "Update User is blank")

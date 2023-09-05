@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.application.service.impl;
 
+import com.google.common.collect.Lists;
 import com.nio.bom.share.enums.YesOrNoEnum;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.LambdaUtil;
@@ -13,11 +14,14 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.enums
 import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.ProductContextAggr;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.request.EditProductConfigCmd;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author xiaozhou.tu
@@ -30,6 +34,10 @@ public class ProductConfigOptionApplicationServiceImpl implements ProductConfigO
     @Override
     public List<ProductConfigOptionAggr> editPcOptionConfig(List<EditProductConfigCmd.PcOptionConfigDto> updatePcOptionConfigList, List<ProductConfigAggr> productConfigAggrList,
                                                             List<ProductConfigOptionAggr> productConfigOptionAggrList, List<ProductContextAggr> productContextAggrList) {
+        if (CollectionUtils.isEmpty(updatePcOptionConfigList)) {
+            return Lists.newArrayList();
+        }
+        // 构建PC、Product Config勾选、Product Context勾选的Map
         Map<String, ProductConfigAggr> productConfigAggrMap = LambdaUtil.toKeyMap(productConfigAggrList, ProductConfigAggr::getPcId);
         Map<String, ProductContextAggr> productContextAggrMap = LambdaUtil.toKeyMap(productContextAggrList, i -> buildProductContextAggrKey(i.getOptionCode(), i.getModelYear()));
         Map<ProductConfigOptionId, ProductConfigOptionAggr> productConfigOptionAggrMap = LambdaUtil.toKeyMap(productConfigOptionAggrList, ProductConfigOptionAggr::getUniqId);
@@ -42,6 +50,10 @@ public class ProductConfigOptionApplicationServiceImpl implements ProductConfigO
                 return newProductConfigOptionAggr;
             }
             ProductConfigAggr productConfigAggr = productConfigAggrMap.get(existProductConfigOptionAggr.getPcId());
+            if (productConfigAggr == null) {
+                throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_PC_NOT_EXIST);
+            }
+            // 编辑Product Config勾选校验
             checkEditPcOptionConfig(i, existProductConfigOptionAggr, productConfigAggr,
                     productContextAggrMap.get(buildProductContextAggrKey(existProductConfigOptionAggr.getOptionCode(), productConfigAggr.getModelYear())));
             return existProductConfigOptionAggr;
@@ -50,8 +62,9 @@ public class ProductConfigOptionApplicationServiceImpl implements ProductConfigO
 
     @Override
     public void skipCheckBeforeEdit(List<ProductConfigAggr> productConfigAggrList, List<ProductConfigOptionAggr> productConfigOptionAggrList) {
+        // Product Config勾选按PC分组
         Map<String, List<ProductConfigOptionAggr>> productConfigOptionGroupByPc = LambdaUtil.groupBy(productConfigOptionAggrList, ProductConfigOptionAggr::getPcId);
-        // skipCheck关闭状态
+        // skipCheck关闭状态时，进行Feature/Option校验
         productConfigAggrList.stream().filter(ProductConfigAggr::isSkipCheckClose).forEach(productConfigAggr -> {
             List<ProductConfigOptionAggr> productConfigOptionList = productConfigOptionGroupByPc.get(productConfigAggr.getPcId());
             // 按Feature分组
@@ -62,6 +75,49 @@ public class ProductConfigOptionApplicationServiceImpl implements ProductConfigO
                 }
             });
         });
+    }
+
+    @Override
+    public void checkEditByProductContextSelect(List<ProductConfigAggr> productConfigAggrList, List<ProductConfigOptionAggr> productConfigOptionAggrList, List<ProductContextAggr> productContextAggrList) {
+        Map<String, ProductConfigAggr> productConfigAggrMap = LambdaUtil.toKeyMap(productConfigAggrList, ProductConfigAggr::getPcId);
+        Map<String, ProductContextAggr> productContextAggrMap = LambdaUtil.toKeyMap(productContextAggrList, i -> buildProductContextAggrKey(i.getOptionCode(), i.getModelYear()));
+        productConfigOptionAggrList.stream().filter(ProductConfigOptionAggr::isSelect).forEach(productConfigOptionAggr -> {
+            ProductConfigAggr productConfigAggr = productConfigAggrMap.get(productConfigOptionAggr.getPcId());
+            if (productConfigAggr == null) {
+                throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_PC_NOT_EXIST);
+            }
+            // 排除From BaseVehicle
+            ProductContextAggr productContextAggr = productContextAggrMap.get(buildProductContextAggrKey(productConfigOptionAggr.getOptionCode(),
+                    productConfigAggr.getModelYear()));
+            if (productContextAggr == null) {
+                // Product Config勾选了，Product Context未勾选，报错
+                throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_OPTION_CAN_NOT_SELECT.getCode(),
+                        String.format("Option %s Is Not Applied In Product Context %s %s, Which Can Not Be Applied In Related PC Either!",
+                                productConfigOptionAggr.getOptionCode(), productConfigAggr.getModelCode(), productConfigAggr.getModelYear()));
+            }
+        });
+
+        Map<String, List<ProductConfigOptionAggr>> productConfigOptionAggrMap = LambdaUtil.groupBy(productConfigOptionAggrList, ProductConfigOptionAggr::getPcId);
+        // 按Model Year分组
+        LambdaUtil.groupBy(productContextAggrList, ProductContextAggr::getModelYear)
+                .forEach((modelYear, productContextOptionList) -> {
+                    // 筛选出勾选的Feature Code
+                    Set<String> selectFeatureCodeSet = productContextOptionList.stream().map(ProductContextAggr::getFeatureCode).collect(Collectors.toSet());
+                    productConfigAggrList.stream().filter(i -> Objects.equals(i.getModelYear(), modelYear)).forEach(pc -> {
+                        List<ProductConfigOptionAggr> productConfigOptionListByPc = productConfigOptionAggrMap.get(pc.getPcId());
+                        // 按Feature Code分组校验
+                        LambdaUtil.groupBy(productConfigOptionListByPc, ProductConfigOptionAggr::getFeatureCode).forEach((featureCode, optionList) -> {
+                            if (!selectFeatureCodeSet.contains(featureCode)) {
+                                return;
+                            }
+                            if (optionList.stream().noneMatch(ProductConfigOptionAggr::isSelect)) {
+                                throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_OPTION_AT_LEAST_SELECT_ONE.getCode(),
+                                        String.format(ConfigErrorCode.PRODUCT_CONFIG_OPTION_AT_LEAST_SELECT_ONE.getMessage(),
+                                                featureCode, modelYear, pc.getPcId()));
+                            }
+                        });
+                    });
+                });
     }
 
     private String buildProductContextAggrKey(String optionCode, String modelYear) {
@@ -81,7 +137,7 @@ public class ProductConfigOptionApplicationServiceImpl implements ProductConfigO
         if (!pcOptionConfigDto.isSelect() && !productConfigOptionAggr.isSelect()) {
             return;
         }
-        // 勾选状态变更，是否可编辑校验
+        // 勾选状态变更，校验是否可编辑
         if (Objects.equals(ProductConfigOptionTypeEnum.FROM_BASE_VEHICLE.getType(), productConfigOptionAggr.getType())
                 && Objects.equals(YesOrNoEnum.NO.getCode(), productConfigAggr.getCompleteInitSelect())) {
             // 打点Copy From Base Vehicle，且未完成初始化勾选，校验是否可编辑

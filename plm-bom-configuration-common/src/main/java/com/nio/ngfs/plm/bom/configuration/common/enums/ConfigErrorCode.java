@@ -89,6 +89,7 @@ public enum ConfigErrorCode implements ErrorCode {
     PRODUCT_CONFIG_SKIP_CHECK_CLOSE_ERROR(83011, "At Most One Option Can Select In The Same Feature When SkipCheck Is Close!"),
     PRODUCT_CONFIG_OPTION_CAN_NOT_EDIT(83012, "Product Config Can Not Edit!"),
     PRODUCT_CONFIG_OPTION_CAN_NOT_SELECT(83013, "Option xxx Is Not Applied In Product Context xxx, Which Can Not Be Applied In Related PC Either!"),
+    PRODUCT_CONFIG_OPTION_AT_LEAST_SELECT_ONE(83014, "Feature xxx Is Applied In Product Context xxx, Please Choose At Least One Option Of The Feature In PC xxx!"),
 
     /**
      * Other

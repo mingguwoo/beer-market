@@ -33,4 +33,14 @@ public interface ProductConfigOptionApplicationService {
      */
     void skipCheckBeforeEdit(List<ProductConfigAggr> productConfigAggrList, List<ProductConfigOptionAggr> productConfigOptionAggrList);
 
+    /**
+     * 根据Product Context勾选状态进行编辑校验
+     *
+     * @param productConfigAggrList       PC列表
+     * @param productConfigOptionAggrList Product Config勾选列表
+     * @param productContextAggrList      Product Context勾选列表
+     */
+    void checkEditByProductContextSelect(List<ProductConfigAggr> productConfigAggrList, List<ProductConfigOptionAggr> productConfigOptionAggrList,
+                                         List<ProductContextAggr> productContextAggrList);
+
 }

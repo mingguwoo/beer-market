@@ -99,7 +99,7 @@ public class QueryProductConfigRespDto implements Dto {
 
         private String modelYear;
 
-        private String skipCheck;
+        private boolean skipCheck;
 
     }
 

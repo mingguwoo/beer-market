@@ -4,6 +4,7 @@ import com.nio.bom.share.constants.CommonConstants;
 import com.nio.bom.share.domain.model.AggrRoot;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.enums.ProductConfigOptionSelectStatusEnum;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.enums.ProductConfigOptionTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -51,11 +52,6 @@ public class ProductConfigOptionAggr extends AbstractDo implements AggrRoot<Prod
         return productConfigOptionId;
     }
 
-    public void changeSelectStatus(boolean select) {
-        setSelectStatus(select ? ProductConfigOptionSelectStatusEnum.SELECT.getStatus() :
-                ProductConfigOptionSelectStatusEnum.UNSELECT.getStatus());
-    }
-
     public String getPcId() {
         return productConfigOptionId.getPcId();
     }
@@ -64,12 +60,33 @@ public class ProductConfigOptionAggr extends AbstractDo implements AggrRoot<Prod
         return productConfigOptionId.getOptionCode();
     }
 
+    /**
+     * 变更勾选状态
+     */
+    public void changeSelectStatus(boolean select) {
+        setSelectStatus(select ? ProductConfigOptionSelectStatusEnum.SELECT.getStatus() :
+                ProductConfigOptionSelectStatusEnum.UNSELECT.getStatus());
+    }
+
+    /**
+     * 是否勾选
+     */
     public boolean isSelect() {
         return Objects.equals(selectStatus, ProductConfigOptionSelectStatusEnum.SELECT.getStatus());
     }
 
+    /**
+     * 勾选是否可编辑
+     */
     public boolean isSelectCanEdit() {
         return Objects.equals(selectCanEdit, CommonConstants.YES);
+    }
+
+    /**
+     * 是否From BaseVehicle
+     */
+    public boolean isFromBaseVehicle() {
+        return Objects.equals(type, ProductConfigOptionTypeEnum.FROM_BASE_VEHICLE.getType());
     }
 
 }

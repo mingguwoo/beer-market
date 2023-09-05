@@ -53,13 +53,13 @@ public class EditProductConfigCommand extends AbstractLockCommand<EditProductCon
                 LambdaUtil.map(productConfigAggrList, ProductConfigAggr::getModelYear, true));
         // 编辑Product Config勾选
         List<ProductConfigOptionAggr> saveProductConfigOptionAggrList = productConfigOptionApplicationService.editPcOptionConfig(cmd.getUpdatePcOptionConfigList(),
-                productConfigAggrList, productConfigOptionAggrList, productContextAggrList);
+                productConfigAggrList, productConfigOptionAggrList);
         // edit时skipCheck校验
         productConfigOptionApplicationService.skipCheckBeforeEdit(productConfigAggrList, productConfigOptionAggrList);
         // Product Context勾选校验
         productConfigOptionApplicationService.checkEditByProductContextSelect(productConfigAggrList, productConfigOptionAggrList, productContextAggrList);
-        // From BaseVehicle初始化完成
-        productConfigDomainService.checkCompleteInitSelect(productConfigAggrList, productConfigOptionAggrList);
+        // 处理初始化勾选完成
+        productConfigDomainService.handleCompleteInitSelect(productConfigAggrList, productConfigOptionAggrList);
         // 保存到数据库
         ((EditProductConfigCommand) AopContext.currentProxy()).savePcAndPcOptionConfig(productConfigAggrList, saveProductConfigOptionAggrList);
         return new EditProductConfigRespDto();

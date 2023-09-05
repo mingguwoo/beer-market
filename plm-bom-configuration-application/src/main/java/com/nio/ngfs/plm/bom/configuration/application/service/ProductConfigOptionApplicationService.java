@@ -19,11 +19,10 @@ public interface ProductConfigOptionApplicationService {
      * @param updatePcOptionConfigList    更新的Product Config勾选列表
      * @param productConfigAggrList       PC列表
      * @param productConfigOptionAggrList Product Config勾选列表
-     * @param productContextAggrList      Product Context勾选列表
      * @return 更新的ProductConfigOptionAggr列表
      */
     List<ProductConfigOptionAggr> editPcOptionConfig(List<EditProductConfigCmd.PcOptionConfigDto> updatePcOptionConfigList, List<ProductConfigAggr> productConfigAggrList,
-                                                     List<ProductConfigOptionAggr> productConfigOptionAggrList, List<ProductContextAggr> productContextAggrList);
+                                                     List<ProductConfigOptionAggr> productConfigOptionAggrList);
 
     /**
      * edit时skipCheck校验

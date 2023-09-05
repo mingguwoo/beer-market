@@ -46,11 +46,11 @@ public interface ProductConfigDomainService {
     List<ProductConfigAggr> changePcSkipCheck(Map<String, Boolean> pcSkipCheckMap, String updateUser);
 
     /**
-     * 检查是否完成初始化勾选
+     * 处理初始化勾选完成
      *
      * @param productConfigAggrList       PC列表
      * @param productConfigOptionAggrList Product Config勾选列表
      */
-    void checkCompleteInitSelect(List<ProductConfigAggr> productConfigAggrList, List<ProductConfigOptionAggr> productConfigOptionAggrList);
+    void handleCompleteInitSelect(List<ProductConfigAggr> productConfigAggrList, List<ProductConfigOptionAggr> productConfigOptionAggrList);
 
 }

@@ -74,9 +74,9 @@ public class ProductConfigDomainServiceImpl implements ProductConfigDomainServic
     }
 
     @Override
-    public void checkCompleteInitSelect(List<ProductConfigAggr> productConfigAggrList, List<ProductConfigOptionAggr> productConfigOptionAggrList) {
+    public void handleCompleteInitSelect(List<ProductConfigAggr> productConfigAggrList, List<ProductConfigOptionAggr> productConfigOptionAggrList) {
         // 筛选未完成初始化勾选的From BaseVehicle的PC列表
-        productConfigAggrList.stream().filter(i -> i.isFromBaseVehicle() && !i.isCompleteInitSelect()).forEach(pc -> {
+        productConfigAggrList.stream().filter(i -> i.isFromBaseVehicle() && i.isNotCompleteInitSelect()).forEach(pc -> {
             Map<String, List<ProductConfigOptionAggr>> checkOptionListByFeature = productConfigOptionAggrList.stream()
                     .filter(i -> Objects.equals(i.getPcId(), pc.getPcId()))
                     .filter(ProductConfigOptionAggr::isFromBaseVehicle)

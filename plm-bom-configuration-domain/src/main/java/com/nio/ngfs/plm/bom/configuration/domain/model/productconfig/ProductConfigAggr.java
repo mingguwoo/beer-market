@@ -183,10 +183,10 @@ public class ProductConfigAggr extends AbstractDo implements AggrRoot<String> {
     }
 
     /**
-     * 是否完成初始化勾选
+     * 是否未完成初始化勾选
      */
-    public boolean isCompleteInitSelect() {
-        return Objects.equals(completeInitSelect, YesOrNoEnum.YES.getCode());
+    public boolean isNotCompleteInitSelect() {
+        return Objects.equals(completeInitSelect, YesOrNoEnum.NO.getCode());
     }
 
     /**

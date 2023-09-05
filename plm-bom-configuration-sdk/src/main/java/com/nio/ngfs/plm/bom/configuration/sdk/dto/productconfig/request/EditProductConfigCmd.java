@@ -48,6 +48,7 @@ public class EditProductConfigCmd implements Cmd {
         @NotBlank(message = "Feature Code is blank")
         private String featureCode;
 
+        @NotBlank(message = "Select is blank")
         private boolean select;
 
     }

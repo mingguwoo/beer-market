@@ -33,13 +33,12 @@ public class ProductConfigOptionApplicationServiceImpl implements ProductConfigO
 
     @Override
     public List<ProductConfigOptionAggr> editPcOptionConfig(List<EditProductConfigCmd.PcOptionConfigDto> updatePcOptionConfigList, List<ProductConfigAggr> productConfigAggrList,
-                                                            List<ProductConfigOptionAggr> productConfigOptionAggrList, List<ProductContextAggr> productContextAggrList) {
+                                                            List<ProductConfigOptionAggr> productConfigOptionAggrList) {
         if (CollectionUtils.isEmpty(updatePcOptionConfigList)) {
             return Lists.newArrayList();
         }
         // 构建PC、Product Config勾选、Product Context勾选的Map
         Map<String, ProductConfigAggr> productConfigAggrMap = LambdaUtil.toKeyMap(productConfigAggrList, ProductConfigAggr::getPcId);
-        Map<String, ProductContextAggr> productContextAggrMap = LambdaUtil.toKeyMap(productContextAggrList, i -> buildProductContextAggrKey(i.getOptionCode(), i.getModelYear()));
         Map<ProductConfigOptionId, ProductConfigOptionAggr> productConfigOptionAggrMap = LambdaUtil.toKeyMap(productConfigOptionAggrList, ProductConfigOptionAggr::getUniqId);
         return LambdaUtil.map(updatePcOptionConfigList, i -> {
             ProductConfigOptionAggr existProductConfigOptionAggr = productConfigOptionAggrMap.get(new ProductConfigOptionId(i.getPcId(), i.getOptionCode()));
@@ -54,8 +53,7 @@ public class ProductConfigOptionApplicationServiceImpl implements ProductConfigO
                 throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_PC_NOT_EXIST);
             }
             // 编辑Product Config勾选校验
-            checkEditPcOptionConfig(i, existProductConfigOptionAggr, productConfigAggr,
-                    productContextAggrMap.get(buildProductContextAggrKey(existProductConfigOptionAggr.getOptionCode(), productConfigAggr.getModelYear())));
+            checkEditPcOptionConfig(i, existProductConfigOptionAggr, productConfigAggr);
             return existProductConfigOptionAggr;
         });
     }
@@ -86,7 +84,10 @@ public class ProductConfigOptionApplicationServiceImpl implements ProductConfigO
             if (productConfigAggr == null) {
                 throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_PC_NOT_EXIST);
             }
-            // 排除From BaseVehicle
+            // 排除From BaseVehicle未完成初始化勾选
+            if (productConfigAggr.isFromBaseVehicle() && productConfigAggr.isNotCompleteInitSelect()) {
+                return;
+            }
             ProductContextAggr productContextAggr = productContextAggrMap.get(buildProductContextAggrKey(productConfigOptionAggr.getOptionCode(),
                     productConfigAggr.getModelYear()));
             if (productContextAggr == null) {
@@ -127,8 +128,7 @@ public class ProductConfigOptionApplicationServiceImpl implements ProductConfigO
     /**
      * 编辑Product Config勾选校验
      */
-    private void checkEditPcOptionConfig(EditProductConfigCmd.PcOptionConfigDto pcOptionConfigDto, ProductConfigOptionAggr productConfigOptionAggr, ProductConfigAggr productConfigAggr,
-                                         ProductContextAggr productContextAggr) {
+    private void checkEditPcOptionConfig(EditProductConfigCmd.PcOptionConfigDto pcOptionConfigDto, ProductConfigOptionAggr productConfigOptionAggr, ProductConfigAggr productConfigAggr) {
         // 勾选状态未变更，不处理
         if (pcOptionConfigDto.isSelect() && productConfigOptionAggr.isSelect()) {
             return;
@@ -145,12 +145,6 @@ public class ProductConfigOptionApplicationServiceImpl implements ProductConfigO
                 throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_OPTION_CAN_NOT_EDIT.getCode(),
                         String.format("Option %s In PC %s Can Not Edit!", productConfigOptionAggr.getOptionCode(), productConfigOptionAggr.getPcId()));
             }
-        }
-        // 状态改为勾选，校验是否可勾选
-        if (pcOptionConfigDto.isSelect() && productContextAggr == null) {
-            throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_OPTION_CAN_NOT_SELECT.getCode(),
-                    String.format("Option %s Is Not Applied In Product Context %s %s, Which Can Not Be Applied In Related PC Either!",
-                            productConfigOptionAggr.getOptionCode(), productConfigAggr.getModelCode(), productConfigAggr.getModelYear()));
         }
         productConfigOptionAggr.changeSelectStatus(pcOptionConfigDto.isSelect());
     }

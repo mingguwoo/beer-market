@@ -84,7 +84,7 @@ public class ImportBaseVehicleTask {
             PreconditionUtil.checkNotBlank(history.getDriveHand(),"Drive hand is blank");
             PreconditionUtil.checkNotBlank(history.getSalesVersion(),"Sales version is blank");
             PreconditionUtil.checkNotBlank(history.getRegionOptionCode(),"Region option code is blank");
-            //PreconditionUtil.checkNotBlank(history.getUpdateUser(),"Update user is blank");
+            PreconditionUtil.checkNotBlank(history.getUpdateUser(),"Update user is blank");
             PreconditionUtil.checkNotBlank(history.getUpdateTime(),"Update time is blank");
             PreconditionUtil.checkNotBlank(history.getCreateTime(),"Create time is blank");
             PreconditionUtil.checkNotBlank(history.getCreateUser(),"Create user is blank");

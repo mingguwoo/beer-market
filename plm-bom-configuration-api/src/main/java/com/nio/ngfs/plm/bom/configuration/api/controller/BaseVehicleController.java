@@ -15,7 +15,6 @@ import com.nio.ngfs.plm.bom.configuration.application.task.basevehicle.ImportBas
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmBaseVehicleClient;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.request.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.response.*;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.response.ImportBaseVehicleRespDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;

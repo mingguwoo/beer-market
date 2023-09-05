@@ -598,7 +598,7 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
 
         OxoTemplateRequestCmd templateRequest = new OxoTemplateRequestCmd();
         templateRequest.setRegionOptionCodes(regionOptionCodes);
-        templateRequest.setChangeContent(oxoVersionSnapshot.getChangeContent());
+        templateRequest.setChangeContent(oxoVersionSnapshot.getChangeContent().replaceAll("\n","<br/>"));
         templateRequest.setUrl(oxoEmailChangeLogUrl.replace("nio", oxoVersionSnapshot.getBrand().toLowerCase()) + modelCode);
 
 

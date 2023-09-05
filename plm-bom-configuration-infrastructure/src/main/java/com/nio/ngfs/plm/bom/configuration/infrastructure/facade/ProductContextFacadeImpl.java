@@ -7,7 +7,10 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.event.Sync
 import com.nio.ngfs.plm.bom.configuration.infrastructure.common.warn.ConfigurationTo3deWarnSender;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.facade.common.AbstractEnoviaFacade;
 import com.nio.ngfs.plm.bom.configuration.remote.PlmEnoviaClient;
-import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.*;
+import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.PlmProductContextFeatureDto;
+import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.PlmProductContextOptionDto;
+import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.PlmSyncProductContextModelFeatureDto;
+import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.PlmSyncProductContextModelFeatureOptionDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

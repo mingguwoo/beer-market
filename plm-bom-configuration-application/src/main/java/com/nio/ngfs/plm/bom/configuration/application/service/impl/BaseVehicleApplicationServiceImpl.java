@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.nio.bom.share.constants.CommonConstants;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.GZIPUtils;
+import com.nio.ngfs.plm.bom.configuration.application.query.oxo.common.OxoQueryUtil;
 import com.nio.ngfs.plm.bom.configuration.application.service.BaseVehicleApplicationService;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
@@ -182,7 +183,7 @@ public class BaseVehicleApplicationServiceImpl implements BaseVehicleApplication
         }
         if (CollectionUtils.isNotEmpty(oxoSnapshotList)){
             oxoSnapshotList.forEach(aggr->{
-                OxoListRespDto oxoListRespDto = JSONObject.parseObject(JSONArray.parse(GZIPUtils.uncompress(aggr.getOxoSnapshot())).toString(), OxoListRespDto.class);
+                OxoListRespDto oxoListRespDto = OxoQueryUtil.resolveSnapShot(aggr.getOxoSnapshot());
                 oxoListRespDto.getOxoHeadResps().forEach(head->{
                     head.getRegionInfos().forEach(region->{
                         //如果region一样，就判断drive hand

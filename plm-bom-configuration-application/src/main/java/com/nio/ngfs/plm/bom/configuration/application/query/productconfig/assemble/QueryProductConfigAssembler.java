@@ -32,7 +32,7 @@ public class QueryProductConfigAssembler {
     public static QueryProductConfigRespDto.FeatureDto assemble(BomsFeatureLibraryEntity entity) {
         QueryProductConfigRespDto.FeatureDto featureDto = new QueryProductConfigRespDto.FeatureDto();
         featureDto.setFeatureCode(entity.getFeatureCode());
-        featureDto.setGroup(entity.getGroup());
+        featureDto.setGroup(entity.getParentFeatureCode());
         featureDto.setDisplayName(entity.getDisplayName());
         featureDto.setChineseName(entity.getChineseName());
         return featureDto;

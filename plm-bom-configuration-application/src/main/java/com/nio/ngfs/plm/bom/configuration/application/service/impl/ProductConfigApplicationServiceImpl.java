@@ -75,7 +75,7 @@ public class ProductConfigApplicationServiceImpl implements ProductConfigApplica
         if (oxoVersionSnapshotAggr == null) {
             throw new BusinessException(ConfigErrorCode.OXO_VERSION_SNAPSHOT_NOT_EXIST);
         }
-        OxoListRespDto oxoListRespDto = oxoVersionSnapshotDomainService.resolveSnapShot(oxoVersionSnapshotAggr.findOxoSnapshot());
+        OxoListRespDto oxoListRespDto = oxoVersionSnapshotDomainService.resolveSnapShot(oxoVersionSnapshotAggr.getOxoSnapshot());
         return LambdaUtil.map(oxoListRespDto.getOxoRowsResps(), row -> {
             BasedOnBaseVehicleFeature baseVehicleFeature = new BasedOnBaseVehicleFeature();
             baseVehicleFeature.setFeatureCode(row.getFeatureCode());

@@ -44,7 +44,7 @@ public class ProductConfigOptionApplicationServiceImpl implements ProductConfigO
             ProductConfigOptionAggr existProductConfigOptionAggr = productConfigOptionAggrMap.get(new ProductConfigOptionId(i.getPcId(), i.getOptionCode()));
             if (existProductConfigOptionAggr == null) {
                 // 新增的勾选记录
-                ProductConfigOptionAggr newProductConfigOptionAggr = ProductConfigOptionFactory.create(i.getPcId(), i.getOptionCode(), i.getFeatureCode());
+                ProductConfigOptionAggr newProductConfigOptionAggr = ProductConfigOptionFactory.create(i.getPcId(), i.getOptionCode(), i.getFeatureCode(), i.isSelect());
                 productConfigOptionAggrList.add(newProductConfigOptionAggr);
                 return newProductConfigOptionAggr;
             }

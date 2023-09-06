@@ -11,6 +11,7 @@ import com.nio.ngfs.plm.bom.configuration.application.query.basevehicle.ExportBa
 import com.nio.ngfs.plm.bom.configuration.application.query.basevehicle.GetBaseVehicleOptionsQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.basevehicle.QueryBaseVehicleQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.basevehicle.QueryCopyFromModelQuery;
+import com.nio.ngfs.plm.bom.configuration.application.task.basevehicle.ImportBaseVehicleTask;
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmBaseVehicleClient;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.request.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.response.*;
@@ -18,7 +19,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -42,6 +45,7 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
     private final GetBaseVehicleOptionsQuery getbaseVehicleOptionsQuery;
     private final QueryCopyFromModelQuery queryCopyFromModelQuery;
     private final ExportBaseVehicleQuery exportBaseVehicleQuery;
+    private final ImportBaseVehicleTask importBaseVehicleTask;
 
 
     @Override
@@ -98,5 +102,11 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
     @PostMapping("/baseVehicle/exportBaseVehicle")
     public void exportBaseVehicle(@Valid @RequestBody ExportBaseVehicleQry qry, HttpServletResponse response) {
         exportBaseVehicleQuery.execute(qry,response);
+    }
+
+    @NotLogResult
+    @PostMapping("/baseVehicle/importBaseVehicle")
+    public ResultInfo<ImportBaseVehicleRespDto> importBaseVehicleHistory(@RequestPart("file") MultipartFile file){
+        return ResultInfo.success(importBaseVehicleTask.execute(file));
     }
 }

@@ -20,6 +20,7 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoSnapshotCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListRespDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -79,18 +80,19 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, List
         baseCmd.setModelCode(modelCode);
 
         //查询 oxo最新working 版本信息  Informal 仅包含Maturity为P且Status为Active的Base Vehicle
-        OxoListRespDto OxoListRespDto = oxoQueryApplicationService.queryOxoInfoByModelCode(modelCode, ConfigConstants.WORKING,
+        OxoListRespDto oxoLists = oxoQueryApplicationService.queryOxoInfoByModelCode(modelCode, ConfigConstants.WORKING,
                 StringUtils.equals(type, OxoSnapshotEnum.FORMAL.getCode()));
 
         // 如果是首发版本
         if (StringUtils.contains(version, ConfigConstants.VERSION_AA)) {
             //- 针对Model下的首版OXO发布，系统需校验AF00是否存在于OXO中
-            if (OxoListRespDto.getOxoRowsResps().stream().noneMatch(x -> StringUtils.equals(x.getFeatureCode(), ConfigConstants.FEATURE_CODE_AF00))) {
+            if (CollectionUtils.isEmpty(oxoLists.getOxoRowsResps()) ||
+                    oxoLists.getOxoRowsResps().stream().noneMatch(x -> StringUtils.equals(x.getFeatureCode(), ConfigConstants.FEATURE_CODE_AF00))) {
                 throw new BusinessException(ConfigErrorCode.AF_ERROR);
             }
         }
 
-        OxoVersionSnapshotAggr oxoVersionSnapshot = OxoVersionSnapshotFactory.buildOxoFeatureOptions(OxoListRespDto, version, editGroupCmd);
+        OxoVersionSnapshotAggr oxoVersionSnapshot = OxoVersionSnapshotFactory.buildOxoFeatureOptions(oxoLists, version, editGroupCmd);
 
 
         //开启事务
@@ -126,7 +128,7 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, List
                 OxoListRespDto preOxoListQry = JSONObject.parseObject(JSONArray.parse(oxoVersionSnapshotAggr.getPreOxoSnapshot()).toString(), OxoListRespDto.class);
 
                 // 对比
-                OxoListRespDto compareOxoListQry = oxoCompareDomainService.compareVersion(OxoListRespDto, preOxoListQry, true);
+                OxoListRespDto compareOxoListQry = oxoCompareDomainService.compareVersion(oxoLists, preOxoListQry, true);
 
                 oxoVersionSnapshot.setPreOxoSnapshot(oxoVersionSnapshotAggr.getPreOxoSnapshot());
                 oxoVersionSnapshot.setPreVersion(oxoVersionSnapshotAggr.getPreVersion());

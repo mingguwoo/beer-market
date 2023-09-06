@@ -346,12 +346,10 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
                         option.setChangeType(CompareChangeTypeEnum.MODIFY.getName());
                     } else if (!oxoMap.containsKey(oxoKey) && (Objects.nonNull(oxo.getCompareOxoEdit()) || Objects.nonNull(compareOxo))) {
                         option.setChangeType(CompareChangeTypeEnum.MODIFY.getName());
-                    }
-                    else if (!oxoMap.containsKey(oxoKey) && (Objects.isNull(oxo.getCompareOxoEdit()) && Objects.isNull(compareOxo))
+                    } else if (!oxoMap.containsKey(oxoKey) && (Objects.isNull(oxo.getCompareOxoEdit()) && Objects.isNull(compareOxo))
                             && StringUtils.isBlank(option.getChangeType())) {
                         option.setChangeType(CompareChangeTypeEnum.DEL.getName());
-                    }
-                    else if (oxoMap.containsKey(oxoKey) && oxoMap.get(oxoKey).getPackageCode().equals(oxo.getPackageCode())) {
+                    } else if (oxoMap.containsKey(oxoKey) && oxoMap.get(oxoKey).getPackageCode().equals(oxo.getPackageCode())) {
                         oxo.setChangeType(CompareChangeTypeEnum.NO_CHANGE.getName());
                     }
                 });
@@ -489,6 +487,7 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
         List<OxoTemplateRequestCmd.DriveHandOptionCode> driveHandOptionCodes = new LinkedList<>();
         List<OxoTemplateRequestCmd.SalesOptionName> salesOptionNames = new LinkedList<>();
 
+        String userName = oxoVersionSnapshot.getCreateUser();
 
         //新老版本
         String oldVersion = oxoVersionSnapshot.getPreVersion();
@@ -599,7 +598,7 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
 
         OxoTemplateRequestCmd templateRequest = new OxoTemplateRequestCmd();
         templateRequest.setRegionOptionCodes(regionOptionCodes);
-        templateRequest.setChangeContent(oxoVersionSnapshot.getChangeContent());
+        templateRequest.setChangeContent(oxoVersionSnapshot.getChangeContent().replaceAll("\n","<br/>"));
         templateRequest.setUrl(oxoEmailChangeLogUrl.replace("nio", oxoVersionSnapshot.getBrand().toLowerCase()) + modelCode);
 
 
@@ -608,7 +607,7 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
         templateRequest.setDriveHandOptionCodes(driveHandOptionCodes);
         templateRequest.setTemplates(oxoInfos);
         templateRequest.setOxoTitle(oxoVersionSnapshot.getTitle() + "_" + oxoVersionSnapshot.getVersion());
-        buildAndSendEmail(templateRequest, getEmails(oxoVersionSnapshot));
+        buildAndSendEmail(templateRequest, getEmails(oxoVersionSnapshot), userName);
     }
 
 
@@ -621,8 +620,10 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
     public List<String> getEmails(OxoVersionSnapshotAggr oxoVersionSnapshot) {
 
         String name = ConfigConstants.OXO_EMAIL_GROUP;
-        if (StringUtils.equals(oxoVersionSnapshot.getBrand(), BrandEnum.ALPS.name())) {
+        if (StringUtils.equalsAnyIgnoreCase(oxoVersionSnapshot.getBrand(), BrandEnum.ALPS.name())) {
             name = ConfigConstants.OXO_EMAIL_GROUP_ALPS;
+        } else if (StringUtils.equalsAnyIgnoreCase(oxoVersionSnapshot.getBrand(), BrandEnum.FY.name())) {
+            name = ConfigConstants.OXO_EMAIL_GROUP_FY;
         }
 
         Map<String, String> map = matrixRuleFacade.queryMatrixRuleValuesByAbscissaOrOrdinate(new MatrixRuleQueryDto
@@ -639,7 +640,7 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
         return emails.stream().distinct().collect(Collectors.toList());
     }
 
-    private void buildAndSendEmail(OxoTemplateRequestCmd templateRequest, List<String> users) {
+    private void buildAndSendEmail(OxoTemplateRequestCmd templateRequest, List<String> users, String userName) {
         for (String user : users) {
             EmailParamDto emailParamDto = new EmailParamDto();
             emailParamDto.setTemplateNo(oxoEmailTemplateNo);
@@ -649,7 +650,7 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
                 emailParamDto.setReceiverEmail(user);
             }
             Map<String, Object> maps = JSON.parseObject(JSONObject.toJSONString(templateRequest), Map.class);
-            maps.put("PLM_Send_Address", user);
+            maps.put("PLM_Send_Address", userName+ "@nio.com");
             emailParamDto.setVariables(maps);
             emailFacade.sendEmail(emailParamDto);
         }
@@ -695,9 +696,9 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
 
             if (Objects.nonNull(oxoEditCmd.getCompareOxoEdit())) {
                 packageOption.setPackageOption(OxoOptionPackageTypeEnum.getByType(oxoEditCmd.getCompareOxoEdit().getPackageCode()).getCode() +
-                         " > " + OxoOptionPackageTypeEnum.getByType(oxoEditCmd.getPackageCode()).getCode());
+                        " > " + OxoOptionPackageTypeEnum.getByType(oxoEditCmd.getPackageCode()).getCode());
                 packageOption.setColor("#f0e68c");
-            }else{
+            } else {
                 packageOption.setPackageOption(OxoOptionPackageTypeEnum.getByType(oxoEditCmd.getPackageCode()).getCode());
             }
 

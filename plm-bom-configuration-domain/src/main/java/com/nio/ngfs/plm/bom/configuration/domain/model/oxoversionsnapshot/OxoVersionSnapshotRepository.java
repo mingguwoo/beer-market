@@ -33,8 +33,4 @@ public interface OxoVersionSnapshotRepository extends Repository<OxoVersionSnaps
        */
       List<OxoVersionSnapshotAggr> queryBomsOxoVersionSnapshotsByModel(String modelCode);
 
-
-
-
-
 }

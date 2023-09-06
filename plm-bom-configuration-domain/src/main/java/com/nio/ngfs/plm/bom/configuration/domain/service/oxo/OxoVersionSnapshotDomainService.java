@@ -28,11 +28,6 @@ public interface OxoVersionSnapshotDomainService {
      OxoVersionSnapshotAggr queryOxoInfoByModelAndVersion(String modelCode,String version);
 
     /**
-     * 校验BaseVehicle是否在oxo中是否已有发布版本
-     */
-      void checkBaseVehicleReleased(String modelCode);
-
-    /**
      * 解析OxoSnapShot字符串
      */
     OxoListRespDto resolveSnapShot(String oxoSnapShot);

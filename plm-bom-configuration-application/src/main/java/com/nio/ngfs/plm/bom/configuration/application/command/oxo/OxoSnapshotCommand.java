@@ -9,9 +9,11 @@ import com.nio.ngfs.plm.bom.configuration.application.service.*;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
+import com.nio.ngfs.plm.bom.configuration.domain.event.EventPublisher;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.enums.OxoSnapshotEnum;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.event.OxoVersionSnapshotPublishEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoVersionSnapshotDomainService;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoVersionSnapshotDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsOxoVersionSnapshotEntity;
@@ -58,6 +60,7 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, List
 
     private final OxoFeatureOptionApplicationService oxoFeatureOptionApplicationService;
 
+    private final EventPublisher eventPublisher;
 
     @Override
     protected String getLockKey(OxoSnapshotCmd editGroupCmd) {
@@ -136,6 +139,8 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, List
                 oxoCompareDomainService.sendCompareEmail(compareOxoListQry, oxoVersionSnapshot);
 
             }
+            // 发布事件
+            eventPublisher.publish(new OxoVersionSnapshotPublishEvent(oxoVersionSnapshotAggr));
             return oxoFeatureOptionApplicationService.checkOxoFeatureCode(modelCode);
         });
 

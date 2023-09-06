@@ -1,4 +1,4 @@
-CREATE TABLE `boms_model_year_config`
+CREATE TABLE `boms_product_config_model_year`
 (
     `id`          bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
     `model`       varchar(64)     NOT NULL DEFAULT '' COMMENT 'Model',
@@ -13,4 +13,4 @@ CREATE TABLE `boms_model_year_config`
     UNIQUE KEY `uniq_model_model_year` (`model`, `model_year`) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  ROW_FORMAT = DYNAMIC COMMENT ='配置管理Model Year配置表';
+  ROW_FORMAT = DYNAMIC COMMENT ='Product Config的Model Year配置表';

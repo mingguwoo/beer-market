@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.domain.model.modelyearconfig;
+package com.nio.ngfs.plm.bom.configuration.domain.model.productconfigmodelyear;
 
 import com.nio.bom.share.domain.model.Identifier;
 import lombok.AllArgsConstructor;
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ModelYearConfigId implements Identifier {
+public class ProductConfigModelYearId implements Identifier {
 
     /**
      * Model

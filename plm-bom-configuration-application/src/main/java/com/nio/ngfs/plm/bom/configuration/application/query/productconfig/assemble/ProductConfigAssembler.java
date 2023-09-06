@@ -7,7 +7,7 @@ import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.common.util.ModelYearComparator;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsBaseVehicleEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureLibraryEntity;
-import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsModelYearConfigEntity;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductConfigModelYearEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductConfigEntity;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.GetBasedOnBaseVehicleListRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.GetBasedOnPcListRespDto;
@@ -24,10 +24,10 @@ import java.util.Map;
  */
 public class ProductConfigAssembler {
 
-    public static GetModelListRespDto assemble(String model, List<BomsModelYearConfigEntity> entityList) {
+    public static GetModelListRespDto assemble(String model, List<BomsProductConfigModelYearEntity> entityList) {
         GetModelListRespDto respDto = new GetModelListRespDto();
         respDto.setModel(model);
-        respDto.setModelYearList(entityList.stream().map(BomsModelYearConfigEntity::getModelYear)
+        respDto.setModelYearList(entityList.stream().map(BomsProductConfigModelYearEntity::getModelYear)
                 .sorted(ModelYearComparator.INSTANCE).toList());
         return respDto;
     }

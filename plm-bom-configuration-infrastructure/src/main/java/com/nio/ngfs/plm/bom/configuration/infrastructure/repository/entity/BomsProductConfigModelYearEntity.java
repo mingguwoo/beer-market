@@ -18,8 +18,8 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("boms_model_year_config")
-public class BomsModelYearConfigEntity extends BaseEntity {
+@TableName("boms_product_config_model_year")
+public class BomsProductConfigModelYearEntity extends BaseEntity {
 
     /**
      * Model
@@ -38,7 +38,7 @@ public class BomsModelYearConfigEntity extends BaseEntity {
 
     @Override
     public String toString() {
-        return "BomsModelYearConfig{" +
+        return "BomsProductConfigModelYearEntity{" +
             "id = " + getId() +
             ", model = " + model +
             ", modelYear = " + modelYear +

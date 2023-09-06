@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.domain.model.modelyearconfig;
+package com.nio.ngfs.plm.bom.configuration.domain.model.productconfigmodelyear;
 
 import com.nio.bom.share.constants.CommonConstants;
 import com.nio.bom.share.domain.model.AggrRoot;
@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.Objects;
+
 /**
  * @author xiaozhou.tu
  * @date 2023/8/9
@@ -16,12 +18,12 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ModelYearConfigAggr extends AbstractDo implements AggrRoot<ModelYearConfigId> {
+public class ProductConfigModelYearAggr extends AbstractDo implements AggrRoot<ProductConfigModelYearId> {
 
     /**
      * 唯一标识
      */
-    private ModelYearConfigId modelYearConfigId;
+    private ProductConfigModelYearId productConfigModelYearId;
 
     /**
      * OXO是否Release，取值Yes、No
@@ -29,23 +31,27 @@ public class ModelYearConfigAggr extends AbstractDo implements AggrRoot<ModelYea
     private String oxoRelease;
 
     @Override
-    public ModelYearConfigId getUniqId() {
-        return modelYearConfigId;
+    public ProductConfigModelYearId getUniqId() {
+        return productConfigModelYearId;
     }
 
     public String getModel() {
-        return modelYearConfigId.getModel();
+        return productConfigModelYearId.getModel();
     }
 
     public String getModelYear() {
-        return modelYearConfigId.getModelYear();
+        return productConfigModelYearId.getModelYear();
     }
 
     /**
      * OXO发布
      */
-    public void oxoReleased() {
+    public boolean oxoReleased() {
+        if (Objects.equals(oxoRelease, CommonConstants.YES)) {
+            return false;
+        }
         setOxoRelease(CommonConstants.YES);
+        return true;
     }
 
 }

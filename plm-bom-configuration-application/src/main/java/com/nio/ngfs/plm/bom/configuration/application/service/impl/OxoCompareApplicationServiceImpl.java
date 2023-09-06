@@ -75,9 +75,7 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
         if (showDiff) {
             return filterDiffData(compareIpFeatureModel.getBaseIpFeature());
         }
-        compareIpFeatureModel.getCompareIpFeature().getOxoRowsResps().sort(Comparator.comparing(OxoRowsQry::getCatalog).thenComparing(OxoRowsQry::getGroup)
-                .thenComparing(OxoRowsQry::getSort).thenComparing(OxoRowsQry::getFeatureCode));
-        return compareIpFeatureModel.getCompareIpFeature();
+        return compareIpFeatureModel.getBaseIpFeature();
     }
 
 
@@ -124,7 +122,9 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
                 return;
             }
             //ADD或者DELETE下面节点属性都是一样
-            if (StringUtils.isNotBlank(feature.getChangeType()) && !feature.getChangeType().equals(CompareChangeTypeEnum.MODIFY.getName())) {
+            if (!StringUtils.equals(CompareChangeTypeEnum.MODIFY.getName(),feature.getChangeType()) &&
+                    feature.getOptions().stream().allMatch(x-> StringUtils.isBlank(x.getChangeType()) ||
+                            StringUtils.equals(x.getChangeType(),CompareChangeTypeEnum.NO_CHANGE.getName()))){
                 return;
             }
             //处理option
@@ -329,7 +329,7 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
                 if (!optionMap.containsKey(compareChildKey)) {
                     //option高版本和低版本比较(高版本有，低版本没有，则新增)
                     option.setChangeType(CompareChangeTypeEnum.ADD.getName());
-                    feature.setChangeType(CompareChangeTypeEnum.MODIFY.getName());
+                    //feature.setChangeType(CompareChangeTypeEnum.MODIFY.getName());
                     return;
                 }
                 //option高低版本都存在

@@ -50,7 +50,6 @@ public class QueryProductConfigAssembler {
     public static QueryProductConfigRespDto.PcOptionConfigDto assemble(BomsProductConfigEntity pc, BomsProductConfigOptionEntity optionEntity,
                                                                        BomsProductContextEntity productContextEntity, boolean edit) {
         QueryProductConfigRespDto.PcOptionConfigDto configDto = new QueryProductConfigRespDto.PcOptionConfigDto();
-        configDto.setId(optionEntity != null ? optionEntity.getId() : null);
         configDto.setPcId(pc.getPcId());
         // 是否勾选，Product Config存在且为勾选状态
         configDto.setSelect(optionEntity != null && Objects.equals(ProductConfigOptionSelectStatusEnum.SELECT.getStatus(), optionEntity.getSelectStatus()));

@@ -67,8 +67,6 @@ public class QueryProductConfigRespDto implements Dto {
     @Data
     public static class PcOptionConfigDto {
 
-        private Long id;
-
         private String pcId;
 
         /**

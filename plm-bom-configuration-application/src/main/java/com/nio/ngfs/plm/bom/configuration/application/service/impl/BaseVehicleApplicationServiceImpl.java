@@ -1,8 +1,14 @@
 package com.nio.ngfs.plm.bom.configuration.application.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.nio.bom.share.constants.CommonConstants;
+import com.nio.bom.share.exception.BusinessException;
+import com.nio.bom.share.utils.GZIPUtils;
+import com.nio.ngfs.plm.bom.configuration.application.query.oxo.common.OxoQueryUtil;
 import com.nio.ngfs.plm.bom.configuration.application.service.BaseVehicleApplicationService;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
+import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
@@ -12,11 +18,16 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatu
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoFeatureOptionDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.request.AddBaseVehicleCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.request.DeleteBaseVehicleCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.request.EditBaseVehicleCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListRespDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +49,7 @@ public class BaseVehicleApplicationServiceImpl implements BaseVehicleApplication
     private final OxoOptionPackageRepository oxoOptionPackageRepository;
     private final OxoFeatureOptionDomainService oxoFeatureOptionDomainService;
     private final BaseVehicleRepository baseVehicleRepository;
-
+    private final OxoVersionSnapshotRepository oxoVersionSnapshotRepository;
     @Override
     public void EditBaseVehicleFilter(BaseVehicleAggr baseVehicleAggr, List<OxoOptionPackageAggr> aggrs, List<OxoFeatureOptionAggr> rows,List<OxoOptionPackageAggr> editPoints,EditBaseVehicleCmd cmd) {
         //先筛选所有行，将他们分成三类
@@ -159,6 +170,42 @@ public class BaseVehicleApplicationServiceImpl implements BaseVehicleApplication
         EditBaseVehicleFilter(baseVehicleAggr, oxoOptionPackageAggrs,driveHandRegionSalesVersionRows,editPoints,cmd);
         editBaseVehicleAndOxoSaveToDb(baseVehicleAggr,editPoints);
     }
+
+    @Override
+    public void checkBaseVehicleReleased(DeleteBaseVehicleCmd cmd) {
+        List<OxoVersionSnapshotAggr> oxoSnapshotList = oxoVersionSnapshotRepository.queryBomsOxoVersionSnapshotsByModel(cmd.getModelCode());
+        if (oxoSnapshotList.isEmpty()){
+            return;
+        }
+        BaseVehicleAggr baseVehicleAggr = baseVehicleRepository.queryBaseVehicleByBaseVehicleId(cmd.getBaseVehicleId());
+        if (Objects.isNull(baseVehicleAggr)|| !Objects.equals(cmd.getModelCode(),baseVehicleAggr.getModelCode())){
+            throw new BusinessException(ConfigErrorCode.BASE_VEHICLE_NOT_EXISTS);
+        }
+        if (CollectionUtils.isNotEmpty(oxoSnapshotList)){
+            oxoSnapshotList.forEach(aggr->{
+                OxoListRespDto oxoListRespDto = OxoQueryUtil.resolveSnapShot(aggr.getOxoSnapshot());
+                oxoListRespDto.getOxoHeadResps().forEach(head->{
+                    head.getRegionInfos().forEach(region->{
+                        //如果region一样，就判断drive hand
+                        if (Objects.equals(region.getRegionCode(),baseVehicleAggr.getRegionOptionCode())){
+                            region.getDriveHands().forEach(driveHand->{
+                                //如果drive hand一样，就判断sales version
+                                if (Objects.equals(driveHand.getDriveHandCode(),baseVehicleAggr.getDriveHand())){
+                                    driveHand.getSalesVersionInfos().forEach(salesVersion->{
+                                        //如果sales version也一样，就报错
+                                        if (Objects.equals(salesVersion.getSalesCode(),baseVehicleAggr.getSalesVersion())){
+                                            throw new BusinessException(ConfigErrorCode.BASE_VEHICLE_ALREADY_RELEASED);
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                });
+            });
+        }
+    }
+
     @Transactional(rollbackFor = Exception.class)
     void editBaseVehicleAndOxoSaveToDb(BaseVehicleAggr baseVehicleAggr, List<OxoOptionPackageAggr> editPoints){
         baseVehicleRepository.save(baseVehicleAggr);

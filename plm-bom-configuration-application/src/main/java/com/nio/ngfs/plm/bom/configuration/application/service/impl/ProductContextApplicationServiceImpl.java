@@ -41,6 +41,10 @@ public class ProductContextApplicationServiceImpl implements ProductContextAppli
 
     @Override
     public void addProductContext(OxoListRespDto OxoListRespDto, String owner) {
+        //预防只有行信息却没有打点的情况，这种情况基本不存在，但以防万一，在此做判断。这种情况下不生成product context，直接返回。
+        if (OxoListRespDto.getOxoHeadResps().isEmpty()){
+            return;
+        }
         String modelCode = OxoListRespDto.getOxoHeadResps().get(CommonConstants.INT_ZERO).getModelCode();
         List<String> modelYearList = modelFacade.getModelYearByModel(modelCode);
 

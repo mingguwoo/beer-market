@@ -2,11 +2,9 @@ package com.nio.ngfs.plm.bom.configuration.domain.service.oxo.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.GZIPUtils;
 import com.nio.bom.share.utils.VersionUtils;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
-import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.enums.OxoSnapshotEnum;
@@ -109,14 +107,6 @@ public class OxoVersionSnapshotDomainServiceImpl implements OxoVersionSnapshotDo
             return oxoVersionSnapshots.get(0);
         }
         return null;
-    }
-
-
-    @Override
-    public void checkBaseVehicleReleased(String modelCode) {
-        if (CollectionUtils.isNotEmpty(oxoVersionSnapshotRepository.queryBomsOxoVersionSnapshotsByModel(modelCode))) {
-            throw new BusinessException(ConfigErrorCode.BASE_VEHICLE_ALREADY_RELEASED);
-        }
     }
 
     @Override

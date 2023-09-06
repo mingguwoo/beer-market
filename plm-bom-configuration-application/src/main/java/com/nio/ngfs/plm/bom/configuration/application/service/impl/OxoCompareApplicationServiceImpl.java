@@ -650,7 +650,7 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
                 emailParamDto.setReceiverEmail(user);
             }
             Map<String, Object> maps = JSON.parseObject(JSONObject.toJSONString(templateRequest), Map.class);
-            maps.put("PLM_Send_Address", userName);
+            maps.put("PLM_Send_Address", userName+ "@nio.com");
             emailParamDto.setVariables(maps);
             emailFacade.sendEmail(emailParamDto);
         }

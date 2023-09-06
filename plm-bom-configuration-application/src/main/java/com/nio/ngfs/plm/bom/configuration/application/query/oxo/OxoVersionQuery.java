@@ -33,7 +33,6 @@ public class OxoVersionQuery implements Query<OxoBaseCmd, List<String>> {
         String modelCode = oxoBaseCmd.getModelCode();
 
         // 获取人员角色
-        //List<String> roleNames = administratorDetailFacade.queryRoleNamesByUserName(userName);
         List<String> roleNames = oxoBaseCmd.getPermissionPoints();
                 // 查询oxo版本
         List<BomsOxoVersionSnapshotEntity> oxoVersionSnapshotAggrs =
@@ -57,13 +56,14 @@ public class OxoVersionQuery implements Query<OxoBaseCmd, List<String>> {
 
             revisions.add(ConfigConstants.WORKING);
 
-            // Formal版本
-            revisions.addAll(roleRevisions);
-
             //最新Informal版本
             revisions.add(oxoVersionSnapshotAggrs.stream()
                     .filter(x -> StringUtils.equals(x.getType(), OxoSnapshotEnum.INFORMAL.getCode()))
                     .map(BomsOxoVersionSnapshotEntity::getVersion).toList().stream().max(Comparator.naturalOrder()).orElse(StringUtils.EMPTY));
+
+            // Formal版本
+            revisions.addAll(roleRevisions);
+
         }
 
         /**下拉框展示的值默认为最新Formal发布版本（即展示OXO最新正式发布版本数据），
@@ -72,6 +72,6 @@ public class OxoVersionQuery implements Query<OxoBaseCmd, List<String>> {
             revisions.addAll(roleRevisions);
         }
 
-        return revisions.stream().filter(StringUtils::isNotBlank).distinct().toList();
+        return revisions.stream().filter(StringUtils::isNotBlank).distinct().sorted(Comparator.reverseOrder()).toList();
     }
 }

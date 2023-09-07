@@ -38,6 +38,7 @@ public class ProductConfigController implements PlmProductConfigClient {
     private final QueryProductConfigQuery queryProductConfigQuery;
     private final GetPcOptionListQuery getPcOptionListQuery;
     private final EditProductConfigCommand editProductConfigCommand;
+    private final ExportProductConfigQuery exportProductConfigQuery;
 
     @Override
     @NotLogResult
@@ -103,6 +104,12 @@ public class ProductConfigController implements PlmProductConfigClient {
     @PostMapping("/productConfig/exportPc")
     public void exportPc(@Valid @RequestBody ExportPcQry qry, HttpServletResponse response) {
         exportPcQuery.execute(qry, response);
+    }
+
+    @NotLogResult
+    @PostMapping("/productConfig/exportProductConfig")
+    public void exportProductConfig(@Valid @RequestBody ExportProductConfigQry qry, HttpServletResponse response) {
+        exportProductConfigQuery.execute(qry, response);
     }
 
 }

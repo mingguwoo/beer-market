@@ -66,4 +66,11 @@ public interface BaseVehicleApplicationService {
      */
     void checkBaseVehicleReleased(DeleteBaseVehicleCmd cmd);
 
+    /**
+     * 获取modelYear对应的optionCode
+     * @param modelYear
+     * @return
+     */
+    String queryModelYearOptionCodeByDisplayName(String modelYear);
+
 }

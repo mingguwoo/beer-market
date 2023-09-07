@@ -1,6 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.application.service.impl;
 
 import com.nio.bom.share.constants.CommonConstants;
+import com.nio.bom.share.enums.ErrorCode;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.application.query.oxo.common.OxoQueryUtil;
 import com.nio.ngfs.plm.bom.configuration.application.service.BaseVehicleApplicationService;
@@ -10,6 +11,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleAg
 import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureCatalogEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionRepository;
@@ -114,10 +116,10 @@ public class BaseVehicleApplicationServiceImpl implements BaseVehicleApplication
         if (cmd.isCopyFrom()){
             //获取要Copy的Model的所有打点信息,要注意这里的baseVehicleId对应的是BasieVehicle表里的id字段，不是baseVehicleId字段
             List<OxoOptionPackageAggr> oxoOptionPackageAggrs = oxoOptionPackageRepository.queryByBaseVehicleId(cmd.getCopyModelId());
-            //获取和region,salesVersion,driveHand，modelCode有关的所有行信息，用于筛选
-            List<OxoFeatureOptionAggr> driveHandRegionSalesVersionRows = queryRegionSalesDrivePoints(cmd.getModelCode());
-            //筛选掉重复的打点信息(region,salesVersion,driveHand)
-            List<OxoOptionPackageAggr> filteredAggrs = oxoFeatureOptionDomainService.filterRepeatCopyfromPoints(oxoOptionPackageAggrs,driveHandRegionSalesVersionRows);
+            //获取和modelYear,region,salesVersion,driveHand，modelCode有关的所有行信息，用于筛选
+            List<OxoFeatureOptionAggr> modelYearDriveHandRegionSalesVersionRows = queryModelYearRegionSalesDrivePoints(cmd.getModelCode());
+            //筛选掉重复的打点信息(modelYear,region,salesVersion,driveHand)
+            List<OxoOptionPackageAggr> filteredAggrs = oxoFeatureOptionDomainService.filterRepeatCopyfromPoints(oxoOptionPackageAggrs,modelYearDriveHandRegionSalesVersionRows);
             //oxo打点
             oxoOptionPackageRepository.inserOxoOptionPackagesByOxoOptionPackages(filteredAggrs.stream().map(aggr->{
                 aggr.setBaseVehicleId(baseVehicleAggr.getId());
@@ -128,6 +130,14 @@ public class BaseVehicleApplicationServiceImpl implements BaseVehicleApplication
             }).toList());
         }
 
+    }
+
+    private List<OxoFeatureOptionAggr> queryModelYearRegionSalesDrivePoints(String modelCode){
+        //获取和model year,region,salesVersion,driveHand，modelCode有关的所有行信息，用于筛选
+        List<String> codeList = Stream.of(ConfigConstants.FEATURE_CODE_AF00,ConfigConstants.BASE_VEHICLE_SALES_VERSION_FEATURE,ConfigConstants.BASE_VEHICLE_REGION_FEATURE,ConfigConstants.BASE_VEHICLE_DRIVE_HAND_FEATURE).collect(Collectors.toList());
+        List<FeatureAggr> featureList = featureRepository.queryByParentFeatureCodeListAndType(codeList, FeatureTypeEnum.OPTION.getType());
+        List<OxoFeatureOptionAggr> modelYeardriveHandRegionSalesVersionRows = oxoFeatureOptionRepository.queryByModelAndFeatureCodeList(modelCode,featureList.stream().map(feature->feature.getFeatureId().getFeatureCode()).toList());
+        return modelYeardriveHandRegionSalesVersionRows;
     }
 
     @Override
@@ -155,7 +165,6 @@ public class BaseVehicleApplicationServiceImpl implements BaseVehicleApplication
     }
 
     @Override
-
     public void editBaseVehicleAndOxo(BaseVehicleAggr baseVehicleAggr, EditBaseVehicleCmd cmd) {
         //记录option的display name与option code的关系
         //获取该baseVehicle下所有点
@@ -211,5 +220,11 @@ public class BaseVehicleApplicationServiceImpl implements BaseVehicleApplication
     void editBaseVehicleAndOxoSaveToDb(BaseVehicleAggr baseVehicleAggr, List<OxoOptionPackageAggr> editPoints){
         baseVehicleRepository.save(baseVehicleAggr);
         oxoOptionPackageRepository.saveOrUpdatebatch(editPoints);
+    }
+
+    public String queryModelYearOptionCodeByDisplayName(String modelYear){
+        List<FeatureAggr> featureAggrList = featureRepository.queryByParentFeatureCodeAndType(ConfigConstants.FEATURE_CODE_AF00,FeatureTypeEnum.OPTION.getType());
+        featureAggrList =  featureAggrList.stream().filter(aggr->Objects.equals(aggr.getDisplayName(),modelYear)).toList();
+        return featureAggrList.get(CommonConstants.INT_ZERO).getFeatureCode();
     }
 }

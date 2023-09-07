@@ -35,11 +35,15 @@ public class AddBaseVehicleCommand {
         BaseVehicleAggr baseVehicleAggr = BaseVehicleFactory.createBaseVehicle(cmd);
         baseVehicleDomainService.checkBaseVehicleUnique(baseVehicleAggr);
         baseVehicleAggr.addBaseVehicle(cmd);
-        List<String> codeList = featureRepository.queryByParentFeatureCodeListAndType(ConfigConstants.BASE_VEHICLE_FEATURE_CODE_LIST, FeatureTypeEnum.OPTION.getType()).stream().map(option->option.getFeatureCode()).toList();
-        //获取oxo行id(region,driveHand,salesVersion相关行)
+        List<String> childList = ConfigConstants.BASE_VEHICLE_FEATURE_CODE_LIST;
+        //后续新增需求，model Year也要考虑。因原有constants已被其他模块复用，因此在这直接添加
+        List<String> codeList = featureRepository.queryByParentFeatureCodeListAndType(childList, FeatureTypeEnum.OPTION.getType()).stream().map(option->option.getFeatureCode()).toList();
+        //获取oxo行id(model year,region,driveHand,salesVersion相关行)
         List<OxoFeatureOptionAggr> oxoFeatureOptionAggrList = oxoFeatureOptionRepository.queryByModelAndFeatureCodeList(baseVehicleAggr.getModelCode(),codeList);
+        //获取model year对应的feature code
+        String modelYearCode = baseVehicleApplicationService.queryModelYearOptionCodeByDisplayName(cmd.getModelYear());
         //构建打点用的聚合根
-        List<OxoOptionPackageAggr> packages = OxoOptionPackageFactory.createOxoOptionPackageAggrList(oxoFeatureOptionAggrList,baseVehicleAggr);
+        List<OxoOptionPackageAggr> packages = OxoOptionPackageFactory.createOxoOptionPackageAggrList(oxoFeatureOptionAggrList,baseVehicleAggr,modelYearCode);
         baseVehicleApplicationService.addBaseVehicleSaveToDb(baseVehicleAggr,packages,cmd);
         return new AddBaseVehicleRespDto();
     }

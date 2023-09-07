@@ -46,6 +46,14 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
     private String oxoEmailChangeLogUrl;
 
 
+    @Value("${oxo.email.alps.changeLog.url}")
+    private String oxoEmailChangeLogAlpsUrl;
+
+
+    @Value("${oxo.email.fy.changeLog.url}")
+    private String oxoEmailChangeLogFyUrl;
+
+
     private final EmailFacade emailFacade;
 
     private final MatrixRuleFacade matrixRuleFacade;
@@ -122,9 +130,9 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
                 return;
             }
             //ADD或者DELETE下面节点属性都是一样
-            if (!StringUtils.equals(CompareChangeTypeEnum.MODIFY.getName(),feature.getChangeType()) &&
-                    feature.getOptions().stream().allMatch(x-> StringUtils.isBlank(x.getChangeType()) ||
-                            StringUtils.equals(x.getChangeType(),CompareChangeTypeEnum.NO_CHANGE.getName()))){
+            if (!StringUtils.equals(CompareChangeTypeEnum.MODIFY.getName(), feature.getChangeType()) &&
+                    feature.getOptions().stream().allMatch(x -> StringUtils.isBlank(x.getChangeType()) ||
+                            StringUtils.equals(x.getChangeType(), CompareChangeTypeEnum.NO_CHANGE.getName()))) {
                 return;
             }
             //处理option
@@ -206,7 +214,7 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
                     //  compareOxoFeatureModel.getBaseIpFeature().setOxoHeadResps(oxoHeads);
 
                     List<OxoHeadQry> oxoHeadQries = compareOxoFeatureModel.getBaseIpFeature().getOxoHeadResps();
-                    List<OxoHeadQry> oxoHeadQryList =Lists.newArrayList(oxoHeadQries);
+                    List<OxoHeadQry> oxoHeadQryList = Lists.newArrayList(oxoHeadQries);
                     oxoHeadQryList.add(modelYear);
                     compareOxoFeatureModel.getBaseIpFeature().setOxoHeadResps(oxoHeadQryList);
                     //子级直接继承
@@ -586,10 +594,16 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
 
         OxoTemplateRequestCmd templateRequest = new OxoTemplateRequestCmd();
         templateRequest.setRegionOptionCodes(regionOptionCodes);
-        templateRequest.setChangeContent(oxoVersionSnapshot.getChangeContent().replaceAll("\n","<br/>"));
-        templateRequest.setUrl(oxoEmailChangeLogUrl.replace("nio", oxoVersionSnapshot.getBrand().toLowerCase()) + modelCode);
+        templateRequest.setChangeContent(oxoVersionSnapshot.getChangeContent().replaceAll("\n", "<br/>"));
 
+        String url = oxoEmailChangeLogUrl + modelCode;
+        if (StringUtils.equalsIgnoreCase(oxoVersionSnapshot.getBrand(), BrandEnum.ALPS.name())) {
+            url = oxoEmailChangeLogAlpsUrl + modelCode;
+        } else if (StringUtils.equalsIgnoreCase(oxoVersionSnapshot.getBrand(), BrandEnum.FY.name())) {
+            url = oxoEmailChangeLogFyUrl + modelCode;
+        }
 
+        templateRequest.setUrl(url);
         templateRequest.setHeadTitles(headTitles);
         templateRequest.setSalesOptionNames(salesOptionNames);
         templateRequest.setDriveHandOptionCodes(driveHandOptionCodes);
@@ -638,7 +652,7 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
                 emailParamDto.setReceiverEmail(user);
             }
             Map<String, Object> maps = JSON.parseObject(JSONObject.toJSONString(templateRequest), Map.class);
-            maps.put("PLM_Send_Address", userName+ "@nio.com");
+            maps.put("PLM_Send_Address", userName + "@nio.com");
             emailParamDto.setVariables(maps);
             emailFacade.sendEmail(emailParamDto);
         }

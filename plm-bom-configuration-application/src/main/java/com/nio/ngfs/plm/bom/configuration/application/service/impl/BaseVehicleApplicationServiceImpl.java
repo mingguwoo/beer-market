@@ -182,7 +182,8 @@ public class BaseVehicleApplicationServiceImpl implements BaseVehicleApplication
             throw new BusinessException(ConfigErrorCode.BASE_VEHICLE_NOT_EXISTS);
         }
         if (CollectionUtils.isNotEmpty(oxoSnapshotList)){
-            oxoSnapshotList.forEach(aggr->{
+            //先筛选掉在baseVehicle之前发布的oxo版本
+            oxoSnapshotList.stream().filter(aggr->aggr.getUpdateTime().after(baseVehicleAggr.getUpdateTime())).toList().forEach(aggr->{
                 OxoListRespDto oxoListRespDto = OxoQueryUtil.resolveSnapShot(aggr.getOxoSnapshot());
                 oxoListRespDto.getOxoHeadResps().forEach(head->{
                     head.getRegionInfos().forEach(region->{
@@ -194,7 +195,10 @@ public class BaseVehicleApplicationServiceImpl implements BaseVehicleApplication
                                     driveHand.getSalesVersionInfos().forEach(salesVersion->{
                                         //如果sales version也一样，就报错
                                         if (Objects.equals(salesVersion.getSalesCode(),baseVehicleAggr.getSalesVersion())){
-                                            throw new BusinessException(ConfigErrorCode.BASE_VEHICLE_ALREADY_RELEASED);
+                                            //需要预防之前发布过同样的base vehicle，发布后但删掉了，现在又建了个新的又要删的情况。需要判断发布的版本
+                                            if (aggr.getUpdateTime().after(baseVehicleAggr.getUpdateTime())){
+                                                throw new BusinessException(ConfigErrorCode.BASE_VEHICLE_ALREADY_RELEASED);
+                                            }
                                         }
                                     });
                                 }

@@ -70,7 +70,6 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, List
     @Override
     protected List<String> executeWithLock(OxoSnapshotCmd editGroupCmd) {
 
-
         String modelCode = editGroupCmd.getModelCode();
         String type = editGroupCmd.getType();
 
@@ -93,6 +92,13 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, List
                     oxoLists.getOxoRowsResps().stream().noneMatch(x -> StringUtils.equals(x.getFeatureCode(), ConfigConstants.FEATURE_CODE_AF00))) {
                 throw new BusinessException(ConfigErrorCode.AF_ERROR);
             }
+        } else if (
+            //非首发formal 版本 表头不能为空
+                StringUtils.equals(type, OxoSnapshotEnum.FORMAL.getCode()) &&
+                        !StringUtils.contains(version, ConfigConstants.VERSION_AA)
+                        && CollectionUtils.isEmpty(oxoLists.getOxoHeadResps())) {
+
+            throw new BusinessException(ConfigErrorCode.MATURITY_ERROR);
         }
 
         OxoVersionSnapshotAggr oxoVersionSnapshot = OxoVersionSnapshotFactory.buildOxoFeatureOptions(oxoLists, version, editGroupCmd);
@@ -104,10 +110,10 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, List
             bomsOxoVersionSnapshotDao.insertBomsOxoVersionSnapshot(BeanConvertUtils.convertTo(
                     oxoVersionSnapshot, BomsOxoVersionSnapshotEntity::new));
 
-            OxoListRespDto productContextOxo = oxoQueryApplicationService.queryOxoInfoByModelCode(modelCode, ConfigConstants.WORKING,false);
+            OxoListRespDto productContextOxo = oxoQueryApplicationService.queryOxoInfoByModelCode(modelCode, ConfigConstants.WORKING, false);
             //同步product context
             try {
-                productContextApplicationService.addProductContext(productContextOxo,editGroupCmd.getUserName());
+                productContextApplicationService.addProductContext(productContextOxo, editGroupCmd.getUserName());
             } catch (Exception e) {
                 log.error("addProductContext error", e);
                 throw new BusinessException("Sync Product Context Fail!");

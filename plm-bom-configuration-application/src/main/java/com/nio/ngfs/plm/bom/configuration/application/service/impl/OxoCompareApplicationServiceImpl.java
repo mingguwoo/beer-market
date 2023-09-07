@@ -206,21 +206,9 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
                     //  compareOxoFeatureModel.getBaseIpFeature().setOxoHeadResps(oxoHeads);
 
                     List<OxoHeadQry> oxoHeadQries = compareOxoFeatureModel.getBaseIpFeature().getOxoHeadResps();
-
-                    for (OxoHeadQry oxoHeadQry : oxoHeadQries) {
-                        if (StringUtils.equals(oxoHeadQry.getModelYear(), modelYear.getModelYear())) {
-                            modelYear.getRegionInfos().forEach(region -> {
-                                if (oxoHeadQry.getRegionInfos().stream().noneMatch(x -> StringUtils.equals(x.getRegionCode(), region.getRegionCode()))) {
-                                    List<OxoHeadQry.RegionInfo> regionHeads = Lists.newArrayList();
-                                    regionHeads.addAll(oxoHeadQry.getRegionInfos());
-                                    regionHeads.add(region);
-                                    oxoHeadQry.setRegionInfos(regionHeads.stream().sorted(Comparator.comparing(OxoHeadQry.RegionInfo::getRegionCode)).toList());
-                                }
-                            });
-                        }
-                    }
-
-
+                    List<OxoHeadQry> oxoHeadQryList =Lists.newArrayList(oxoHeadQries);
+                    oxoHeadQryList.add(modelYear);
+                    compareOxoFeatureModel.getBaseIpFeature().setOxoHeadResps(oxoHeadQryList);
                     //子级直接继承
                     setRegionChildrenChangeType(regionInfo.getDriveHands(), CompareChangeTypeEnum.DELETE.getName());
                     return;

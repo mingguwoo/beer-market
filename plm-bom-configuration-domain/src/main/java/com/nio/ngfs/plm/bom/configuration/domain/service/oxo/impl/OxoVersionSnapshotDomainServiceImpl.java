@@ -59,7 +59,7 @@ public class OxoVersionSnapshotDomainServiceImpl implements OxoVersionSnapshotDo
             }
         } else {
             List<OxoVersionSnapshotAggr> oxoSortedVersionSnapshot = oxoVersionSnapshots.stream()
-                    .sorted(Comparator.comparing(OxoVersionSnapshotAggr::getVersion).reversed()).toList();
+                    .sorted(Comparator.comparing(OxoVersionSnapshotAggr::getCreateTime).reversed()).toList();
 
 
             //版本

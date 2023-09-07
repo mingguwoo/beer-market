@@ -1,7 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.application.service.impl;
 
 import com.nio.bom.share.constants.CommonConstants;
-import com.nio.bom.share.enums.ErrorCode;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.application.query.oxo.common.OxoQueryUtil;
 import com.nio.ngfs.plm.bom.configuration.application.service.BaseVehicleApplicationService;
@@ -11,7 +10,6 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleAg
 import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureCatalogEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionRepository;

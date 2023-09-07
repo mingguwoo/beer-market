@@ -60,7 +60,7 @@ public class OxoOptionPackageFactory {
         //判断是否oxo中有对应model year的行信息
         if (!oxoFeatureOptionAggrList.stream().filter(aggr->(Objects.equals(aggr.getFeatureCode().substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO),ConfigConstants.FEATURE_CODE_AF00.substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO))))
                 .collect(Collectors.toSet()).contains(modelYearCode)){
-                throw new BusinessException(ConfigErrorCode.BASE_VEHICLE_NO_MODEL_YEAR_OPTON_IN_OXO,modelYearCode);
+                throw new BusinessException(ConfigErrorCode.BASE_VEHICLE_NO_MODEL_YEAR_OPTON_IN_OXO.getCode(),String.format(ConfigErrorCode.BASE_VEHICLE_NO_MODEL_YEAR_OPTON_IN_OXO.getMessage(),modelYearCode));
         }
         List<OxoOptionPackageAggr> resList =
             oxoFeatureOptionAggrList.stream().map(oxoFeatureOptionAggr -> {

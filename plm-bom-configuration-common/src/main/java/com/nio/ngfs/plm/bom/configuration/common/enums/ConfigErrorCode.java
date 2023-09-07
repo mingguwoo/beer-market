@@ -107,7 +107,11 @@ public enum ConfigErrorCode implements ErrorCode {
     VERSION_ERROR(89004, "版本{0}没有数据"),
 
 
-    OPTION_ERROR(89005, "Option {0} Is Not Consistent With Product Configuration【Model Year:{1}】!");;
+    OPTION_ERROR(89005, "Option {0} Is Not Consistent With Product Configuration【Model Year:{1}】!"),
+
+    MATURITY_ERROR(89006, "The Maturity Of All Base Vehicle Is 'U', Can Not Publish Formal Version!"),
+
+    ;
 
     /**
      * 错误码编号

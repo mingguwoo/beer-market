@@ -70,7 +70,7 @@ public class BaseVehicleController implements PlmBaseVehicleClient {
     }
 
     @Override
-    //@NeedAuthorization
+    @NeedAuthorization
     @NotLogResult
     public ResultInfo<DeleteBaseVehicleRespDto> deleteBaseVehicle(@Valid @RequestBody DeleteBaseVehicleCmd cmd) {
         return ResultInfo.success(deleteBaseVehicleCommand.execute(cmd));

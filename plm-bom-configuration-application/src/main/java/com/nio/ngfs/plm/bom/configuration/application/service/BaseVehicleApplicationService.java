@@ -65,4 +65,5 @@ public interface BaseVehicleApplicationService {
      * @param cmd
      */
     void checkBaseVehicleReleased(DeleteBaseVehicleCmd cmd);
+
 }

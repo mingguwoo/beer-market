@@ -3,6 +3,7 @@ package com.nio.ngfs.plm.bom.configuration.application.command.productconfig;
 import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockCommand;
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
 import com.nio.ngfs.plm.bom.configuration.domain.event.EventPublisher;
+import com.nio.ngfs.plm.bom.configuration.domain.facade.ModelFacade;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.event.PcUpdateEvent;
@@ -25,6 +26,7 @@ public class EditPcCommand extends AbstractLockCommand<EditPcCmd, EditPcRespDto>
     private final ProductConfigRepository productConfigRepository;
     private final ProductConfigDomainService productConfigDomainService;
     private final EventPublisher eventPublisher;
+    private final ModelFacade modelFacade;
 
     @Override
     protected String getLockKey(EditPcCmd cmd) {

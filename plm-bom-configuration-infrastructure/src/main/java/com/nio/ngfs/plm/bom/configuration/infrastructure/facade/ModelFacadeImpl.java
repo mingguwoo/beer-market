@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author xiaozhou.tu
@@ -58,6 +60,23 @@ public class ModelFacadeImpl implements ModelFacade {
             throw new BusinessException(ConfigErrorCode.BOM_MIDDLE_PLATFORM_MODEL_NOT_EXIST);
         }
         return response.getData().getModelYear();
+    }
+
+    public Set<String> getModelListByBrand(String brand) {
+        ResultInfo<List<ModelDto>> response;
+        try {
+            response = bomMiddlePlatformClient.getModelListByBrand(brand);
+        } catch (Exception e) {
+            log.error("bomMiddlePlatformClient getModel error", e);
+            throw new BusinessException(CommonErrorCode.THIRD_PARTY_ERROR, e.getMessage());
+        }
+        if (response == null || !response.isSuccess()) {
+            throw new BusinessException(ConfigErrorCode.BOM_MIDDLE_PLATFORM_GET_MODEL_FAIL);
+        }
+        if (response.getData() == null) {
+            throw new BusinessException(ConfigErrorCode.BOM_MIDDLE_PLATFORM_MODEL_NOT_EXIST);
+        }
+        return response.getData().stream().map(data->data.getModel()).collect(Collectors.toSet());
     }
 
 }

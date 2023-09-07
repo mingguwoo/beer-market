@@ -10,10 +10,9 @@ import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoVersionSnapshotD
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListRespDto;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;

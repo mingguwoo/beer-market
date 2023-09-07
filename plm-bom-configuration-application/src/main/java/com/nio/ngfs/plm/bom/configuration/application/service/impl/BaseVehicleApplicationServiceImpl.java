@@ -1,10 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.application.service.impl;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.nio.bom.share.constants.CommonConstants;
 import com.nio.bom.share.exception.BusinessException;
-import com.nio.bom.share.utils.GZIPUtils;
 import com.nio.ngfs.plm.bom.configuration.application.query.oxo.common.OxoQueryUtil;
 import com.nio.ngfs.plm.bom.configuration.application.service.BaseVehicleApplicationService;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;

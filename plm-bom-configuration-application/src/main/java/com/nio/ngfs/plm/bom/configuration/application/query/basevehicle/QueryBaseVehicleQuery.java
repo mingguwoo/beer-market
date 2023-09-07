@@ -6,7 +6,9 @@ import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.application.query.AbstractQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.basevehicle.assemble.BaseVehicleAssembler;
 import com.nio.ngfs.plm.bom.configuration.application.query.basevehicle.service.BaseVehicleQueryService;
+import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
+import com.nio.ngfs.plm.bom.configuration.domain.facade.ModelFacade;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsBaseVehicleDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsBaseVehicleEntity;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.basevehicle.request.QueryBaseVehicleQry;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author bill.wang
@@ -29,6 +32,8 @@ public class QueryBaseVehicleQuery extends AbstractQuery<QueryBaseVehicleQry, Li
 
     private final BomsBaseVehicleDao bomsBaseVehicleDao;
     private final BaseVehicleQueryService baseVehicleQueryService;
+    private final ModelFacade modelFacade;
+
 
     @Override
     protected void validate(QueryBaseVehicleQry queryBaseVehicleQry) {
@@ -47,6 +52,8 @@ public class QueryBaseVehicleQuery extends AbstractQuery<QueryBaseVehicleQry, Li
     }
 
     private List<BaseVehicleRespDto> filter(List<BaseVehicleRespDto> dtoList, QueryBaseVehicleQry qry){
+        String brandName = ConfigConstants.brandName.get();
+        Set<String> modelName = modelFacade.getModelListByBrand(brandName);
         dtoList = dtoList.stream()
                 .filter(dto-> StringUtils.isBlank(qry.getModelCode()) || Objects.equals(qry.getModelCode(),dto.getModelCode()))
                 .filter(dto-> CollectionUtils.isEmpty(qry.getModelYear()) || qry.getModelYear().contains(dto.getModelYear()))
@@ -55,6 +62,7 @@ public class QueryBaseVehicleQuery extends AbstractQuery<QueryBaseVehicleQry, Li
                 .filter(dto-> StringUtils.isBlank(qry.getRegionOptionCode()) || Objects.equals(qry.getRegionOptionCode(),dto.getRegionOptionCode()))
                 .filter(dto-> StringUtils.isBlank(qry.getDriveHand()) || Objects.equals(qry.getDriveHand(),dto.getDriveHand()))
                 .filter(dto->StringUtils.isBlank(qry.getMaturity()) || Objects.equals(qry.getMaturity(),dto.getMaturity()))
+                .filter(dto->modelName.contains(dto.getModelCode()))
                 .toList();
         return dtoList;
     }

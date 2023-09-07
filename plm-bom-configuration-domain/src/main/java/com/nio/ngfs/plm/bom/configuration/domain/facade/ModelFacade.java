@@ -1,6 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.domain.facade;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author xiaozhou.tu
@@ -22,5 +23,12 @@ public interface ModelFacade {
      * @return
      */
     List<String> getModelYearByModel(String model);
+
+    /**
+     *  根据品牌获取车型列表
+     * @param brand
+     * @return
+     */
+    Set<String> getModelListByBrand(String brand);
 
 }

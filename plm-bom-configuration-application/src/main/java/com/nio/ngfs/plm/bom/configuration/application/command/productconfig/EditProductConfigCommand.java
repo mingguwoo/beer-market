@@ -4,10 +4,12 @@ import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockCommand;
 import com.nio.ngfs.plm.bom.configuration.application.service.ProductConfigOptionApplicationService;
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
+import com.nio.ngfs.plm.bom.configuration.domain.event.EventPublisher;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.ProductConfigOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.ProductConfigOptionRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.event.ProductConfigOptionChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.ProductContextAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.ProductContextRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.service.productconfig.ProductConfigDomainService;
@@ -35,6 +37,7 @@ public class EditProductConfigCommand extends AbstractLockCommand<EditProductCon
     private final ProductConfigOptionRepository productConfigOptionRepository;
     private final ProductContextRepository productContextRepository;
     private final ProductConfigOptionApplicationService productConfigOptionApplicationService;
+    private final EventPublisher eventPublisher;
 
     @Override
     protected String getLockKey(EditProductConfigCmd cmd) {
@@ -62,6 +65,8 @@ public class EditProductConfigCommand extends AbstractLockCommand<EditProductCon
         productConfigDomainService.handleCompleteInitSelect(productConfigAggrList, productConfigOptionAggrList);
         // 保存到数据库
         ((EditProductConfigCommand) AopContext.currentProxy()).savePcAndPcOptionConfig(productConfigAggrList, saveProductConfigOptionAggrList);
+        // ProductConfig打点变更事件
+        eventPublisher.publish(new ProductConfigOptionChangeEvent(saveProductConfigOptionAggrList));
         return new EditProductConfigRespDto();
     }
 

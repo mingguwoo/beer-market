@@ -75,16 +75,34 @@ public class ConfigurationTo3deWarnSender {
 
     /**
      * 获取Product Context告警人列表
+     *
      * @return
      */
     private List<String> getProductContextAtList() {
         return Splitter.on(",").omitEmptyStrings().trimResults().splitToList(productContextAts);
     }
+
     /**
      * 发送同步Feature/Option告警
      */
     public void sendSyncFeatureOptionWarn(PlmFeatureOptionSyncDto syncDto, String errorMsg) {
         sendWarnMessage(FEATURE_LIBRARY, syncDto, errorMsg, getFeatureLibraryAtList(), buildSyncFeatureOptionMsg(syncDto));
+    }
+
+    /**
+     * 发送同步勾选ProductConfig告警
+     */
+    public void sendSelectPcOptionWarn(PlmConnectPcFeatureAndOptionDto syncDto, String errorMsg) {
+        sendWarnMessage(PRODUCT_CONFIGURATION, syncDto, errorMsg, getProductConfigAtList(),
+                String.format("PC %s Sync Select Code %s Fail!", syncDto.getPcId(), syncDto.getOptionCode()));
+    }
+
+    /**
+     * 发送同步取消勾选ProductConfig告警
+     */
+    public void sendUnselectPcOptionWarn(PlmDisconnectPcFeatureAndOptionDto syncDto, String errorMsg) {
+        sendWarnMessage(PRODUCT_CONFIGURATION, syncDto, errorMsg, getProductConfigAtList(),
+                String.format("PC %s Sync Unselect Code %s Fail!", syncDto.getPcId(), syncDto.getOptionCode()));
     }
 
     /**
@@ -113,6 +131,7 @@ public class ConfigurationTo3deWarnSender {
 
     /**
      * 发送同步Prodcut Context Model Feature告警
+     *
      * @param dto
      * @param errorMsg
      */
@@ -123,13 +142,15 @@ public class ConfigurationTo3deWarnSender {
 
     /**
      * 发送同步Prodcut Context Model Feature Option告警
+     *
      * @param dto
      * @param errorMsg
      */
     public void sendSyncProductContextModelFeatureOptionWarn(PlmSyncProductContextModelFeatureOptionDto dto, String errorMsg) {
-        sendWarnMessage(PRODUCT_CONTEXT,dto,errorMsg,getProductContextAtList(),
-                String.format("Model %s Sync Code %s Fail!", dto.getModel(),dto.getFeature().get(0).getOption().get(0).getOptionCode()));
+        sendWarnMessage(PRODUCT_CONTEXT, dto, errorMsg, getProductContextAtList(),
+                String.format("Model %s Sync Code %s Fail!", dto.getModel(), dto.getFeature().get(0).getOption().get(0).getOptionCode()));
     }
+
     private <Req> void sendWarnMessage(String module, Req request, String errorMsg, List<String> atList, String failMsg) {
         String message = FeishuPostMessageBuilder.buildPostMessage(
                 getTitle(),

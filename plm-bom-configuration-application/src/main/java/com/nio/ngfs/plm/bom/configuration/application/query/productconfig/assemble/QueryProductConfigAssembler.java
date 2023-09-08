@@ -21,6 +21,7 @@ public class QueryProductConfigAssembler {
 
     public static QueryProductConfigRespDto.PcDto assemble(BomsProductConfigEntity entity) {
         QueryProductConfigRespDto.PcDto pcDto = new QueryProductConfigRespDto.PcDto();
+        pcDto.setPcPkId(entity.getId());
         pcDto.setPcId(entity.getPcId());
         pcDto.setPcName(entity.getName());
         pcDto.setModel(entity.getModelCode());
@@ -50,6 +51,7 @@ public class QueryProductConfigAssembler {
     public static QueryProductConfigRespDto.PcOptionConfigDto assemble(BomsProductConfigEntity pc, BomsProductConfigOptionEntity optionEntity,
                                                                        BomsProductContextEntity productContextEntity, boolean edit) {
         QueryProductConfigRespDto.PcOptionConfigDto configDto = new QueryProductConfigRespDto.PcOptionConfigDto();
+        configDto.setPcPkId(pc.getId());
         configDto.setPcId(pc.getPcId());
         // 是否勾选，Product Config存在且为勾选状态
         configDto.setSelect(optionEntity != null && Objects.equals(ProductConfigOptionSelectStatusEnum.SELECT.getStatus(), optionEntity.getSelectStatus()));

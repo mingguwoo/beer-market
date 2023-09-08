@@ -11,10 +11,12 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConf
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.event.PcAddEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.ProductConfigOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.ProductConfigOptionRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.event.ProductConfigOptionChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.service.productconfig.ProductConfigDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.request.AddPcCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.AddPcRespDto;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,6 +64,8 @@ public class AddPcCommand extends AbstractLockCommand<AddPcCmd, AddPcRespDto> {
         ((AddPcCommand) AopContext.currentProxy()).saveProductConfigAndProductConfigOption(productConfigAggr, basedOnPcOptionAggrList, basedOnBaseVehicleOptionAggrList);
         // 发布PC新增事件
         eventPublisher.publish(new PcAddEvent(productConfigAggr));
+        // 发布ProductConfig打点变更事件
+        publishProductConfigOptionChangeEvent(basedOnPcOptionAggrList, basedOnBaseVehicleOptionAggrList);
         return new AddPcRespDto();
     }
 
@@ -71,6 +75,16 @@ public class AddPcCommand extends AbstractLockCommand<AddPcCmd, AddPcRespDto> {
         productConfigRepository.save(productConfigAggr);
         productConfigOptionRepository.batchSave(basedOnPcOptionAggrList);
         productConfigOptionRepository.batchSave(basedOnBaseVehicleOptionAggrList);
+    }
+
+    private void publishProductConfigOptionChangeEvent(List<ProductConfigOptionAggr> basedOnPcOptionAggrList,
+                                                       List<ProductConfigOptionAggr> basedOnBaseVehicleOptionAggrList) {
+        if (CollectionUtils.isNotEmpty(basedOnPcOptionAggrList)) {
+            eventPublisher.publish(new ProductConfigOptionChangeEvent(basedOnPcOptionAggrList));
+        }
+        if (CollectionUtils.isNotEmpty(basedOnBaseVehicleOptionAggrList)) {
+            eventPublisher.publish(new ProductConfigOptionChangeEvent(basedOnBaseVehicleOptionAggrList));
+        }
     }
 
 }

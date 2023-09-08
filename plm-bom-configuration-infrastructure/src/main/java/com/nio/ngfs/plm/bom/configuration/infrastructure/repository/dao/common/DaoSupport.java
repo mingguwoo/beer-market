@@ -6,6 +6,7 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BaseE
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -26,6 +27,17 @@ public class DaoSupport {
             dao.updateById(entity);
         } else {
             dao.save(entity);
+        }
+    }
+
+    public static <E extends BaseEntity> void saveOrUpdate(IService<E> dao, E entity, Consumer<E> callback) {
+        if (entity.getId() != null) {
+            dao.updateById(entity);
+        } else {
+            dao.save(entity);
+        }
+        if (callback != null) {
+            callback.accept(entity);
         }
     }
 

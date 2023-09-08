@@ -23,7 +23,11 @@ public class ProductConfigRepositoryImpl implements ProductConfigRepository {
 
     @Override
     public void save(ProductConfigAggr aggr) {
-        DaoSupport.saveOrUpdate(bomsProductConfigDao, productConfigConverter.convertDoToEntity(aggr));
+        DaoSupport.saveOrUpdate(bomsProductConfigDao, productConfigConverter.convertDoToEntity(aggr), entity -> {
+            if (aggr.getId() == null) {
+                aggr.setId(entity.getId());
+            }
+        });
     }
 
     @Override

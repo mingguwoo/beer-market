@@ -37,9 +37,9 @@ public class ProductConfigModelOptionApplicationServiceImpl implements ProductCo
     public void syncFeatureOptionFromOxoRelease(OxoVersionSnapshotAggr oxoVersionSnapshotAggr) {
         // 查询Model下所有的Option行
         List<ProductConfigModelOptionAggr> modelOptionAggrList = productConfigModelOptionRepository.queryByModel(oxoVersionSnapshotAggr.getModelCode());
-        OxoListRespDto OxoListRespDto = oxoVersionSnapshotDomainService.resolveSnapShot(oxoVersionSnapshotAggr.getOxoSnapshot());
+        OxoListRespDto oxoListRespDto = oxoVersionSnapshotDomainService.resolveSnapShot(oxoVersionSnapshotAggr.getOxoSnapshot());
         // 过滤OXO Catalog为Engineering的Feature/Option
-        List<OptionSyncBo> optionSyncBoList = filterEngineeringFeatureOption(OxoListRespDto);
+        List<OptionSyncBo> optionSyncBoList = filterEngineeringFeatureOption(oxoListRespDto);
         // Product Config已存在的Option行
         Set<String> existOptionCodeSet = modelOptionAggrList.stream().map(ProductConfigModelOptionAggr::getOptionCode).collect(Collectors.toSet());
         List<ProductConfigModelOptionAggr> newModelOptionAggrList = optionSyncBoList.stream()
@@ -52,15 +52,15 @@ public class ProductConfigModelOptionApplicationServiceImpl implements ProductCo
     /**
      * 过滤OXO Catalog为Engineering的Feature/Option
      *
-     * @param OxoListRespDto OxoListRespDto
+     * @param oxoListRespDto oxoListRespDto
      * @return OptionSyncBo列表
      */
-    private List<OptionSyncBo> filterEngineeringFeatureOption(OxoListRespDto OxoListRespDto) {
-        if (OxoListRespDto == null || CollectionUtils.isEmpty(OxoListRespDto.getOxoRowsResps())) {
+    private List<OptionSyncBo> filterEngineeringFeatureOption(OxoListRespDto oxoListRespDto) {
+        if (oxoListRespDto == null || CollectionUtils.isEmpty(oxoListRespDto.getOxoRowsResps())) {
             return Collections.emptyList();
         }
         List<OptionSyncBo> optionSyncBoList = Lists.newArrayList();
-        OxoListRespDto.getOxoRowsResps().forEach(feature -> {
+        oxoListRespDto.getOxoRowsResps().forEach(feature -> {
             if (CollectionUtils.isNotEmpty(feature.getOptions())) {
                 feature.getOptions().forEach(option -> {
                     // 过滤Catalog为Engineering的Feature/Option

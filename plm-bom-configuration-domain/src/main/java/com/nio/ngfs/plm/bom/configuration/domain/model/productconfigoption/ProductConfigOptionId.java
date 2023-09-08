@@ -19,9 +19,9 @@ import java.util.Objects;
 public class ProductConfigOptionId implements Identifier {
 
     /**
-     * PC id
+     * PC主键id
      */
-    private String pcId;
+    private Long pcId;
 
     /**
      * Option Code

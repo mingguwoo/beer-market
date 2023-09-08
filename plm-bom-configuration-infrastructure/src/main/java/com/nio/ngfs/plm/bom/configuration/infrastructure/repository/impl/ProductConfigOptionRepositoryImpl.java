@@ -35,7 +35,7 @@ public class ProductConfigOptionRepositoryImpl implements ProductConfigOptionRep
     }
 
     @Override
-    public List<ProductConfigOptionAggr> queryByPcId(String pcId) {
+    public List<ProductConfigOptionAggr> queryByPcId(Long pcId) {
         return productConfigOptionConverter.convertEntityListToDoList(
                 bomsProductConfigOptionDao.queryByPcId(pcId)
         );
@@ -47,7 +47,7 @@ public class ProductConfigOptionRepositoryImpl implements ProductConfigOptionRep
     }
 
     @Override
-    public List<ProductConfigOptionAggr> queryByPcIdList(List<String> pcIdList) {
+    public List<ProductConfigOptionAggr> queryByPcIdList(List<Long> pcIdList) {
         return productConfigOptionConverter.convertEntityListToDoList(
                 bomsProductConfigOptionDao.queryByPcIdList(pcIdList, null)
         );

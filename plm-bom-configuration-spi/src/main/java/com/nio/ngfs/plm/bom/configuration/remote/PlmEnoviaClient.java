@@ -23,6 +23,24 @@ public interface PlmEnoviaClient {
     PlmEnoviaResult<Object> syncFeatureOption(PlmFeatureOptionSyncDto dto);
 
     /**
+     * 同步Product Config勾选到3DE
+     *
+     * @param dto 同步数据
+     * @return 结果
+     */
+    @PostMapping("/resources/NioPlm/configuration/connectConfigurationFeatureAndOption")
+    PlmEnoviaResult<Object> connectConfigurationFeatureAndOption(PlmConnectPcFeatureAndOptionDto dto);
+
+    /**
+     * 同步Product Config取消勾选到3DE
+     *
+     * @param dto 同步数据
+     * @return 结果
+     */
+    @PostMapping("/resources/NioPlm/configuration/disconnectConfigurationFeatureAndOption")
+    PlmEnoviaResult<Object> disconnectConfigurationFeatureAndOption(PlmDisconnectPcFeatureAndOptionDto dto);
+
+    /**
      * 同步新增PC到3DE
      *
      * @param dto 同步数据
@@ -51,6 +69,7 @@ public interface PlmEnoviaClient {
 
     /**
      * 同步新增Product Context行到3DE
+     *
      * @param dto
      * @return
      */

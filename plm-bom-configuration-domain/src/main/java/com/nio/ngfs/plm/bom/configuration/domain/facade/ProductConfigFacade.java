@@ -1,8 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.domain.facade;
 
-import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncAddPcDto;
-import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncDeletePcDto;
-import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncUpdatePcDto;
+import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.*;
 
 /**
  * @author xiaozhou.tu
@@ -30,5 +28,19 @@ public interface ProductConfigFacade {
      * @param dto dto
      */
     void syncDeletePcToEnovia(SyncDeletePcDto dto);
+
+    /**
+     * 同步勾选ProductConfig到3DE
+     *
+     * @param dto dto
+     */
+    void syncSelectPcOptionToEnovia(SyncSelectPcOptionDto dto);
+
+    /**
+     * 同步取消勾选ProductConfig到3DE
+     *
+     * @param dto dto
+     */
+    void syncUnselectPcOptionToEnovia(SyncUnselectPcOptionDto dto);
 
 }

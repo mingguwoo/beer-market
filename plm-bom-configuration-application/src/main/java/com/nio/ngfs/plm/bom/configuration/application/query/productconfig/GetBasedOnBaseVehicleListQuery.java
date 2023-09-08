@@ -84,8 +84,8 @@ public class GetBasedOnBaseVehicleListQuery extends AbstractQuery<GetBasedOnBase
         if (oxoVersionSnapshotEntity == null) {
             return Lists.newArrayList();
         }
-        OxoListRespDto OxoListRespDto = OxoQueryUtil.resolveSnapShot(oxoVersionSnapshotEntity.getOxoSnapshot());
-        List<Long> baseVehicleIdList = OxoQueryUtil.getBaseVehicleIdListFromOxoRelease(OxoListRespDto);
+        OxoListRespDto oxoListRespDto = OxoQueryUtil.resolveSnapShot(oxoVersionSnapshotEntity.getOxoSnapshot());
+        List<Long> baseVehicleIdList = OxoQueryUtil.getBaseVehicleIdListFromOxoRelease(oxoListRespDto);
         List<BomsBaseVehicleEntity> baseVehicleEntityList = baseVehicleDao.queryByIdList(baseVehicleIdList);
         // 过滤maturity
         return baseVehicleEntityList.stream().filter(i -> maturityEnum == null || Objects.equals(maturityEnum.getMaturity(), i.getMaturity()))

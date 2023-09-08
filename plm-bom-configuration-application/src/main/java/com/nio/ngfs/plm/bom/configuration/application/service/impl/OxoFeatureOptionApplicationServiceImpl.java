@@ -3,6 +3,7 @@ package com.nio.ngfs.plm.bom.configuration.application.service.impl;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.nio.bom.share.enums.YesOrNoEnum;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.application.service.OxoFeatureOptionApplicationService;
@@ -19,7 +20,6 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.enums.Ox
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.enums.OxoSnapshotEnum;
-import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.enums.ProductConfigOptionSelectStatusEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoFeatureOptionDomainService;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoVersionSnapshotDomainService;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsBaseVehicleDao;
@@ -487,7 +487,7 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
             return Lists.newArrayList();
         }
 
-        List<String> pcIds = bomsProductConfigEntities.stream().map(BomsProductConfigEntity::getPcId).distinct().toList();
+        List<Long> pcIdList = bomsProductConfigEntities.stream().map(BomsProductConfigEntity::getId).distinct().toList();
 
 
         Map<String, List<String>> pcIdMapByModelYear = bomsProductConfigEntities.stream().collect(Collectors.toMap(BomsProductConfigEntity::getModelYear, s -> {
@@ -501,7 +501,7 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
 
         // 获取 已经选择 的 option
         List<BomsProductConfigOptionEntity> productConfigOptions =
-                bomsProductConfigOptionDao.queryByPcIdList(pcIds, ProductConfigOptionSelectStatusEnum.SELECT.getStatus());
+                bomsProductConfigOptionDao.queryByPcIdList(pcIdList, YesOrNoEnum.YES.getCode());
 
         if (CollectionUtils.isEmpty(bomsProductConfigEntities)) {
             return Lists.newArrayList();

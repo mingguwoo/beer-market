@@ -67,6 +67,8 @@ public class QueryProductConfigRespDto implements Dto {
     @Data
     public static class PcOptionConfigDto {
 
+        private Long pcPkId;
+
         private String pcId;
 
         /**
@@ -88,6 +90,8 @@ public class QueryProductConfigRespDto implements Dto {
 
     @Data
     public static class PcDto {
+
+        private Long pcPkId;
 
         private String pcId;
 

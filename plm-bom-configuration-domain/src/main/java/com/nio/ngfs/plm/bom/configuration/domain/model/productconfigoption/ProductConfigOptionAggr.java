@@ -1,9 +1,8 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption;
 
-import com.nio.bom.share.constants.CommonConstants;
 import com.nio.bom.share.domain.model.AggrRoot;
+import com.nio.bom.share.enums.YesOrNoEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
-import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.enums.ProductConfigOptionSelectStatusEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.enums.ProductConfigOptionTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,14 +32,14 @@ public class ProductConfigOptionAggr extends AbstractDo implements AggrRoot<Prod
     private String featureCode;
 
     /**
-     * 勾选状态，取值Select、Unselect
+     * 勾选状态，0-Unselect，1-Select
      */
-    private String selectStatus;
+    private Integer selectStatus;
 
     /**
-     * 勾选是否可编辑，取值Yes、No
+     * From Base Vehicle下是否可人工编辑，0-No，1-Yes
      */
-    private String selectCanEdit;
+    private Integer selectCanEdit;
 
     /**
      * 类型，0-正常，1-From Base Vehicle，2-From PC
@@ -52,7 +51,7 @@ public class ProductConfigOptionAggr extends AbstractDo implements AggrRoot<Prod
         return productConfigOptionId;
     }
 
-    public String getPcId() {
+    public Long getPcId() {
         return productConfigOptionId.getPcId();
     }
 
@@ -64,22 +63,21 @@ public class ProductConfigOptionAggr extends AbstractDo implements AggrRoot<Prod
      * 变更勾选状态
      */
     public void changeSelectStatus(boolean select) {
-        setSelectStatus(select ? ProductConfigOptionSelectStatusEnum.SELECT.getStatus() :
-                ProductConfigOptionSelectStatusEnum.UNSELECT.getStatus());
+        setSelectStatus(select ? YesOrNoEnum.YES.getCode() : YesOrNoEnum.NO.getCode());
     }
 
     /**
      * 是否勾选
      */
     public boolean isSelect() {
-        return Objects.equals(selectStatus, ProductConfigOptionSelectStatusEnum.SELECT.getStatus());
+        return Objects.equals(selectStatus, YesOrNoEnum.YES.getCode());
     }
 
     /**
      * 勾选是否可编辑
      */
     public boolean isSelectCanEdit() {
-        return Objects.equals(selectCanEdit, CommonConstants.YES);
+        return Objects.equals(selectCanEdit, YesOrNoEnum.YES.getCode());
     }
 
     /**

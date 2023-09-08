@@ -69,7 +69,7 @@ public class QueryProductConfigQuery extends AbstractQuery<QueryProductConfigQry
         }
         // 查询Option勾选
         List<BomsProductConfigOptionEntity> optionEntityList = productConfigOptionDao.queryByPcIdList(LambdaUtil.map(response.getPcList(),
-                QueryProductConfigRespDto.PcDto::getPcId), null);
+                QueryProductConfigRespDto.PcDto::getPcPkId), null);
         // 查询Product Context勾选（只针对编辑模式下）
         List<BomsProductContextEntity> productContextEntityList = null;
         if (qry.isEdit()) {
@@ -92,10 +92,10 @@ public class QueryProductConfigQuery extends AbstractQuery<QueryProductConfigQry
     private void buildPcOptionConfig(QueryProductConfigRespDto.OptionDto optionDto, List<BomsProductConfigOptionEntity> optionEntityList,
                                      List<BomsProductContextEntity> productContextEntityList, List<BomsProductConfigEntity> pcList,
                                      boolean edit) {
-        Map<String, BomsProductConfigOptionEntity> optionEntityMap = LambdaUtil.toKeyMap(optionEntityList, BomsProductConfigOptionEntity::getPcId);
+        Map<Long, BomsProductConfigOptionEntity> optionEntityMap = LambdaUtil.toKeyMap(optionEntityList, BomsProductConfigOptionEntity::getPcId);
         Map<String, BomsProductContextEntity> productContextEntityMap = LambdaUtil.toKeyMap(productContextEntityList, BomsProductContextEntity::getModelYear);
         optionDto.setConfigList(LambdaUtil.map(pcList, pc ->
-                QueryProductConfigAssembler.assemble(pc, optionEntityMap.get(pc.getPcId()), productContextEntityMap.get(pc.getModelYear()), edit))
+                QueryProductConfigAssembler.assemble(pc, optionEntityMap.get(pc.getId()), productContextEntityMap.get(pc.getModelYear()), edit))
         );
     }
 

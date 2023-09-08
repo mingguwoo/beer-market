@@ -2,15 +2,11 @@ package com.nio.ngfs.plm.bom.configuration.infrastructure.facade;
 
 import com.nio.bom.share.utils.GsonUtils;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.ProductConfigFacade;
-import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncAddPcDto;
-import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncDeletePcDto;
-import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncUpdatePcDto;
+import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.*;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.common.warn.ConfigurationTo3deWarnSender;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.facade.common.AbstractEnoviaFacade;
 import com.nio.ngfs.plm.bom.configuration.remote.PlmEnoviaClient;
-import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.PlmDeletePcDto;
-import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.PlmModifyPcDto;
-import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.PlmSyncProductConfigurationDto;
+import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -55,6 +51,24 @@ public class ProductConfigFacadeImpl extends AbstractEnoviaFacade implements Pro
         );
     }
 
+    @Override
+    public void syncSelectPcOptionToEnovia(SyncSelectPcOptionDto dto) {
+        log.info("ProductConfigFacade syncSelectPcOptionToEnovia data={}", GsonUtils.toJson(dto));
+        PlmConnectPcFeatureAndOptionDto syncDto = buildPlmConnectPcFeatureAndOptionDto(dto);
+        invokeEnovia(plmEnoviaClient::connectConfigurationFeatureAndOption, syncDto, "PlmEnoviaClient.connectConfigurationFeatureAndOption", (response, e) ->
+                configurationTo3deWarnSender.sendSelectPcOptionWarn(syncDto, e != null ? e.getMessage() : GsonUtils.toJson(response))
+        );
+    }
+
+    @Override
+    public void syncUnselectPcOptionToEnovia(SyncUnselectPcOptionDto dto) {
+        log.info("ProductConfigFacade syncUnselectPcOptionToEnovia data={}", GsonUtils.toJson(dto));
+        PlmDisconnectPcFeatureAndOptionDto syncDto = buildPlmDisconnectPcFeatureAndOptionDto(dto);
+        invokeEnovia(plmEnoviaClient::disconnectConfigurationFeatureAndOption, syncDto, "PlmEnoviaClient.disconnectConfigurationFeatureAndOption", (response, e) ->
+                configurationTo3deWarnSender.sendUnselectPcOptionWarn(syncDto, e != null ? e.getMessage() : GsonUtils.toJson(response))
+        );
+    }
+
     private PlmSyncProductConfigurationDto buildPlmSyncProductConfigurationDto(SyncAddPcDto dto) {
         PlmSyncProductConfigurationDto syncProductConfigurationDto = new PlmSyncProductConfigurationDto();
         BeanUtils.copyProperties(dto, syncProductConfigurationDto);
@@ -76,6 +90,21 @@ public class ProductConfigFacadeImpl extends AbstractEnoviaFacade implements Pro
         PlmDeletePcDto deletePcDto = new PlmDeletePcDto();
         deletePcDto.setPcId(dto.getPcId());
         return deletePcDto;
+    }
+
+    private PlmConnectPcFeatureAndOptionDto buildPlmConnectPcFeatureAndOptionDto(SyncSelectPcOptionDto dto) {
+        PlmConnectPcFeatureAndOptionDto connectPcFeatureAndOptionDto = new PlmConnectPcFeatureAndOptionDto();
+        connectPcFeatureAndOptionDto.setPcId(dto.getPcId());
+        connectPcFeatureAndOptionDto.setOptionCode(dto.getOptionCode());
+        connectPcFeatureAndOptionDto.setFeatureCode(dto.getFeatureCode());
+        return connectPcFeatureAndOptionDto;
+    }
+
+    private PlmDisconnectPcFeatureAndOptionDto buildPlmDisconnectPcFeatureAndOptionDto(SyncUnselectPcOptionDto dto) {
+        PlmDisconnectPcFeatureAndOptionDto disconnectPcFeatureAndOptionDto = new PlmDisconnectPcFeatureAndOptionDto();
+        disconnectPcFeatureAndOptionDto.setPcId(dto.getPcId());
+        disconnectPcFeatureAndOptionDto.setOptionCode(dto.getOptionCode());
+        return disconnectPcFeatureAndOptionDto;
     }
 
 }

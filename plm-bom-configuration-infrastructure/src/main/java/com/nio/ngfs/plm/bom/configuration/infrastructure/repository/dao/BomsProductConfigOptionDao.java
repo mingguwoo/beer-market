@@ -18,7 +18,7 @@ public interface BomsProductConfigOptionDao extends IService<BomsProductConfigOp
      * @param optionCode Option Code
      * @return BomsProductConfigOptionEntity
      */
-    BomsProductConfigOptionEntity getByPcIdAndOptionCode(String pcId, String optionCode);
+    BomsProductConfigOptionEntity getByPcIdAndOptionCode(Long pcId, String optionCode);
 
     /**
      * 根据PC Id查询
@@ -26,14 +26,15 @@ public interface BomsProductConfigOptionDao extends IService<BomsProductConfigOp
      * @param pcId PC Id
      * @return BomsProductConfigOptionEntity列表
      */
-    List<BomsProductConfigOptionEntity> queryByPcId(String pcId);
+    List<BomsProductConfigOptionEntity> queryByPcId(Long pcId);
 
     /**
      * 根据PC Id列表查询
      *
-     * @param pcIdList PC Id列表
+     * @param pcIdList     PC Id列表
+     * @param selectStatus 勾选状态
      * @return BomsProductConfigOptionEntity列表
      */
-    List<BomsProductConfigOptionEntity> queryByPcIdList(List<String> pcIdList, String canSelect);
+    List<BomsProductConfigOptionEntity> queryByPcIdList(List<Long> pcIdList, Integer selectStatus);
 
 }

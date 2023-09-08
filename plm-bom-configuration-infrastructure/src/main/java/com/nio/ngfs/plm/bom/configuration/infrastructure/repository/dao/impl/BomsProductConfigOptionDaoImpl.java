@@ -8,7 +8,6 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsP
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsProductConfigOptionMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,7 +25,7 @@ public class BomsProductConfigOptionDaoImpl extends AbstractDao<BomsProductConfi
     }
 
     @Override
-    public BomsProductConfigOptionEntity getByPcIdAndOptionCode(String pcId, String optionCode) {
+    public BomsProductConfigOptionEntity getByPcIdAndOptionCode(Long pcId, String optionCode) {
         LambdaQueryWrapper<BomsProductConfigOptionEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(BomsProductConfigOptionEntity::getPcId, pcId);
         lambdaQueryWrapper.eq(BomsProductConfigOptionEntity::getOptionCode, optionCode);
@@ -34,22 +33,21 @@ public class BomsProductConfigOptionDaoImpl extends AbstractDao<BomsProductConfi
     }
 
     @Override
-    public List<BomsProductConfigOptionEntity> queryByPcId(String pcId) {
+    public List<BomsProductConfigOptionEntity> queryByPcId(Long pcId) {
         LambdaQueryWrapper<BomsProductConfigOptionEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(BomsProductConfigOptionEntity::getPcId, pcId);
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 
     @Override
-    public List<BomsProductConfigOptionEntity> queryByPcIdList(List<String> pcIdList, String canSelect) {
+    public List<BomsProductConfigOptionEntity> queryByPcIdList(List<Long> pcIdList, Integer selectStatus) {
         if (CollectionUtils.isEmpty(pcIdList)) {
             return Lists.newArrayList();
         }
         LambdaQueryWrapper<BomsProductConfigOptionEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.in(BomsProductConfigOptionEntity::getPcId, pcIdList);
-
-        if (StringUtils.isNotBlank(canSelect)) {
-            lambdaQueryWrapper.eq(BomsProductConfigOptionEntity::getSelectStatus, canSelect);
+        if (selectStatus != null) {
+            lambdaQueryWrapper.eq(BomsProductConfigOptionEntity::getSelectStatus, selectStatus);
         }
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }

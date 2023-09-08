@@ -16,7 +16,7 @@ public interface ProductConfigOptionRepository extends Repository<ProductConfigO
      * @param pcId PC Id
      * @return ProductConfigOptionAggr列表
      */
-    List<ProductConfigOptionAggr> queryByPcId(String pcId);
+    List<ProductConfigOptionAggr> queryByPcId(Long pcId);
 
     /**
      * 批量保存
@@ -31,6 +31,6 @@ public interface ProductConfigOptionRepository extends Repository<ProductConfigO
      * @param pcIdList PC Id列表
      * @return 聚合根列表
      */
-    List<ProductConfigOptionAggr> queryByPcIdList(List<String> pcIdList);
+    List<ProductConfigOptionAggr> queryByPcIdList(List<Long> pcIdList);
 
 }

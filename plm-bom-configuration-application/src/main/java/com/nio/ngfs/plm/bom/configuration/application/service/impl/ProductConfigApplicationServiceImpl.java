@@ -51,9 +51,9 @@ public class ProductConfigApplicationServiceImpl implements ProductConfigApplica
         if (basedOnPc == null) {
             throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_BASED_ON_PC_NOT_EXIST);
         }
-        List<ProductConfigOptionAggr> productConfigOptionAggrList = productConfigOptionRepository.queryByPcId(basedOnPc.getPcId());
+        List<ProductConfigOptionAggr> productConfigOptionAggrList = productConfigOptionRepository.queryByPcId(basedOnPc.getId());
         // copy Based On PC的Code勾选
-        return LambdaUtil.map(productConfigOptionAggrList, i -> ProductConfigOptionFactory.createFromPc(productConfigAggr.getPcId(), i));
+        return LambdaUtil.map(productConfigOptionAggrList, i -> ProductConfigOptionFactory.createFromPc(productConfigAggr.getId(), i));
     }
 
     @Override
@@ -65,7 +65,7 @@ public class ProductConfigApplicationServiceImpl implements ProductConfigApplica
         OxoVersionSnapshotAggr oxoVersionSnapshotAggr = oxoVersionSnapshotRepository.find(productConfigAggr.getOxoVersionSnapshotId());
         // copy OXO发布版本Base Vehicle的Feature/Option列表
         List<BasedOnBaseVehicleFeature> baseVehicleFeatureList = copyOxoBaseVehicleFeatureOptionList(productConfigAggr, oxoVersionSnapshotAggr);
-        return productConfigOptionDomainService.copyFromBaseVehicle(productConfigAggr.getPcId(), baseVehicleFeatureList);
+        return productConfigOptionDomainService.copyFromBaseVehicle(productConfigAggr.getId(), baseVehicleFeatureList);
     }
 
     /**

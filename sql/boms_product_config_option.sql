@@ -1,11 +1,11 @@
 CREATE TABLE `boms_product_config_option`
 (
     `id`              bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-    `pc_id`           varchar(128)    NOT NULL DEFAULT '' COMMENT 'PC id',
-    `option_code`     varchar(128)    NOT NULL DEFAULT '' COMMENT 'Option Code',
-    `feature_code`    varchar(128)    NOT NULL DEFAULT '' COMMENT 'Feature Code',
-    `select_status`   varchar(16)     NOT NULL DEFAULT '' COMMENT '勾选状态，取值Select、Unselect',
-    `select_can_edit` varchar(4)      NOT NULL DEFAULT '' COMMENT '勾选是否可编辑，取值Yes、No',
+    `pc_id`           bigint          NOT NULL COMMENT 'PC主键id',
+    `option_code`     varchar(128)    NOT NULL COMMENT 'Option Code',
+    `feature_code`    varchar(128)    NOT NULL COMMENT 'Feature Code',
+    `select_status`   tinyint(4)      NOT NULL DEFAULT 0 COMMENT '勾选状态，0-Unselect，1-Select',
+    `select_can_edit` tinyint(4)      NOT NULL DEFAULT 0 COMMENT 'From Base Vehicle下是否可人工编辑，0-No，1-Yes',
     `type`            tinyint(4)      NOT NULL DEFAULT 0 COMMENT '类型，0-正常，1-From Base Vehicle，2-From PC',
     `create_user`     varchar(32)     NOT NULL DEFAULT '' COMMENT '创建人',
     `update_user`     varchar(32)     NOT NULL DEFAULT '' COMMENT '更新人',

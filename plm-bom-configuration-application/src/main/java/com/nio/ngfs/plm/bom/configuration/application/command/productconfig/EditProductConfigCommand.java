@@ -50,7 +50,7 @@ public class EditProductConfigCommand extends AbstractLockCommand<EditProductCon
         List<ProductConfigAggr> productConfigAggrList = productConfigDomainService.changePcSkipCheck(LambdaUtil.toKeyValueMap(cmd.getPcList(), EditProductConfigCmd.PcDto::getPcId,
                 EditProductConfigCmd.PcDto::isSkipCheck), cmd.getUpdateUser());
         // 查询Product Config勾选
-        List<ProductConfigOptionAggr> productConfigOptionAggrList = productConfigOptionRepository.queryByPcIdList(LambdaUtil.map(productConfigAggrList, ProductConfigAggr::getPcId));
+        List<ProductConfigOptionAggr> productConfigOptionAggrList = productConfigOptionRepository.queryByPcIdList(LambdaUtil.map(productConfigAggrList, ProductConfigAggr::getId));
         // 查询Product Context勾选
         List<ProductContextAggr> productContextAggrList = productContextRepository.queryByModelAndModelYearList(cmd.getModel(),
                 LambdaUtil.map(productConfigAggrList, ProductConfigAggr::getModelYear, true));
@@ -66,7 +66,7 @@ public class EditProductConfigCommand extends AbstractLockCommand<EditProductCon
         // 保存到数据库
         ((EditProductConfigCommand) AopContext.currentProxy()).savePcAndPcOptionConfig(productConfigAggrList, saveProductConfigOptionAggrList);
         // ProductConfig打点变更事件
-        eventPublisher.publish(new ProductConfigOptionChangeEvent(saveProductConfigOptionAggrList));
+        eventPublisher.publish(new ProductConfigOptionChangeEvent(productConfigAggrList, saveProductConfigOptionAggrList));
         return new EditProductConfigRespDto();
     }
 

@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.application.command.productconfig;
 
+import com.google.common.collect.Lists;
 import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockCommand;
 import com.nio.ngfs.plm.bom.configuration.application.service.ProductConfigApplicationService;
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
@@ -10,6 +11,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConf
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.event.PcAddEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.ProductConfigOptionAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.ProductConfigOptionId;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.ProductConfigOptionRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.event.ProductConfigOptionChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.service.productconfig.ProductConfigDomainService;
@@ -65,7 +67,7 @@ public class AddPcCommand extends AbstractLockCommand<AddPcCmd, AddPcRespDto> {
         // 发布PC新增事件
         eventPublisher.publish(new PcAddEvent(productConfigAggr));
         // 发布ProductConfig打点变更事件
-        publishProductConfigOptionChangeEvent(basedOnPcOptionAggrList, basedOnBaseVehicleOptionAggrList);
+        publishProductConfigOptionChangeEvent(productConfigAggr, basedOnPcOptionAggrList, basedOnBaseVehicleOptionAggrList);
         return new AddPcRespDto();
     }
 
@@ -73,17 +75,29 @@ public class AddPcCommand extends AbstractLockCommand<AddPcCmd, AddPcRespDto> {
     public void saveProductConfigAndProductConfigOption(ProductConfigAggr productConfigAggr, List<ProductConfigOptionAggr> basedOnPcOptionAggrList,
                                                         List<ProductConfigOptionAggr> basedOnBaseVehicleOptionAggrList) {
         productConfigRepository.save(productConfigAggr);
-        productConfigOptionRepository.batchSave(basedOnPcOptionAggrList);
-        productConfigOptionRepository.batchSave(basedOnBaseVehicleOptionAggrList);
-    }
-
-    private void publishProductConfigOptionChangeEvent(List<ProductConfigOptionAggr> basedOnPcOptionAggrList,
-                                                       List<ProductConfigOptionAggr> basedOnBaseVehicleOptionAggrList) {
         if (CollectionUtils.isNotEmpty(basedOnPcOptionAggrList)) {
-            eventPublisher.publish(new ProductConfigOptionChangeEvent(basedOnPcOptionAggrList));
+            // 补充pcId
+            basedOnPcOptionAggrList.forEach(aggr -> aggr.setProductConfigOptionId(new ProductConfigOptionId(productConfigAggr.getId(), aggr.getOptionCode())));
+            productConfigOptionRepository.batchSave(basedOnPcOptionAggrList);
         }
         if (CollectionUtils.isNotEmpty(basedOnBaseVehicleOptionAggrList)) {
-            eventPublisher.publish(new ProductConfigOptionChangeEvent(basedOnBaseVehicleOptionAggrList));
+            // 补充pcId
+            basedOnBaseVehicleOptionAggrList.forEach(aggr -> aggr.setProductConfigOptionId(new ProductConfigOptionId(productConfigAggr.getId(), aggr.getOptionCode())));
+            productConfigOptionRepository.batchSave(basedOnBaseVehicleOptionAggrList);
+        }
+    }
+
+    private void publishProductConfigOptionChangeEvent(ProductConfigAggr productConfigAggr, List<ProductConfigOptionAggr> basedOnPcOptionAggrList,
+                                                       List<ProductConfigOptionAggr> basedOnBaseVehicleOptionAggrList) {
+        if (CollectionUtils.isNotEmpty(basedOnPcOptionAggrList)) {
+            // 新增PC时只同步勾选的打点
+            eventPublisher.publish(new ProductConfigOptionChangeEvent(Lists.newArrayList(productConfigAggr), basedOnPcOptionAggrList
+                    .stream().filter(ProductConfigOptionAggr::isSelect).toList()));
+        }
+        if (CollectionUtils.isNotEmpty(basedOnBaseVehicleOptionAggrList)) {
+            // 新增PC时只同步勾选的打点
+            eventPublisher.publish(new ProductConfigOptionChangeEvent(Lists.newArrayList(productConfigAggr), basedOnBaseVehicleOptionAggrList
+                    .stream().filter(ProductConfigOptionAggr::isSelect).toList()));
         }
     }
 

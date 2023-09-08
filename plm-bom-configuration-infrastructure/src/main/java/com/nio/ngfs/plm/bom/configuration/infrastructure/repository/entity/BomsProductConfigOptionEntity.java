@@ -22,9 +22,9 @@ import lombok.experimental.SuperBuilder;
 public class BomsProductConfigOptionEntity extends BaseEntity {
 
     /**
-     * PC id
+     * PC主键id
      */
-    private String pcId;
+    private Long pcId;
 
     /**
      * Option Code
@@ -37,14 +37,14 @@ public class BomsProductConfigOptionEntity extends BaseEntity {
     private String featureCode;
 
     /**
-     * 勾选状态，取值Select、Unselect
+     * 勾选状态，0-Unselect，1-Select
      */
-    private String selectStatus;
+    private Integer selectStatus;
 
     /**
-     * 勾选是否可编辑，取值Yes、No
+     * From Base Vehicle下是否可人工编辑，0-No，1-Yes
      */
-    private String selectCanEdit;
+    private Integer selectCanEdit;
 
     /**
      * 类型，0-正常，1-From Base Vehicle，2-From PC

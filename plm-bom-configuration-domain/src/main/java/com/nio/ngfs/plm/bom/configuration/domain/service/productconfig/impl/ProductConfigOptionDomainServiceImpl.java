@@ -24,7 +24,7 @@ import static com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoptio
 public class ProductConfigOptionDomainServiceImpl implements ProductConfigOptionDomainService {
 
     @Override
-    public List<ProductConfigOptionAggr> copyFromBaseVehicle(String pcId, List<BasedOnBaseVehicleFeature> baseVehicleFeatureList) {
+    public List<ProductConfigOptionAggr> copyFromBaseVehicle(Long pcId, List<BasedOnBaseVehicleFeature> baseVehicleFeatureList) {
         if (CollectionUtils.isEmpty(baseVehicleFeatureList)) {
             return Collections.emptyList();
         }

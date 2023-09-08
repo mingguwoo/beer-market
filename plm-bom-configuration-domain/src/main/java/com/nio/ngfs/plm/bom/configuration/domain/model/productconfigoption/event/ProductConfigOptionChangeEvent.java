@@ -1,6 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.event;
 
 import com.nio.ngfs.plm.bom.configuration.domain.event.DomainEvent;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.ProductConfigOptionAggr;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,6 +19,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductConfigOptionChangeEvent extends DomainEvent {
+
+    private List<ProductConfigAggr> productConfigAggrList;
 
     private List<ProductConfigOptionAggr> productConfigOptionAggrList;
 

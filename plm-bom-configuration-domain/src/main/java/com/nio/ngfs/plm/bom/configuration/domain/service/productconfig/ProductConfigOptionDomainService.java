@@ -18,6 +18,6 @@ public interface ProductConfigOptionDomainService {
      * @param baseVehicleFeatureList Base Vehicle Feature列表
      * @return ProductConfigOptionAggr列表
      */
-    List<ProductConfigOptionAggr> copyFromBaseVehicle(String pcId, List<BasedOnBaseVehicleFeature> baseVehicleFeatureList);
+    List<ProductConfigOptionAggr> copyFromBaseVehicle(Long pcId, List<BasedOnBaseVehicleFeature> baseVehicleFeatureList);
 
 }

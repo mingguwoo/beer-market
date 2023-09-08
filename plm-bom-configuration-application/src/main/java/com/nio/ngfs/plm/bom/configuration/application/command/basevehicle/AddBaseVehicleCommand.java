@@ -36,6 +36,7 @@ public class AddBaseVehicleCommand {
         baseVehicleDomainService.checkBaseVehicleUnique(baseVehicleAggr);
         baseVehicleAggr.addBaseVehicle(cmd);
         List<String> childList = ConfigConstants.BASE_VEHICLE_FEATURE_CODE_LIST;
+        childList.add(ConfigConstants.FEATURE_CODE_AF00);
         //后续新增需求，model Year也要考虑。因原有constants已被其他模块复用，因此在这直接添加
         List<String> codeList = featureRepository.queryByParentFeatureCodeListAndType(childList, FeatureTypeEnum.OPTION.getType()).stream().map(option->option.getFeatureCode()).toList();
         //获取oxo行id(model year,region,driveHand,salesVersion相关行)

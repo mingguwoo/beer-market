@@ -2,7 +2,10 @@ package com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage;
 
 
 import com.google.common.collect.Lists;
+import com.nio.bom.share.constants.CommonConstants;
+import com.nio.bom.share.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
+import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoEditCmd;
@@ -10,6 +13,7 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoHeadQry;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author xiaozhou.tu
@@ -52,7 +56,12 @@ public class OxoOptionPackageFactory {
         return optionPackageAggrs;
     }
 
-    public static List<OxoOptionPackageAggr> createOxoOptionPackageAggrList (List<OxoFeatureOptionAggr> oxoFeatureOptionAggrList, BaseVehicleAggr baseVehicleAggr){
+    public static List<OxoOptionPackageAggr> createOxoOptionPackageAggrList (List<OxoFeatureOptionAggr> oxoFeatureOptionAggrList, BaseVehicleAggr baseVehicleAggr,String modelYearCode){
+        //判断是否oxo中有对应model year的行信息
+        if (!oxoFeatureOptionAggrList.stream().filter(aggr->(Objects.equals(aggr.getFeatureCode().substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO),ConfigConstants.FEATURE_CODE_AF00.substring(CommonConstants.INT_ZERO,CommonConstants.INT_TWO))))
+                .collect(Collectors.toSet()).contains(modelYearCode)){
+                throw new BusinessException(ConfigErrorCode.BASE_VEHICLE_NO_MODEL_YEAR_OPTON_IN_OXO.getCode(),String.format(ConfigErrorCode.BASE_VEHICLE_NO_MODEL_YEAR_OPTON_IN_OXO.getMessage(),modelYearCode));
+        }
         List<OxoOptionPackageAggr> resList =
             oxoFeatureOptionAggrList.stream().map(oxoFeatureOptionAggr -> {
             OxoOptionPackageAggr oxoPackageInfoAggr = new OxoOptionPackageAggr();

@@ -61,6 +61,7 @@ public enum ConfigErrorCode implements ErrorCode {
     BASE_VEHICLE_MATURITY_CHANGE_INVALID(81004, "Base Vehicle Can Not Revert Its Maturity From P To U!"),
     BASE_VEHICLE_STATUS_INVALID(81005, "Base Vehicle Status Is Invalid!"),
     BASE_VEHICLE_ALREADY_RELEASED(81006, "The Base Vehicle Is Published, Can Not Delete!"),
+    BASE_VEHICLE_NO_MODEL_YEAR_OPTON_IN_OXO(81007,"Please Add Related Option Code (Option: %s) In OXO!"),
 
     /**
      * OXO

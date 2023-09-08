@@ -130,7 +130,7 @@ public class OxoCompareExportUtil {
                 XSSFRow childRow = xssfWorkbook.getSheetAt(0).createRow(childRowIndex);
                 buildOptionHeadDatas(x, childRow, cellOptionColorStyle, cellOptionCodeColorStyle);
                 List<OxoEditCmd> optionOxoConfigration = x.getPackInfos();
-                Map<String, List<OxoEditCmd>> oxoConfigrationMap = optionOxoConfigration.stream().collect(Collectors.groupingBy(o -> String.format("%s-%s-%s-%s", o.getModelCode()+" "+o.getModelYear()+" ",
+                Map<String, List<OxoEditCmd>> oxoConfigrationMap = optionOxoConfigration.stream().collect(Collectors.groupingBy(o -> String.format("%s-%s-%s-%s", o.getModelCode() + " " + o.getModelYear() + " ",
                         o.getRegionCode(), o.getDriveHandCode(), o.getSalesCode())));
                 //是否有变更，没有的话需要清除changeType 为 modify
                 AtomicBoolean isModify = new AtomicBoolean(false);
@@ -157,24 +157,24 @@ public class OxoCompareExportUtil {
                             if (!Objects.isNull(compareIpdOXOOutput)) {
                                 String compareIpdPackageNo = compareIpdOXOOutput.getPackageCode();
                                 if (StringUtils.isNotBlank(compareIpdPackageNo)) {
-                                    if (StringUtils.equals(OxoOptionPackageTypeEnum.UNAVAILABLE.getType(),compareIpdPackageNo)) {
-                                        packageCellValue.append("->");
+                                    if (StringUtils.equals(OxoOptionPackageTypeEnum.UNAVAILABLE.getType(), compareIpdPackageNo)) {
+                                        packageCellValue.append("-/").append(ipdOXOOutput.getDescription()).append(" > ");
                                     } else if (StringUtils.equals(OxoOptionPackageTypeEnum.DEFALUT.getType(), compareIpdPackageNo)) {
-                                        packageCellValue.append("●>");
+                                        packageCellValue.append("●/").append(ipdOXOOutput.getDescription()).append(" > ");
                                     } else if (StringUtils.equals(OxoOptionPackageTypeEnum.AVAILABLE.getType(), compareIpdPackageNo)) {
-                                        packageCellValue.append("○>");
+                                        packageCellValue.append("○/").append(ipdOXOOutput.getDescription()).append(" > ");
                                     } else if (StringUtils.isNotBlank(compareIpdPackageNo)) {
                                         packageCellValue.append(compareIpdPackageNo + ">");
                                     }
                                 }
                             }
                             //设置打点属性值
-                            if (StringUtils.equals(OxoOptionPackageTypeEnum.UNAVAILABLE.getType(),packageCode)) {
-                                cell.setCellValue(packageCellValue.append("-").toString());
-                            } else if (StringUtils.equals(OxoOptionPackageTypeEnum.DEFALUT.getType(),packageCode)) {
-                                cell.setCellValue(packageCellValue.append("●").toString());
+                            if (StringUtils.equals(OxoOptionPackageTypeEnum.UNAVAILABLE.getType(), packageCode)) {
+                                cell.setCellValue(packageCellValue.append("-/").append(ipdOXOOutput.getDescription()).toString());
+                            } else if (StringUtils.equals(OxoOptionPackageTypeEnum.DEFALUT.getType(), packageCode)) {
+                                cell.setCellValue(packageCellValue.append("●/").append(ipdOXOOutput.getDescription()).toString());
                             } else if (StringUtils.equals(OxoOptionPackageTypeEnum.AVAILABLE.getType(), packageCode)) {
-                                cell.setCellValue(packageCellValue.append("○").toString());
+                                cell.setCellValue(packageCellValue.append("○/").append(ipdOXOOutput.getDescription()).toString());
                             } else if (StringUtils.isNotBlank(packageCode)) {
                                 cell.setCellValue(packageCellValue.append(packageCode).toString());
                             }

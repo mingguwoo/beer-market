@@ -335,7 +335,10 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
                             versionName, oxo.getModelCode(), oxo.getModelYear(), feature.getFeatureCode(), option.getFeatureCode(),
                             oxo.getRegionCode(), oxo.getDriveHandCode(), oxo.getSalesCode());
                     OxoEditCmd compareOxo = oxoMap.get(oxoKey);
-                    if (oxoMap.containsKey(oxoKey) && !oxoMap.get(oxoKey).getPackageCode().equals(oxo.getPackageCode())) {
+
+
+                    if (oxoMap.containsKey(oxoKey) && (!oxoMap.get(oxoKey).getPackageCode().equals(oxo.getPackageCode()) ||
+                            !StringUtils.equals(oxoMap.get(oxoKey).getDescription(), oxo.getDescription()))) {
                         if (Objects.nonNull(compareOxo)) {
                             oxo.setCompareOxoEdit(compareOxo);
                         }

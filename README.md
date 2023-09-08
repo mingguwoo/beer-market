@@ -2,91 +2,61 @@
 
 
 
-## Getting started
-
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
-
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://git.nevint.com/plm/plm-bom-configuration.git
-git branch -M master
-git push -uf origin master
-```
-
-## Integrate with your tools
-
-- [ ] [Set up project integrations](https://git.nevint.com/plm/plm-bom-configuration/-/settings/integrations)
-
-## Collaborate with your team
-
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+## 模块说明
 
 ***
 
-# Editing this README
+本服务一共有如下几个核心模块：
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+***
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+## Api
 
-## Name
-Choose a self-explaining name for your project.
+用户接入层，负责用户接口层负责接收外部的请求，请求包括但不限于Http请求或Kafka消息等。
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+- [ ] Controller
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+## Application
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+应用层，通常会采用CQRS的处理模式（也可以采用别的模式，但规范大同小异可以通用），将命令和查询进行分离，同时领域事件和一些复杂的跨领域的业务逻辑也可以在这一层处理。
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+- [ ] 命令
+- [ ] 查询
+- [ ] 应用服务
+- [ ] 任务
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+## Domain
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+领域层，主要分为聚合、领域服务、领域事件三大部分和其他一些小的组成，聚合内包括一系列实体和值对象，每个聚合对应一个聚合根，由聚合根统一封装聚合内实体的状态变更，聚合根实现不了的操作，由领域服务负责实现，跨领域/聚合的操作发送领域事件进行流转，或者在应用层进行聚合编排。
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+- [ ] 聚合
+- [ ] 领域服务
+- [ ] 防腐接口
+- [ ] 领域事件
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+## Infrastructure
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+基础设施层，负责数据存储、API网关、事件总线，防腐等，其中，数据存储为Repositiry，repository的接口定义在领域层，基础设施层提供repository实现，API网关通过防腐层ACL统一封装隔离变化，事件总线用于发送领域事件。总之，所有与平台，框架相关的实现都会在该层中，避免领域层被这些逻辑所污染。
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+- [ ] 配置
+- [ ] 仓储实现
+- [ ] 防腐实现
+- [ ] 其他
 
-## License
-For open source projects, say how it is licensed.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+***
+
+除此之外，还有一些辅助模块：
+
+***
+
+## Common
+
+公共模块，主要用来存放一些服务中通用的一些对象，工具类，常量，枚举等等
+
+## Spi
+Spi模块，是用来存放外部调用相关的Feign服务客户端以及Request，Response对象等
+
+## Sdk
+Sdk模块，是用来存放配置管理服务日后用来提供对外服务调用的Feign接口及其相关的Request，Response对象等

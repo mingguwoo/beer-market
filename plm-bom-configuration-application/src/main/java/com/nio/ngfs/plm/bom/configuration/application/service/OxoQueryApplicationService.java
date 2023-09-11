@@ -3,6 +3,8 @@ package com.nio.ngfs.plm.bom.configuration.application.service;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoCompareQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListRespDto;
 
+import java.util.List;
+
 /**
  * @author wangchao.wang
  */
@@ -16,7 +18,7 @@ public interface OxoQueryApplicationService {
      * @para version
      * @return
      */
-    OxoListRespDto queryOxoInfoByModelCode(String modelCode, String version, Boolean isMaturity);
+    OxoListRespDto queryOxoInfoByModelCode(String modelCode, String version, Boolean isMaturity, List<String> roleNames);
 
 
     /**

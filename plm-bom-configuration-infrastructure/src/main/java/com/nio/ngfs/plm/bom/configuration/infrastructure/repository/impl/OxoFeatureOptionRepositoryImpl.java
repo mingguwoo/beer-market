@@ -1,5 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.impl;
 
+import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureCatalogEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionRepository;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.OxoFeatureOptionConverter;
@@ -58,7 +60,7 @@ public class OxoFeatureOptionRepositoryImpl implements OxoFeatureOptionRepositor
     }
 
     @Override
-    public List<OxoFeatureOptionAggr> queryFeatureListsByModel(String modelCode) {
+    public List<OxoFeatureOptionAggr> queryFeatureListsByModel(String modelCode, List<String> roleNames) {
 
         List<BomsOxoFeatureOptionEntity> bomsOxoFeatureOptionEntities =
                 bomsOxoFeatureOptionDao.queryOxoFeatureOptionByModel(modelCode, null);
@@ -72,40 +74,50 @@ public class OxoFeatureOptionRepositoryImpl implements OxoFeatureOptionRepositor
 
         List<BomsFeatureLibraryEntity> libraryEntities = bomsFeatureLibraryDao.queryByFeatureCodes(featureCodes);
 
+        List<OxoFeatureOptionAggr> oxoFeatureOptionAggrs = Lists.newArrayList();
 
-        return bomsOxoFeatureOptionEntities.stream().map(x -> {
+        boolean result = CollectionUtils.isNotEmpty(roleNames) && !roleNames.contains(ConfigConstants.CONFIG_ADMIN);
+        bomsOxoFeatureOptionEntities.forEach(x -> {
+            BomsFeatureLibraryEntity entity =
+                    libraryEntities.stream().filter(
+                            y -> StringUtils.equals(x.getFeatureCode(), y.getFeatureCode())).findFirst().orElse(null);
 
+            if (Objects.isNull(entity)) {
+                return;
+            }
+
+            if (result && !StringUtils.equals(entity.getCatalog(), FeatureCatalogEnum.ENGINEERING.getCatalog())) {
+                return;
+            }
             OxoFeatureOptionAggr oxoFeatureOptionAggr = new OxoFeatureOptionAggr();
             oxoFeatureOptionAggr.setFeatureCode(x.getFeatureCode());
             oxoFeatureOptionAggr.setId(x.getId());
-            BomsFeatureLibraryEntity entity =
-                    libraryEntities.stream().filter(y -> StringUtils.equals(x.getFeatureCode(), y.getFeatureCode())).findFirst().orElse(null);
 
-            if (Objects.nonNull(entity)) {
 
-                oxoFeatureOptionAggr.setCatalog(entity.getCatalog());
-                oxoFeatureOptionAggr.setParentFeatureCode(entity.getParentFeatureCode());
-                oxoFeatureOptionAggr.setChineseName(entity.getChineseName());
-                oxoFeatureOptionAggr.setDisplayName(entity.getDisplayName());
-                oxoFeatureOptionAggr.setType(entity.getType());
+            oxoFeatureOptionAggr.setCatalog(entity.getCatalog());
+            oxoFeatureOptionAggr.setParentFeatureCode(entity.getParentFeatureCode());
+            oxoFeatureOptionAggr.setChineseName(entity.getChineseName());
+            oxoFeatureOptionAggr.setDisplayName(entity.getDisplayName());
+            oxoFeatureOptionAggr.setType(entity.getType());
 
-            }
             oxoFeatureOptionAggr.setRuleCheck(x.getRuleCheck());
             oxoFeatureOptionAggr.setComment(x.getComment());
             oxoFeatureOptionAggr.setSoftDelete(x.getSoftDelete());
             oxoFeatureOptionAggr.setModelCode(modelCode);
             oxoFeatureOptionAggr.setSort(x.getSort());
 
-            return oxoFeatureOptionAggr;
+            oxoFeatureOptionAggrs.add(oxoFeatureOptionAggr);
 
-        }).toList();
+        });
+
+        return oxoFeatureOptionAggrs;
     }
 
     @Override
     public List<OxoFeatureOptionAggr> queryFeatureListsByModelAndSortDelete(String modelCode, Boolean isSoftDelete) {
         List<BomsOxoFeatureOptionEntity> entities =
                 bomsOxoFeatureOptionDao.queryOxoFeatureOptionByModel(modelCode, isSoftDelete);
-       return oxoFeatureOptionConverter.convertEntityListToDoList(entities);
+        return oxoFeatureOptionConverter.convertEntityListToDoList(entities);
     }
 
     @Override
@@ -116,7 +128,7 @@ public class OxoFeatureOptionRepositoryImpl implements OxoFeatureOptionRepositor
 
     @Override
     public void updateOxoFeatureOptions(List<OxoFeatureOptionAggr> oxoFeatureOptionAggrs) {
-        bomsOxoFeatureOptionDao.updateOxoFeatureOptions( oxoFeatureOptionAggrs.stream().map(oxoFeatureOptionAggr -> {
+        bomsOxoFeatureOptionDao.updateOxoFeatureOptions(oxoFeatureOptionAggrs.stream().map(oxoFeatureOptionAggr -> {
             BomsOxoFeatureOptionEntity entity = new BomsOxoFeatureOptionEntity();
             if (StringUtils.isNotBlank(oxoFeatureOptionAggr.getComment())) {
                 entity.setComment(oxoFeatureOptionAggr.getComment());

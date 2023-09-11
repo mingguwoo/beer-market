@@ -83,7 +83,7 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, List
 
         //查询 oxo最新working 版本信息  Informal 仅包含Maturity为P且Status为Active的Base Vehicle
         OxoListRespDto oxoLists = oxoQueryApplicationService.queryOxoInfoByModelCode(modelCode, ConfigConstants.WORKING,
-                StringUtils.equals(type, OxoSnapshotEnum.FORMAL.getCode()));
+                StringUtils.equals(type, OxoSnapshotEnum.FORMAL.getCode()), Lists.newArrayList());
 
         // 如果是首发版本
         if (StringUtils.contains(version, ConfigConstants.VERSION_AA)) {
@@ -110,7 +110,7 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, List
             bomsOxoVersionSnapshotDao.insertBomsOxoVersionSnapshot(BeanConvertUtils.convertTo(
                     oxoVersionSnapshot, BomsOxoVersionSnapshotEntity::new));
 
-            OxoListRespDto productContextOxo = oxoQueryApplicationService.queryOxoInfoByModelCode(modelCode, ConfigConstants.WORKING, false);
+            OxoListRespDto productContextOxo = oxoQueryApplicationService.queryOxoInfoByModelCode(modelCode, ConfigConstants.WORKING, false, Lists.newArrayList());
             //同步product context
             try {
                 productContextApplicationService.addProductContext(productContextOxo, editGroupCmd.getUserName());

@@ -319,7 +319,7 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
 
 
         // 查询 is_delete数据
-        List<OxoFeatureOptionAggr> oxoFeatureOptions = oxoFeatureOptionRepository.queryFeatureListsByModel(modelCode);
+        List<OxoFeatureOptionAggr> oxoFeatureOptions = oxoFeatureOptionRepository.queryFeatureListsByModel(modelCode,Lists.newArrayList());
 
 
         if (CollectionUtils.isEmpty(oxoFeatureOptions)) {

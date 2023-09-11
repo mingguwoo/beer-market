@@ -699,12 +699,18 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
             }
 
 
+            String packageCode = OxoOptionPackageTypeEnum.getByType(oxoEditCmd.getPackageCode()).getCode();
+            String description = StringUtils.isNotBlank(oxoEditCmd.getDescription()) ? "/" + oxoEditCmd.getDescription() : "";
+
             if (Objects.nonNull(oxoEditCmd.getCompareOxoEdit())) {
-                packageOption.setPackageOption(OxoOptionPackageTypeEnum.getByType(oxoEditCmd.getCompareOxoEdit().getPackageCode()).getCode() +
-                        " > " + OxoOptionPackageTypeEnum.getByType(oxoEditCmd.getPackageCode()).getCode());
+                String comparePackageCode =
+                        OxoOptionPackageTypeEnum.getByType(oxoEditCmd.getCompareOxoEdit().getPackageCode()).getCode();
+                String compareDescription = StringUtils.isNotBlank(oxoEditCmd.getCompareOxoEdit().getDescription()) ? "/" + oxoEditCmd.getCompareOxoEdit().getDescription() : "";
+
+                packageOption.setPackageOption(comparePackageCode + compareDescription + " > " + packageCode + description);
                 packageOption.setColor("#f0e68c");
             } else {
-                packageOption.setPackageOption(OxoOptionPackageTypeEnum.getByType(oxoEditCmd.getPackageCode()).getCode());
+                packageOption.setPackageOption(packageCode + description);
             }
 
             options.add(packageOption);

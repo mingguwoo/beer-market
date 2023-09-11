@@ -16,8 +16,9 @@ public interface ProductConfigOptionDomainService {
      *
      * @param pcId                   PC Id
      * @param baseVehicleFeatureList Base Vehicle Feature列表
+     * @param createUser             创建人
      * @return ProductConfigOptionAggr列表
      */
-    List<ProductConfigOptionAggr> copyFromBaseVehicle(Long pcId, List<BasedOnBaseVehicleFeature> baseVehicleFeatureList);
+    List<ProductConfigOptionAggr> copyFromBaseVehicle(Long pcId, List<BasedOnBaseVehicleFeature> baseVehicleFeatureList, String createUser);
 
 }

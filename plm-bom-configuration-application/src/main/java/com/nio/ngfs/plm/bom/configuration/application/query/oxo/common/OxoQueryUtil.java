@@ -33,6 +33,9 @@ public class OxoQueryUtil {
         }
         List<Long> baseVehicleIdList = Lists.newArrayList();
         oxoListRespDto.getOxoHeadResps().forEach(head -> {
+            if (CollectionUtils.isEmpty(head.getRegionInfos())) {
+                return;
+            }
             head.getRegionInfos().forEach(region -> {
                 region.getDriveHands().forEach(driveHand -> {
                     driveHand.getSalesVersionInfos().forEach(salesVersion -> {

@@ -6,9 +6,11 @@ package com.nio.ngfs.plm.bom.configuration.domain.model.productconfigmodelyear;
  */
 public class ProductConfigModelYearFactory {
 
-    public static ProductConfigModelYearAggr create(String model, String modelYear) {
+    public static ProductConfigModelYearAggr create(String model, String modelYear, String createUser) {
         return ProductConfigModelYearAggr.builder()
                 .productConfigModelYearId(new ProductConfigModelYearId(model, modelYear))
+                .createUser(createUser)
+                .updateUser(createUser)
                 .build();
     }
 

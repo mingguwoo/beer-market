@@ -44,7 +44,7 @@ public class ProductConfigModelOptionApplicationServiceImpl implements ProductCo
         Set<String> existOptionCodeSet = modelOptionAggrList.stream().map(ProductConfigModelOptionAggr::getOptionCode).collect(Collectors.toSet());
         List<ProductConfigModelOptionAggr> newModelOptionAggrList = optionSyncBoList.stream()
                 .filter(i -> !existOptionCodeSet.contains(i.getOptionCode()))
-                .map(i -> ProductConfigModelOptionFactory.create(oxoVersionSnapshotAggr.getModelCode(), i.getOptionCode(), i.getFeatureCode()))
+                .map(i -> ProductConfigModelOptionFactory.create(oxoVersionSnapshotAggr.getModelCode(), i.getOptionCode(), i.getFeatureCode(), oxoVersionSnapshotAggr.getCreateUser()))
                 .toList();
         productConfigModelOptionRepository.batchSave(newModelOptionAggrList);
     }

@@ -33,7 +33,7 @@ public class ProductConfigOptionApplicationServiceImpl implements ProductConfigO
 
     @Override
     public List<ProductConfigOptionAggr> editPcOptionConfig(List<EditProductConfigCmd.PcOptionConfigDto> updatePcOptionConfigList, List<ProductConfigAggr> productConfigAggrList,
-                                                            List<ProductConfigOptionAggr> productConfigOptionAggrList) {
+                                                            List<ProductConfigOptionAggr> productConfigOptionAggrList, String updateUser) {
         if (CollectionUtils.isEmpty(updatePcOptionConfigList)) {
             return Lists.newArrayList();
         }
@@ -49,12 +49,12 @@ public class ProductConfigOptionApplicationServiceImpl implements ProductConfigO
             if (existProductConfigOptionAggr == null) {
                 // 新增的勾选记录
                 ProductConfigOptionAggr newProductConfigOptionAggr = ProductConfigOptionFactory.create(productConfigAggr.getId(), i.getOptionCode(), i.getFeatureCode(),
-                        i.isSelect());
+                        i.isSelect(), updateUser);
                 productConfigOptionAggrList.add(newProductConfigOptionAggr);
                 return newProductConfigOptionAggr;
             }
             // 编辑Product Config勾选校验
-            checkEditPcOptionConfig(i, existProductConfigOptionAggr, productConfigAggr);
+            checkEditPcOptionConfig(i, existProductConfigOptionAggr, productConfigAggr, updateUser);
             return existProductConfigOptionAggr;
         });
     }
@@ -129,7 +129,8 @@ public class ProductConfigOptionApplicationServiceImpl implements ProductConfigO
     /**
      * 编辑Product Config勾选校验
      */
-    private void checkEditPcOptionConfig(EditProductConfigCmd.PcOptionConfigDto pcOptionConfigDto, ProductConfigOptionAggr productConfigOptionAggr, ProductConfigAggr productConfigAggr) {
+    private void checkEditPcOptionConfig(EditProductConfigCmd.PcOptionConfigDto pcOptionConfigDto, ProductConfigOptionAggr productConfigOptionAggr,
+                                         ProductConfigAggr productConfigAggr, String updateUser) {
         // 勾选状态未变更，不处理
         if (pcOptionConfigDto.isSelect() && productConfigOptionAggr.isSelect()) {
             return;
@@ -148,6 +149,7 @@ public class ProductConfigOptionApplicationServiceImpl implements ProductConfigO
             }
         }
         productConfigOptionAggr.changeSelectStatus(pcOptionConfigDto.isSelect());
+        productConfigOptionAggr.setUpdateUser(updateUser);
     }
 
 }

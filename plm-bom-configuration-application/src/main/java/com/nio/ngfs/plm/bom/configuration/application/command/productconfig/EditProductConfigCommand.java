@@ -56,7 +56,7 @@ public class EditProductConfigCommand extends AbstractLockCommand<EditProductCon
                 LambdaUtil.map(productConfigAggrList, ProductConfigAggr::getModelYear, true));
         // 编辑Product Config勾选
         List<ProductConfigOptionAggr> saveProductConfigOptionAggrList = productConfigOptionApplicationService.editPcOptionConfig(cmd.getUpdatePcOptionConfigList(),
-                productConfigAggrList, productConfigOptionAggrList);
+                productConfigAggrList, productConfigOptionAggrList, cmd.getUpdateUser());
         // edit时skipCheck校验
         productConfigOptionApplicationService.skipCheckBeforeEdit(productConfigAggrList, productConfigOptionAggrList);
         // Product Context勾选校验

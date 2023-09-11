@@ -36,7 +36,7 @@ public class ModelYearOxoReleaseHandler implements EventHandler<OxoVersionSnapsh
             return;
         }
         List<ProductConfigModelYearAggr> productConfigModelYearAggrList = oxoListRespDto.getOxoHeadResps().stream().map(head ->
-                ProductConfigModelYearFactory.create(head.getModelCode(), head.getModelYear())
+                ProductConfigModelYearFactory.create(head.getModelCode(), head.getModelYear(), event.getOxoVersionSnapshotAggr().getCreateUser())
         ).toList();
         List<ProductConfigModelYearAggr> existModelYearAggrList = productConfigModelYearRepository.queryByModel(event.getOxoVersionSnapshotAggr().getModelCode());
         Map<String, ProductConfigModelYearAggr> existModelYearAggrMap = LambdaUtil.toKeyMap(existModelYearAggrList, ProductConfigModelYearAggr::getModelYear);

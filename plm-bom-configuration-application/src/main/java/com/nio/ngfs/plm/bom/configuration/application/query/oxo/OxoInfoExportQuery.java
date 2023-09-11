@@ -39,7 +39,7 @@ public class OxoInfoExportQuery {
         String version = oxoBaseCmd.getVersion();
 
         //查询oxo  info数据
-        OxoListRespDto qry = oxoQueryApplicationService.queryOxoInfoByModelCode(modelCode, version,false);
+        OxoListRespDto qry = oxoQueryApplicationService.queryOxoInfoByModelCode(modelCode, version,false,oxoBaseCmd.getPermissionPoints());
 
 
         //导出数据

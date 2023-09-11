@@ -38,4 +38,5 @@ public class OxoBaseCmd implements Cmd, Qry {
      * 权限点查询
      */
     private List<String> permissionPoints;
+
 }

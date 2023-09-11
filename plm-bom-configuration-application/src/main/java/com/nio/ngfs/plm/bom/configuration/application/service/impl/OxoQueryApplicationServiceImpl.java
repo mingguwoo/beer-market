@@ -55,6 +55,7 @@ public class OxoQueryApplicationServiceImpl implements OxoQueryApplicationServic
 
     /**
      * 对比版本
+     *
      * @param oxoCompareQry
      * @return
      */
@@ -72,25 +73,28 @@ public class OxoQueryApplicationServiceImpl implements OxoQueryApplicationServic
             throw new BusinessException(ConfigErrorCode.BASIC_VERSION_ERROR);
         }
 
-        //查询oxo  info数据
-        OxoListRespDto baseVersionQry = queryOxoInfoByModelCode(modelCode, baseVersion, false);
+        //查询oxo  info 基准数据
+        OxoListRespDto baseVersionQry = findQryByVersion(modelCode, baseVersion);
 
-        if (CollectionUtils.isEmpty(baseVersionQry.getOxoHeadResps()) || CollectionUtils.isEmpty(baseVersionQry.getOxoHeadResps())) {
-            throw new BusinessException(MessageFormat.format(ConfigErrorCode.VERSION_ERROR.getMessage(), baseVersion));
-        }
-
-        OxoListRespDto compareVersionQry = queryOxoInfoByModelCode(modelCode, compareVersion, false);
-
-        if (CollectionUtils.isEmpty(compareVersionQry.getOxoHeadResps()) || CollectionUtils.isEmpty(compareVersionQry.getOxoHeadResps())) {
-            throw new BusinessException(MessageFormat.format(ConfigErrorCode.VERSION_ERROR.getMessage(), compareVersion));
-        }
+        //查询对比数据
+        OxoListRespDto compareVersionQry = findQryByVersion(modelCode, baseVersion);
 
         return oxoCompareDomainService.compareVersion(baseVersionQry, compareVersionQry, oxoCompareQry.isShowDiff());
     }
 
 
+    public OxoListRespDto findQryByVersion(String modelCode, String version){
+        OxoListRespDto compareVersionQry = queryOxoInfoByModelCode(modelCode, version, false, Lists.newArrayList());
+
+        if (CollectionUtils.isEmpty(compareVersionQry.getOxoHeadResps()) || CollectionUtils.isEmpty(compareVersionQry.getOxoHeadResps())) {
+            throw new BusinessException(MessageFormat.format(ConfigErrorCode.VERSION_ERROR.getMessage(), version));
+        }
+
+        return compareVersionQry;
+    }
+
     @Override
-    public OxoListRespDto queryOxoInfoByModelCode(String modelCode, String version, Boolean isMaturity) {
+    public OxoListRespDto queryOxoInfoByModelCode(String modelCode, String version, Boolean isMaturity, List<String> roleNames) {
         OxoListRespDto qry = new OxoListRespDto();
 
         // 快照版本查询
@@ -108,7 +112,7 @@ public class OxoQueryApplicationServiceImpl implements OxoQueryApplicationServic
             // 查询working版本
         } else {
             // 查询行数据
-            List<OxoFeatureOptionAggr> oxoFeatureOptions = oxoFeatureOptionRepository.queryFeatureListsByModel(modelCode);
+            List<OxoFeatureOptionAggr> oxoFeatureOptions = oxoFeatureOptionRepository.queryFeatureListsByModel(modelCode, roleNames);
 
             //查询表头信息
             List<OxoHeadQry> oxoLists = baseVehicleDomainService.queryByModel(modelCode, isMaturity);

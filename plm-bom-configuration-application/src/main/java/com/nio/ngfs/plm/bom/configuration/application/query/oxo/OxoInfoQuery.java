@@ -16,13 +16,12 @@ import org.springframework.stereotype.Component;
 public class OxoInfoQuery implements Query<OxoBaseCmd, OxoListRespDto> {
 
 
-
     private final OxoQueryApplicationService oxoQueryApplicationService;
 
 
     @Override
     public OxoListRespDto execute(OxoBaseCmd oxoListQry) {
         return oxoQueryApplicationService.queryOxoInfoByModelCode(
-                oxoListQry.getModelCode(),oxoListQry.getVersion(),false);
+                oxoListQry.getModelCode(), oxoListQry.getVersion(), false, oxoListQry.getPermissionPoints());
     }
 }

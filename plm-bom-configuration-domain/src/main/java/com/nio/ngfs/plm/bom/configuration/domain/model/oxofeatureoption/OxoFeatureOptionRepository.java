@@ -40,7 +40,7 @@ public interface OxoFeatureOptionRepository extends Repository<OxoFeatureOptionA
      * @param modelCode
      * @return
      */
-    List<OxoFeatureOptionAggr> queryFeatureListsByModel(String modelCode);
+    List<OxoFeatureOptionAggr> queryFeatureListsByModel(String modelCode,List<String> roleNames);
 
 
     /**

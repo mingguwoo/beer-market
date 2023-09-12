@@ -52,8 +52,9 @@ public class ProductConfigApplicationServiceImpl implements ProductConfigApplica
             throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_BASED_ON_PC_NOT_EXIST);
         }
         List<ProductConfigOptionAggr> productConfigOptionAggrList = productConfigOptionRepository.queryByPcId(basedOnPc.getId());
-        // copy Based On PC的Code勾选
-        return LambdaUtil.map(productConfigOptionAggrList, i -> ProductConfigOptionFactory.createFromPc(productConfigAggr.getId(), i, productConfigAggr.getCreateUser()));
+        // copy Based On PC的Code勾选（只copy打勾的）
+        return LambdaUtil.map(productConfigOptionAggrList, ProductConfigOptionAggr::isSelect, i -> ProductConfigOptionFactory.createFromPc(productConfigAggr.getId(), i,
+                productConfigAggr.getCreateUser()));
     }
 
     @Override

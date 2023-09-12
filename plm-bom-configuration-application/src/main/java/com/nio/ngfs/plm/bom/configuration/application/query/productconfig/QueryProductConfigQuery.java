@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 查询Product Config列表
@@ -79,11 +80,21 @@ public class QueryProductConfigQuery extends AbstractQuery<QueryProductConfigQry
         // Product Config和Product Context按Option分组
         Map<String, List<BomsProductConfigOptionEntity>> optionEntityGroup = LambdaUtil.groupBy(optionEntityList, BomsProductConfigOptionEntity::getOptionCode);
         Map<String, List<BomsProductContextEntity>> productContextEntityGroup = LambdaUtil.groupBy(productContextEntityList, BomsProductContextEntity::getOptionCode);
-        response.getFeatureList().forEach(feature ->
-                feature.getOptionList().forEach(option ->
-                        buildPcOptionConfig(option, optionEntityGroup.get(option.getOptionCode()), productContextEntityGroup.get(option.getOptionCode()), pcList, qry.isEdit())
-                )
-        );
+        response.getFeatureList().forEach(feature -> {
+            feature.getOptionList().forEach(option ->
+                    buildPcOptionConfig(option, optionEntityGroup.get(option.getOptionCode()), productContextEntityGroup.get(option.getOptionCode()), pcList, qry.isEdit())
+            );
+            Map<String, List<QueryProductConfigRespDto.PcOptionConfigDto>> configByPcIdMap =
+                    feature.getOptionList().stream().map(QueryProductConfigRespDto.OptionDto::getConfigList)
+                            .flatMap(Collection::stream).collect(Collectors.groupingBy(QueryProductConfigRespDto.PcOptionConfigDto::getPcId));
+            // Feature是否跳过SkipCheck校验，满足: Feature下所有的Option都跳过SkipCheck校验
+            if (qry.isEdit()) {
+                feature.setConfigList(LambdaUtil.map(pcList, pc ->
+                        QueryProductConfigAssembler.assemble(pc.getPcId(), configByPcIdMap.get(pc.getPcId()).stream()
+                                .allMatch(QueryProductConfigRespDto.PcOptionConfigDto::isIgnoreSkipCheck))
+                ));
+            }
+        });
     }
 
     /**
@@ -139,7 +150,7 @@ public class QueryProductConfigQuery extends AbstractQuery<QueryProductConfigQry
                 // 过滤并构建子节点列表
                 .peek(feature -> {
                     boolean featureMatchSearch = feature.isMatchSearch(qry.getSearch());
-                    feature.setOptionList(featureGroup.get(feature.getFeatureCode()).stream()
+                    feature.setOptionList(featureGroup.getOrDefault(feature.getFeatureCode(), Lists.newArrayList()).stream()
                             // 构建OptionDto
                             .map(option -> buildOptionDto(option, featureLibraryEntityMap, feature.getGroup()))
                             // 模糊匹配，匹配Feature或Option

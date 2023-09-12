@@ -77,7 +77,7 @@ public class OxoQueryApplicationServiceImpl implements OxoQueryApplicationServic
         OxoListRespDto baseVersionQry = findQryByVersion(modelCode, baseVersion);
 
         //查询对比数据
-        OxoListRespDto compareVersionQry = findQryByVersion(modelCode, baseVersion);
+        OxoListRespDto compareVersionQry = findQryByVersion(modelCode, compareVersion);
 
         return oxoCompareDomainService.compareVersion(baseVersionQry, compareVersionQry, oxoCompareQry.isShowDiff());
     }

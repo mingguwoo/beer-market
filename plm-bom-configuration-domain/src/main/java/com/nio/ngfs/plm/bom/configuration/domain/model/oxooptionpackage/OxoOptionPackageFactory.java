@@ -70,7 +70,8 @@ public class OxoOptionPackageFactory {
             //如果是被选中的点
             if (Objects.equals(oxoFeatureOptionAggr.getFeatureCode(),baseVehicleAggr.getDriveHand())
             || Objects.equals(oxoFeatureOptionAggr.getFeatureCode(),baseVehicleAggr.getRegionOptionCode())
-            || Objects.equals(oxoFeatureOptionAggr.getFeatureCode(),baseVehicleAggr.getSalesVersion())){
+            || Objects.equals(oxoFeatureOptionAggr.getFeatureCode(),baseVehicleAggr.getSalesVersion())
+            || Objects.equals(oxoFeatureOptionAggr.getFeatureCode(),modelYearCode)){
                 oxoPackageInfoAggr.setPackageCode("Default");
             }
             else{

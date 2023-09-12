@@ -10,6 +10,7 @@ import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.event.EventPublisher;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.enums.OxoSnapshotEnum;
@@ -18,8 +19,10 @@ import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoVersionSnapshotD
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoVersionSnapshotDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsOxoVersionSnapshotEntity;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoBaseCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoEditCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoSnapshotCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListRespDto;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoRowsQry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -28,6 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 /**
@@ -85,23 +89,12 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, List
         OxoListRespDto oxoLists = oxoQueryApplicationService.queryOxoInfoByModelCode(modelCode, ConfigConstants.WORKING,
                 StringUtils.equals(type, OxoSnapshotEnum.FORMAL.getCode()), Lists.newArrayList());
 
-        // 如果是首发版本
-        if (StringUtils.contains(version, ConfigConstants.VERSION_AA)) {
-            //- 针对Model下的首版OXO发布，系统需校验AF00是否存在于OXO中
-            if (CollectionUtils.isEmpty(oxoLists.getOxoRowsResps()) ||
-                    oxoLists.getOxoRowsResps().stream().noneMatch(x -> StringUtils.equals(x.getFeatureCode(), ConfigConstants.FEATURE_CODE_AF00))) {
-                throw new BusinessException(ConfigErrorCode.AF_ERROR);
-            }
-        } else if (
-            //非首发formal 版本 表头不能为空
-                StringUtils.equals(type, OxoSnapshotEnum.FORMAL.getCode()) &&
-                        !StringUtils.contains(version, ConfigConstants.VERSION_AA)
-                        && CollectionUtils.isEmpty(oxoLists.getOxoHeadResps())) {
 
-            throw new BusinessException(ConfigErrorCode.MATURITY_ERROR);
-        }
 
         OxoVersionSnapshotAggr oxoVersionSnapshot = OxoVersionSnapshotFactory.buildOxoFeatureOptions(oxoLists, version, editGroupCmd);
+
+        // 检查快照数据
+        checkSnapshot(version,oxoLists,type);
 
 
         //开启事务
@@ -151,5 +144,54 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, List
         });
 
         return Lists.newArrayList();
+    }
+
+
+    public void checkSnapshot(String version, OxoListRespDto oxoLists,String type){
+        // 如果是首发版本
+        if (StringUtils.contains(version, ConfigConstants.VERSION_AA)) {
+            //- 针对Model下的首版OXO发布，系统需校验AF00是否存在于OXO中
+            if (CollectionUtils.isEmpty(oxoLists.getOxoRowsResps()) ||
+                    oxoLists.getOxoRowsResps().stream().noneMatch(x -> StringUtils.equals(x.getFeatureCode(), ConfigConstants.FEATURE_CODE_AF00))) {
+                throw new BusinessException(ConfigErrorCode.AF_ERROR);
+            }
+        }
+        //非首发formal 版本 表头不能为空
+        if (StringUtils.equals(type, OxoSnapshotEnum.FORMAL.getCode()) &&
+                !StringUtils.contains(version, ConfigConstants.VERSION_AA) && CollectionUtils.isEmpty(oxoLists.getOxoHeadResps())) {
+            throw new BusinessException(ConfigErrorCode.MATURITY_ERROR);
+        }
+
+
+        //校验数据  每个版本必须要有打点信息
+        List<OxoRowsQry> oxoRowsQries = oxoLists.getOxoRowsResps();
+        List<Long> headIds = Lists.newArrayList();
+
+        // 获取头id
+        oxoLists.getOxoHeadResps().forEach(oxoHeadQry -> {
+            oxoHeadQry.getRegionInfos().forEach(regionInfo -> {
+                regionInfo.getDriveHands().forEach(driveHandInfo -> {
+                    driveHandInfo.getSalesVersionInfos().forEach(salesVersionInfo -> {
+                        headIds.add(salesVersionInfo.getHeadId());
+                    });
+                });
+            });
+        });
+
+        //获取没有 打点信息的optionCode
+        List<String> options = Lists.newArrayList();
+        oxoRowsQries.forEach(oxoRowsQry -> {
+            oxoRowsQry.getOptions().forEach(option -> {
+                List<Long> packageHeadIds = option.getPackInfos().stream().map(OxoEditCmd::getHeadId).distinct().toList();
+                if(!packageHeadIds.containsAll(headIds.stream().distinct().toList())){
+                    options.add(option.getFeatureCode());
+                }
+            });
+        });
+
+        if (CollectionUtils.isNotEmpty(options)) {
+            throw new BusinessException(MessageFormat.format("Fail! Option Code {0} Has None Value!", options));
+        }
+
     }
 }

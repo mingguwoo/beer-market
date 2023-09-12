@@ -90,7 +90,7 @@ public class QueryProductConfigQuery extends AbstractQuery<QueryProductConfigQry
             // Feature是否跳过SkipCheck校验，满足: Feature下所有的Option都跳过SkipCheck校验
             if (qry.isEdit()) {
                 feature.setConfigList(LambdaUtil.map(pcList, pc ->
-                        QueryProductConfigAssembler.assemble(pc.getPcId(), configByPcIdMap.get(pc.getPcId()).stream()
+                        QueryProductConfigAssembler.assemble(pc, configByPcIdMap.get(pc.getPcId()).stream()
                                 .allMatch(QueryProductConfigRespDto.PcOptionConfigDto::isIgnoreSkipCheck))
                 ));
             }

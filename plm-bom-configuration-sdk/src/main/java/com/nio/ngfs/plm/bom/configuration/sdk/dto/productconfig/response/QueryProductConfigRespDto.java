@@ -69,6 +69,8 @@ public class QueryProductConfigRespDto implements Dto {
     @Data
     public static class PcFeatureConfigDto {
 
+        private Long pcPkId;
+
         private String pcId;
 
         private boolean ignoreSkipCheck;

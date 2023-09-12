@@ -76,9 +76,10 @@ public class QueryProductConfigAssembler {
         return configDto;
     }
 
-    public static QueryProductConfigRespDto.PcFeatureConfigDto assemble(String pcId, boolean ignoreSkipCheck) {
+    public static QueryProductConfigRespDto.PcFeatureConfigDto assemble(BomsProductConfigEntity entity, boolean ignoreSkipCheck) {
         QueryProductConfigRespDto.PcFeatureConfigDto featureConfigDto = new QueryProductConfigRespDto.PcFeatureConfigDto();
-        featureConfigDto.setPcId(pcId);
+        featureConfigDto.setPcPkId(entity.getId());
+        featureConfigDto.setPcId(entity.getPcId());
         featureConfigDto.setIgnoreSkipCheck(ignoreSkipCheck);
         return featureConfigDto;
     }

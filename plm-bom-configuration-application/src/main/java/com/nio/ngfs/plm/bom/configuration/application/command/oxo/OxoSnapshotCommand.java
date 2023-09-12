@@ -146,7 +146,7 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, List
 
             }
             // 发布事件
-            eventPublisher.publish(new OxoVersionSnapshotPublishEvent(oxoVersionSnapshotAggr));
+            eventPublisher.publish(new OxoVersionSnapshotPublishEvent(oxoVersionSnapshot));
             return oxoFeatureOptionApplicationService.checkOxoFeatureCode(modelCode);
         });
 

@@ -132,7 +132,7 @@ public class ExportProductConfigQuery extends AbstractExportQuery {
         XSSFRow row = sheet.createRow(optionRowIndex.get());
         optionRowIndex.incrementAndGet();
         // 每隔一个Feature设置灰底背景色
-        boolean grey = featureRowIndex % CommonConstants.INT_TWO == 1;
+        boolean grey = featureRowIndex % CommonConstants.INT_TWO == 0;
         int columnIndex = -1;
         createCell(row, ++columnIndex, featureDto.getFeatureCode(), createCellStyle(workbook, grey, false, true), maxColumnWithMap);
         createCell(row, ++columnIndex, featureDto.getDisplayName(), createCellStyle(workbook, grey, false, true), maxColumnWithMap);

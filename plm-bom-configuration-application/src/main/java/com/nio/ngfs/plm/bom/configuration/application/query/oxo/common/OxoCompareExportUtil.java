@@ -154,31 +154,22 @@ public class OxoCompareExportUtil {
                             String packageCode = ipdOXOOutput.getPackageCode();
                             OxoEditCmd compareIpdOXOOutput = ipdOXOOutput.getCompareOxoEdit();
                             StringBuffer packageCellValue = new StringBuffer();
-                            if (!Objects.isNull(compareIpdOXOOutput)) {
+                            if (Objects.nonNull(compareIpdOXOOutput)) {
                                 String compareIpdPackageNo = compareIpdOXOOutput.getPackageCode();
                                 if (StringUtils.isNotBlank(compareIpdPackageNo)) {
-                                    if (StringUtils.equals(OxoOptionPackageTypeEnum.UNAVAILABLE.getType(), compareIpdPackageNo)) {
-                                        packageCellValue.append("-/").append(ipdOXOOutput.getDescription()).append(" > ");
-                                    } else if (StringUtils.equals(OxoOptionPackageTypeEnum.DEFALUT.getType(), compareIpdPackageNo)) {
-                                        packageCellValue.append("●/").append(ipdOXOOutput.getDescription()).append(" > ");
-                                    } else if (StringUtils.equals(OxoOptionPackageTypeEnum.AVAILABLE.getType(), compareIpdPackageNo)) {
-                                        packageCellValue.append("○/").append(ipdOXOOutput.getDescription()).append(" > ");
-                                    } else if (StringUtils.isNotBlank(compareIpdPackageNo)) {
-                                        packageCellValue.append(compareIpdPackageNo + ">");
+                                    packageCellValue.append(OxoOptionPackageTypeEnum.getByType(compareIpdPackageNo).getCode());
+                                    if (StringUtils.isNotBlank(compareIpdOXOOutput.getDescription())) {
+                                        packageCellValue.append("/").append(compareIpdOXOOutput.getDescription());
                                     }
+                                    packageCellValue.append(" > ");
                                 }
                             }
                             //设置打点属性值
-                            if (StringUtils.equals(OxoOptionPackageTypeEnum.UNAVAILABLE.getType(), packageCode)) {
-                                cell.setCellValue(packageCellValue.append("-/").append(ipdOXOOutput.getDescription()).toString());
-                            } else if (StringUtils.equals(OxoOptionPackageTypeEnum.DEFALUT.getType(), packageCode)) {
-                                cell.setCellValue(packageCellValue.append("●/").append(ipdOXOOutput.getDescription()).toString());
-                            } else if (StringUtils.equals(OxoOptionPackageTypeEnum.AVAILABLE.getType(), packageCode)) {
-                                cell.setCellValue(packageCellValue.append("○/").append(ipdOXOOutput.getDescription()).toString());
-                            } else if (StringUtils.isNotBlank(packageCode)) {
-                                cell.setCellValue(packageCellValue.append(packageCode).toString());
+                            packageCellValue.append(OxoOptionPackageTypeEnum.getByType(packageCode).getCode());
+                            if (StringUtils.isNotBlank(ipdOXOOutput.getDescription())) {
+                                packageCellValue.append("/").append(ipdOXOOutput.getDescription());
                             }
-
+                            cell.setCellValue(packageCellValue.toString());
                         }
                     }
                     if (StringUtils.isNotBlank(cell.getStringCellValue()) && cell.getStringCellValue().contains(">")) {

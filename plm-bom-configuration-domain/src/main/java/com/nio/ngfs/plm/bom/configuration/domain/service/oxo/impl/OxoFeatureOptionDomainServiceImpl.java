@@ -100,7 +100,7 @@ public class OxoFeatureOptionDomainServiceImpl implements OxoFeatureOptionDomain
 
     @Override
     public List<OxoOptionPackageAggr> filterRepeatCopyfromPoints(List<OxoOptionPackageAggr> points, List<OxoFeatureOptionAggr> driveHandRegionSalesVersionRows) {
-        List<Long> repeatRows = driveHandRegionSalesVersionRows.stream().map(row -> row.getId()).collect(Collectors.toList());
+        Set<Long> repeatRows = driveHandRegionSalesVersionRows.stream().map(row -> row.getId()).collect(Collectors.toSet());
         return points.stream().filter(point -> !repeatRows.contains(point.getFeatureOptionId())).toList();
     }
 

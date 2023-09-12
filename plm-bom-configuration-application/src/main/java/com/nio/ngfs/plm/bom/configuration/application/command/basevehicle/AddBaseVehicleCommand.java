@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.application.command.basevehicle;
 
+import com.nio.bom.share.constants.CommonConstants;
 import com.nio.ngfs.plm.bom.configuration.application.service.BaseVehicleApplicationService;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleAggr;
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author bill.wang
@@ -39,8 +41,8 @@ public class AddBaseVehicleCommand {
         //后续新增需求，model Year也要考虑。因原有constants已被其他模块复用，因此在这直接添加
         childList.add(ConfigConstants.FEATURE_CODE_AF00);
         List<String> codeList = featureRepository.queryByParentFeatureCodeListAndType(childList, FeatureTypeEnum.OPTION.getType()).stream().map(option->option.getFeatureCode()).toList();
-        //获取oxo行id(model year,region,driveHand,salesVersion相关行)
-        List<OxoFeatureOptionAggr> oxoFeatureOptionAggrList = oxoFeatureOptionRepository.queryByModelAndFeatureCodeList(baseVehicleAggr.getModelCode(),codeList);
+        //获取oxo行id(model year,region,driveHand,salesVersion相关行)，还要过滤一下，考虑到softDelete的软删除
+        List<OxoFeatureOptionAggr> oxoFeatureOptionAggrList = oxoFeatureOptionRepository.queryByModelAndFeatureCodeList(baseVehicleAggr.getModelCode(),codeList).stream().filter(aggr-> Objects.equals(aggr.getSoftDelete(), CommonConstants.INT_ZERO)).toList();
         //获取model year对应的feature code
         String modelYearCode = baseVehicleApplicationService.queryModelYearOptionCodeByDisplayName(cmd.getModelYear());
         //构建打点用的聚合根

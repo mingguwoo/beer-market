@@ -26,7 +26,6 @@ public interface BomMiddlePlatformClient {
 
     /**
      *  根据品牌获取车型列表
-     * @param state
      * @param brand
      * @return
      */

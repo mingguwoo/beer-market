@@ -131,11 +131,11 @@ public class BaseVehicleApplicationServiceImpl implements BaseVehicleApplication
     }
 
     private List<OxoFeatureOptionAggr> queryModelYearRegionSalesDrivePoints(String modelCode){
-        //获取和model year,region,salesVersion,driveHand，modelCode有关的所有行信息，用于筛选
+        //获取和model year,region,salesVersion,driveHand，modelCode有关的所有未被软删除（softDelete为0）的有关行信息，用于筛选
         List<String> codeList = Stream.of(ConfigConstants.FEATURE_CODE_AF00,ConfigConstants.BASE_VEHICLE_SALES_VERSION_FEATURE,ConfigConstants.BASE_VEHICLE_REGION_FEATURE,ConfigConstants.BASE_VEHICLE_DRIVE_HAND_FEATURE).collect(Collectors.toList());
         List<FeatureAggr> featureList = featureRepository.queryByParentFeatureCodeListAndType(codeList, FeatureTypeEnum.OPTION.getType());
-        List<OxoFeatureOptionAggr> modelYeardriveHandRegionSalesVersionRows = oxoFeatureOptionRepository.queryByModelAndFeatureCodeList(modelCode,featureList.stream().map(feature->feature.getFeatureId().getFeatureCode()).toList());
-        return modelYeardriveHandRegionSalesVersionRows;
+        List<OxoFeatureOptionAggr> modelYearDriveHandRegionSalesVersionRows = oxoFeatureOptionRepository.queryByModelAndFeatureCodeList(modelCode,featureList.stream().map(feature->feature.getFeatureId().getFeatureCode()).toList()).stream().filter(aggr->Objects.equals(aggr.getSoftDelete(),CommonConstants.INT_ZERO)).toList();
+        return modelYearDriveHandRegionSalesVersionRows;
     }
 
     @Override

@@ -67,7 +67,13 @@ public class ProductConfigApplicationServiceImpl implements ProductConfigApplica
         OxoVersionSnapshotAggr oxoVersionSnapshotAggr = oxoVersionSnapshotRepository.find(productConfigAggr.getOxoVersionSnapshotId());
         // copy OXO发布版本Base Vehicle的Feature/Option列表
         List<BasedOnBaseVehicleFeature> baseVehicleFeatureList = copyOxoBaseVehicleFeatureOptionList(productConfigAggr, oxoVersionSnapshotAggr);
-        return productConfigOptionDomainService.copyFromBaseVehicle(productConfigAggr.getId(), baseVehicleFeatureList, productConfigAggr.getCreateUser());
+        List<ProductConfigOptionAggr> basedOnBaseVehicleOptionAggrList = productConfigOptionDomainService.copyFromBaseVehicle(productConfigAggr.getId(), baseVehicleFeatureList,
+                productConfigAggr.getCreateUser());
+        // 没有情况4，直接初始化完成
+        if (basedOnBaseVehicleOptionAggrList.stream().noneMatch(ProductConfigOptionAggr::isSelectCanEdit)) {
+            productConfigAggr.completeInitSelect();
+        }
+        return basedOnBaseVehicleOptionAggrList;
     }
 
     /**

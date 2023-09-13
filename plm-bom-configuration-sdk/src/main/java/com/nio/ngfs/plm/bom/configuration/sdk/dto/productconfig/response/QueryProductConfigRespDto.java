@@ -30,8 +30,6 @@ public class QueryProductConfigRespDto implements Dto {
 
         private List<OptionDto> optionList;
 
-        private List<PcFeatureConfigDto> configList;
-
         public boolean isMatchSearch(String search) {
             if (StringUtils.isBlank(search)) {
                 return true;
@@ -98,11 +96,6 @@ public class QueryProductConfigRespDto implements Dto {
          * 是否置灰
          */
         private boolean setGray;
-
-        /**
-         * 是否跳过skipCheck校验
-         */
-        private boolean ignoreSkipCheck;
 
     }
 

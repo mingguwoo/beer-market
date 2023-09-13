@@ -67,11 +67,6 @@ public class QueryProductConfigAssembler {
                 // 是否置灰，Product Context未勾选时，置灰
                 configDto.setSetGray(productContextEntity == null);
             }
-            // 是否跳过skipCheck校验，满足: From BaseVehicle、未完成初始化勾选、情况1/2/3/4不可人工勾选
-            configDto.setIgnoreSkipCheck(Objects.equals(pc.getCompleteInitSelect(), YesOrNoEnum.NO.getCode())
-                    && optionEntity != null
-                    && Objects.equals(optionEntity.getType(), ProductConfigOptionTypeEnum.FROM_BASE_VEHICLE.getType())
-                    && Objects.equals(optionEntity.getSelectCanEdit(), YesOrNoEnum.NO.getCode()));
         }
         return configDto;
     }

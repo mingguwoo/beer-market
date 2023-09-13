@@ -91,13 +91,6 @@ public class QueryProductConfigQuery extends AbstractQuery<QueryProductConfigQry
             Map<String, List<QueryProductConfigRespDto.PcOptionConfigDto>> configByPcIdMap =
                     feature.getOptionList().stream().map(QueryProductConfigRespDto.OptionDto::getConfigList)
                             .flatMap(Collection::stream).collect(Collectors.groupingBy(QueryProductConfigRespDto.PcOptionConfigDto::getPcId));
-            // Feature是否跳过SkipCheck校验，满足: Feature下所有的Option都跳过SkipCheck校验
-            if (qry.isEdit()) {
-                feature.setConfigList(LambdaUtil.map(pcList, pc ->
-                        QueryProductConfigAssembler.assemble(pc, configByPcIdMap.get(pc.getPcId()).stream()
-                                .allMatch(QueryProductConfigRespDto.PcOptionConfigDto::isIgnoreSkipCheck))
-                ));
-            }
         });
     }
 

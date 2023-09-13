@@ -8,6 +8,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.enums.
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoVersionSnapshotDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsOxoVersionSnapshotEntity;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.request.OxoBaseCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoRowsQry;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -29,7 +30,6 @@ public class OxoVersionQuery implements Query<OxoBaseCmd, List<String>> {
 
     @Override
     public List<String> execute(OxoBaseCmd oxoBaseCmd) {
-        String userName = oxoBaseCmd.getUserName();
         String modelCode = oxoBaseCmd.getModelCode();
 
         // 获取人员角色
@@ -57,9 +57,10 @@ public class OxoVersionQuery implements Query<OxoBaseCmd, List<String>> {
             revisions.add(ConfigConstants.WORKING);
 
             //最新Informal版本
-            revisions.add(oxoVersionSnapshotAggrs.stream()
+            revisions.addAll(oxoVersionSnapshotAggrs.stream()
                     .filter(x -> StringUtils.equals(x.getType(), OxoSnapshotEnum.INFORMAL.getCode()))
-                    .map(BomsOxoVersionSnapshotEntity::getVersion).toList().stream().max(Comparator.naturalOrder()).orElse(StringUtils.EMPTY));
+                            .sorted(Comparator.comparing(BomsOxoVersionSnapshotEntity::getCreateTime).reversed()).toList().stream()
+                    .map(BomsOxoVersionSnapshotEntity::getVersion).distinct().toList());
 
             // Formal版本
             revisions.addAll(roleRevisions);

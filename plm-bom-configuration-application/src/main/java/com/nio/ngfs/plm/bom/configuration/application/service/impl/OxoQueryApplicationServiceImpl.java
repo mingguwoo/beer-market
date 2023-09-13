@@ -152,7 +152,7 @@ public class OxoQueryApplicationServiceImpl implements OxoQueryApplicationServic
 
             List<OxoRowsQry> rowsQryList = Lists.newArrayList();
             oxoInfoDoMaps.forEach((k, features) -> {
-                List<OxoFeatureOptionAggr> oxoInfoDoList = features.stream().sorted().sorted(Comparator.comparing(OxoFeatureOptionAggr::getSort)
+                List<OxoFeatureOptionAggr> oxoInfoDoList = features.stream().sorted(Comparator.comparing(OxoFeatureOptionAggr::getSort)
                         .thenComparing(OxoFeatureOptionAggr::getFeatureCode)).toList();
 
                 oxoInfoDoList.forEach(x -> {

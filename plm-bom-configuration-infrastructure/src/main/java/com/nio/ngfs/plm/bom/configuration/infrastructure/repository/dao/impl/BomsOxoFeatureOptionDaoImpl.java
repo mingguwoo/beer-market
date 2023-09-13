@@ -49,6 +49,9 @@ public class BomsOxoFeatureOptionDaoImpl extends AbstractDao<BomsOxoFeatureOptio
     public void updateOxoFeatureOptions(List<BomsOxoFeatureOptionEntity> entities) {
         entities.forEach(entity -> {
             //更新 oxo row
+            if (0 == entity.getSort()) {
+                entity.setSort(null);
+            }
             getBaseMapper().updateById(entity);
         });
     }

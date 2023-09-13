@@ -1,6 +1,5 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.domainobject;
 
-import com.nio.bom.share.constants.CommonConstants;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.GsonUtils;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
@@ -32,19 +31,15 @@ public class BasedOnBaseVehicleFeature {
         } else if (optionList.stream().anyMatch(BasedOnBaseVehicleOption::isAvailable)) {
             return BasedOnBaseVehicleTypeEnum.EXIST_Available;
         }
-        log.error("getBasedOnBaseVehicleType error, all option package code is empty, featureCode={} optionList={}",
+        log.error("getBasedOnBaseVehicleType error, basedOnBaseVehicleType is not match, featureCode={} optionList={}",
                 featureCode, GsonUtils.toJson(optionList));
         throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_BASED_ON_BASE_VEHICLE_TYPE_ERROR);
     }
 
     private boolean isOnlyDefaultAndUnavailable() {
-        if (optionList.size() != CommonConstants.INT_TWO) {
-            return false;
-        }
-        BasedOnBaseVehicleOption firstOption = optionList.get(0);
-        BasedOnBaseVehicleOption secondOption = optionList.get(1);
-        return (firstOption.isDefault() && secondOption.isUnavailable()) ||
-                (firstOption.isUnavailable() && secondOption.isDefault());
+        long defaultSize = optionList.stream().filter(BasedOnBaseVehicleOption::isDefault).count();
+        long unavailableSize = optionList.stream().filter(BasedOnBaseVehicleOption::isUnavailable).count();
+        return defaultSize == 1 && unavailableSize >= 1;
     }
 
 }

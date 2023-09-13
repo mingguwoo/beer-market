@@ -11,7 +11,7 @@ public enum BasedOnBaseVehicleTypeEnum {
      */
     // 仅有一个实心圆
     ONLY_Default,
-    // 仅有一个一个实心圆和-
+    // 仅有一个一个实心圆和多个-
     ONLY_Default_AND_Unavailable,
     // 全部-
     ALL_Unavailable,

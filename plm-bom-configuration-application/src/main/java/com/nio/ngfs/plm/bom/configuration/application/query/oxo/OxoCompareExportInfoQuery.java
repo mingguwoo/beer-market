@@ -33,9 +33,8 @@ public class OxoCompareExportInfoQuery {
      * @param response
      */
     public void execute(OxoCompareQry compareCmd, HttpServletRequest request, HttpServletResponse response) {
-
+        compareCmd.setShowDiff(false);
         OxoListRespDto OxoListRespDto= oxoQueryApplicationService.compareVersion(compareCmd);
-
         OxoCompareExportUtil.compareExport(OxoListRespDto,compareCmd, response, request);
 
     }

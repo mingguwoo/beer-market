@@ -3,12 +3,10 @@ package com.nio.ngfs.plm.bom.configuration.domain.service.productconfig.impl;
 import com.google.common.collect.Lists;
 import com.nio.bom.share.constants.CommonConstants;
 import com.nio.bom.share.exception.BusinessException;
-import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.common.util.RegexUtil;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigRepository;
-import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.ProductConfigOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.service.productconfig.ProductConfigDomainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * @author xiaozhou.tu
@@ -72,25 +69,6 @@ public class ProductConfigDomainServiceImpl implements ProductConfigDomainServic
         List<ProductConfigAggr> productConfigAggrList = productConfigRepository.queryByPcIdList(Lists.newArrayList(pcSkipCheckMap.keySet()));
         productConfigAggrList.forEach(aggr -> aggr.changeSkipCheck(pcSkipCheckMap.get(aggr.getPcId()), updateUser));
         return productConfigAggrList;
-    }
-
-    @Override
-    public void handleCompleteInitSelect(List<ProductConfigAggr> productConfigAggrList, List<ProductConfigOptionAggr> productConfigOptionAggrList) {
-        Map<Long, List<ProductConfigOptionAggr>> productConfigOptionMapByPc = LambdaUtil.groupBy(productConfigOptionAggrList, ProductConfigOptionAggr::getPcId);
-        // 筛选未完成初始化勾选的From BaseVehicle的PC列表
-        productConfigAggrList.stream().filter(i -> i.isFromBaseVehicle() && i.isNotCompleteInitSelect()).forEach(pc -> {
-            Map<String, List<ProductConfigOptionAggr>> checkOptionListByFeature = productConfigOptionMapByPc.getOrDefault(pc.getId(), Lists.newArrayList()).stream()
-                    .filter(ProductConfigOptionAggr::isFromBaseVehicle)
-                    .filter(ProductConfigOptionAggr::isSelectCanEdit)
-                    .collect(Collectors.groupingBy(ProductConfigOptionAggr::getFeatureCode));
-            for (Map.Entry<String, List<ProductConfigOptionAggr>> entry : checkOptionListByFeature.entrySet()) {
-                if (entry.getValue().stream().noneMatch(ProductConfigOptionAggr::isSelect)) {
-                    return;
-                }
-            }
-            // 全部的情况4的Feature都满足至少勾选一个Option
-            pc.completeInitSelect();
-        });
     }
 
 }

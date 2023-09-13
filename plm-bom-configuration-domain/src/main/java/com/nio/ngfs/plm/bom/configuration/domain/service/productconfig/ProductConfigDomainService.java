@@ -1,7 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service.productconfig;
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigAggr;
-import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.ProductConfigOptionAggr;
 
 import java.util.List;
 import java.util.Map;
@@ -44,13 +43,5 @@ public interface ProductConfigDomainService {
      * @return 聚合根列表
      */
     List<ProductConfigAggr> changePcSkipCheck(Map<String, Boolean> pcSkipCheckMap, String updateUser);
-
-    /**
-     * 处理初始化勾选完成
-     *
-     * @param productConfigAggrList       PC列表
-     * @param productConfigOptionAggrList Product Config勾选列表
-     */
-    void handleCompleteInitSelect(List<ProductConfigAggr> productConfigAggrList, List<ProductConfigOptionAggr> productConfigOptionAggrList);
 
 }

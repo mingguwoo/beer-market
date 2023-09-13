@@ -2,11 +2,16 @@ package com.nio.ngfs.plm.bom.configuration.application.command.productconfig.con
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.ProductConfigOptionAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.ProductContextAggr;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 编辑ProductConfig上下文
@@ -15,28 +20,46 @@ import java.util.Map;
  * @date 2023/9/11
  */
 @Data
+@NoArgsConstructor
 public class EditProductConfigContext {
 
-    private static final ThreadLocal<EditProductConfigContext> CONTEXT = ThreadLocal.withInitial(EditProductConfigContext::new);
+    /**
+     * PC列表
+     */
+    private List<ProductConfigAggr> productConfigAggrList;
+
+    /**
+     * Product Config勾选列表
+     */
+    private List<ProductConfigOptionAggr> productConfigOptionAggrList;
+
+    /**
+     * Product Context勾选列表
+     */
+    private List<ProductContextAggr> productContextAggrList;
 
     /**
      * PC的错误提示信息列表集合
      */
-    private final Map<String, List<String>> messageListMap = Maps.newHashMap();
+    private Map<String, List<String>> messageListMap = Maps.newHashMap();
 
-    public static void addMessage(String pcId, String message) {
-        CONTEXT.get().getMessageListMap().computeIfAbsent(pcId, i -> Lists.newArrayList()).add(message);
+    private Map<Long, Map<String, List<ProductConfigOptionAggr>>> pcFeatureOptionMap;
+
+    public EditProductConfigContext(List<ProductConfigAggr> productConfigAggrList, List<ProductConfigOptionAggr> productConfigOptionAggrList, List<ProductContextAggr> productContextAggrList) {
+        this.productConfigAggrList = productConfigAggrList;
+        this.productConfigOptionAggrList = productConfigOptionAggrList;
+        this.productContextAggrList = productContextAggrList;
+        // Product Config勾选按PC和Feature分组
+        this.pcFeatureOptionMap = productConfigOptionAggrList.stream().collect(Collectors.groupingBy(ProductConfigOptionAggr::getPcId,
+                Collectors.groupingBy(ProductConfigOptionAggr::getFeatureCode, Collectors.toList())));
     }
 
-    public static List<String> getMessageList() {
-        return CONTEXT.get().getMessageListMap().values().stream().flatMap(Collection::stream).toList();
+    public void addMessage(String pcId, String message) {
+        messageListMap.computeIfAbsent(pcId, i -> Lists.newArrayList()).add(message);
     }
 
-    /**
-     * 清除
-     */
-    public static void remove() {
-        CONTEXT.remove();
+    public List<String> getMessageList() {
+        return messageListMap.values().stream().flatMap(Collection::stream).toList();
     }
 
 }

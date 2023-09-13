@@ -1,8 +1,8 @@
 package com.nio.ngfs.plm.bom.configuration.application.service;
 
+import com.nio.ngfs.plm.bom.configuration.application.command.productconfig.context.EditProductConfigContext;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.ProductConfigOptionAggr;
-import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.ProductContextAggr;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.request.EditProductConfigCmd;
 
 import java.util.List;
@@ -28,19 +28,22 @@ public interface ProductConfigOptionApplicationService {
     /**
      * edit时skipCheck校验
      *
-     * @param productConfigAggrList       PC列表
-     * @param productConfigOptionAggrList Product Config勾选列表
+     * @param context 上下文
      */
-    void skipCheckBeforeEdit(List<ProductConfigAggr> productConfigAggrList, List<ProductConfigOptionAggr> productConfigOptionAggrList);
+    void skipCheckBeforeEdit(EditProductConfigContext context);
 
     /**
      * 根据Product Context勾选状态进行编辑校验
      *
-     * @param productConfigAggrList       PC列表
-     * @param productConfigOptionAggrList Product Config勾选列表
-     * @param productContextAggrList      Product Context勾选列表
+     * @param context 上下文
      */
-    void checkEditByProductContextSelect(List<ProductConfigAggr> productConfigAggrList, List<ProductConfigOptionAggr> productConfigOptionAggrList,
-                                         List<ProductContextAggr> productContextAggrList);
+    void checkEditByProductContextSelect(EditProductConfigContext context);
+
+    /**
+     * 处理初始化勾选完成
+     *
+     * @param context 上下文
+     */
+    void handleCompleteInitSelect(EditProductConfigContext context);
 
 }

@@ -59,16 +59,16 @@ public class EditProductConfigCommand extends AbstractLockCommand<EditProductCon
         // 编辑Product Config勾选
         List<ProductConfigOptionAggr> saveProductConfigOptionAggrList = productConfigOptionApplicationService.editPcOptionConfig(cmd.getUpdatePcOptionConfigList(),
                 productConfigAggrList, productConfigOptionAggrList, cmd.getUpdateUser());
+        EditProductConfigContext context = new EditProductConfigContext(productConfigAggrList, productConfigOptionAggrList, productContextAggrList);
         // edit时skipCheck校验
-        productConfigOptionApplicationService.skipCheckBeforeEdit(productConfigAggrList, productConfigOptionAggrList);
+        productConfigOptionApplicationService.skipCheckBeforeEdit(context);
         // Product Context勾选校验
-        productConfigOptionApplicationService.checkEditByProductContextSelect(productConfigAggrList, productConfigOptionAggrList, productContextAggrList);
+        productConfigOptionApplicationService.checkEditByProductContextSelect(context);
         // 处理初始化勾选完成
-        productConfigDomainService.handleCompleteInitSelect(productConfigAggrList, productConfigOptionAggrList);
-        List<String> messageList = EditProductConfigContext.getMessageList();
+        productConfigOptionApplicationService.handleCompleteInitSelect(context);
         // 校验未通过，直接返回
-        if (CollectionUtils.isNotEmpty(messageList)) {
-            return new EditProductConfigRespDto(messageList);
+        if (CollectionUtils.isNotEmpty(context.getMessageList())) {
+            return new EditProductConfigRespDto(context.getMessageList());
         }
         // 保存到数据库
         ((EditProductConfigCommand) AopContext.currentProxy()).savePcAndPcOptionConfig(productConfigAggrList, saveProductConfigOptionAggrList);
@@ -81,11 +81,6 @@ public class EditProductConfigCommand extends AbstractLockCommand<EditProductCon
     public void savePcAndPcOptionConfig(List<ProductConfigAggr> productConfigAggrList, List<ProductConfigOptionAggr> saveProductConfigOptionAggrList) {
         productConfigRepository.batchSave(productConfigAggrList);
         productConfigOptionRepository.batchSave(saveProductConfigOptionAggrList);
-    }
-
-    @Override
-    protected void close() {
-        EditProductConfigContext.remove();
     }
 
 }

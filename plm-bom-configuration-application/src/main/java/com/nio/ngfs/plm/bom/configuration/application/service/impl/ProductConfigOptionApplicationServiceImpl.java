@@ -1,6 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.application.service.impl;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.nio.bom.share.enums.YesOrNoEnum;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.LambdaUtil;
@@ -61,28 +62,25 @@ public class ProductConfigOptionApplicationServiceImpl implements ProductConfigO
     }
 
     @Override
-    public void skipCheckBeforeEdit(List<ProductConfigAggr> productConfigAggrList, List<ProductConfigOptionAggr> productConfigOptionAggrList) {
-        // Product Config勾选按PC分组
-        Map<Long, List<ProductConfigOptionAggr>> productConfigOptionGroupByPc = LambdaUtil.groupBy(productConfigOptionAggrList, ProductConfigOptionAggr::getPcId);
+    public void skipCheckBeforeEdit(EditProductConfigContext context) {
         // skipCheck关闭状态时，进行Feature/Option校验
-        productConfigAggrList.stream().filter(ProductConfigAggr::isSkipCheckClose).forEach(productConfigAggr -> {
-            List<ProductConfigOptionAggr> productConfigOptionList = productConfigOptionGroupByPc.get(productConfigAggr.getId());
-            // 按Feature分组
-            LambdaUtil.groupBy(productConfigOptionList, ProductConfigOptionAggr::getFeatureCode).forEach((featureCode, optionList) -> {
-                // 1个Feature下最多只可勾选1个Option（可以不勾选）
-                if (optionList.stream().filter(ProductConfigOptionAggr::isSelect).count() > 1) {
-                    EditProductConfigContext.addMessage(productConfigAggr.getPcId(),
-                            String.format("Please Choose One Option Of Feature %s In PC %s (Skip Check Button Is Closed)!", featureCode, productConfigAggr.getPcId()));
-                }
-            });
-        });
+        context.getProductConfigAggrList().stream().filter(ProductConfigAggr::isSkipCheckClose).forEach(pc ->
+                context.getPcFeatureOptionMap().getOrDefault(pc.getId(), Maps.newHashMap())
+                        .forEach((featureCode, optionList) -> {
+                            // 1个Feature下最多只可勾选1个Option（可以不勾选）
+                            if (optionList.stream().filter(ProductConfigOptionAggr::isSelect).count() > 1) {
+                                context.addMessage(pc.getPcId(), String.format("Please Choose One Option Of Feature %s In PC %s (Skip Check Button Is Closed)!",
+                                        featureCode, pc.getPcId()));
+                            }
+                        })
+        );
     }
 
     @Override
-    public void checkEditByProductContextSelect(List<ProductConfigAggr> productConfigAggrList, List<ProductConfigOptionAggr> productConfigOptionAggrList, List<ProductContextAggr> productContextAggrList) {
-        Map<Long, ProductConfigAggr> productConfigAggrMap = LambdaUtil.toKeyMap(productConfigAggrList, ProductConfigAggr::getId);
-        Map<String, ProductContextAggr> productContextAggrMap = LambdaUtil.toKeyMap(productContextAggrList, i -> buildProductContextAggrKey(i.getOptionCode(), i.getModelYear()));
-        productConfigOptionAggrList.stream().filter(ProductConfigOptionAggr::isSelect).forEach(productConfigOptionAggr -> {
+    public void checkEditByProductContextSelect(EditProductConfigContext context) {
+        Map<Long, ProductConfigAggr> productConfigAggrMap = LambdaUtil.toKeyMap(context.getProductConfigAggrList(), ProductConfigAggr::getId);
+        Map<String, ProductContextAggr> productContextAggrMap = LambdaUtil.toKeyMap(context.getProductContextAggrList(), i -> buildProductContextAggrKey(i.getOptionCode(), i.getModelYear()));
+        context.getProductConfigOptionAggrList().stream().filter(ProductConfigOptionAggr::isSelect).forEach(productConfigOptionAggr -> {
             ProductConfigAggr productConfigAggr = productConfigAggrMap.get(productConfigOptionAggr.getPcId());
             if (productConfigAggr == null) {
                 throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_PC_NOT_EXIST);
@@ -95,38 +93,56 @@ public class ProductConfigOptionApplicationServiceImpl implements ProductConfigO
                     productConfigAggr.getModelYear()));
             if (productContextAggr == null) {
                 // Product Config勾选了，Product Context未勾选，报错
-                EditProductConfigContext.addMessage(productConfigAggr.getPcId(),
-                        String.format("Option %s Is Not Applied In Product Context %s %s, Which Can Not Be Applied In Related PC Either!",
-                                productConfigOptionAggr.getOptionCode(), productConfigAggr.getModelCode(), productConfigAggr.getModelYear()));
+                context.addMessage(productConfigAggr.getPcId(), String.format("Option %s Is Not Applied In Product Context %s %s, Which Can Not Be Applied In Related PC Either!",
+                        productConfigOptionAggr.getOptionCode(), productConfigAggr.getModelCode(), productConfigAggr.getModelYear()));
             }
         });
 
-        Map<Long, List<ProductConfigOptionAggr>> productConfigOptionAggrMap = LambdaUtil.groupBy(productConfigOptionAggrList, ProductConfigOptionAggr::getPcId);
         // 按Model Year分组
-        LambdaUtil.groupBy(productContextAggrList, ProductContextAggr::getModelYear)
+        LambdaUtil.groupBy(context.getProductContextAggrList(), ProductContextAggr::getModelYear)
                 .forEach((modelYear, productContextOptionList) -> {
                     // 筛选出勾选的Feature Code
                     Set<String> selectFeatureCodeSet = productContextOptionList.stream().map(ProductContextAggr::getFeatureCode).collect(Collectors.toSet());
-                    productConfigAggrList.stream().filter(i -> Objects.equals(i.getModelYear(), modelYear)).forEach(pc -> {
+                    context.getProductConfigAggrList().stream().filter(i -> Objects.equals(i.getModelYear(), modelYear)).forEach(pc -> {
                         // PC Copy From Base Vehicle，且未完成初始化勾选，跳过校验
                         if (pc.isFromBaseVehicle() && pc.isNotCompleteInitSelect()) {
                             return;
                         }
-                        List<ProductConfigOptionAggr> productConfigOptionListByPc = productConfigOptionAggrMap.get(pc.getId());
                         // 按Feature Code分组校验
-                        LambdaUtil.groupBy(productConfigOptionListByPc, ProductConfigOptionAggr::getFeatureCode).forEach((featureCode, optionList) -> {
+                        context.getPcFeatureOptionMap().getOrDefault(pc.getId(), Maps.newHashMap()).forEach((featureCode, optionList) -> {
                             if (!selectFeatureCodeSet.contains(featureCode)) {
                                 return;
                             }
                             // Feature下的Option在PC对应Model/Model Year下的Product Context中有勾选，则在该PC中至少勾选Feature下的其中1个Option
                             if (optionList.stream().noneMatch(ProductConfigOptionAggr::isSelect)) {
-                                EditProductConfigContext.addMessage(pc.getPcId(),
-                                        String.format("Feature %s Is Applied In Product Context %s, Please Choose At Least One Option Of The Feature In PC %s!",
-                                                featureCode, pc.getModelCode() + " " + pc.getModelYear(), pc.getPcId()));
+                                context.addMessage(pc.getPcId(), String.format("Feature %s Is Applied In Product Context %s, Please Choose At Least One Option Of The Feature In PC %s!",
+                                        featureCode, pc.getModelCode() + " " + pc.getModelYear(), pc.getPcId()));
                             }
                         });
                     });
                 });
+    }
+
+    @Override
+    public void handleCompleteInitSelect(EditProductConfigContext context) {
+        // 筛选未完成初始化勾选的From BaseVehicle的PC列表
+        context.getProductConfigAggrList().stream().filter(i -> i.isFromBaseVehicle() && i.isNotCompleteInitSelect()).forEach(pc -> {
+            Map<String, List<ProductConfigOptionAggr>> featureOptionMap = context.getPcFeatureOptionMap().getOrDefault(pc.getId(), Maps.newHashMap());
+            for (Map.Entry<String, List<ProductConfigOptionAggr>> entry : featureOptionMap.entrySet()) {
+                // 筛选From BaseVehicle且可以人工编辑的打点（情况4的实心圆和空心圆）
+                List<ProductConfigOptionAggr> canEditOptionList = entry.getValue().stream().filter(ProductConfigOptionAggr::isFromBaseVehicle)
+                        .filter(ProductConfigOptionAggr::isSelectCanEdit).toList();
+                if (CollectionUtils.isEmpty(canEditOptionList)) {
+                    continue;
+                }
+                // 情况4的Option打点未勾选，直接跳过当前PC
+                if (canEditOptionList.stream().noneMatch(ProductConfigOptionAggr::isSelect)) {
+                    return;
+                }
+            }
+            // 全部的情况4的Feature都满足至少勾选一个Option
+            pc.completeInitSelect();
+        });
     }
 
     private String buildProductContextAggrKey(String optionCode, String modelYear) {
@@ -151,7 +167,7 @@ public class ProductConfigOptionApplicationServiceImpl implements ProductConfigO
                 && Objects.equals(YesOrNoEnum.NO.getCode(), productConfigAggr.getCompleteInitSelect())) {
             // 打点Copy From Base Vehicle，且未完成初始化勾选，校验是否可编辑
             if (!productConfigOptionAggr.isSelectCanEdit()) {
-                EditProductConfigContext.addMessage(productConfigAggr.getPcId(),
+                throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_OPTION_CAN_NOT_EDIT,
                         String.format("Option %s In PC %s Can Not Edit, Because PC Is Copy From Base Vehicle And Not Complete Init Select!",
                                 productConfigOptionAggr.getOptionCode(), productConfigAggr.getPcId()));
             }

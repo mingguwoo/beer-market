@@ -22,7 +22,7 @@ public class PcAddSyncHandler implements EventHandler<PcAddEvent> {
     private final ProductConfigFacade productConfigFacade;
 
     @Override
-//    @Async("commonThreadPool")
+    @Async
     public void onApplicationEvent(@NotNull PcAddEvent event) {
         productConfigFacade.syncAddPcToEnovia(buildSyncAddPcDto(event));
     }

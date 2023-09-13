@@ -29,7 +29,7 @@ public class ModelYearOxoReleaseHandler implements EventHandler<OxoVersionSnapsh
     private final ProductConfigModelYearRepository productConfigModelYearRepository;
 
     @Override
-//    @Async("commonThreadPool")
+    @Async
     public void onApplicationEvent(@NotNull OxoVersionSnapshotPublishEvent event) {
         OxoListRespDto oxoListRespDto = oxoVersionSnapshotDomainService.resolveSnapShot(event.getOxoVersionSnapshotAggr().getOxoSnapshot());
         if (oxoListRespDto == null || CollectionUtils.isEmpty(oxoListRespDto.getOxoHeadResps())) {

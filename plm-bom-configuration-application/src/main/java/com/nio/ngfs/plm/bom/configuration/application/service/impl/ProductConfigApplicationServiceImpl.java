@@ -5,6 +5,7 @@ import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.application.service.ProductConfigApplicationService;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureCatalogEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigAggr;
@@ -77,7 +78,8 @@ public class ProductConfigApplicationServiceImpl implements ProductConfigApplica
             throw new BusinessException(ConfigErrorCode.OXO_VERSION_SNAPSHOT_NOT_EXIST);
         }
         OxoListRespDto oxoListRespDto = oxoVersionSnapshotDomainService.resolveSnapShot(oxoVersionSnapshotAggr.getOxoSnapshot());
-        return LambdaUtil.map(oxoListRespDto.getOxoRowsResps(), row -> {
+        // 只copy Catalog类型为Engineering的打点
+        return LambdaUtil.map(oxoListRespDto.getOxoRowsResps(), i -> Objects.equals(i.getCatalog(), FeatureCatalogEnum.ENGINEERING.getCatalog()), row -> {
             BasedOnBaseVehicleFeature baseVehicleFeature = new BasedOnBaseVehicleFeature();
             baseVehicleFeature.setFeatureCode(row.getFeatureCode());
             baseVehicleFeature.setOptionList(LambdaUtil.map(row.getOptions(), option -> {

@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.nio.bom.share.enums.YesOrNoEnum;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.LambdaUtil;
+import com.nio.ngfs.plm.bom.configuration.application.command.productconfig.context.EditProductConfigContext;
 import com.nio.ngfs.plm.bom.configuration.application.service.ProductConfigOptionApplicationService;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigAggr;
@@ -68,6 +69,7 @@ public class ProductConfigOptionApplicationServiceImpl implements ProductConfigO
             List<ProductConfigOptionAggr> productConfigOptionList = productConfigOptionGroupByPc.get(productConfigAggr.getId());
             // 按Feature分组
             LambdaUtil.groupBy(productConfigOptionList, ProductConfigOptionAggr::getFeatureCode).forEach((featureCode, optionList) -> {
+                // 跳过From Base Vehicle & 未初始化完成 & 不可编辑的Option打点
                 // 1个Feature下只可勾选1个Option
                 if (optionList.stream().filter(ProductConfigOptionAggr::isSelect).count() > 1) {
                     throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_SKIP_CHECK_CLOSE_ERROR);
@@ -144,8 +146,9 @@ public class ProductConfigOptionApplicationServiceImpl implements ProductConfigO
                 && Objects.equals(YesOrNoEnum.NO.getCode(), productConfigAggr.getCompleteInitSelect())) {
             // 打点Copy From Base Vehicle，且未完成初始化勾选，校验是否可编辑
             if (!productConfigOptionAggr.isSelectCanEdit()) {
-                throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_OPTION_CAN_NOT_EDIT.getCode(),
-                        String.format("Option %s In PC %s Can Not Edit!", productConfigOptionAggr.getOptionCode(), productConfigOptionAggr.getPcId()));
+                EditProductConfigContext.addMessage(productConfigAggr.getPcId(),
+                        String.format("Option %s In PC %s Can Not Edit, Because PC Is Copy From Base Vehicle And Not Complete Init Select!",
+                                productConfigOptionAggr.getOptionCode(), productConfigAggr.getPcId()));
             }
         }
         productConfigOptionAggr.changeSelectStatus(pcOptionConfigDto.isSelect());

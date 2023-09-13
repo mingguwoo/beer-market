@@ -23,7 +23,7 @@ public class EditProductConfigContext {
      */
     private final Map<String, List<String>> messageListMap = Maps.newHashMap();
 
-    public void addMessage(String pcId, String message) {
+    public static void addMessage(String pcId, String message) {
         CONTEXT.get().getMessageListMap().computeIfAbsent(pcId, i -> Lists.newArrayList()).add(message);
     }
 

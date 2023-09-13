@@ -9,10 +9,10 @@ public enum BasedOnBaseVehicleTypeEnum {
     /**
      * Based On Base Vehicle类型
      */
-    // 全部实心圆
-    ALL_Default,
-    // 全部实心圆和-
-    ALL_Default_AND_Unavailable,
+    // 仅有一个实心圆
+    ONLY_Default,
+    // 仅有一个一个实心圆和-
+    ONLY_Default_AND_Unavailable,
     // 全部-
     ALL_Unavailable,
     // 存在空心圆

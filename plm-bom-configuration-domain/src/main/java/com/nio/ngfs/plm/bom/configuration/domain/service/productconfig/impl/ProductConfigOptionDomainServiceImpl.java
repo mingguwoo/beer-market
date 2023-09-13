@@ -32,11 +32,11 @@ public class ProductConfigOptionDomainServiceImpl implements ProductConfigOption
         baseVehicleFeatureList.forEach(baseVehicleFeature -> {
             BasedOnBaseVehicleTypeEnum basedOnBaseVehicleTypeEnum = baseVehicleFeature.getBasedOnBaseVehicleType();
             baseVehicleFeature.getOptionList().forEach(option -> {
-                if (ALL_Default == basedOnBaseVehicleTypeEnum) {
+                if (ONLY_Default == basedOnBaseVehicleTypeEnum) {
                     // 所有Option自动勾选，不可编辑
                     productConfigOptionAggrList.add(ProductConfigOptionFactory.createFromBaseVehicle(pcId, option.getOptionCode(), option.getFeatureCode(),
                             createUser, true, false));
-                } else if (ALL_Default_AND_Unavailable == basedOnBaseVehicleTypeEnum) {
+                } else if (ONLY_Default_AND_Unavailable == basedOnBaseVehicleTypeEnum) {
                     // 实心圆的Option自动勾选，不可编辑
                     productConfigOptionAggrList.add(ProductConfigOptionFactory.createFromBaseVehicle(pcId, option.getOptionCode(), option.getFeatureCode(),
                             createUser, option.isDefault(), false));

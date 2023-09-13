@@ -69,10 +69,10 @@ public class ProductConfigOptionApplicationServiceImpl implements ProductConfigO
             List<ProductConfigOptionAggr> productConfigOptionList = productConfigOptionGroupByPc.get(productConfigAggr.getId());
             // 按Feature分组
             LambdaUtil.groupBy(productConfigOptionList, ProductConfigOptionAggr::getFeatureCode).forEach((featureCode, optionList) -> {
-                // 跳过From Base Vehicle & 未初始化完成 & 不可编辑的Option打点
-                // 1个Feature下只可勾选1个Option
+                // 1个Feature下最多只可勾选1个Option（可以不勾选）
                 if (optionList.stream().filter(ProductConfigOptionAggr::isSelect).count() > 1) {
-                    throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_SKIP_CHECK_CLOSE_ERROR);
+                    EditProductConfigContext.addMessage(productConfigAggr.getPcId(),
+                            String.format("Please Choose One Option Of Feature %s In PC %s (Skip Check Button Is Closed)!", featureCode, productConfigAggr.getPcId()));
                 }
             });
         });
@@ -87,15 +87,15 @@ public class ProductConfigOptionApplicationServiceImpl implements ProductConfigO
             if (productConfigAggr == null) {
                 throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_PC_NOT_EXIST);
             }
-            // 排除From BaseVehicle未完成初始化勾选
-            if (productConfigAggr.isFromBaseVehicle() && productConfigAggr.isNotCompleteInitSelect()) {
+            // 排除From BaseVehicle且未完成初始化勾选的打点
+            if (productConfigOptionAggr.isFromBaseVehicle() && productConfigAggr.isNotCompleteInitSelect()) {
                 return;
             }
             ProductContextAggr productContextAggr = productContextAggrMap.get(buildProductContextAggrKey(productConfigOptionAggr.getOptionCode(),
                     productConfigAggr.getModelYear()));
             if (productContextAggr == null) {
                 // Product Config勾选了，Product Context未勾选，报错
-                throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_OPTION_CAN_NOT_SELECT.getCode(),
+                EditProductConfigContext.addMessage(productConfigAggr.getPcId(),
                         String.format("Option %s Is Not Applied In Product Context %s %s, Which Can Not Be Applied In Related PC Either!",
                                 productConfigOptionAggr.getOptionCode(), productConfigAggr.getModelCode(), productConfigAggr.getModelYear()));
             }
@@ -108,16 +108,21 @@ public class ProductConfigOptionApplicationServiceImpl implements ProductConfigO
                     // 筛选出勾选的Feature Code
                     Set<String> selectFeatureCodeSet = productContextOptionList.stream().map(ProductContextAggr::getFeatureCode).collect(Collectors.toSet());
                     productConfigAggrList.stream().filter(i -> Objects.equals(i.getModelYear(), modelYear)).forEach(pc -> {
+                        // PC Copy From Base Vehicle，且未完成初始化勾选，跳过校验
+                        if (pc.isFromBaseVehicle() && pc.isNotCompleteInitSelect()) {
+                            return;
+                        }
                         List<ProductConfigOptionAggr> productConfigOptionListByPc = productConfigOptionAggrMap.get(pc.getId());
                         // 按Feature Code分组校验
                         LambdaUtil.groupBy(productConfigOptionListByPc, ProductConfigOptionAggr::getFeatureCode).forEach((featureCode, optionList) -> {
                             if (!selectFeatureCodeSet.contains(featureCode)) {
                                 return;
                             }
+                            // Feature下的Option在PC对应Model/Model Year下的Product Context中有勾选，则在该PC中至少勾选Feature下的其中1个Option
                             if (optionList.stream().noneMatch(ProductConfigOptionAggr::isSelect)) {
-                                throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_OPTION_AT_LEAST_SELECT_ONE.getCode(),
-                                        String.format(ConfigErrorCode.PRODUCT_CONFIG_OPTION_AT_LEAST_SELECT_ONE.getMessage(),
-                                                featureCode, modelYear, pc.getPcId()));
+                                EditProductConfigContext.addMessage(pc.getPcId(),
+                                        String.format("Feature %s Is Applied In Product Context %s, Please Choose At Least One Option Of The Feature In PC %s!",
+                                                featureCode, pc.getModelCode() + " " + pc.getModelYear(), pc.getPcId()));
                             }
                         });
                     });

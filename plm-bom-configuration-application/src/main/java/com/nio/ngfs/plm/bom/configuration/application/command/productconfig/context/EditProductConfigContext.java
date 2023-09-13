@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Data;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +26,17 @@ public class EditProductConfigContext {
 
     public static void addMessage(String pcId, String message) {
         CONTEXT.get().getMessageListMap().computeIfAbsent(pcId, i -> Lists.newArrayList()).add(message);
+    }
+
+    public static List<String> getMessageList() {
+        return CONTEXT.get().getMessageListMap().values().stream().flatMap(Collection::stream).toList();
+    }
+
+    /**
+     * 清除
+     */
+    public static void remove() {
+        CONTEXT.remove();
     }
 
 }

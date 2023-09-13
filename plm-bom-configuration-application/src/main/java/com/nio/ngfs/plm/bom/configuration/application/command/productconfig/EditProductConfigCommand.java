@@ -2,6 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.application.command.productconfig;
 
 import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockCommand;
+import com.nio.ngfs.plm.bom.configuration.application.command.productconfig.context.EditProductConfigContext;
 import com.nio.ngfs.plm.bom.configuration.application.service.ProductConfigOptionApplicationService;
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
 import com.nio.ngfs.plm.bom.configuration.domain.event.EventPublisher;
@@ -16,6 +17,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.service.productconfig.ProductCo
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.request.EditProductConfigCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.EditProductConfigRespDto;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,6 +65,11 @@ public class EditProductConfigCommand extends AbstractLockCommand<EditProductCon
         productConfigOptionApplicationService.checkEditByProductContextSelect(productConfigAggrList, productConfigOptionAggrList, productContextAggrList);
         // 处理初始化勾选完成
         productConfigDomainService.handleCompleteInitSelect(productConfigAggrList, productConfigOptionAggrList);
+        List<String> messageList = EditProductConfigContext.getMessageList();
+        // 校验未通过，直接返回
+        if (CollectionUtils.isNotEmpty(messageList)) {
+            return new EditProductConfigRespDto(messageList);
+        }
         // 保存到数据库
         ((EditProductConfigCommand) AopContext.currentProxy()).savePcAndPcOptionConfig(productConfigAggrList, saveProductConfigOptionAggrList);
         // ProductConfig打点变更事件
@@ -74,6 +81,11 @@ public class EditProductConfigCommand extends AbstractLockCommand<EditProductCon
     public void savePcAndPcOptionConfig(List<ProductConfigAggr> productConfigAggrList, List<ProductConfigOptionAggr> saveProductConfigOptionAggrList) {
         productConfigRepository.batchSave(productConfigAggrList);
         productConfigOptionRepository.batchSave(saveProductConfigOptionAggrList);
+    }
+
+    @Override
+    protected void close() {
+        EditProductConfigContext.remove();
     }
 
 }

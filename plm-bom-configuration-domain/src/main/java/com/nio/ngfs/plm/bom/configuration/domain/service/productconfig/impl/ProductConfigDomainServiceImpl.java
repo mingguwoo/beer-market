@@ -3,6 +3,7 @@ package com.nio.ngfs.plm.bom.configuration.domain.service.productconfig.impl;
 import com.google.common.collect.Lists;
 import com.nio.bom.share.constants.CommonConstants;
 import com.nio.bom.share.exception.BusinessException;
+import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.common.util.RegexUtil;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigAggr;
@@ -75,10 +76,10 @@ public class ProductConfigDomainServiceImpl implements ProductConfigDomainServic
 
     @Override
     public void handleCompleteInitSelect(List<ProductConfigAggr> productConfigAggrList, List<ProductConfigOptionAggr> productConfigOptionAggrList) {
+        Map<Long, List<ProductConfigOptionAggr>> productConfigOptionMapByPc = LambdaUtil.groupBy(productConfigOptionAggrList, ProductConfigOptionAggr::getPcId);
         // 筛选未完成初始化勾选的From BaseVehicle的PC列表
         productConfigAggrList.stream().filter(i -> i.isFromBaseVehicle() && i.isNotCompleteInitSelect()).forEach(pc -> {
-            Map<String, List<ProductConfigOptionAggr>> checkOptionListByFeature = productConfigOptionAggrList.stream()
-                    .filter(i -> Objects.equals(i.getPcId(), pc.getPcId()))
+            Map<String, List<ProductConfigOptionAggr>> checkOptionListByFeature = productConfigOptionMapByPc.getOrDefault(pc.getId(), Lists.newArrayList()).stream()
                     .filter(ProductConfigOptionAggr::isFromBaseVehicle)
                     .filter(ProductConfigOptionAggr::isSelectCanEdit)
                     .collect(Collectors.groupingBy(ProductConfigOptionAggr::getFeatureCode));

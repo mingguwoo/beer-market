@@ -193,7 +193,7 @@ public class ProductConfigAggr extends AbstractDo implements AggrRoot<String> {
      * 是否From BaseVehicle
      */
     public boolean isFromBaseVehicle() {
-        return basedOnBaseVehicleId > 0;
+        return basedOnBaseVehicleId > 0 && oxoVersionSnapshotId > 0;
     }
 
 }

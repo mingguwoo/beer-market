@@ -71,4 +71,20 @@ JAVA_OPTS="${JAVA_OPTS} -Dapollo.bootstrap.eagerLoad.enabled=true"
 JAVA_OPTS="${JAVA_OPTS} -Dapollo.cache-dir=/data"
 JAVA_OPTS="${JAVA_OPTS} -Dapollo.cluster=$IDC"
 
+#流量回放
+if [ "$K8S_ENV" == "test"  ] ; then
+  curl -o simulator-agent.zip https://nrc-api.nioint.com/api/agent17/download
+  mkdir takin/
+  unzip simulator-agent.zip -d takin/
+  JAVA_OPTS="${JAVA_OPTS} -javaagent:takin/simulator-agent/simulator-launcher-instrument.jar"
+  JAVA_OPTS="${JAVA_OPTS} -Dpradar.project.name=${INST_NAME}"
+  JAVA_OPTS="${JAVA_OPTS} -Dpradar.project.env=${K8S_ENV}"
+  JAVA_OPTS="${JAVA_OPTS} -Dsimulator.delay=10"
+  JAVA_OPTS="${JAVA_OPTS} -Dsimulator.unit=SECONDS"
+  JAVA_OPTS="${JAVA_OPTS} -Djdk.attach.allowAttachSelf=true"
+  JAVA_OPTS="${JAVA_OPTS} --add-opens java.base/java.lang=ALL-UNNAMED"
+  JAVA_OPTS="${JAVA_OPTS} --add-opens java.base/java.net=ALL-UNNAMED"
+  JAVA_OPTS="${JAVA_OPTS} --add-opens java.base/java.security=ALL-UNNAMED"
+fi
+
 java  -XX:NativeMemoryTracking=summary -jar ${JAVA_OPTS} /app/${JAR_FILE}

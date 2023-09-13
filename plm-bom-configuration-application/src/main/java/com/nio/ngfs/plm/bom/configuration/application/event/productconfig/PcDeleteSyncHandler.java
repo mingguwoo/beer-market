@@ -21,7 +21,7 @@ public class PcDeleteSyncHandler implements EventHandler<PcDeleteEvent> {
     private final ProductConfigFacade productConfigFacade;
 
     @Override
-    @Async("commonThreadPool")
+//    @Async("commonThreadPool")
     public void onApplicationEvent(@NotNull PcDeleteEvent event) {
         productConfigFacade.syncDeletePcToEnovia(buildSyncDeletePcDto(event));
     }

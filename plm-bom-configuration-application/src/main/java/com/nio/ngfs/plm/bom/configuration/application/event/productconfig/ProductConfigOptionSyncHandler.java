@@ -33,7 +33,7 @@ public class ProductConfigOptionSyncHandler implements EventHandler<ProductConfi
     private final ProductConfigFacade productConfigFacade;
 
     @Override
-    @Async("commonThreadPool")
+//    @Async("commonThreadPool")
     public void onApplicationEvent(@NotNull ProductConfigOptionChangeEvent event) {
         if (CollectionUtils.isEmpty(event.getProductConfigOptionAggrList())) {
             return;

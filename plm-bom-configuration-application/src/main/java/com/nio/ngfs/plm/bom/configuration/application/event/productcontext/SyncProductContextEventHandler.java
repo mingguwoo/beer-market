@@ -17,7 +17,7 @@ public class SyncProductContextEventHandler implements EventHandler<SyncProductC
 
     private final ProductContextFacade productContextFacade;
     @Override
-    @Async("commonThreadPool")
+//    @Async("commonThreadPool")
     public void onApplicationEvent(SyncProductContextEvent event) {
         productContextFacade.syncAddProductContextToEnovia(event);
     }

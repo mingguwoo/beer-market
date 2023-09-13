@@ -21,7 +21,7 @@ public class PcUpdateSyncHandler implements EventHandler<PcUpdateEvent> {
     private final ProductConfigFacade productConfigFacade;
 
     @Override
-    @Async("commonThreadPool")
+//    @Async("commonThreadPool")
     public void onApplicationEvent(@NotNull PcUpdateEvent event) {
         productConfigFacade.syncUpdatePcToEnovia(buildSyncUpdatePcDto(event));
     }

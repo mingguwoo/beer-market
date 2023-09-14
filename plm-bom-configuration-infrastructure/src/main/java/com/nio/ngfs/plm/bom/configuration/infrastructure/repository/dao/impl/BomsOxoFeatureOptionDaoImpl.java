@@ -62,6 +62,10 @@ public class BomsOxoFeatureOptionDaoImpl extends AbstractDao<BomsOxoFeatureOptio
             BomsOxoFeatureOptionEntity oxoFeatureOption = new BomsOxoFeatureOptionEntity();
             oxoFeatureOption.setId(id);
             oxoFeatureOption.setSoftDelete(isDelete);
+            //更新 oxo row
+            if (0 == oxoFeatureOption.getSort()) {
+                oxoFeatureOption.setSort(null);
+            }
             getBaseMapper().updateById(oxoFeatureOption);
         });
     }

@@ -24,4 +24,9 @@
             </foreach>
         </trim>
     </insert>
+
+    <select id="queryAllIncludeDelete" resultType="com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductContextEntity">
+        select model_code, model_year, option_code, feature_code, del_flag from boms_product_context
+    </select>
+
 </mapper>

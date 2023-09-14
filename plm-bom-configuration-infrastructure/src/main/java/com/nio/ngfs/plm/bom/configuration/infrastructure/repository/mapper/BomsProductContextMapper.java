@@ -17,4 +17,12 @@ public interface BomsProductContextMapper extends BaseMapper<BomsProductContextE
      * @param entityList
      */
     void addOrUpdateBatch(@Param("entityList") List<BomsProductContextEntity> entityList);
+
+    /**
+     * 查询所有的Context打点（包括逻辑删除的）
+     *
+     * @return BomsProductContextEntity列表
+     */
+    List<BomsProductContextEntity> queryAllIncludeDelete();
+
 }

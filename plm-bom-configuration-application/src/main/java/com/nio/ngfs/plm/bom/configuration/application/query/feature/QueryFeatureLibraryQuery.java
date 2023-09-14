@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.application.query.feature;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.Sets;
 import com.nio.bom.share.enums.StatusEnum;
 import com.nio.bom.share.exception.BusinessException;
@@ -8,9 +9,12 @@ import com.nio.ngfs.plm.bom.configuration.application.query.AbstractQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.feature.assemble.FeatureLibraryAssembler;
 import com.nio.ngfs.plm.bom.configuration.application.query.feature.common.FeatureLibraryQueryUtil;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
+import com.nio.ngfs.plm.bom.configuration.common.util.ModelYearComparator;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureCatalogEnum;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsFeatureLibraryDao;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsProductContextDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureLibraryEntity;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductContextEntity;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.QueryFeatureLibraryQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.QueryFeatureLibraryDto;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +35,7 @@ import java.util.*;
 public class QueryFeatureLibraryQuery extends AbstractQuery<QueryFeatureLibraryQry, List<QueryFeatureLibraryDto>> {
 
     private final BomsFeatureLibraryDao bomsFeatureLibraryDao;
+    private final BomsProductContextDao bomsProductContextDao;
 
     @Override
     protected void validate(QueryFeatureLibraryQry qry) {
@@ -109,7 +114,25 @@ public class QueryFeatureLibraryQuery extends AbstractQuery<QueryFeatureLibraryQ
     }
 
     private void handleRelatedModel(List<QueryFeatureLibraryDto> dtoList) {
-        // todo
+        // 查询Product Context所有的打点信息，包括逻辑删除的
+        List<BomsProductContextEntity> productContextEntityList = bomsProductContextDao.queryAllIncludeDelete();
+        // 按Option分组
+        Map<String, List<BomsProductContextEntity>> productContextByOptionMap = LambdaUtil.groupBy(productContextEntityList, BomsProductContextEntity::getOptionCode);
+        dtoList.forEach(group ->
+                group.getChildren().forEach(feature ->
+                        feature.getChildren().forEach(option -> {
+                            List<BomsProductContextEntity> productContextOptionList = productContextByOptionMap.get(option.getFeatureCode());
+                            if (CollectionUtils.isEmpty(productContextOptionList)) {
+                                return;
+                            }
+                            // 按Model & Model Year排序
+                            option.setModelYear(Joiner.on(",").join(productContextOptionList.stream().sorted(
+                                            Comparator.comparing(BomsProductContextEntity::getModelCode)
+                                                    .thenComparing(BomsProductContextEntity::getModelYear, ModelYearComparator.INSTANCE))
+                                    .map(i -> i.getModelCode() + " " + i.getModelYear()).toList()));
+                        })
+                )
+        );
     }
 
 }

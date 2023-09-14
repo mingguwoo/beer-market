@@ -31,4 +31,12 @@ public interface BomsProductContextDao extends IService<BomsProductContextEntity
      * @param entityList
      */
     void addOrUpdateBatch(List<BomsProductContextEntity> entityList);
+
+    /**
+     * 查询所有的Context打点（包括逻辑删除的）
+     *
+     * @return BomsProductContextEntity列表
+     */
+    List<BomsProductContextEntity> queryAllIncludeDelete();
+
 }

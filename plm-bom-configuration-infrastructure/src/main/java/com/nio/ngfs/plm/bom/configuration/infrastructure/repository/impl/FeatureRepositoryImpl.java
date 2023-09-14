@@ -115,8 +115,8 @@ public class FeatureRepositoryImpl implements FeatureRepository {
     }
 
     @Override
-    public List<FeatureAggr> queryByFeatureOptionCodeListNoActive(List<String> featureOptionCodeList) {
-        return featureConverter.convertEntityListToDoList(bomsFeatureLibraryDao.queryByFeatureOptionCodeListNoActive(featureOptionCodeList));
+    public List<FeatureAggr> queryByFeatureOptionCodeListActive(List<String> featureOptionCodeList) {
+        return featureConverter.convertEntityListToDoList(bomsFeatureLibraryDao.queryByFeatureOptionCodeListActive(featureOptionCodeList));
     }
 
     @Override

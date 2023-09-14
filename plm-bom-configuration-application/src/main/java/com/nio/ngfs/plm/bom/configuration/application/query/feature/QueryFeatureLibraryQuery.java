@@ -61,7 +61,7 @@ public class QueryFeatureLibraryQuery extends AbstractQuery<QueryFeatureLibraryQ
         // 排序
         List<QueryFeatureLibraryDto> sortedTree = sortFeatureLibraryTree(filteredTree);
         // 处理RelatedModel
-        handleRelatedModel(sortedTree);
+        handleRelatedModel(qry, sortedTree);
         return sortedTree;
     }
 
@@ -113,7 +113,10 @@ public class QueryFeatureLibraryQuery extends AbstractQuery<QueryFeatureLibraryQ
         return entityList.stream().sorted(Comparator.comparing(QueryFeatureLibraryDto::getFeatureCode)).toList();
     }
 
-    private void handleRelatedModel(List<QueryFeatureLibraryDto> dtoList) {
+    private void handleRelatedModel(QueryFeatureLibraryQry qry, List<QueryFeatureLibraryDto> dtoList) {
+        if (!qry.isRelatedModel()) {
+            return;
+        }
         // 查询Product Context所有的打点信息，包括逻辑删除的
         List<BomsProductContextEntity> productContextEntityList = bomsProductContextDao.queryAllIncludeDelete();
         // 按Option分组

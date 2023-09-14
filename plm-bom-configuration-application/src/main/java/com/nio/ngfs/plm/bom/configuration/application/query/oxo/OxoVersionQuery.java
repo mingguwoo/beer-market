@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author wangchao.wang
@@ -23,8 +24,6 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class OxoVersionQuery implements Query<OxoBaseCmd, List<String>> {
-
-    private final AdministratorDetailFacade administratorDetailFacade;
 
     private final BomsOxoVersionSnapshotDao bomsOxoVersionSnapshotDao;
 
@@ -34,45 +33,43 @@ public class OxoVersionQuery implements Query<OxoBaseCmd, List<String>> {
 
         // 获取人员角色
         List<String> roleNames = oxoBaseCmd.getPermissionPoints();
-                // 查询oxo版本
+        // 查询oxo版本
         List<BomsOxoVersionSnapshotEntity> oxoVersionSnapshotAggrs =
-                bomsOxoVersionSnapshotDao.queryBomsOxoVersionSnapshotsByModelOrVersionOrType(modelCode,null,null);
+                bomsOxoVersionSnapshotDao.queryBomsOxoVersionSnapshotsByModelOrVersionOrType(modelCode, null, null);
 
         if (CollectionUtils.isEmpty(oxoVersionSnapshotAggrs) && roleNames.contains(ConfigConstants.CONFIG_ADMIN)) {
             return Lists.newArrayList(ConfigConstants.WORKING);
-        }else if(CollectionUtils.isEmpty(oxoVersionSnapshotAggrs)){
+        } else if (CollectionUtils.isEmpty(oxoVersionSnapshotAggrs)) {
             return Lists.newArrayList();
         }
 
-        List<String> revisions = Lists.newArrayList();
+        List<BomsOxoVersionSnapshotEntity> revisions = Lists.newArrayList();
 
-        List<String> roleRevisions = oxoVersionSnapshotAggrs.stream()
+        List<BomsOxoVersionSnapshotEntity> roleRevisions = oxoVersionSnapshotAggrs.stream()
                 .filter(x -> StringUtils.equals(x.getType(), OxoSnapshotEnum.FORMAL.getCode()))
-                .map(BomsOxoVersionSnapshotEntity::getVersion).toList().stream()
-                .sorted(Comparator.reverseOrder()).toList();
+                .toList();
 
         /**下拉框展示的值默认为Working（即展示OXO Working版本数据），下拉框可选值：Working版本、Formal版本、最新Informal版本*/
         if (roleNames.contains(ConfigConstants.CONFIG_ADMIN)) {
-
-            revisions.add(ConfigConstants.WORKING);
-
             //最新Informal版本
-            revisions.addAll(oxoVersionSnapshotAggrs.stream()
+            BomsOxoVersionSnapshotEntity snapshotEntity = oxoVersionSnapshotAggrs.stream()
                     .filter(x -> StringUtils.equals(x.getType(), OxoSnapshotEnum.INFORMAL.getCode()))
-                            .sorted(Comparator.comparing(BomsOxoVersionSnapshotEntity::getCreateTime).reversed()).toList().stream()
-                    .map(BomsOxoVersionSnapshotEntity::getVersion).distinct().toList());
-
-            // Formal版本
-            revisions.addAll(roleRevisions);
-
+                    .max(Comparator.comparing(BomsOxoVersionSnapshotEntity::getCreateTime)).orElse(null);
+            if (Objects.nonNull(snapshotEntity)) {
+                revisions.add(snapshotEntity);
+            }
         }
 
-        /**下拉框展示的值默认为最新Formal发布版本（即展示OXO最新正式发布版本数据），
-         * 下拉框可选值为所有Formal Version(不包含Working版本和Informal版本)*/
-        else {
-            revisions.addAll(roleRevisions);
+        revisions.addAll(roleRevisions);
+
+        List<String> revs = Lists.newArrayList();
+
+        if (roleNames.contains(ConfigConstants.CONFIG_ADMIN)) {
+            revs.add(ConfigConstants.WORKING);
         }
 
-        return revisions.stream().filter(StringUtils::isNotBlank).distinct().sorted(Comparator.reverseOrder()).toList();
+        revs.addAll(revisions.stream().sorted(Comparator.comparing(BomsOxoVersionSnapshotEntity::getCreateTime))
+                .map(BomsOxoVersionSnapshotEntity::getVersion).distinct().toList());
+        return revs;
     }
 }

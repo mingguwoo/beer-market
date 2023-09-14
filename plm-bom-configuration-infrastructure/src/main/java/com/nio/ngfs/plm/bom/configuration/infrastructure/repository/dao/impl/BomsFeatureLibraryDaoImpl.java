@@ -93,7 +93,6 @@ public class BomsFeatureLibraryDaoImpl extends AbstractDao<BomsFeatureLibraryMap
         }
         LambdaQueryWrapper<BomsFeatureLibraryEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.in(BomsFeatureLibraryEntity::getFeatureCode, featureCodes);
-        lambdaQueryWrapper.eq(BomsFeatureLibraryEntity::getStatus, StatusEnum.ACTIVE.getStatus());
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 

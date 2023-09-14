@@ -61,7 +61,7 @@ public class QueryPcQuery extends AbstractQuery<QueryPcQry, List<QueryPcRespDto>
         }
         // 查询Based On PC
         List<BomsProductConfigEntity> basedOnPcList = bomsProductConfigDao.queryByPcIdList(LambdaUtil.map(pcList, i -> StringUtils.isNotBlank(i.getBasedOnPcId()),
-                BomsProductConfigEntity::getBasedOnPcId));
+                BomsProductConfigEntity::getBasedOnPcId), true);
         // 构建Response
         return buildResponse(pcList, basedOnBaseVehicleList, baseVehicleOptionList, basedOnPcList);
     }

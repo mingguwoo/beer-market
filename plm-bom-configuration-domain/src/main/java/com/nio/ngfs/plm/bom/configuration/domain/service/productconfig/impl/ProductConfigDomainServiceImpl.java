@@ -65,9 +65,17 @@ public class ProductConfigDomainServiceImpl implements ProductConfigDomainServic
     }
 
     @Override
-    public List<ProductConfigAggr> changePcSkipCheck(Map<String, Boolean> pcSkipCheckMap, String updateUser) {
-        List<ProductConfigAggr> productConfigAggrList = productConfigRepository.queryByPcIdList(Lists.newArrayList(pcSkipCheckMap.keySet()));
-        productConfigAggrList.forEach(aggr -> aggr.changeSkipCheck(pcSkipCheckMap.get(aggr.getPcId()), updateUser));
+    public List<ProductConfigAggr> changePcSkipCheck(String model, Map<String, Boolean> pcSkipCheckMap, String updateUser) {
+        List<ProductConfigAggr> productConfigAggrList = productConfigRepository.queryByPcIdList(Lists.newArrayList(pcSkipCheckMap.keySet()), false);
+        if (productConfigAggrList.size() != pcSkipCheckMap.size()) {
+            throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_PC_NOT_EXIST);
+        }
+        productConfigAggrList.forEach(aggr -> {
+            if (!Objects.equals(aggr.getModelCode(), model)) {
+                throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_PC_MODEL_NOT_MATCH);
+            }
+            aggr.changeSkipCheck(pcSkipCheckMap.get(aggr.getPcId()), updateUser);
+        });
         return productConfigAggrList;
     }
 

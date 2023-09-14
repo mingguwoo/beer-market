@@ -38,10 +38,11 @@ public interface ProductConfigDomainService {
     /**
      * 改变PC的skipCheck开关
      *
+     * @param model          车型
      * @param pcSkipCheckMap PC的skipCheck集合
      * @param updateUser     更新人
      * @return 聚合根列表
      */
-    List<ProductConfigAggr> changePcSkipCheck(Map<String, Boolean> pcSkipCheckMap, String updateUser);
+    List<ProductConfigAggr> changePcSkipCheck(String model, Map<String, Boolean> pcSkipCheckMap, String updateUser);
 
 }

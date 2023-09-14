@@ -51,8 +51,8 @@ public class ProductConfigRepositoryImpl implements ProductConfigRepository {
     }
 
     @Override
-    public List<ProductConfigAggr> queryByPcIdList(List<String> pcIdList) {
-        return productConfigConverter.convertEntityListToDoList(bomsProductConfigDao.queryByPcIdList(pcIdList));
+    public List<ProductConfigAggr> queryByPcIdList(List<String> pcIdList, boolean includeDelete) {
+        return productConfigConverter.convertEntityListToDoList(bomsProductConfigDao.queryByPcIdList(pcIdList, includeDelete));
     }
 
     @Override

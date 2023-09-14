@@ -68,12 +68,17 @@ public class BomsProductConfigDaoImpl extends AbstractDao<BomsProductConfigMappe
     }
 
     @Override
-    public List<BomsProductConfigEntity> queryByPcIdList(List<String> pcIdList) {
+    public List<BomsProductConfigEntity> queryByPcIdList(List<String> pcIdList, boolean includeDelete) {
         if (CollectionUtils.isEmpty(pcIdList)) {
             return Lists.newArrayList();
         }
-        // 此处需包含逻辑删除的数据
-        return getBaseMapper().queryByPcIdList(pcIdList);
+        if (includeDelete) {
+            // 此处需包含逻辑删除的数据
+            return getBaseMapper().queryByPcIdList(pcIdList);
+        }
+        LambdaQueryWrapper<BomsProductConfigEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.in(BomsProductConfigEntity::getPcId, pcIdList);
+        return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 
 }

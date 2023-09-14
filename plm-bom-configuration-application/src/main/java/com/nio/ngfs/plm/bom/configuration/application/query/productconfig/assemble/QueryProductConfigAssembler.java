@@ -57,11 +57,17 @@ public class QueryProductConfigAssembler {
         // 是否编辑模式
         if (edit) {
             if (optionEntity != null && Objects.equals(ProductConfigOptionTypeEnum.FROM_BASE_VEHICLE.getType(), optionEntity.getType())
-                    && Objects.equals(YesOrNoEnum.NO.getCode(), pc.getCompleteInitSelect())
-                    && Objects.equals(YesOrNoEnum.NO.getCode(), optionEntity.getSelectCanEdit())) {
-                // 1、打点Copy From Base Vehicle，且未完成初始化勾选，且人工不可勾选
-                configDto.setSelectCanEdit(false);
-                configDto.setSetGray(true);
+                    && Objects.equals(YesOrNoEnum.NO.getCode(), pc.getCompleteInitSelect())) {
+                // 1、打点Copy From Base Vehicle，且未完成初始化勾选
+                if (Objects.equals(YesOrNoEnum.NO.getCode(), optionEntity.getSelectCanEdit())) {
+                    // 情况1、2、3、4，人工不可勾选
+                    configDto.setSelectCanEdit(false);
+                    configDto.setSetGray(true);
+                } else {
+                    // 情况4，人工可勾选
+                    configDto.setSelectCanEdit(true);
+                    configDto.setSetGray(false);
+                }
             } else {
                 // 2、其它情况，可勾选包括: Product Context勾选了、Product Config勾选了
                 configDto.setSelectCanEdit(productContextEntity != null || configDto.isSelect());

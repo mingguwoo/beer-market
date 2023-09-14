@@ -30,10 +30,11 @@ public interface ProductConfigRepository extends Repository<ProductConfigAggr, S
     /**
      * 根据pcId列表查询
      *
-     * @param pcIdList pcId列表
+     * @param pcIdList      pcId列表
+     * @param includeDelete 是否包含删除
      * @return ProductConfigAggr列表
      */
-    List<ProductConfigAggr> queryByPcIdList(List<String> pcIdList);
+    List<ProductConfigAggr> queryByPcIdList(List<String> pcIdList, boolean includeDelete);
 
     /**
      * 批量保存

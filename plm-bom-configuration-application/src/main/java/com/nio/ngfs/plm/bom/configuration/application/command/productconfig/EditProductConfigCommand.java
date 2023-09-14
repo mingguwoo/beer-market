@@ -49,8 +49,8 @@ public class EditProductConfigCommand extends AbstractLockCommand<EditProductCon
     @Override
     protected EditProductConfigRespDto executeWithLock(EditProductConfigCmd cmd) {
         // 改变PC的skipCheck开关
-        List<ProductConfigAggr> productConfigAggrList = productConfigDomainService.changePcSkipCheck(LambdaUtil.toKeyValueMap(cmd.getPcList(), EditProductConfigCmd.PcDto::getPcId,
-                EditProductConfigCmd.PcDto::isSkipCheck), cmd.getUpdateUser());
+        List<ProductConfigAggr> productConfigAggrList = productConfigDomainService.changePcSkipCheck(cmd.getModel(), LambdaUtil.toKeyValueMap(cmd.getPcList(),
+                EditProductConfigCmd.PcDto::getPcId, EditProductConfigCmd.PcDto::isSkipCheck), cmd.getUpdateUser());
         // 查询Product Config勾选
         List<ProductConfigOptionAggr> productConfigOptionAggrList = productConfigOptionRepository.queryByPcIdList(LambdaUtil.map(productConfigAggrList, ProductConfigAggr::getId));
         // 查询Product Context勾选

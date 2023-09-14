@@ -1,6 +1,5 @@
 package com.nio.ngfs.plm.bom.configuration.application.query.productconfig;
 
-import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.application.query.AbstractQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.productconfig.assemble.ProductConfigAssembler;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsProductConfigDao;
@@ -11,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -28,9 +28,10 @@ public class GetBasedOnPcListQuery extends AbstractQuery<GetBasedOnPcListQry, Li
     @Override
     protected List<GetBasedOnPcListRespDto> executeQuery(GetBasedOnPcListQry qry) {
         List<BomsProductConfigEntity> productConfigEntityList = productConfigDao.queryByModel(qry.getModel());
-        return LambdaUtil.map(productConfigEntityList,
-                i -> StringUtils.isBlank(qry.getSearch()) || i.getName().contains(qry.getSearch()),
-                ProductConfigAssembler::assemble);
+        return productConfigEntityList.stream().filter(i -> StringUtils.isBlank(qry.getSearch()) || i.getName().contains(qry.getSearch()))
+                .map(ProductConfigAssembler::assemble)
+                .sorted(Comparator.comparing(GetBasedOnPcListRespDto::getPcName))
+                .toList();
     }
 
 }

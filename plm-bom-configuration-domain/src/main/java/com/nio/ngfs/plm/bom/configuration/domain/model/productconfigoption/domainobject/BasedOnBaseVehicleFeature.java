@@ -39,7 +39,7 @@ public class BasedOnBaseVehicleFeature {
     private boolean isOnlyDefaultAndUnavailable() {
         long defaultSize = optionList.stream().filter(BasedOnBaseVehicleOption::isDefault).count();
         long unavailableSize = optionList.stream().filter(BasedOnBaseVehicleOption::isUnavailable).count();
-        return defaultSize == 1 && unavailableSize >= 1;
+        return defaultSize == 1 && unavailableSize >= 1 && (defaultSize + unavailableSize == optionList.size());
     }
 
 }

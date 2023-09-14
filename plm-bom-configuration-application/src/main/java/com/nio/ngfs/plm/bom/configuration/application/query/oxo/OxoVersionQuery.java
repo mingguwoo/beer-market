@@ -68,7 +68,7 @@ public class OxoVersionQuery implements Query<OxoBaseCmd, List<String>> {
             revs.add(ConfigConstants.WORKING);
         }
 
-        revs.addAll(revisions.stream().sorted(Comparator.comparing(BomsOxoVersionSnapshotEntity::getCreateTime))
+        revs.addAll(revisions.stream().sorted(Comparator.comparing(BomsOxoVersionSnapshotEntity::getCreateTime).reversed())
                 .map(BomsOxoVersionSnapshotEntity::getVersion).distinct().toList());
         return revs;
     }

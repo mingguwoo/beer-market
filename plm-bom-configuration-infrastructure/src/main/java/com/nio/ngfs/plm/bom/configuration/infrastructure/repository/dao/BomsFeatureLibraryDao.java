@@ -105,6 +105,16 @@ public interface BomsFeatureLibraryDao extends IService<BomsFeatureLibraryEntity
      */
     List<BomsFeatureLibraryEntity> queryByFeatureOptionCodeList(List<String> featureOptionCodeList);
 
+
+
+    /**
+     * 根据Feature/Option Code列表批量查询
+     *
+     * @param featureOptionCodeList Feature/Option Code列表
+     * @return BomsFeatureLibraryEntity列表
+     */
+    List<BomsFeatureLibraryEntity>  queryByFeatureOptionCodeListNoActive(List<String> featureOptionCodeList);
+
     /**
      * 根据Feature或Option Code查询
      *

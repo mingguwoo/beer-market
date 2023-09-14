@@ -167,7 +167,7 @@ public class OxoController {
     /**
      * 版本对比
      *
-     * @param compareCmd
+     * @param oxoCompareQry
      * @return
      */
     @PostMapping("/compare")

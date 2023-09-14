@@ -136,6 +136,18 @@ public class BomsFeatureLibraryDaoImpl extends AbstractDao<BomsFeatureLibraryMap
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 
+
+    @Override
+    public List<BomsFeatureLibraryEntity> queryByFeatureOptionCodeListNoActive(List<String> featureOptionCodeList) {
+        if (CollectionUtils.isEmpty(featureOptionCodeList)) {
+            return Lists.newArrayList();
+        }
+        LambdaQueryWrapper<BomsFeatureLibraryEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.in(BomsFeatureLibraryEntity::getFeatureCode, featureOptionCodeList);
+        lambdaQueryWrapper.in(BomsFeatureLibraryEntity::getType, FEATURE_OPTION_TYPE_LIST);
+        return getBaseMapper().selectList(lambdaQueryWrapper);
+    }
+
     @Override
     public BomsFeatureLibraryEntity getByFeatureOrOptionCode(String featureOptionCode) {
         LambdaQueryWrapper<BomsFeatureLibraryEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();

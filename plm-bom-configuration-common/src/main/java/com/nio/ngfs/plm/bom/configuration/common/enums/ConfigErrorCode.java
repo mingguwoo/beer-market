@@ -100,6 +100,7 @@ public enum ConfigErrorCode implements ErrorCode {
     V36_CODE_DIGIT_NOT_EXIST(84004, "V36 Code Digit Not Exist!"),
     V36_CODE_OPTION_FORMAT_INVALID(84005, "The Option Code Format Is Invalid!"),
     V36_CODE_OPTION_LENGTH_NOT_MATCH(84006, "The Option Code Length Is Not Match!"),
+    V36_CODE_SALES_FEATURE_NOT_MATCH(84007, "The Sales Feature Not Match!"),
 
     /**
      * Other

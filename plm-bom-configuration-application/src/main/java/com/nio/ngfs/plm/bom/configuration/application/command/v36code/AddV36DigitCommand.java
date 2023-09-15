@@ -1,6 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.application.command.v36code;
 
 import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockCommand;
+import com.nio.ngfs.plm.bom.configuration.application.service.V36CodeLibraryApplicationService;
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
 import com.nio.ngfs.plm.bom.configuration.domain.model.v36code.V36CodeLibraryAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.v36code.V36CodeLibraryFactory;
@@ -21,6 +22,7 @@ public class AddV36DigitCommand extends AbstractLockCommand<AddDigitCmd, AddDigi
 
     private final V36CodeLibraryRepository v36CodeLibraryRepository;
     private final V36CodeLibraryDomainService v36CodeLibraryDomainService;
+    private final V36CodeLibraryApplicationService v36CodeLibraryApplicationService;
 
     @Override
     protected String getLockKey(AddDigitCmd cmd) {
@@ -37,6 +39,8 @@ public class AddV36DigitCommand extends AbstractLockCommand<AddDigitCmd, AddDigi
         v36CodeLibraryDomainService.checkCodeAndParentAndChineseNameUnique(aggr);
         // 校验Digit Code是否重叠
         v36CodeLibraryDomainService.checkDigitCodeOverlap(aggr);
+        // 校验Sales Feature List是否有效
+        v36CodeLibraryApplicationService.checkSalesFeatureList(aggr);
         // 保持到数据库
         v36CodeLibraryRepository.save(aggr);
         return new AddDigitRespDto();

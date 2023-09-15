@@ -1,8 +1,11 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.v36code;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.request.AddDigitCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.request.AddOptionCmd;
+
+import java.util.Optional;
 
 /**
  * @author xiaozhou.tu
@@ -15,7 +18,8 @@ public class V36CodeLibraryFactory {
                 .code(cmd.getCode().trim())
                 .displayName(cmd.getDisplayName().trim())
                 .chineseName(cmd.getChineseName().trim())
-                .salesFeatureList(Joiner.on(",").join(cmd.getSalesFeatureCodeList()))
+                .salesFeatureList(Joiner.on(",").join(Optional.ofNullable(cmd.getSalesFeatureCodeList())
+                        .orElse(Lists.newArrayList()).stream().distinct().toList()))
                 .remark(cmd.getRemark())
                 .createUser(cmd.getCreateUser())
                 .updateUser(cmd.getCreateUser())

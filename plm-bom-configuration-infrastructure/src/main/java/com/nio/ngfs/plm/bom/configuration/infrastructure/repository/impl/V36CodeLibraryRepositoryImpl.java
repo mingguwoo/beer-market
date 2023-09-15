@@ -32,8 +32,8 @@ public class V36CodeLibraryRepositoryImpl implements V36CodeLibraryRepository {
     }
 
     @Override
-    public V36CodeLibraryAggr queryByCodeParentIdAndChineseName(String code, Long parentId, String chineseName) {
-        return v36CodeLibraryConverter.convertEntityToDo(bomsV36CodeLibraryDao.queryByCodeParentIdAndChineseName(code, parentId, chineseName));
+    public List<V36CodeLibraryAggr> queryByCodeParentIdAndChineseName(String code, Long parentId, String chineseName) {
+        return v36CodeLibraryConverter.convertEntityListToDoList(bomsV36CodeLibraryDao.queryByCodeParentIdAndChineseName(code, parentId, chineseName));
     }
 
     @Override

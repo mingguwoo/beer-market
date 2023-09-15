@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class AddDigitCommand extends AbstractLockCommand<AddDigitCmd, AddDigitRespDto> {
+public class AddV36DigitCommand extends AbstractLockCommand<AddDigitCmd, AddDigitRespDto> {
 
     private final V36CodeLibraryRepository v36CodeLibraryRepository;
     private final V36CodeLibraryDomainService v36CodeLibraryDomainService;
@@ -29,7 +29,7 @@ public class AddDigitCommand extends AbstractLockCommand<AddDigitCmd, AddDigitRe
 
     @Override
     protected AddDigitRespDto executeWithLock(AddDigitCmd cmd) {
-        // 构建聚合更
+        // 构建聚合根
         V36CodeLibraryAggr aggr = V36CodeLibraryFactory.createDigit(cmd);
         // 新增Digit
         aggr.addDigit();

@@ -5,6 +5,7 @@ import com.nio.ngfs.common.model.page.WherePageRequest;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsV36CodeLibraryDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsV36CodeLibraryEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsV36CodeLibraryMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,12 +22,14 @@ public class BomsV36CodeLibraryDaoImpl extends AbstractDao<BomsV36CodeLibraryMap
     }
 
     @Override
-    public BomsV36CodeLibraryEntity queryByCodeParentIdAndChineseName(String code, Long parentId, String chineseName) {
+    public List<BomsV36CodeLibraryEntity> queryByCodeParentIdAndChineseName(String code, Long parentId, String chineseName) {
         LambdaQueryWrapper<BomsV36CodeLibraryEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(BomsV36CodeLibraryEntity::getCode, code);
         lambdaQueryWrapper.eq(BomsV36CodeLibraryEntity::getParentId, parentId);
-        lambdaQueryWrapper.eq(BomsV36CodeLibraryEntity::getChineseName, chineseName);
-        return getBaseMapper().selectOne(lambdaQueryWrapper);
+        if (StringUtils.isNotBlank(chineseName)) {
+            lambdaQueryWrapper.eq(BomsV36CodeLibraryEntity::getChineseName, chineseName);
+        }
+        return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 
     @Override

@@ -62,6 +62,12 @@ public class V36CodeLibraryAggr extends AbstractDo implements AggrRoot<Long> {
      */
     private String remark;
 
+    // -------------------- 以下为业务字段 --------------------
+    /**
+     * 父节点
+     */
+    private V36CodeLibraryAggr parent;
+
     @Override
     public Long getUniqId() {
         return id;
@@ -74,6 +80,14 @@ public class V36CodeLibraryAggr extends AbstractDo implements AggrRoot<Long> {
         setType(V36CodeLibraryTypeEnum.DIGIT.getType());
         setParentId(ConfigConstants.V36_CODE_DIGIT_PARENT_CODE_ID);
         checkDigitCode();
+    }
+
+    /**
+     * 新增Option
+     */
+    public void addOption() {
+        setType(V36CodeLibraryTypeEnum.OPTION.getType());
+        checkOptionCode();
     }
 
     /**
@@ -114,6 +128,22 @@ public class V36CodeLibraryAggr extends AbstractDo implements AggrRoot<Long> {
         // 校验Digit数字最小为1，最大为32
         if (lowNumber > highNumber || lowNumber < CommonConstants.INT_ONE || highNumber > MAX_DIGIT_NUMBER) {
             throw new BusinessException(ConfigErrorCode.V36_CODE_DIGIT_FORMAT_INVALID);
+        }
+    }
+
+    /**
+     * 校验Option Code
+     */
+    private void checkOptionCode() {
+        if (!RegexUtil.isMatchAlphabetAndNumber(code)) {
+            throw new BusinessException(ConfigErrorCode.V36_CODE_OPTION_FORMAT_INVALID);
+        }
+        int optionCodeLength = parent.getDigitHighNumber() - parent.getDigitLowNumber() + 1;
+        if (optionCodeLength < 1) {
+            throw new BusinessException(ConfigErrorCode.V36_CODE_DIGIT_FORMAT_INVALID);
+        }
+        if (code.length() != optionCodeLength) {
+            throw new BusinessException(ConfigErrorCode.V36_CODE_OPTION_LENGTH_NOT_MATCH);
         }
     }
 

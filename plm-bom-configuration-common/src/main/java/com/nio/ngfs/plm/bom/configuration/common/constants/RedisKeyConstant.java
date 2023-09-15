@@ -53,4 +53,6 @@ public interface RedisKeyConstant {
      */
     String V36_CODE_DIGIT_ADD_LOCK_KEY_PREFIX = CONFIGURATION_PREFIX + "v36Code:digit:add:lock:";
 
+    String V36_CODE_OPTION_ADD_LOCK_KEY_PREFIX = CONFIGURATION_PREFIX + "v36Code:option:add:lock:";
+
 }

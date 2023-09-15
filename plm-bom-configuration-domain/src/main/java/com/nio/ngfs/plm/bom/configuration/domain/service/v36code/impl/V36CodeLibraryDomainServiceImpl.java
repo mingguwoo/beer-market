@@ -7,6 +7,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.v36code.V36CodeLibraryAgg
 import com.nio.ngfs.plm.bom.configuration.domain.model.v36code.V36CodeLibraryRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.service.v36code.V36CodeLibraryDomainService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,18 +24,35 @@ public class V36CodeLibraryDomainServiceImpl implements V36CodeLibraryDomainServ
     private final V36CodeLibraryRepository v36CodeLibraryRepository;
 
     @Override
-    public void checkCodeAndParentAndChineseNameUnique(V36CodeLibraryAggr aggr) {
-        V36CodeLibraryAggr existAggr = v36CodeLibraryRepository.queryByCodeParentIdAndChineseName(aggr.getCode(), aggr.getParentId(), aggr.getChineseName());
-        if (existAggr != null && !Objects.equals(existAggr.getId(), aggr.getId())) {
-            throw new BusinessException(aggr.isDigit() ? ConfigErrorCode.V36_CODE_DIGIT_CHINESE_NAME_REPEAT :
-                    ConfigErrorCode.V36_CODE_DIGIT_OPTION_CHINESE_NAME_REPEAT);
+    public V36CodeLibraryAggr getAndCheckAggr(Long id) {
+        V36CodeLibraryAggr aggr = v36CodeLibraryRepository.find(id);
+        if (aggr == null) {
+            throw new BusinessException(ConfigErrorCode.V36_CODE_DIGIT_NOT_EXIST);
         }
+        return aggr;
+    }
+
+    @Override
+    public void checkCodeAndParentAndChineseNameUnique(V36CodeLibraryAggr aggr) {
+        List<V36CodeLibraryAggr> existAggrList = v36CodeLibraryRepository.queryByCodeParentIdAndChineseName(aggr.getCode(), aggr.getParentId(), aggr.getChineseName());
+        existAggrList.forEach(existAggr -> {
+            if (existAggr != null && !Objects.equals(existAggr.getId(), aggr.getId())) {
+                throw new BusinessException(aggr.isDigit() ? ConfigErrorCode.V36_CODE_DIGIT_CHINESE_NAME_REPEAT :
+                        ConfigErrorCode.V36_CODE_DIGIT_OPTION_CHINESE_NAME_REPEAT);
+            }
+        });
     }
 
     @Override
     public void checkDigitCodeOverlap(V36CodeLibraryAggr aggr) {
         List<V36CodeLibraryAggr> digitAggrList = v36CodeLibraryRepository.queryByParentId(ConfigConstants.V36_CODE_DIGIT_PARENT_CODE_ID);
         digitAggrList.forEach(digitAggr -> digitAggr.checkDigitCodeOverlap(aggr));
+    }
+
+    @Override
+    public boolean isDigitHasSameOption(V36CodeLibraryAggr aggr) {
+        List<V36CodeLibraryAggr> existAggrList = v36CodeLibraryRepository.queryByCodeParentIdAndChineseName(aggr.getCode(), aggr.getParentId(), null);
+        return CollectionUtils.isNotEmpty(existAggrList);
     }
 
 }

@@ -97,6 +97,9 @@ public enum ConfigErrorCode implements ErrorCode {
     V36_CODE_DIGIT_OPTION_CHINESE_NAME_REPEAT(84001, "The Option Is Already Existed, Please Enter A New One!"),
     V36_CODE_DIGIT_FORMAT_INVALID(84002, "The Digit Code Format Is Invalid!"),
     V36_CODE_DIGIT_OVERLAP(84003, "The Digit Code Is Overlap!"),
+    V36_CODE_DIGIT_NOT_EXIST(84004, "V36 Code Digit Not Exist!"),
+    V36_CODE_OPTION_FORMAT_INVALID(84005, "The Option Code Format Is Invalid!"),
+    V36_CODE_OPTION_LENGTH_NOT_MATCH(84006, "The Option Code Length Is Not Match!"),
 
     /**
      * Other

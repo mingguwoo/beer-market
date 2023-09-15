@@ -17,9 +17,9 @@ public interface BomsV36CodeLibraryDao extends IService<BomsV36CodeLibraryEntity
      * @param code        Code
      * @param parentId    ParentId
      * @param chineseName ChineseName
-     * @return BomsV36CodeLibraryEntity
+     * @return BomsV36CodeLibraryEntity列表
      */
-    BomsV36CodeLibraryEntity queryByCodeParentIdAndChineseName(String code, Long parentId, String chineseName);
+    List<BomsV36CodeLibraryEntity> queryByCodeParentIdAndChineseName(String code, Long parentId, String chineseName);
 
     /**
      * 根据ParentId查询

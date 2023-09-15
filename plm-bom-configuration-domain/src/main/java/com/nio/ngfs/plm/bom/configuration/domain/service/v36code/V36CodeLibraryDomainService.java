@@ -9,6 +9,14 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.v36code.V36CodeLibraryAgg
 public interface V36CodeLibraryDomainService {
 
     /**
+     * 获取并校验聚合根
+     *
+     * @param id id
+     * @return 聚合根
+     */
+    V36CodeLibraryAggr getAndCheckAggr(Long id);
+
+    /**
      * 校验Code + Parent Code + ChineseName是否唯一
      *
      * @param aggr 聚合根
@@ -21,5 +29,13 @@ public interface V36CodeLibraryDomainService {
      * @param aggr 聚合根
      */
     void checkDigitCodeOverlap(V36CodeLibraryAggr aggr);
+
+    /**
+     * Digit下面是否包含相同的Option
+     *
+     * @param aggr 聚合根
+     * @return true|false
+     */
+    boolean isDigitHasSameOption(V36CodeLibraryAggr aggr);
 
 }

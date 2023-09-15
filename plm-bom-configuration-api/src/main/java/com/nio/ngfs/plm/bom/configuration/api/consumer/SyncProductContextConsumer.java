@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SyncProductContextConsumer {
 
-    @KafkaListener(topics = "${kafka.topic.syncProductContext}", containerFactory = "syncProductContextKafkaContainerFactory")
+//    @KafkaListener(topics = "${kafka.topic.syncProductContext}", containerFactory = "syncProductContextKafkaContainerFactory")
     public void consume(ConsumerRecord<?, ?> consumerRecord) {
 
     }

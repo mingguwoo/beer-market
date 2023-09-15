@@ -1,0 +1,21 @@
+package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.impl;
+
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.nio.ngfs.common.model.page.WherePageRequest;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsV36CodeLibraryDao;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsV36CodeLibraryEntity;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsV36CodeLibraryMapper;
+import org.springframework.stereotype.Repository;
+
+/**
+ * @author xiaozhou.tu
+ * @date 2023/9/15
+ */
+@Repository
+public class BomsV36CodeLibraryDaoImpl extends AbstractDao<BomsV36CodeLibraryMapper, BomsV36CodeLibraryEntity, WherePageRequest<BomsV36CodeLibraryEntity>> implements BomsV36CodeLibraryDao {
+
+    @Override
+    protected void fuzzyConditions(WherePageRequest<BomsV36CodeLibraryEntity> bomsV36CodeLibraryEntityWherePageRequest, LambdaQueryWrapper<BomsV36CodeLibraryEntity> queryWrapper) {
+    }
+
+}

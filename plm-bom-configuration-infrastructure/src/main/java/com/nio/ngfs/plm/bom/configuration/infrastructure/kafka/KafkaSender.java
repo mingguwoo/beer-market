@@ -3,6 +3,7 @@ package com.nio.ngfs.plm.bom.configuration.infrastructure.kafka;
 import com.nio.bom.share.utils.GsonUtils;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.config.kafka.KafkaTopicProperties;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.kafka.SyncProductConfigOptionKafkaCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.kafka.SyncProductContextModelFeatureKafkaCmd;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -26,4 +27,8 @@ public class KafkaSender {
                 , GsonUtils.toJson(kafkaCmd));
     }
 
+    public void sendSyncProductContextFeature(SyncProductContextModelFeatureKafkaCmd kafkaCmd) {
+        commonKafkaTemplate.send(kafkaTopicProperties.getSyncProductContext(),String.format("&s::%s", kafkaCmd.getModelCodeList().get(0),kafkaCmd.getFeatureCode())
+        ,GsonUtils.toJson(kafkaCmd));
+    }
 }

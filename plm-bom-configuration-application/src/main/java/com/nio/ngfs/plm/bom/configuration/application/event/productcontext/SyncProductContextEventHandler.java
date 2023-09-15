@@ -58,7 +58,7 @@ public class SyncProductContextEventHandler implements EventHandler<SyncProductC
             modelFeatureOption.setModel(event.getProductContextAggrlist().get(0).getModelCode());
         }
         else{
-            modelFeatureOption.setModel(event.getProductContextAggrlist().get(0).getModelCode());
+            modelFeatureOption.setModel(event.getProductContextFeatureAggrList().get(0).getModelCode());
         }
         if (!event.getProductContextFeatureAggrList().isEmpty()){
             event.getProductContextFeatureAggrList().forEach(aggr->{

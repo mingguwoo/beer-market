@@ -4,10 +4,11 @@ import lombok.Data;
 
 /**
  * @author bill.wang
- * @date 2023/8/30
+ * @date 2023/9/15
  */
 @Data
-public class PlmProductContextOptionDto {
+public class PlmSyncProductContextOptionDto {
+
 
     private String optionCode;
 }

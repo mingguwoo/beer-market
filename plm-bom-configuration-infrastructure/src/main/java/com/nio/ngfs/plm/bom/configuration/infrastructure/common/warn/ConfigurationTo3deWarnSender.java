@@ -3,9 +3,7 @@ package com.nio.ngfs.plm.bom.configuration.infrastructure.common.warn;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.nio.bom.share.utils.GsonUtils;
-import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncAddPcDto;
-import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncDeletePcDto;
-import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncUpdatePcDto;
+import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.*;
 import com.nio.ngfs.plm.bom.configuration.remote.FeishuIntegrationClient;
 import com.nio.ngfs.plm.bom.configuration.remote.dto.enovia.*;
 import com.nio.ngfs.plm.bom.configuration.remote.dto.feature.PlmFeatureOptionSyncDto;
@@ -135,7 +133,7 @@ public class ConfigurationTo3deWarnSender {
      * @param dto
      * @param errorMsg
      */
-    public void sendSyncProductContextFeatureModelWarn(PlmSyncProductContextModelFeatureDto dto, String errorMsg) {
+    public void sendSyncProductContextFeatureModelWarn(SyncProductContextModelFeatureDto dto, String errorMsg) {
         sendWarnMessage(PRODUCT_CONTEXT, dto, errorMsg, getProductContextAtList(),
                 String.format("Model %s Sync Code %s Fail!", dto.getModelCodeList().get(0), dto.getFeatureCode()));
     }
@@ -146,7 +144,7 @@ public class ConfigurationTo3deWarnSender {
      * @param dto
      * @param errorMsg
      */
-    public void sendSyncProductContextModelFeatureOptionWarn(PlmSyncProductContextModelFeatureOptionDto dto, String errorMsg) {
+    public void sendSyncProductContextModelFeatureOptionWarn(SyncProductContextModelFeatureOptionDto dto, String errorMsg) {
         sendWarnMessage(PRODUCT_CONTEXT, dto, errorMsg, getProductContextAtList(),
                 String.format("Model %s Sync Code %s Fail!", dto.getModel(), dto.getFeature().get(0).getOption().get(0).getOptionCode()));
     }

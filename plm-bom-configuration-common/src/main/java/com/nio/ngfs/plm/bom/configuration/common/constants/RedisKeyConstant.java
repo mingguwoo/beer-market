@@ -48,4 +48,9 @@ public interface RedisKeyConstant {
 
     String PRODUCT_CONFIG_EDIT_PRODUCT_CONFIG_LOCK_KEY_PREFIX = CONFIGURATION_PREFIX + "productConfig:productConfig:edit:lock:";
 
+    /**
+     * V36 Code
+     */
+    String V36_CODE_DIGIT_ADD_LOCK_KEY_PREFIX = CONFIGURATION_PREFIX + "v36Code:digit:add:lock:";
+
 }

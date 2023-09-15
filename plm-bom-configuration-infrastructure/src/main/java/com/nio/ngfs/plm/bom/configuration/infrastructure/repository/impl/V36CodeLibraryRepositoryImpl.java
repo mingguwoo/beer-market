@@ -8,6 +8,8 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.common.D
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author xiaozhou.tu
  * @date 2023/9/15
@@ -27,6 +29,16 @@ public class V36CodeLibraryRepositoryImpl implements V36CodeLibraryRepository {
     @Override
     public V36CodeLibraryAggr find(Long id) {
         return v36CodeLibraryConverter.convertEntityToDo(bomsV36CodeLibraryDao.getById(id));
+    }
+
+    @Override
+    public V36CodeLibraryAggr queryByCodeParentIdAndChineseName(String code, Long parentId, String chineseName) {
+        return v36CodeLibraryConverter.convertEntityToDo(bomsV36CodeLibraryDao.queryByCodeParentIdAndChineseName(code, parentId, chineseName));
+    }
+
+    @Override
+    public List<V36CodeLibraryAggr> queryByParentId(Long parentId) {
+        return v36CodeLibraryConverter.convertEntityListToDoList(bomsV36CodeLibraryDao.queryByParentId(parentId));
     }
 
 }

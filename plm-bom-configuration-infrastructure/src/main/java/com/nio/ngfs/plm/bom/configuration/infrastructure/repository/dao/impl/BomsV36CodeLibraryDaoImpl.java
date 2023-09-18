@@ -9,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author xiaozhou.tu
@@ -41,11 +40,8 @@ public class BomsV36CodeLibraryDaoImpl extends AbstractDao<BomsV36CodeLibraryMap
     }
 
     @Override
-    public List<BomsV36CodeLibraryEntity> queryBySalesFeatureAndName(String salesFeature, String name) {
-        LambdaQueryWrapper<BomsV36CodeLibraryEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.like(Objects.nonNull(salesFeature),BomsV36CodeLibraryEntity::getSalesFeatureList,salesFeature);
-        lambdaQueryWrapper.like(Objects.nonNull(name),BomsV36CodeLibraryEntity::getChineseName,name).or().like(Objects.nonNull(name),BomsV36CodeLibraryEntity::getDisplayName,name);
-        return getBaseMapper().selectList(lambdaQueryWrapper);
+    public List<BomsV36CodeLibraryEntity> queryAll() {
+        return getBaseMapper().selectList(new LambdaQueryWrapper<>());
     }
 
 }

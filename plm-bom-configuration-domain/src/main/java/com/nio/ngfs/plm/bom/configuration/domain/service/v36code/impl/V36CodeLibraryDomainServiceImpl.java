@@ -36,7 +36,7 @@ public class V36CodeLibraryDomainServiceImpl implements V36CodeLibraryDomainServ
     public void checkParentCodeCodeChineseNameUnique(V36CodeLibraryAggr aggr) {
         List<V36CodeLibraryAggr> existAggrList = v36CodeLibraryRepository.queryByParentCodeCodeAndChineseName(aggr.getParentCode(), aggr.getCode(), aggr.getChineseName());
         existAggrList.forEach(existAggr -> {
-            if (existAggr != null && !Objects.equals(existAggr.getId(), aggr.getId())) {
+            if (!Objects.equals(existAggr.getId(), aggr.getId())) {
                 throw new BusinessException(aggr.isDigit() ? ConfigErrorCode.V36_CODE_DIGIT_CHINESE_NAME_REPEAT :
                         ConfigErrorCode.V36_CODE_DIGIT_OPTION_CHINESE_NAME_REPEAT);
             }

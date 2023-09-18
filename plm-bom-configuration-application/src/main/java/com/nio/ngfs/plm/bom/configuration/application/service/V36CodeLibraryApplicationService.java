@@ -15,4 +15,12 @@ public interface V36CodeLibraryApplicationService {
      */
     void checkSalesFeatureList(V36CodeLibraryAggr aggr);
 
+    /**
+     * V36 Code ID是否已应用于Release版本的V36中
+     *
+     * @param aggr 聚合根
+     * @return true|false
+     */
+    boolean isV36CodeIdInReleasedV36(V36CodeLibraryAggr aggr);
+
 }

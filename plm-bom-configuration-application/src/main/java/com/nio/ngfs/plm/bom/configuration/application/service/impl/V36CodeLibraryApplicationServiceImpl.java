@@ -41,4 +41,10 @@ public class V36CodeLibraryApplicationServiceImpl implements V36CodeLibraryAppli
         }
     }
 
+    @Override
+    public boolean isV36CodeIdInReleasedV36(V36CodeLibraryAggr aggr) {
+        // todo
+        return true;
+    }
+
 }

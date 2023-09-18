@@ -1,6 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.application.command.v36code;
 
 import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockCommand;
+import com.nio.ngfs.plm.bom.configuration.application.service.V36CodeLibraryApplicationService;
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
 import com.nio.ngfs.plm.bom.configuration.domain.model.v36code.V36CodeLibraryAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.v36code.V36CodeLibraryRepository;
@@ -22,6 +23,7 @@ public class EditV36OptionCommand extends AbstractLockCommand<EditOptionCmd, Edi
 
     private final V36CodeLibraryRepository v36CodeLibraryRepository;
     private final V36CodeLibraryDomainService v36CodeLibraryDomainService;
+    private final V36CodeLibraryApplicationService v36CodeLibraryApplicationService;
 
     @Override
     protected String getLockKey(EditOptionCmd cmd) {
@@ -37,7 +39,10 @@ public class EditV36OptionCommand extends AbstractLockCommand<EditOptionCmd, Edi
         aggr.editOption(cmd);
         // 校验Digit Code + Option Code + Chinese Name是否唯一
         v36CodeLibraryDomainService.checkParentCodeCodeChineseNameUnique(aggr);
-        // todo: 校验V36 Code Id是否应用于Release版本的V36中
+        // V36 Code ID是否已应用于Release版本的V36中
+        if (!cmd.isConfirm() && v36CodeLibraryApplicationService.isV36CodeIdInReleasedV36(aggr)) {
+            return new EditOptionRespDto("This Option Code Is Already Applied In Release V36, Confirm To Update It?");
+        }
         // 保存到数据库
         v36CodeLibraryRepository.save(aggr);
         return new EditOptionRespDto();

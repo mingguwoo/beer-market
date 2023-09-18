@@ -160,22 +160,23 @@ public class V36CodeLibraryAggr extends AbstractDo implements AggrRoot<Long> {
      * 校验Digit Code
      */
     private void checkDigitCode() {
+        checkCode();
         // 校验Digit Code格式
         if (!RegexUtil.isMatchV36DigitCode(code)) {
-            throw new BusinessException(ConfigErrorCode.V36_CODE_DIGIT_FORMAT_INVALID);
+            throw new BusinessException(ConfigErrorCode.V36_CODE_DIGIT_CODE_FORMAT_INVALID);
         }
         String[] splits = code.split("-");
         String low = splits[0];
         String high = splits[1];
         // 校验Digit数字不能以非0开头
         if (low.startsWith(CommonConstants.STR_ZERO) || high.startsWith(CommonConstants.STR_ZERO)) {
-            throw new BusinessException(ConfigErrorCode.V36_CODE_DIGIT_FORMAT_INVALID);
+            throw new BusinessException(ConfigErrorCode.V36_CODE_DIGIT_CODE_FORMAT_INVALID);
         }
         int lowNumber = Integer.parseInt(low);
         int highNumber = Integer.parseInt(high);
-        // 校验Digit数字最小为1，最大为32
+        // 校验Digit数字最小为1，最大为32，低位数字不大于高位数字
         if (lowNumber > highNumber || lowNumber < CommonConstants.INT_ONE || highNumber > MAX_DIGIT_NUMBER) {
-            throw new BusinessException(ConfigErrorCode.V36_CODE_DIGIT_FORMAT_INVALID);
+            throw new BusinessException(ConfigErrorCode.V36_CODE_DIGIT_CODE_FORMAT_INVALID);
         }
     }
 
@@ -183,15 +184,26 @@ public class V36CodeLibraryAggr extends AbstractDo implements AggrRoot<Long> {
      * 校验Option Code
      */
     private void checkOptionCode() {
+        checkCode();
         if (!RegexUtil.isMatchAlphabetAndNumber(code)) {
-            throw new BusinessException(ConfigErrorCode.V36_CODE_OPTION_FORMAT_INVALID);
+            throw new BusinessException(ConfigErrorCode.V36_CODE_OPTION_CODE_FORMAT_INVALID);
         }
         int optionCodeLength = parent.getDigitHighNumber() - parent.getDigitLowNumber() + 1;
         if (optionCodeLength < 1) {
-            throw new BusinessException(ConfigErrorCode.V36_CODE_DIGIT_FORMAT_INVALID);
+            throw new BusinessException(ConfigErrorCode.V36_CODE_DIGIT_CODE_FORMAT_INVALID);
         }
         if (code.length() != optionCodeLength) {
             throw new BusinessException(ConfigErrorCode.V36_CODE_OPTION_LENGTH_NOT_MATCH);
+        }
+    }
+
+    /**
+     * 校验Code
+     */
+    private void checkCode() {
+        if (Objects.equals(code, ConfigConstants.V36_CODE_DIGIT_PARENT_CODE)) {
+            throw new BusinessException(isDigit() ? ConfigErrorCode.V36_CODE_DIGIT_CODE_FORMAT_INVALID :
+                    ConfigErrorCode.V36_CODE_OPTION_CODE_FORMAT_INVALID);
         }
     }
 

@@ -7,6 +7,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.v36code.V36CodeLibraryAgg
 import com.nio.ngfs.plm.bom.configuration.domain.model.v36code.V36CodeLibraryRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.service.v36code.V36CodeLibraryDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.request.EditDigitCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.response.AddOptionRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.response.EditDigitRespDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -41,7 +42,10 @@ public class EditV36DigitCommand extends AbstractLockCommand<EditDigitCmd, EditD
         v36CodeLibraryDomainService.checkParentCodeCodeChineseNameUnique(aggr);
         // 校验Sales Feature List是否有效
         v36CodeLibraryApplicationService.checkSalesFeatureList(aggr);
-        // todo: 校验V36 Code Id是否应用于Release版本的V36中
+        // V36 Code ID是否已应用于Release版本的V36中
+        if (!cmd.isConfirm() && v36CodeLibraryApplicationService.isV36CodeIdInReleasedV36(aggr)) {
+            return new EditDigitRespDto("This Digit Is Already Applied In Release V36, Confirm To Update It?");
+        }
         // 保存到数据库
         v36CodeLibraryRepository.save(aggr);
         return new EditDigitRespDto();

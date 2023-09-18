@@ -1,16 +1,12 @@
 package com.nio.ngfs.plm.bom.configuration.sdk;
 
 import com.nio.bom.share.result.ResultInfo;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.request.AddDigitCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.request.AddOptionCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.request.EditDigitCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.request.EditOptionCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.response.AddDigitRespDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.response.AddOptionRespDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.response.EditDigitRespDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.response.EditOptionRespDto;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.request.*;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.response.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import java.util.List;
 
 /**
  * @author xiaozhou.tu
@@ -55,4 +51,7 @@ public interface PlmV36CodeLibraryClient {
     @PostMapping("/v36code/editOption")
     ResultInfo<EditOptionRespDto> editOption(EditOptionCmd cmd);
 
+
+    @PostMapping("/v36code/queryV36CodeLibrary")
+    ResultInfo<List<QueryV36CodeLibraryRespDto>> queryV36CodeLibrary(QueryV36CodeLibraryQry qry);
 }

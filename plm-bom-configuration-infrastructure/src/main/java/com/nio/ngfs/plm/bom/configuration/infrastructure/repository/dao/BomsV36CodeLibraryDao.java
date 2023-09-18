@@ -29,4 +29,11 @@ public interface BomsV36CodeLibraryDao extends IService<BomsV36CodeLibraryEntity
      */
     List<BomsV36CodeLibraryEntity> queryByParentId(Long parentId);
 
+    /**
+     * 根据sales feature和name查询
+     * @param salesFeature
+     * @param name
+     * @return
+     */
+    List<BomsV36CodeLibraryEntity> queryBySalesFeatureAndName(String salesFeature,String name);
 }

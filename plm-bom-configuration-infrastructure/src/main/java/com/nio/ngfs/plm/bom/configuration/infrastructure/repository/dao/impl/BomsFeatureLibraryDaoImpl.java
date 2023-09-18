@@ -156,4 +156,11 @@ public class BomsFeatureLibraryDaoImpl extends AbstractDao<BomsFeatureLibraryMap
         return getBaseMapper().selectOne(lambdaQueryWrapper);
     }
 
+    @Override
+    public List<BomsFeatureLibraryEntity> queryByType(String type) {
+        LambdaQueryWrapper<BomsFeatureLibraryEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(BomsFeatureLibraryEntity::getType,type);
+        return getBaseMapper().selectList(lambdaQueryWrapper);
+    }
+
 }

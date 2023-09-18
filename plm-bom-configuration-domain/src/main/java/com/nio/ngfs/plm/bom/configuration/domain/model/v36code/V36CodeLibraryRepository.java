@@ -13,12 +13,12 @@ public interface V36CodeLibraryRepository extends Repository<V36CodeLibraryAggr,
     /**
      * 根据Code + ParentId + ChineseName查询
      *
+     * @param parentCode  ParentCode
      * @param code        Code
-     * @param parentId    ParentId
      * @param chineseName ChineseName
      * @return V36CodeLibraryAggr列表
      */
-    List<V36CodeLibraryAggr> queryByCodeParentIdAndChineseName(String code, Long parentId, String chineseName);
+    List<V36CodeLibraryAggr> queryByParentCodeCodeAndChineseName(String parentCode, String code, String chineseName);
 
     /**
      * 根据ParentId查询

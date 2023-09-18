@@ -22,10 +22,10 @@ public class BomsV36CodeLibraryDaoImpl extends AbstractDao<BomsV36CodeLibraryMap
     }
 
     @Override
-    public List<BomsV36CodeLibraryEntity> queryByCodeParentIdAndChineseName(String code, Long parentId, String chineseName) {
+    public List<BomsV36CodeLibraryEntity> queryByParentCodeCodeAndChineseName(String parentCode, String code, String chineseName) {
         LambdaQueryWrapper<BomsV36CodeLibraryEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(BomsV36CodeLibraryEntity::getParentCode, parentCode);
         lambdaQueryWrapper.eq(BomsV36CodeLibraryEntity::getCode, code);
-        lambdaQueryWrapper.eq(BomsV36CodeLibraryEntity::getParentId, parentId);
         if (StringUtils.isNotBlank(chineseName)) {
             lambdaQueryWrapper.eq(BomsV36CodeLibraryEntity::getChineseName, chineseName);
         }

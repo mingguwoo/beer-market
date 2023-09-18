@@ -33,8 +33,8 @@ public class V36CodeLibraryDomainServiceImpl implements V36CodeLibraryDomainServ
     }
 
     @Override
-    public void checkCodeAndParentAndChineseNameUnique(V36CodeLibraryAggr aggr) {
-        List<V36CodeLibraryAggr> existAggrList = v36CodeLibraryRepository.queryByCodeParentIdAndChineseName(aggr.getCode(), aggr.getParentId(), aggr.getChineseName());
+    public void checkParentCodeCodeChineseNameUnique(V36CodeLibraryAggr aggr) {
+        List<V36CodeLibraryAggr> existAggrList = v36CodeLibraryRepository.queryByParentCodeCodeAndChineseName(aggr.getParentCode(), aggr.getCode(), aggr.getChineseName());
         existAggrList.forEach(existAggr -> {
             if (existAggr != null && !Objects.equals(existAggr.getId(), aggr.getId())) {
                 throw new BusinessException(aggr.isDigit() ? ConfigErrorCode.V36_CODE_DIGIT_CHINESE_NAME_REPEAT :
@@ -51,7 +51,7 @@ public class V36CodeLibraryDomainServiceImpl implements V36CodeLibraryDomainServ
 
     @Override
     public boolean isDigitHasSameOption(V36CodeLibraryAggr aggr) {
-        List<V36CodeLibraryAggr> existAggrList = v36CodeLibraryRepository.queryByCodeParentIdAndChineseName(aggr.getCode(), aggr.getParentId(), null);
+        List<V36CodeLibraryAggr> existAggrList = v36CodeLibraryRepository.queryByParentCodeCodeAndChineseName(aggr.getParentCode(), aggr.getCode(), null);
         return CollectionUtils.isNotEmpty(existAggrList);
     }
 

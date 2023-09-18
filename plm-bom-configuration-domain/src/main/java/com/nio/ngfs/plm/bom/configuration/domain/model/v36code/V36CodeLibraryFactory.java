@@ -29,7 +29,8 @@ public class V36CodeLibraryFactory {
     public static V36CodeLibraryAggr createOption(AddOptionCmd cmd, V36CodeLibraryAggr parentAggr) {
         return V36CodeLibraryAggr.builder()
                 .code(cmd.getCode().trim().toUpperCase())
-                .parentId(cmd.getParentId())
+                .parentCode(parentAggr.getCode())
+                .parentId(parentAggr.getId())
                 .displayName(cmd.getDisplayName().trim())
                 .chineseName(cmd.getChineseName().trim())
                 .remark(cmd.getRemark())

@@ -23,7 +23,11 @@ public class V36CodeLibraryRepositoryImpl implements V36CodeLibraryRepository {
 
     @Override
     public void save(V36CodeLibraryAggr aggr) {
-        DaoSupport.saveOrUpdate(bomsV36CodeLibraryDao, v36CodeLibraryConverter.convertDoToEntity(aggr));
+        DaoSupport.saveOrUpdate(bomsV36CodeLibraryDao, v36CodeLibraryConverter.convertDoToEntity(aggr), entity -> {
+            if (aggr.getId() == null) {
+                aggr.setId(entity.getId());
+            }
+        });
     }
 
     @Override
@@ -32,8 +36,8 @@ public class V36CodeLibraryRepositoryImpl implements V36CodeLibraryRepository {
     }
 
     @Override
-    public List<V36CodeLibraryAggr> queryByCodeParentIdAndChineseName(String code, Long parentId, String chineseName) {
-        return v36CodeLibraryConverter.convertEntityListToDoList(bomsV36CodeLibraryDao.queryByCodeParentIdAndChineseName(code, parentId, chineseName));
+    public List<V36CodeLibraryAggr> queryByParentCodeCodeAndChineseName(String parentCode, String code, String chineseName) {
+        return v36CodeLibraryConverter.convertEntityListToDoList(bomsV36CodeLibraryDao.queryByParentCodeCodeAndChineseName(parentCode, code, chineseName));
     }
 
     @Override

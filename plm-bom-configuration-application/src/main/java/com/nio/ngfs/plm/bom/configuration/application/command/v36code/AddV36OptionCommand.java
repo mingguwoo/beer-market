@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 /**
+ * 新增Option
+ *
  * @author xiaozhou.tu
  * @date 2023/9/15
  */
@@ -24,7 +26,8 @@ public class AddV36OptionCommand extends AbstractLockCommand<AddOptionCmd, AddOp
 
     @Override
     protected String getLockKey(AddOptionCmd cmd) {
-        return RedisKeyConstant.V36_CODE_OPTION_ADD_LOCK_KEY_PREFIX + cmd.getParentId();
+        V36CodeLibraryAggr parentAggr = v36CodeLibraryDomainService.getAndCheckAggr(cmd.getParentId());
+        return RedisKeyConstant.V36_CODE_OPTION_LOCK_KEY_PREFIX + parentAggr.getCode();
     }
 
     @Override
@@ -39,10 +42,10 @@ public class AddV36OptionCommand extends AbstractLockCommand<AddOptionCmd, AddOp
             return new AddOptionRespDto("This Option Code Is Already Existed In The Digit, Confirm To Add It?");
         }
         // 校验Digit Code + Option Code + Chinese Name是否唯一
-        v36CodeLibraryDomainService.checkCodeAndParentAndChineseNameUnique(aggr);
+        v36CodeLibraryDomainService.checkParentCodeCodeChineseNameUnique(aggr);
         // 保持到数据库
         v36CodeLibraryRepository.save(aggr);
-        return new AddOptionRespDto();
+        return new AddOptionRespDto(aggr.getId());
     }
 
 }

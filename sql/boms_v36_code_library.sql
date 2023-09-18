@@ -2,6 +2,7 @@ CREATE TABLE `boms_v36_code_library`
 (
     `id`                 bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
     `code`               varchar(32)     NOT NULL COMMENT 'Code',
+    `parent_code`        varchar(32)     NOT NULL COMMENT 'Parent Code',
     `parent_id`          bigint          NOT NULL COMMENT 'Parent Code Id',
     `type`               varchar(8)      NOT NULL COMMENT '类型，Digit/Option',
     `display_name`       varchar(128)    NOT NULL DEFAULT '' COMMENT '英文描述',
@@ -14,7 +15,7 @@ CREATE TABLE `boms_v36_code_library`
     `update_time`        timestamp       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     `del_flag`           tinyint(4)      NOT NULL DEFAULT 0 COMMENT '是否逻辑删除，0：否，1：是',
     PRIMARY KEY (`id`) USING BTREE,
-    UNIQUE KEY `uniq_code_parent_id_chinese_name` (`code`, `parent_id`, `chinese_name`) USING BTREE,
+    UNIQUE KEY `uniq_code_parent_code_chinese_name` (`code`, `parent_code`, `chinese_name`) USING BTREE,
     INDEX `idx_parent_id` (`parent_id`) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4

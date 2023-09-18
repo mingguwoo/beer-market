@@ -27,6 +27,11 @@ public class BomsV36CodeLibraryEntity extends BaseEntity {
     private String code;
 
     /**
+     * Parent Code
+     */
+    private String parentCode;
+
+    /**
      * Parent Code Id
      */
     private Long parentId;
@@ -59,20 +64,21 @@ public class BomsV36CodeLibraryEntity extends BaseEntity {
     @Override
     public String toString() {
         return "BomsV36CodeLibrary{" +
-            "id = " + getId() +
-            ", code = " + code +
-            ", parentId = " + parentId +
-            ", type = " + type +
-            ", displayName = " + displayName +
-            ", chineseName = " + chineseName +
-            ", salesFeatureList = " + salesFeatureList +
-            ", remark = " + remark +
-            ", createUser = " + getCreateUser() +
-            ", updateUser = " + getUpdateUser() +
-            ", createTime = " + getCreateTime() +
-            ", updateTime = " + getUpdateTime() +
-            ", delFlag = " + getDelFlag() +
-        "}";
+                "id = " + getId() +
+                ", code = " + code +
+                ", parentCode = " + parentCode +
+                ", parentId = " + parentId +
+                ", type = " + type +
+                ", displayName = " + displayName +
+                ", chineseName = " + chineseName +
+                ", salesFeatureList = " + salesFeatureList +
+                ", remark = " + remark +
+                ", createUser = " + getCreateUser() +
+                ", updateUser = " + getUpdateUser() +
+                ", createTime = " + getCreateTime() +
+                ", updateTime = " + getUpdateTime() +
+                ", delFlag = " + getDelFlag() +
+                "}";
     }
 
 }

@@ -17,11 +17,11 @@ public interface V36CodeLibraryDomainService {
     V36CodeLibraryAggr getAndCheckAggr(Long id);
 
     /**
-     * 校验Code + Parent Code + ChineseName是否唯一
+     * 校验Parent Code + Code + ChineseName是否唯一
      *
      * @param aggr 聚合根
      */
-    void checkCodeAndParentAndChineseNameUnique(V36CodeLibraryAggr aggr);
+    void checkParentCodeCodeChineseNameUnique(V36CodeLibraryAggr aggr);
 
     /**
      * 校验Digit Code是否重叠

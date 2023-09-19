@@ -625,7 +625,7 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
         templateRequest.setDriveHandOptionCodes(driveHandOptionCodes);
         templateRequest.setTemplates(oxoInfos);
         templateRequest.setOxoTitle(oxoVersionSnapshot.getTitle() + "_" + oxoVersionSnapshot.getVersion());
-        buildAndSendEmail(templateRequest, getEmails(oxoVersionSnapshot), userName);
+        buildAndSendEmail(templateRequest, getEmails(oxoVersionSnapshot));
     }
 
 
@@ -658,7 +658,7 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
         return emails.stream().distinct().collect(Collectors.toList());
     }
 
-    private void buildAndSendEmail(OxoTemplateRequestCmd templateRequest, List<String> users, String userName) {
+    private void buildAndSendEmail(OxoTemplateRequestCmd templateRequest, List<String> users) {
         for (String user : users) {
             EmailParamDto emailParamDto = new EmailParamDto();
             emailParamDto.setTemplateNo(oxoEmailTemplateNo);
@@ -668,7 +668,6 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
                 emailParamDto.setReceiverEmail(user);
             }
             Map<String, Object> maps = JSON.parseObject(JSONObject.toJSONString(templateRequest), Map.class);
-            maps.put("PLM_Send_Address", userName + "@nio.com");
             emailParamDto.setVariables(maps);
             emailFacade.sendEmail(emailParamDto);
         }

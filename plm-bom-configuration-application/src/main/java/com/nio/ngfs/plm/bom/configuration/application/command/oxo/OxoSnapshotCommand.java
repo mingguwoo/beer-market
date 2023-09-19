@@ -103,10 +103,9 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, List
             bomsOxoVersionSnapshotDao.insertBomsOxoVersionSnapshot(BeanConvertUtils.convertTo(
                     oxoVersionSnapshot, BomsOxoVersionSnapshotEntity::new));
 
-            OxoListRespDto productContextOxo = oxoQueryApplicationService.queryOxoInfoByModelCode(modelCode, ConfigConstants.WORKING, false, Lists.newArrayList());
             //同步product context
             try {
-                productContextApplicationService.addProductContext(productContextOxo, editGroupCmd.getUserName());
+                productContextApplicationService.addProductContext(oxoLists, editGroupCmd.getUserName());
             } catch (Exception e) {
                 log.error("addProductContext error", e);
                 throw new BusinessException("Sync Product Context Fail!");

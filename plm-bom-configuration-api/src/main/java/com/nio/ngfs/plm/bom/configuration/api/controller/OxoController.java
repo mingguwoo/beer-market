@@ -54,7 +54,7 @@ public class OxoController {
      * @param cmd
      * @return
      */
-    //@NeedAuthorization
+    @NeedAuthorization
     @NotLogResult
     @PostMapping("/queryVersion")
     public ResultInfo<List<String>> queryVersion(@Valid @RequestBody OxoBaseCmd cmd) {
@@ -67,7 +67,7 @@ public class OxoController {
      * @param cmd
      * @return
      */
-    //@NeedAuthorization
+    @NeedAuthorization
     @NotLogResult
     @PostMapping("/queryList")
     public ResultInfo<OxoListRespDto> queryList(@Valid @RequestBody OxoBaseCmd cmd) {
@@ -80,7 +80,7 @@ public class OxoController {
      * @param cmd 命令
      * @return 结果
      */
-    //@NeedAuthorization
+    @NeedAuthorization
     @NotLogResult
     @PostMapping("/deleteFeatureOption")
     public ResultInfo<DeleteFeatureOptionRespDto> deleteFeatureOption(@Valid @RequestBody DeleteFeatureOptionCmd cmd) {
@@ -93,7 +93,7 @@ public class OxoController {
      * @param cmd
      * @return
      */
-    //@NeedAuthorization
+    @NeedAuthorization
     @NotLogResult
     @PostMapping("/add")
     public ResultInfo add(@Valid @RequestBody OxoAddCmd cmd) {
@@ -105,7 +105,7 @@ public class OxoController {
      *
      * @return
      */
-    //@NeedAuthorization
+    @NeedAuthorization
     @NotLogResult
     @PostMapping("/queryFeatureList")
     public ResultInfo<OxoAddCmd> queryFeatureList(@Valid @RequestBody OxoBaseCmd cmd) {
@@ -118,7 +118,7 @@ public class OxoController {
      * @param cmd
      * @return
      */
-    //@NeedAuthorization
+    @NeedAuthorization
     @NotLogResult
     @PostMapping("/edit")
     public ResultInfo edit(@Valid @RequestBody OxoEditInfoCmd cmd) {
@@ -143,7 +143,7 @@ public class OxoController {
      * @param cmd
      * @return
      */
-    //@NeedAuthorization
+    @NeedAuthorization
     @NotLogResult
     @PostMapping("/saveSnapshot")
     public ResultInfo saveSnapshot(@Valid @RequestBody OxoSnapshotCmd cmd) {

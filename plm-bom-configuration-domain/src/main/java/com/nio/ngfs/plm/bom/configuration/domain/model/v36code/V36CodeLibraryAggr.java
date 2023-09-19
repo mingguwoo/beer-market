@@ -112,6 +112,9 @@ public class V36CodeLibraryAggr extends AbstractDo implements AggrRoot<Long> {
      * 新增Option
      */
     public void addOption() {
+        if (!Objects.equals(parent.getType(), V36CodeLibraryTypeEnum.DIGIT.getType())) {
+            throw new BusinessException(ConfigErrorCode.V36_CODE_PARENT_NOT_DIGIT);
+        }
         setType(V36CodeLibraryTypeEnum.OPTION.getType());
         checkOptionCode();
     }

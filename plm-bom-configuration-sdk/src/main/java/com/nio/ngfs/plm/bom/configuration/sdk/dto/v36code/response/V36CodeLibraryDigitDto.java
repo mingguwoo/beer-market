@@ -1,7 +1,12 @@
 package com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,5 +34,5 @@ public class V36CodeLibraryDigitDto {
 
     private String updateTime;
 
-    private List<V36CodeLibraryOptionDto> optionList;
+    private List<V36CodeLibraryOptionDto> optionList = new ArrayList<>();
 }

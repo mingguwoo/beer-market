@@ -58,16 +58,16 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
         //模糊搜索，筛选optionCode, featureCode, optionDisplayName, featureDisplayName
         if (Objects.nonNull(qry.getFeature())){
             pointList = pointList.stream().filter(point-> matchSearch(point.getOptionCode(), qry.getFeature()) ||
-                    matchSearch(point.getFeatureCode(),qry.getFeature()) ||
-                    matchSearch(featureAggrMap.get(point.getFeatureCode()).getDisplayName(),qry.getFeature()) ||
-                    matchSearch(featureAggrMap.get(point.getOptionCode()).getDisplayName(),qry.getFeature()) ||
-                    Objects.equals(point.getFeatureCode(), ConfigConstants.FEATURE_CODE_AF00)).toList();
+                    matchSearch(point.getFeatureCode().toUpperCase(),qry.getFeature().toUpperCase()) ||
+                    matchSearch(featureAggrMap.get(point.getFeatureCode()).getDisplayName().toUpperCase(),qry.getFeature().toUpperCase()) ||
+                    matchSearch(featureAggrMap.get(point.getOptionCode()).getDisplayName().toUpperCase(),qry.getFeature().toUpperCase()) ||
+                    Objects.equals(point.getFeatureCode().toUpperCase(), ConfigConstants.FEATURE_CODE_AF00)).toList();
             Set<String> matchFeatureRowSet = new HashSet<>();
             Set<String> matchOptionRowSet = new HashSet<>();
             Set<String> matchOptionFatherSet = new HashSet<>();
             //存下所有满足模糊查询的option，row
             rowList.forEach(row-> {
-                if (matchSearch(row.getFeatureCode(),qry.getFeature()) || matchSearch(featureAggrMap.get(row.getFeatureCode()).getDisplayName(),qry.getFeature())){
+                if (matchSearch(row.getFeatureCode().toUpperCase(),qry.getFeature().toUpperCase()) || matchSearch(featureAggrMap.get(row.getFeatureCode()).getDisplayName().toUpperCase(),qry.getFeature().toUpperCase())){
                     if (Objects.equals(row.getType(),ProductContextFeatureEnum.FEATURE.getType())){
                         matchFeatureRowSet.add(row.getFeatureCode());
                     }
@@ -83,8 +83,7 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
                     return (matchFeatureRowSet.contains(row.getFeatureCode()) || matchOptionFatherSet.contains(row.getFeatureCode()));
                 }
                 else{
-                    return (matchOptionRowSet.contains(row.getFeatureCode()));
-
+                    return (matchOptionRowSet.contains(row.getFeatureCode()) || matchFeatureRowSet.contains(featureAggrMap.get(row.getFeatureCode()).getParentFeatureCode()));
                 }
             }).toList();
         }

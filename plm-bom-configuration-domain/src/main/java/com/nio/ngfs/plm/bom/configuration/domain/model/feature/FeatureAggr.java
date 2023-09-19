@@ -482,6 +482,13 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
     }
 
     /**
+     * 是否Feature
+     */
+    public boolean isFeature() {
+        return isType(FeatureTypeEnum.FEATURE);
+    }
+
+    /**
      * Chinese Name在同一feature下是否唯一
      */
     private void checkOptionChineseNameUnique(String chineseName) {

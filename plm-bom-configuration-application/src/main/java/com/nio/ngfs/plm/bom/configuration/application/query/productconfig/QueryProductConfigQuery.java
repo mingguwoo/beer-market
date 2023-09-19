@@ -40,9 +40,6 @@ public class QueryProductConfigQuery extends AbstractQuery<QueryProductConfigQry
     @Override
     protected void validate(QueryProductConfigQry qry) {
         if (qry.isEdit()) {
-            // 编辑模式下，groupList和search置为空
-            qry.setGroupList(null);
-            qry.setSearch(null);
             // 编辑模式下，不支持Show Diff
             qry.setShowDiff(false);
         }

@@ -6,12 +6,13 @@ import java.util.List;
 
 /**
  * @author bill.wang
- * @date 2023/8/30
+ * @date 2023/9/15
  */
 @Data
-public class PlmProductContextFeatureDto {
+public class PlmSyncProductContextFeatureDto {
 
     private String featureCode;
 
-    List<PlmProductContextOptionDto> option;
+    List<PlmSyncProductContextOptionDto> option;
+
 }

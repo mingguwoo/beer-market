@@ -12,6 +12,7 @@ public class RegexUtil {
     private static final Pattern PATTERN_ALPHABET_NUMBER = Pattern.compile("^[\\dA-Za-z]+$");
     private static final Pattern PATTERN_PC_ID_SUFFIX = Pattern.compile("^\\d{4}$");
     private static final Pattern PATTERN_PC_NAME = Pattern.compile("^[\\dA-Za-z_\\-.]+$");
+    private static final Pattern PATTERN_V36_DIGIT_CODE = Pattern.compile("^\\d{1,2}-\\d{1,2}$");
 
     /**
      * GroupCode是否匹配字母、数字、中间空格、-
@@ -51,6 +52,13 @@ public class RegexUtil {
      */
     public static boolean isMatchPcName(String str) {
         return PATTERN_PC_NAME.matcher(str).matches();
+    }
+
+    /**
+     * 是否匹配V36 Digit Code
+     */
+    public static boolean isMatchV36DigitCode(String str) {
+        return PATTERN_V36_DIGIT_CODE.matcher(str).matches();
     }
 
 }

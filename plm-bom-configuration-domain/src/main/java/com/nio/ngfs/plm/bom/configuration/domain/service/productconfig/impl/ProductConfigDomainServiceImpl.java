@@ -60,7 +60,9 @@ public class ProductConfigDomainServiceImpl implements ProductConfigDomainServic
                 // id相同，代表同一条记录，忽略
                 return;
             }
-            throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_PC_NAME_REPEAT);
+            throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_PC_NAME_REPEAT.getCode(),
+                    String.format("This PC Name Is Existed In【%s/%s】, Please Input A New One!", existProductConfigAggr.getModelCode(),
+                            existProductConfigAggr.getModelYear()));
         }
     }
 

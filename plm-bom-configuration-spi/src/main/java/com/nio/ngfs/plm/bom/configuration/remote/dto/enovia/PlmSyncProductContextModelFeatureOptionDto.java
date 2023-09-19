@@ -13,5 +13,5 @@ public class PlmSyncProductContextModelFeatureOptionDto {
 
     private String model;
 
-    private List<PlmProductContextFeatureDto> feature;
+    private List<PlmSyncProductContextFeatureDto> feature;
 }

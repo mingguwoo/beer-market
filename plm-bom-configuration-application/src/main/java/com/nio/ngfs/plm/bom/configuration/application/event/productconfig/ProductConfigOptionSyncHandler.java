@@ -4,12 +4,11 @@ import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.application.event.EventHandler;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
-import com.nio.ngfs.plm.bom.configuration.domain.facade.ProductConfigFacade;
-import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncSelectPcOptionDto;
-import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncUnselectPcOptionDto;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.ProductConfigOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.event.ProductConfigOptionChangeEvent;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.kafka.KafkaSender;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.kafka.SyncProductConfigOptionKafkaCmd;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -30,7 +29,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ProductConfigOptionSyncHandler implements EventHandler<ProductConfigOptionChangeEvent> {
 
-    private final ProductConfigFacade productConfigFacade;
+    private final KafkaSender kafkaSender;
 
     @Override
     @Async
@@ -45,29 +44,20 @@ public class ProductConfigOptionSyncHandler implements EventHandler<ProductConfi
                 if (productConfigAggr == null) {
                     throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_PC_NOT_EXIST);
                 }
-                syncToEnovia(productConfigAggr, aggr);
+                kafkaSender.sendSyncProductConfig(buildSyncProductConfigOptionKafkaCmd(productConfigAggr, aggr));
             } catch (Exception e) {
-                log.error("ProductConfigOptionSyncHandler syncToEnovia error", e);
+                log.error("Kafka sendSyncProductConfig error", e);
             }
         });
     }
 
-    private void syncToEnovia(ProductConfigAggr productConfigAggr, ProductConfigOptionAggr productConfigOptionAggr) {
-        if (productConfigOptionAggr.isSelect()) {
-            // 同步ProductConfig勾选到3DE
-            SyncSelectPcOptionDto syncDto = new SyncSelectPcOptionDto();
-            syncDto.setPcId(productConfigAggr.getPcId());
-            syncDto.setOptionCode(productConfigOptionAggr.getOptionCode());
-            syncDto.setFeatureCode(productConfigOptionAggr.getFeatureCode());
-            productConfigFacade.syncSelectPcOptionToEnovia(syncDto);
-        } else {
-            // 同步ProductConfig取消勾选到3DE
-            SyncUnselectPcOptionDto syncDto = new SyncUnselectPcOptionDto();
-            syncDto.setPcId(productConfigAggr.getPcId());
-            syncDto.setOptionCode(productConfigOptionAggr.getOptionCode());
-            syncDto.setFeatureCode(productConfigOptionAggr.getFeatureCode());
-            productConfigFacade.syncUnselectPcOptionToEnovia(syncDto);
-        }
+    private SyncProductConfigOptionKafkaCmd buildSyncProductConfigOptionKafkaCmd(ProductConfigAggr productConfigAggr, ProductConfigOptionAggr productConfigOptionAggr) {
+        SyncProductConfigOptionKafkaCmd kafkaCmd = new SyncProductConfigOptionKafkaCmd();
+        kafkaCmd.setPcId(productConfigAggr.getPcId());
+        kafkaCmd.setOptionCode(productConfigOptionAggr.getOptionCode());
+        kafkaCmd.setFeatureCode(productConfigOptionAggr.getFeatureCode());
+        kafkaCmd.setSelect(productConfigOptionAggr.isSelect());
+        return kafkaCmd;
     }
 
 }

@@ -6,8 +6,6 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.response.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.List;
-
 /**
  * @author xiaozhou.tu
  * @date 2023/9/15
@@ -53,5 +51,5 @@ public interface PlmV36CodeLibraryClient {
 
 
     @PostMapping("/v36code/queryV36CodeLibrary")
-    ResultInfo<List<QueryV36CodeLibraryRespDto>> queryV36CodeLibrary(QueryV36CodeLibraryQry qry);
+    ResultInfo<QueryV36CodeLibraryRespDto> queryV36CodeLibrary(QueryV36CodeLibraryQry qry);
 }

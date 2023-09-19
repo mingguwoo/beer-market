@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * @author xiaozhou.tu
@@ -50,7 +49,7 @@ public class V36CodeLibraryController implements PlmV36CodeLibraryClient {
     }
     @Override
     @NotLogResult
-    public ResultInfo<List<QueryV36CodeLibraryRespDto>> queryV36CodeLibrary(@Valid @RequestBody QueryV36CodeLibraryQry qry) {
+    public ResultInfo<QueryV36CodeLibraryRespDto> queryV36CodeLibrary(@Valid @RequestBody QueryV36CodeLibraryQry qry) {
         return ResultInfo.success(queryV36CodeLibraryQuery.execute(qry));
     }
 
@@ -59,5 +58,6 @@ public class V36CodeLibraryController implements PlmV36CodeLibraryClient {
     public ResultInfo<EditOptionRespDto> editOption(@Valid @RequestBody EditOptionCmd cmd) {
         return ResultInfo.success(editV36OptionCommand.execute(cmd));
     }
+
 
 }

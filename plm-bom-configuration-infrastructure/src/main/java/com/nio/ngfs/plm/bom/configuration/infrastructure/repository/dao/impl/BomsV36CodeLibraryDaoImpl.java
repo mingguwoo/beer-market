@@ -44,4 +44,11 @@ public class BomsV36CodeLibraryDaoImpl extends AbstractDao<BomsV36CodeLibraryMap
         return getBaseMapper().selectList(new LambdaQueryWrapper<>());
     }
 
+    @Override
+    public List<BomsV36CodeLibraryEntity> queryByType(String type) {
+        LambdaQueryWrapper<BomsV36CodeLibraryEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(BomsV36CodeLibraryEntity::getType, type);
+        return getBaseMapper().selectList(lambdaQueryWrapper);
+    }
+
 }

@@ -83,7 +83,8 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
                     return (matchFeatureRowSet.contains(row.getFeatureCode()) || matchOptionFatherSet.contains(row.getFeatureCode()));
                 }
                 else{
-                    return (matchOptionRowSet.contains(row.getFeatureCode()) || matchOptionFatherSet.contains(featureAggrMap.get(row.getFeatureCode()).getParentFeatureCode()));
+                    return (matchOptionRowSet.contains(row.getFeatureCode()));
+
                 }
             }).toList();
         }

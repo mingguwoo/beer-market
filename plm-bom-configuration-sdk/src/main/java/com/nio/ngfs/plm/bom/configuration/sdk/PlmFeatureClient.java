@@ -123,4 +123,6 @@ public interface PlmFeatureClient {
     @PostMapping("/feature/queryFeatureLibrary")
     ResultInfo<List<QueryFeatureLibraryDto>> queryFeatureLibrary(QueryFeatureLibraryQry qry);
 
+    @PostMapping("/feature/queryFeatureCodeByCatalog")
+    ResultInfo<List<String>> getFeatureCodeByCatalog(QueryFeatureCodeByCatalogQry qry);
 }

@@ -30,8 +30,14 @@ public interface BomsV36CodeLibraryDao extends IService<BomsV36CodeLibraryEntity
     List<BomsV36CodeLibraryEntity> queryByParentId(Long parentId);
 
     /**
-     * 查找所有
+     * 查询所有
      * @return
      */
     List<BomsV36CodeLibraryEntity> queryAll();
+
+    /**
+     * 根据type查询
+     * @return
+     */
+    List<BomsV36CodeLibraryEntity> queryByType(String type);
 }

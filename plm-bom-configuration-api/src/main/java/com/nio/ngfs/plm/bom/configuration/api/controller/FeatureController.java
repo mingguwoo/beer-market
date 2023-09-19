@@ -4,10 +4,7 @@ import com.nio.bom.share.annotation.NeedAuthorization;
 import com.nio.bom.share.annotation.NotLogResult;
 import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.application.command.feature.*;
-import com.nio.ngfs.plm.bom.configuration.application.query.feature.ExportFeatureLibraryQuery;
-import com.nio.ngfs.plm.bom.configuration.application.query.feature.GetChangeLogListQuery;
-import com.nio.ngfs.plm.bom.configuration.application.query.feature.GetGroupCodeListQuery;
-import com.nio.ngfs.plm.bom.configuration.application.query.feature.QueryFeatureLibraryQuery;
+import com.nio.ngfs.plm.bom.configuration.application.query.feature.*;
 import com.nio.ngfs.plm.bom.configuration.application.task.feature.ImportFeatureLibraryTask;
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmFeatureClient;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.*;
@@ -47,6 +44,7 @@ public class FeatureController implements PlmFeatureClient {
     private final QueryFeatureLibraryQuery queryFeatureLibraryQuery;
     private final ExportFeatureLibraryQuery exportFeatureLibraryQuery;
     private final ImportFeatureLibraryTask importFeatureLibraryTask;
+    private final QueryFeatureCodeByCatalogQuery queryFeatureCodeByCatalogQuery;
 
     @Override
     @NeedAuthorization
@@ -130,6 +128,13 @@ public class FeatureController implements PlmFeatureClient {
     @NotLogResult
     public ResultInfo<List<QueryFeatureLibraryDto>> queryFeatureLibrary(@Valid @RequestBody QueryFeatureLibraryQry qry) {
         return ResultInfo.success(queryFeatureLibraryQuery.execute(qry));
+    }
+
+    @Override
+    //@NeedAuthorization
+    @NotLogResult
+    public ResultInfo<List<String>> getFeatureCodeByCatalog(@Valid @RequestBody QueryFeatureCodeByCatalogQry qry) {
+        return ResultInfo.success(queryFeatureCodeByCatalogQuery.executeQuery(qry));
     }
 
     /**

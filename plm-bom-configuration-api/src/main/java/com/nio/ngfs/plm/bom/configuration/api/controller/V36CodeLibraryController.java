@@ -7,6 +7,7 @@ import com.nio.ngfs.plm.bom.configuration.application.command.v36code.AddV36Opti
 import com.nio.ngfs.plm.bom.configuration.application.command.v36code.EditV36DigitCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.v36code.EditV36OptionCommand;
 import com.nio.ngfs.plm.bom.configuration.application.query.v36codelibrary.QueryV36CodeLibraryQuery;
+import com.nio.ngfs.plm.bom.configuration.application.query.v36codelibrary.QueryV36DigitCodeQuery;
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmV36CodeLibraryClient;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.request.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.response.*;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author xiaozhou.tu
@@ -29,6 +31,7 @@ public class V36CodeLibraryController implements PlmV36CodeLibraryClient {
     private final AddV36OptionCommand addV36OptionCommand;
     private final EditV36OptionCommand editV36OptionCommand;
     private final QueryV36CodeLibraryQuery queryV36CodeLibraryQuery;
+    private final QueryV36DigitCodeQuery queryV36DigitCodeQuery;
 
     @Override
     @NotLogResult
@@ -51,6 +54,12 @@ public class V36CodeLibraryController implements PlmV36CodeLibraryClient {
     @NotLogResult
     public ResultInfo<QueryV36CodeLibraryRespDto> queryV36CodeLibrary(@Valid @RequestBody QueryV36CodeLibraryQry qry) {
         return ResultInfo.success(queryV36CodeLibraryQuery.execute(qry));
+    }
+
+    @Override
+    @NotLogResult
+    public ResultInfo<List<String>> queryV36DigitCode(@Valid @RequestBody QueryV36DigitCodeQry qry) {
+        return ResultInfo.success(queryV36DigitCodeQuery.execute(qry));
     }
 
     @Override

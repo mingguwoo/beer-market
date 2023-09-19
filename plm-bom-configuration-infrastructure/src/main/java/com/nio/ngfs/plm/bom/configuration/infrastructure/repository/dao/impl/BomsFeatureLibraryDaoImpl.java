@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author xiaozhou.tu
@@ -157,9 +158,9 @@ public class BomsFeatureLibraryDaoImpl extends AbstractDao<BomsFeatureLibraryMap
     }
 
     @Override
-    public List<BomsFeatureLibraryEntity> queryByType(String type) {
+    public List<BomsFeatureLibraryEntity> queryByCatalog(String catalog) {
         LambdaQueryWrapper<BomsFeatureLibraryEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(BomsFeatureLibraryEntity::getType,type);
+        lambdaQueryWrapper.eq(Objects.nonNull(catalog),BomsFeatureLibraryEntity::getCatalog,catalog);
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 

@@ -66,7 +66,7 @@ public class QueryV36CodeLibraryQuery {
                 }
             }
         });
-        //先存下所有digit
+        //先存下所有被选中的digit
         digitSet.forEach(id->{
             V36CodeLibraryDigitDto dto = buildDigit(entityMap.get(id));
             dto.setOptionList(digitOptionMap.get(id));

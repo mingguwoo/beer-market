@@ -157,7 +157,6 @@ public class LogTraceAppender extends AppenderBase<ILoggingEvent> {
             }
         }
         Map<String, String> extMap = Maps.newLinkedHashMap();
-        extMap.put("env", SpringContextHolder.getApplicationContext().getBean(WarnLogConfig.class).getEnv());
         Map<String, String> traceInfoMap = buildTraceInfoMap(mdcDataMap);
         extMap.putAll(traceInfoMap);
         WarnLogUtils.send(SpringContextHolder.getApplicationContext().getBean(WarnLogConfig.class).getUrl(), "应用发生错误，日志详情信息:" + errorStackInfo, extMap);

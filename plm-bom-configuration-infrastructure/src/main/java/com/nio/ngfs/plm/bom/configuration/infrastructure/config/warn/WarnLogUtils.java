@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 日志告警UTIl
@@ -55,10 +56,14 @@ public class WarnLogUtils {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("事件:").append("报警").append("\n");
         stringBuilder.append("服务器时间:").append(LocalDateTime.now()).append("\n");
-        //设置kibana信息，方便定位
+        //设置luban cls信息，方便定位
         if (ObjectUtils.isNotEmpty(warnLogConfig)) {
-            stringBuilder.append("kibana地址:").append(warnLogConfig.getKibanaAddress()).append("\n");
-            stringBuilder.append("kibana索引名称:").append(warnLogConfig.getIndexName()).append("\n");
+            stringBuilder.append("cls地址:").append(warnLogConfig.getLubanAddress()).append("\n");
+            stringBuilder.append("env:").append(warnLogConfig.getEnv()).append("\n");
+            String podIp = Optional.ofNullable(SpringContextHolder.getApplicationContext().getEnvironment().getProperty("POD_IP")).orElse("localhost");
+            //添加pod ip区分本地还是pod环境
+            stringBuilder.append("pod_ip:").append(podIp).append("\n");
+            extMap.put("pod_ip", podIp);
         }
         if (MapUtils.isEmpty(extMap)) {
             for (Map.Entry<String, String> entry : extMap.entrySet()) {

@@ -131,7 +131,7 @@ public class FeatureController implements PlmFeatureClient {
     }
 
     @Override
-    //@NeedAuthorization
+    @NeedAuthorization
     @NotLogResult
     public ResultInfo<List<String>> getFeatureCodeByCatalog(@Valid @RequestBody QueryFeatureCodeByCatalogQry qry) {
         return ResultInfo.success(queryFeatureCodeByCatalogQuery.executeQuery(qry));

@@ -27,6 +27,11 @@ public interface ConfigConstants {
     String FEATURE_ATTRIBUTE_REQUESTOR = "Requestor";
     String FEATURE_ATTRIBUTE_STATUS = "Status";
 
+    String V36_CODE_ATTRIBUTE_DISPLAY_NAME = "Display Name";
+    String V36_CODE_ATTRIBUTE_CHINESE_NAME = "Chinese Name";
+    String V36_CODE_ATTRIBUTE_SALES_FEATURE = "Sales Feature";
+    String V36_CODE_ATTRIBUTE_REMARK = "Remark";
+
     String FEATURE_OPTION_SYNC_ADD = "add";
     String FEATURE_OPTION_SYNC_UPDATE = "update";
     String FEATURE_OPTION_SYNC_CHANGE_OLD_DATA = "changeOldData";

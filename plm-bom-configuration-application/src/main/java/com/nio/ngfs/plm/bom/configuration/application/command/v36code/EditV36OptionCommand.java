@@ -3,8 +3,11 @@ package com.nio.ngfs.plm.bom.configuration.application.command.v36code;
 import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockCommand;
 import com.nio.ngfs.plm.bom.configuration.application.service.V36CodeLibraryApplicationService;
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
+import com.nio.ngfs.plm.bom.configuration.domain.event.EventPublisher;
 import com.nio.ngfs.plm.bom.configuration.domain.model.v36code.V36CodeLibraryAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.v36code.V36CodeLibraryRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.v36code.common.V36CodeLibraryAggrThreadLocal;
+import com.nio.ngfs.plm.bom.configuration.domain.model.v36code.event.V36CodeLibraryAttributeChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.service.v36code.V36CodeLibraryDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.request.EditOptionCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.response.EditOptionRespDto;
@@ -24,6 +27,7 @@ public class EditV36OptionCommand extends AbstractLockCommand<EditOptionCmd, Edi
     private final V36CodeLibraryRepository v36CodeLibraryRepository;
     private final V36CodeLibraryDomainService v36CodeLibraryDomainService;
     private final V36CodeLibraryApplicationService v36CodeLibraryApplicationService;
+    private final EventPublisher eventPublisher;
 
     @Override
     protected String getLockKey(EditOptionCmd cmd) {
@@ -45,7 +49,14 @@ public class EditV36OptionCommand extends AbstractLockCommand<EditOptionCmd, Edi
         }
         // 保存到数据库
         v36CodeLibraryRepository.save(aggr);
+        // 发布属性变更事件
+        eventPublisher.publish(new V36CodeLibraryAttributeChangeEvent(V36CodeLibraryAggrThreadLocal.get(aggr.getId()), aggr));
         return new EditOptionRespDto();
+    }
+
+    @Override
+    protected void close() {
+        V36CodeLibraryAggrThreadLocal.remove();
     }
 
 }

@@ -2,6 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.impl;
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.v36code.V36CodeLibraryAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.v36code.V36CodeLibraryRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.v36code.common.V36CodeLibraryAggrThreadLocal;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.V36CodeLibraryConverter;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsV36CodeLibraryDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.common.DaoSupport;
@@ -32,7 +33,12 @@ public class V36CodeLibraryRepositoryImpl implements V36CodeLibraryRepository {
 
     @Override
     public V36CodeLibraryAggr find(Long id) {
-        return v36CodeLibraryConverter.convertEntityToDo(bomsV36CodeLibraryDao.getById(id));
+        V36CodeLibraryAggr aggr = v36CodeLibraryConverter.convertEntityToDo(bomsV36CodeLibraryDao.getById(id));
+        if (aggr == null) {
+            return null;
+        }
+        V36CodeLibraryAggrThreadLocal.add(aggr);
+        return aggr;
     }
 
     @Override

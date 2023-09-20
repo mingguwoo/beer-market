@@ -32,7 +32,7 @@ public class ProductConfigOptionSyncHandler implements EventHandler<ProductConfi
     private final KafkaSender kafkaSender;
 
     @Override
-    @Async
+    @Async("eventExecutor")
     public void onApplicationEvent(@NotNull ProductConfigOptionChangeEvent event) {
         if (CollectionUtils.isEmpty(event.getProductConfigOptionAggrList())) {
             return;

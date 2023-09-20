@@ -27,10 +27,10 @@ import java.util.*;
 public class SyncProductContextEventHandler implements EventHandler<SyncProductContextEvent> {
 
     private final ProductContextFacade productContextFacade;
-
     private final KafkaSender kafkaSender;
+
     @Override
-    @Async
+    @Async("eventExecutor")
     public void onApplicationEvent(SyncProductContextEvent event) {
 
         if(CollectionUtils.isEmpty(event.getProductContextAggrlist()) && CollectionUtils.isEmpty(event.getProductContextFeatureAggrList())){

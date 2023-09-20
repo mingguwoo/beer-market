@@ -42,14 +42,14 @@ public class FeatureChangeLogHandler {
     }
 
     @EventListener
-    @Async
+    @Async("eventExecutor")
     public void onFeatureStatusChangeEvent(@NotNull FeatureStatusChangeEvent event) {
         List<FeatureChangeLogAggr> changeLogAggrList = featureChangeLogDomainService.buildStatusChangeLogByGroupFeatureAndOption(event);
         featureChangeLogRepository.batchSave(changeLogAggrList);
     }
 
     @EventListener
-    @Async
+    @Async("eventExecutor")
     public void onGroupCodeChangeEvent(@NotNull GroupCodeChangeEvent event) {
         // 查询Feature下面的Option列表
         List<String> featureCodeList = LambdaUtil.map(event.getGroup().getChildrenList(), i -> i.getFeatureId().getFeatureCode());
@@ -61,7 +61,7 @@ public class FeatureChangeLogHandler {
     }
 
     @EventListener
-    @Async
+    @Async("eventExecutor")
     public void onFeatureGroupCodeChangeEvent(@NotNull FeatureGroupCodeChangeEvent event) {
         List<FeatureChangeLogAggr> changeLogAggrList = LambdaUtil.map(event.getFeature().getChildrenList(), option ->
                 FeatureChangeLogFactory.create(option.getId(), event)

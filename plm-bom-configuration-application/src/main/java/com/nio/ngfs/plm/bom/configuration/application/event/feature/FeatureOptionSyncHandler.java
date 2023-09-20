@@ -32,7 +32,7 @@ public class FeatureOptionSyncHandler {
     private final FeatureFacade featureFacade;
 
     @EventListener
-    @Async
+    @Async("eventExecutor")
     public void onGroupCodeChangeEvent(@NotNull GroupCodeChangeEvent event) {
         if (CollectionUtils.isEmpty(event.getGroup().getChildrenList())) {
             return;
@@ -43,7 +43,7 @@ public class FeatureOptionSyncHandler {
     }
 
     @EventListener
-    @Async
+    @Async("eventExecutor")
     public void onFeatureChangeEvent(@NotNull FeatureChangeEvent event) {
         FeatureAggr featureAggr = event.getChangedFeatureAggr();
         // 只处理Feature和Option变更同步

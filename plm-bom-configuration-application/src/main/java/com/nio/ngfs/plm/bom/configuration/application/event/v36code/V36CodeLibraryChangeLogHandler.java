@@ -23,7 +23,7 @@ public class V36CodeLibraryChangeLogHandler implements EventHandler<V36CodeLibra
     private final V36CodeLibraryChangeLogRepository v36CodeLibraryChangeLogRepository;
     private final V36CodeLibraryChangeLogApplicationService v36CodeLibraryChangeLogApplicationService;
 
-    @Async
+    @Async("eventExecutor")
     @Override
     public void onApplicationEvent(@NotNull V36CodeLibraryAttributeChangeEvent event) {
         List<V36CodeLibraryChangeLogAggr> changeLogAggrList = v36CodeLibraryChangeLogApplicationService.buildV36CodeLibraryChangeLogAggr(event);

@@ -42,7 +42,7 @@ public class V36CodeLibraryChangeLogApplicationServiceImpl implements V36CodeLib
         if (Objects.equals(oldValue, newValue)) {
             return;
         }
-        changeLogAggrList.add(V36CodeLibraryChangeLogFactory.create(before.getId(), attributeName, oldValue, newValue));
+        changeLogAggrList.add(V36CodeLibraryChangeLogFactory.create(after.getId(), attributeName, oldValue, newValue, after.getUpdateUser()));
     }
 
 }

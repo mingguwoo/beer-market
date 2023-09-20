@@ -40,8 +40,4 @@ public class BomsV36CodeLibraryChangeLogEntity extends BaseEntity{
      */
     private String newValue;
 
-    /**
-     * 变更类型，Auto/Hand
-     */
-    private String type;
 }

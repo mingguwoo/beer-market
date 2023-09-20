@@ -1,13 +1,12 @@
 package com.nio.ngfs.plm.bom.configuration.application.command.feature;
 
 import com.nio.bom.share.exception.BusinessException;
-import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockCommand;
+import com.nio.ngfs.plm.bom.configuration.application.command.feature.common.AbstractFeatureCommand;
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.event.EventPublisher;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.common.FeatureAggrThreadLocal;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.GroupCodeChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.service.feature.FeatureDomainService;
@@ -26,7 +25,7 @@ import java.util.Objects;
  */
 @Component
 @RequiredArgsConstructor
-public class EditGroupCommand extends AbstractLockCommand<EditGroupCmd, EditGroupRespDto> {
+public class EditGroupCommand extends AbstractFeatureCommand<EditGroupCmd, EditGroupRespDto> {
 
     private final FeatureDomainService featureDomainService;
     private final FeatureRepository featureRepository;
@@ -68,11 +67,6 @@ public class EditGroupCommand extends AbstractLockCommand<EditGroupCmd, EditGrou
         groupCodeChangeEvent.setGroup(featureAggr);
         groupCodeChangeEvent.setOldGroupCode(oldGroupCode);
         eventPublisher.publish(groupCodeChangeEvent);
-    }
-
-    @Override
-    protected void close() {
-        FeatureAggrThreadLocal.remove();
     }
 
 }

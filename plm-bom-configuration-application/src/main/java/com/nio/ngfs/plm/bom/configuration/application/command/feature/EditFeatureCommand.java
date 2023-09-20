@@ -1,11 +1,10 @@
 package com.nio.ngfs.plm.bom.configuration.application.command.feature;
 
-import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockCommand;
+import com.nio.ngfs.plm.bom.configuration.application.command.feature.common.AbstractFeatureCommand;
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
 import com.nio.ngfs.plm.bom.configuration.domain.event.EventPublisher;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.common.FeatureAggrThreadLocal;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.event.FeatureChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.service.feature.FeatureDomainService;
@@ -22,7 +21,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class EditFeatureCommand extends AbstractLockCommand<EditFeatureCmd, EditFeatureCmdRespDto> {
+public class EditFeatureCommand extends AbstractFeatureCommand<EditFeatureCmd, EditFeatureCmdRespDto> {
 
     private final FeatureDomainService featureDomainService;
     private final FeatureRepository featureRepository;
@@ -42,11 +41,6 @@ public class EditFeatureCommand extends AbstractLockCommand<EditFeatureCmd, Edit
         featureRepository.save(featureAggr);
         eventPublisher.publish(new FeatureChangeEvent(featureAggr));
         return new EditFeatureCmdRespDto();
-    }
-
-    @Override
-    protected void close() {
-        FeatureAggrThreadLocal.remove();
     }
 
 }

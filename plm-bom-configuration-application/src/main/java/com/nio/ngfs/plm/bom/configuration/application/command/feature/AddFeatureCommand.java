@@ -1,6 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.application.command.feature;
 
-import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockCommand;
+import com.nio.ngfs.plm.bom.configuration.application.command.feature.common.AbstractFeatureCommand;
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
 import com.nio.ngfs.plm.bom.configuration.domain.event.EventPublisher;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class AddFeatureCommand extends AbstractLockCommand<AddFeatureCmd, AddFeatureRespDto> {
+public class AddFeatureCommand extends AbstractFeatureCommand<AddFeatureCmd, AddFeatureRespDto> {
 
     private final FeatureDomainService featureDomainService;
     private final FeatureRepository featureRepository;

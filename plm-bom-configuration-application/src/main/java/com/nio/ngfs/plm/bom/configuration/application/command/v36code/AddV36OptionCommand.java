@@ -1,6 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.application.command.v36code;
 
-import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockCommand;
+import com.nio.ngfs.plm.bom.configuration.application.command.v36code.common.AbstractV36CodeCommand;
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
 import com.nio.ngfs.plm.bom.configuration.domain.model.v36code.V36CodeLibraryAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.v36code.V36CodeLibraryFactory;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class AddV36OptionCommand extends AbstractLockCommand<AddOptionCmd, AddOptionRespDto> {
+public class AddV36OptionCommand extends AbstractV36CodeCommand<AddOptionCmd, AddOptionRespDto> {
 
     private final V36CodeLibraryRepository v36CodeLibraryRepository;
     private final V36CodeLibraryDomainService v36CodeLibraryDomainService;

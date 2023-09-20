@@ -1,10 +1,9 @@
 package com.nio.ngfs.plm.bom.configuration.application.command.feature;
 
-import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockCommand;
+import com.nio.ngfs.plm.bom.configuration.application.command.feature.common.AbstractFeatureCommand;
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
-import com.nio.ngfs.plm.bom.configuration.domain.model.feature.common.FeatureAggrThreadLocal;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureStatusChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.service.feature.FeatureDomainService;
@@ -21,7 +20,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class ChangeFeatureStatusCommand extends AbstractLockCommand<ChangeFeatureStatusCmd, ChangeFeatureStatusRespDto> {
+public class ChangeFeatureStatusCommand extends AbstractFeatureCommand<ChangeFeatureStatusCmd, ChangeFeatureStatusRespDto> {
 
     private final FeatureDomainService featureDomainService;
     private final FeatureRepository featureRepository;
@@ -40,11 +39,6 @@ public class ChangeFeatureStatusCommand extends AbstractLockCommand<ChangeFeatur
             featureRepository.save(featureAggr);
         }
         return new ChangeFeatureStatusRespDto();
-    }
-
-    @Override
-    protected void close() {
-        FeatureAggrThreadLocal.remove();
     }
 
 }

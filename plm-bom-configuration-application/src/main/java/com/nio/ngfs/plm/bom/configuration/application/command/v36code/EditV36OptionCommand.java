@@ -1,6 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.application.command.v36code;
 
-import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockCommand;
+import com.nio.ngfs.plm.bom.configuration.application.command.v36code.common.AbstractV36CodeCommand;
 import com.nio.ngfs.plm.bom.configuration.application.service.V36CodeLibraryApplicationService;
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
 import com.nio.ngfs.plm.bom.configuration.domain.event.EventPublisher;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class EditV36OptionCommand extends AbstractLockCommand<EditOptionCmd, EditOptionRespDto> {
+public class EditV36OptionCommand extends AbstractV36CodeCommand<EditOptionCmd, EditOptionRespDto> {
 
     private final V36CodeLibraryRepository v36CodeLibraryRepository;
     private final V36CodeLibraryDomainService v36CodeLibraryDomainService;
@@ -52,11 +52,6 @@ public class EditV36OptionCommand extends AbstractLockCommand<EditOptionCmd, Edi
         // 发布属性变更事件
         eventPublisher.publish(new V36CodeLibraryAttributeChangeEvent(V36CodeLibraryAggrThreadLocal.get(aggr.getId()), aggr));
         return new EditOptionRespDto();
-    }
-
-    @Override
-    protected void close() {
-        V36CodeLibraryAggrThreadLocal.remove();
     }
 
 }

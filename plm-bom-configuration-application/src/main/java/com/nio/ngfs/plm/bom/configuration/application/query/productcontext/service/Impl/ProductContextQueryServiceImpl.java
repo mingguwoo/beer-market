@@ -182,7 +182,7 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
         ProductContextFeatureRowComparator comparator = new ProductContextFeatureRowComparator(groupRecordMap);
         //先排option
         productContext.setProductContextFeatureRowDtoList(productContext.getProductContextFeatureRowDtoList().stream().map(feature->{
-            if (!Objects.equals(feature.getFeatureCode(),ConfigConstants.FEATURE_CODE_AF00)){
+            if (Objects.equals(feature.getFeatureCode(),ConfigConstants.FEATURE_CODE_AF00)){
                 feature.setOptionRowList(feature.getOptionRowList().stream().sorted(Comparator.comparing(ProductContextOptionRowDto::getDisplayName, ModelYearComparator.INSTANCE)).toList());
             }
             else{

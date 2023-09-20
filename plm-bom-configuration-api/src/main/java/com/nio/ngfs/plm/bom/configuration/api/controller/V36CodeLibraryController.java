@@ -6,15 +6,19 @@ import com.nio.ngfs.plm.bom.configuration.application.command.v36code.AddV36Digi
 import com.nio.ngfs.plm.bom.configuration.application.command.v36code.AddV36OptionCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.v36code.EditV36DigitCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.v36code.EditV36OptionCommand;
+import com.nio.ngfs.plm.bom.configuration.application.query.v36codelibrary.ExportV36CodeLibraryQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.v36codelibrary.QueryV36CodeLibraryQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.v36codelibrary.QueryV36DigitCodeQuery;
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmV36CodeLibraryClient;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.request.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.response.*;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.math3.analysis.function.Exp;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -32,6 +36,7 @@ public class V36CodeLibraryController implements PlmV36CodeLibraryClient {
     private final EditV36OptionCommand editV36OptionCommand;
     private final QueryV36CodeLibraryQuery queryV36CodeLibraryQuery;
     private final QueryV36DigitCodeQuery queryV36DigitCodeQuery;
+    private final ExportV36CodeLibraryQuery exportV36CodeLibraryQuery;
 
     @Override
     @NotLogResult
@@ -66,6 +71,12 @@ public class V36CodeLibraryController implements PlmV36CodeLibraryClient {
     @NotLogResult
     public ResultInfo<EditOptionRespDto> editOption(@Valid @RequestBody EditOptionCmd cmd) {
         return ResultInfo.success(editV36OptionCommand.execute(cmd));
+    }
+
+    @NotLogResult
+    @PostMapping("/v36code/exportV36CodeLibrary")
+    public void exportV36CodeLibrary(@Valid @RequestBody ExportV36CodeLibraryQry qry, HttpServletResponse response) {
+        exportV36CodeLibraryQuery.execute(qry,response);
     }
 
 

@@ -85,7 +85,7 @@ public class ExportProductConfigQuery extends AbstractExportQuery {
     private void setSheetTitle(XSSFWorkbook workbook, XSSFSheet sheet, QueryProductConfigRespDto respDto, Map<Integer, Integer> maxColumnWithMap) {
         List<String> titleList = Lists.newArrayList(TITLE_LIST);
         // 动态添加PC列表头
-        respDto.getPcList().forEach(pc -> titleList.add(pc.getPcId()));
+        respDto.getPcList().forEach(pc -> titleList.add(pc.getPcName()));
         super.setSheetTitle(workbook, sheet, titleList, 30, true);
         for (int i = 0; i < titleList.size(); i++) {
             maxColumnWithMap.put(i, Math.max(maxColumnWithMap.getOrDefault(i, 0), getStrLength(titleList.get(i))));

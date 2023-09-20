@@ -7,6 +7,8 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsV
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsV36CodeLibraryChangeLogMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author xiaozhou.tu
  * @date 2023/9/20
@@ -19,4 +21,11 @@ public class BomsV36CodeLibraryChangeLogDaoImpl extends AbstractDao<BomsV36CodeL
     protected void fuzzyConditions(WherePageRequest<BomsV36CodeLibraryChangeLogEntity> bomsV36CodeLibraryChangeLogEntityWherePageRequest, LambdaQueryWrapper<BomsV36CodeLibraryChangeLogEntity> queryWrapper) {
     }
 
+    @Override
+    public List<BomsV36CodeLibraryChangeLogEntity> queryByCodeId(Long codeId) {
+        LambdaQueryWrapper<BomsV36CodeLibraryChangeLogEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(BomsV36CodeLibraryChangeLogEntity::getCodeId,codeId);
+        lambdaQueryWrapper.orderByDesc(BomsV36CodeLibraryChangeLogEntity::getUpdateTime);
+        return getBaseMapper().selectList(lambdaQueryWrapper);
+    }
 }

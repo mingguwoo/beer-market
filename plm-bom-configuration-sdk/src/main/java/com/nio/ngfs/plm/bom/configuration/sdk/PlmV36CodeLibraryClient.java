@@ -57,4 +57,7 @@ public interface PlmV36CodeLibraryClient {
 
     @PostMapping("/v36Code/queryV36DigitCode")
     ResultInfo<List<String>> queryV36DigitCode(QueryV36DigitCodeQry qry);
+
+    @PostMapping("/v36Code/queryV36CodeLibraryChangeLog")
+    ResultInfo<List<QueryV36CodeLibraryChangeLogRespDto>> queryV36CodeLibraryChangeLog(QueryV36CodeLibraryChangeLogQry qry);
 }

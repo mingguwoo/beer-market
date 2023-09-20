@@ -25,8 +25,6 @@ public class V36CodeLibraryChangeLogAggr extends AbstractDo implements AggrRoot<
 
     private String newValue;
 
-    private String type;
-
     @Override
     public Long getUniqId() {
         return getId();

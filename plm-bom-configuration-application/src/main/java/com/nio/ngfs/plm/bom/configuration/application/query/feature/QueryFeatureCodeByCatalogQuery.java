@@ -25,7 +25,7 @@ public class QueryFeatureCodeByCatalogQuery extends AbstractQuery<QueryFeatureCo
     @Override
     public List<String> executeQuery(QueryFeatureCodeByCatalogQry qry) {
         checkType(qry);
-        return bomsFeatureLibraryDao.queryByCatalog(qry.getCatalog()).stream().map(entity->entity.getFeatureCode()).distinct().toList();
+        return bomsFeatureLibraryDao.queryByCatalog(qry.getCatalog()).stream().map(entity->entity.getFeatureCode()).distinct().sorted().toList();
     }
 
     private void checkType(QueryFeatureCodeByCatalogQry qry){

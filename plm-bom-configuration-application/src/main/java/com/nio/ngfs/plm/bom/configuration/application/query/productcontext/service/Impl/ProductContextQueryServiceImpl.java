@@ -2,6 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.application.query.productcontext.serv
 
 import com.nio.ngfs.plm.bom.configuration.application.query.productcontext.service.ProductContextQueryService;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
+import com.nio.ngfs.plm.bom.configuration.common.util.ModelYearComparator;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature.enums.ProductContextFeatureEnum;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsFeatureLibraryDao;
@@ -161,7 +162,7 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
             getProductContextRespDto.getProductContextColumnDtoList().add(productContextColumnDto);
             getProductContextRespDto.getProductContextPointDtoList().add(productContextPointDto);
         });
-        getProductContextRespDto.setProductContextColumnDtoList(getProductContextRespDto.getProductContextColumnDtoList().stream().distinct().toList());
+        getProductContextRespDto.setProductContextColumnDtoList(getProductContextRespDto.getProductContextColumnDtoList().stream().distinct().sorted(Comparator.comparing(ProductContextColumnDto::getModelYear,ModelYearComparator.INSTANCE)).toList());
         //筛选掉没被选中的列
         getProductContextRespDto.getProductContextPointDtoList().forEach(point->{
             columnIdSet.add(point.getColumnId());
@@ -181,7 +182,12 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
         ProductContextFeatureRowComparator comparator = new ProductContextFeatureRowComparator(groupRecordMap);
         //先排option
         productContext.setProductContextFeatureRowDtoList(productContext.getProductContextFeatureRowDtoList().stream().map(feature->{
-            feature.setOptionRowList(feature.getOptionRowList().stream().sorted(Comparator.comparing(ProductContextOptionRowDto::getFeatureCode)).toList());
+            if (Objects.equals(feature.getFeatureCode(),ConfigConstants.FEATURE_CODE_AF00)){
+                feature.setOptionRowList(feature.getOptionRowList().stream().sorted(Comparator.comparing(ProductContextOptionRowDto::getDisplayName, ModelYearComparator.INSTANCE)).toList());
+            }
+            else{
+                feature.setOptionRowList(feature.getOptionRowList().stream().sorted(Comparator.comparing(ProductContextOptionRowDto::getFeatureCode)).toList());
+            }
             return feature;
         }).toList());
         //排feature

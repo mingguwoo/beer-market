@@ -111,6 +111,7 @@ public class QueryV36CodeLibraryQuery {
 
     private V36CodeLibraryDigitDto buildDigit(BomsV36CodeLibraryEntity entity){
         V36CodeLibraryDigitDto dto = new V36CodeLibraryDigitDto();
+        dto.setId(entity.getId());
         dto.setCode(entity.getCode());
         dto.setChineseName(entity.getChineseName().replace(",","|"));
         dto.setRemark(entity.getRemark());
@@ -125,6 +126,7 @@ public class QueryV36CodeLibraryQuery {
 
     private V36CodeLibraryOptionDto buildOption(BomsV36CodeLibraryEntity entity){
         V36CodeLibraryOptionDto dto = new V36CodeLibraryOptionDto();
+        dto.setId(entity.getId());
         dto.setCode(entity.getCode());
         dto.setChineseName(entity.getChineseName().replace(",","|"));
         dto.setRemark(entity.getRemark());

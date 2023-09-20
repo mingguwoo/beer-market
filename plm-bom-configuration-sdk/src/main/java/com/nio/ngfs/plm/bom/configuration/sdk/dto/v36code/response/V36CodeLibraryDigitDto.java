@@ -12,6 +12,8 @@ import java.util.List;
 @Data
 public class V36CodeLibraryDigitDto {
 
+    private Long id;
+
     private String code;
 
     private String displayName;

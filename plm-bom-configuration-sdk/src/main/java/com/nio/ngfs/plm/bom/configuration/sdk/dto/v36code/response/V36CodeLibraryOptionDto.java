@@ -9,6 +9,8 @@ import lombok.Data;
 @Data
 public class V36CodeLibraryOptionDto {
 
+    private Long id;
+
     private String code;
 
     private String displayName;

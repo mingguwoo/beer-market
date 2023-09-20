@@ -35,7 +35,7 @@ public class FeatureChangeLogHandler {
     private final FeatureRepository featureRepository;
 
     @EventListener
-    @Async("commonThreadPool")
+    @Async("eventExecutor")
     public void onFeatureAttributeChangeEvent(@NotNull FeatureAttributeChangeEvent event) {
         List<FeatureChangeLogAggr> changeLogAggrList = featureChangeLogDomainService.buildFeatureAttributeChangeLog(event);
         featureChangeLogRepository.batchSave(changeLogAggrList);

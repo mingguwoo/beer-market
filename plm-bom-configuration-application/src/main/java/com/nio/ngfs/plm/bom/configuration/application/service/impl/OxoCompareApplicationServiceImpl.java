@@ -314,10 +314,10 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
         featureMap.forEach((feature, rowInfo) -> {
             if (OxoListRespDto.getOxoRowsResps().stream().noneMatch(x -> StringUtils.equals(String.format("%s:%s", versionName, x.getFeatureCode()), feature))) {
 
-                List<OxoRowsQry>  oxoRowsQries = Lists.newArrayList(OxoListRespDto.getOxoRowsResps());
+                List<OxoRowsQry> oxoRowsQries = Lists.newArrayList(OxoListRespDto.getOxoRowsResps());
                 OxoRowsQry rowsQry = BeanConvertUtils.convertTo(rowInfo, OxoRowsQry::new);
                 rowsQry.setChangeType(CompareChangeTypeEnum.DELETE.getName());
-               // oxoRowsQries.add()
+                // oxoRowsQries.add()
             }
         });
 
@@ -659,18 +659,28 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
     }
 
     private void buildAndSendEmail(OxoTemplateRequestCmd templateRequest, List<String> users) {
-        for (String user : users) {
-            EmailParamDto emailParamDto = new EmailParamDto();
-            emailParamDto.setTemplateNo(oxoEmailTemplateNo);
-            if (!StringUtils.contains(user, "@nio.com")) {
-                emailParamDto.setReceiverEmail(user + "@nio.com");
-            } else {
-                emailParamDto.setReceiverEmail(user);
+
+        EmailParamDto emailParamDto = new EmailParamDto();
+        emailParamDto.setTemplateNo(oxoEmailTemplateNo);
+        List<String> finalUsers = Lists.newArrayList();
+        users.forEach(user -> {
+            if(StringUtils.isBlank(user)){
+                return;
             }
-            Map<String, Object> maps = JSON.parseObject(JSONObject.toJSONString(templateRequest), Map.class);
-            emailParamDto.setVariables(maps);
-            emailFacade.sendEmail(emailParamDto);
-        }
+            if (!StringUtils.contains(user, "@nio.com")) {
+                user= user + "@nio.com";
+            }
+            finalUsers.add(user);
+        });
+        emailParamDto.setReceiverEmail(String.join(",", finalUsers));
+        Map<String, Object> maps = JSON.parseObject(JSONObject.toJSONString(templateRequest), Map.class);
+        emailParamDto.setVariables(maps);
+        emailFacade.sendEmail(emailParamDto);
+    }
+
+
+    private void ss() {
+
     }
 
     public List<OxoTemplateRequestCmd.PackageOption> convertPackageOptionAll(int titleSize, OxoRowsQry option,

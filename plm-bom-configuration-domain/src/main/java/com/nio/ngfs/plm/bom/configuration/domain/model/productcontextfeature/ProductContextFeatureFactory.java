@@ -7,6 +7,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature.enu
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoRowsQry;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author bill.wang
@@ -67,7 +68,7 @@ public class ProductContextFeatureFactory {
      * @param modelYearMap
      * @param owner
      */
-    public static void createModelYearProductContextFeature(List<ProductContextFeatureAggr> productContextFeatureAggrList, FeatureAggr featureModelYearAggr,String modelCode,Map<String,String> modelYearMap,List<ProductContextFeatureAggr> addProductContextFeatureAggrList,String owner){
+    public static void createModelYearProductContextFeature(List<ProductContextFeatureAggr> productContextFeatureAggrList, FeatureAggr featureModelYearAggr,String modelCode,Map<String,String> modelYearMap,List<ProductContextFeatureAggr> addProductContextFeatureAggrList,String owner,List<String> modelYearList){
         List<FeatureAggr> optionAggrList = featureModelYearAggr.getChildrenList();
         Set<ProductContextFeatureAggr> existModelYearSet = new HashSet<>();
         //记录原有所有modelYear相关行
@@ -88,13 +89,14 @@ public class ProductContextFeatureFactory {
             productContextFeatureAggr.setCreateUser(owner);
             addProductContextFeatureAggrList.add(productContextFeatureAggr);
         }
+        Set<String> modelYearSet = modelYearList.stream().collect(Collectors.toSet());
         //再添加AF00下面的option
         optionAggrList.forEach(option->{
             ProductContextFeatureAggr aggr = new ProductContextFeatureAggr();
             aggr.setModelCode(modelCode);
             aggr.setFeatureCode(option.getFeatureCode());
             aggr.setType(ProductContextFeatureEnum.OPTION.getType());
-            if (!existModelYearSet.contains(productContextFeatureAggr)) {
+            if (!existModelYearSet.contains(productContextFeatureAggr) && modelYearSet.contains(option.getDisplayName())) {
                 aggr.setCreateUser(owner);
                 aggr.setUpdateUser(owner);
                 addProductContextFeatureAggrList.add(aggr);

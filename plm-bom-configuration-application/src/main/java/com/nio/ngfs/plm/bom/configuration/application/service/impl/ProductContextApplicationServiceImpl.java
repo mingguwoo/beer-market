@@ -70,7 +70,7 @@ public class ProductContextApplicationServiceImpl implements ProductContextAppli
         ProductContextFeatureFactory.createProductContextFeatureList(productContextFeatureList,featureList,featureOptionMap,modelCode,addProductContextFeatureAggrList,owner);
         ProductContextFactory.createProductContextList(productContextList,featureList,OxoListRespDto,addProductContextAggrList,removeProductContextAggrList,existProductContextSet,owner);
         //单独处理AF00
-        ProductContextFeatureFactory.createModelYearProductContextFeature(productContextFeatureList,featureModelYearAggr,modelCode,modelYearMap,addProductContextFeatureAggrList,owner);
+        ProductContextFeatureFactory.createModelYearProductContextFeature(productContextFeatureList,featureModelYearAggr,modelCode,modelYearMap,addProductContextFeatureAggrList,owner,modelYearList);
         ProductContextFactory.createModelYearProductContext(modelCode,modelYearList,modelYearMap,addProductContextAggrList,removeProductContextAggrList,existProductContextSet,owner);
         //去重
         addProductContextFeatureAggrList = addProductContextFeatureAggrList.stream().distinct().toList();

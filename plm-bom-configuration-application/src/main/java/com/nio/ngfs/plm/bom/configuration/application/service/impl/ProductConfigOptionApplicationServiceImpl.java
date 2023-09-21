@@ -108,15 +108,14 @@ public class ProductConfigOptionApplicationServiceImpl implements ProductConfigO
                         if (pc.isFromBaseVehicle() && pc.isNotCompleteInitSelect()) {
                             return;
                         }
-                        // 按Feature Code分组校验
-                        context.getPcFeatureOptionMap().getOrDefault(pc.getId(), Maps.newHashMap()).forEach((featureCode, optionList) -> {
-                            if (!selectFeatureCodeSet.contains(featureCode)) {
-                                return;
-                            }
+                        Map<String, List<ProductConfigOptionAggr>> configFeatureOptionList = context.getPcFeatureOptionMap().getOrDefault(pc.getId(), Maps.newHashMap());
+                        selectFeatureCodeSet.forEach(selectFeatureCode -> {
+                            List<ProductConfigOptionAggr> optionList = configFeatureOptionList.get(selectFeatureCode);
                             // Feature下的Option在PC对应Model/Model Year下的Product Context中有勾选，则在该PC中至少勾选Feature下的其中1个Option
-                            if (optionList.stream().noneMatch(ProductConfigOptionAggr::isSelect)) {
+                            if (CollectionUtils.isEmpty(optionList) ||
+                                    optionList.stream().noneMatch(ProductConfigOptionAggr::isSelect)) {
                                 context.addMessage(pc.getPcId(), String.format("Feature %s Is Applied In Product Context %s, Please Choose At Least One Option Of The Feature In PC %s!",
-                                        featureCode, pc.getModelCode() + " " + pc.getModelYear(), pc.getName()));
+                                        selectFeatureCode, pc.getModelCode() + " " + pc.getModelYear(), pc.getName()));
                             }
                         });
                     });

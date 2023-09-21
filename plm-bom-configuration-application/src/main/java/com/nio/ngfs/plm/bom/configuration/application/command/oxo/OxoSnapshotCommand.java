@@ -10,6 +10,7 @@ import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.event.EventPublisher;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.enums.OxoOptionPackageTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.enums.OxoSnapshotEnum;
@@ -32,6 +33,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author wangchao.wang
@@ -145,7 +147,7 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, List
     }
 
 
-    public void checkSnapshot(String version, OxoListRespDto oxoLists,String type){
+    public void checkSnapshot(String version, OxoListRespDto oxoLists, String type) {
         // 如果是首发版本
         if (StringUtils.contains(version, ConfigConstants.VERSION_AA)) {
             //- 针对Model下的首版OXO发布，系统需校验AF00是否存在于OXO中
@@ -187,9 +189,32 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, List
             });
         });
 
+
         if (CollectionUtils.isNotEmpty(options)) {
-            throw new BusinessException(MessageFormat.format("Fail! Option Code {0} Has None Value!", options));
+            throw new BusinessException(MessageFormat.format(ConfigErrorCode.EDIT_OPTION_ERROR.getMessage(), options));
         }
 
+
+        //基于Base Vehicle，某一Feature 下的所有Option打点是否存在多个（超过1个）实心圈
+        List<String> featureCodes = Lists.newArrayList();
+        oxoRowsQries.forEach(oxoRowsQry -> {
+            headIds.forEach(headId -> {
+                List<String> packageCodes = Lists.newArrayList();
+                oxoRowsQry.getOptions().forEach(option -> {
+                    packageCodes.add(option.getPackInfos().stream().filter(x -> Objects.equals(x.getHeadId(), headId))
+                            .findFirst().orElse(new OxoEditCmd()).getPackageCode());
+                });
+
+                if (packageCodes.stream().filter(x -> StringUtils.equals(x, OxoOptionPackageTypeEnum.DEFALUT.getType())).count() > 1) {
+                    featureCodes.add(oxoRowsQry.getFeatureCode());
+                }
+            });
+        });
+
+        if (CollectionUtils.isNotEmpty(featureCodes)) {
+            throw new BusinessException(MessageFormat.format(ConfigErrorCode.EDIT_FEATURE_ERROR.getMessage(), featureCodes.stream().distinct().toList()));
+        }
     }
+
 }
+

@@ -124,6 +124,12 @@ public enum ConfigErrorCode implements ErrorCode {
 
     MATURITY_ERROR(89006, "The Maturity Of All Base Vehicle Is 'U', Can Not Publish Formal Version!"),
 
+
+    EDIT_OPTION_ERROR(89007,"Edit Fail! Option Code {0} Has None Value!"),
+
+
+    EDIT_FEATURE_ERROR(89008,"Edit Fail! Feature Code {0} Has More Than One Standard Configuration!"),
+
     ;
 
     /**

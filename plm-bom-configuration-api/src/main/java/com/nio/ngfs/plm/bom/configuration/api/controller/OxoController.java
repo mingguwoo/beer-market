@@ -67,7 +67,7 @@ public class OxoController {
      * @param cmd
      * @return
      */
-    @NeedAuthorization
+    //@NeedAuthorization
     @NotLogResult
     @PostMapping("/queryList")
     public ResultInfo<OxoListRespDto> queryList(@Valid @RequestBody OxoBaseCmd cmd) {
@@ -143,7 +143,7 @@ public class OxoController {
      * @param cmd
      * @return
      */
-    @NeedAuthorization
+   // @NeedAuthorization
     @NotLogResult
     @PostMapping("/saveSnapshot")
     public ResultInfo saveSnapshot(@Valid @RequestBody OxoSnapshotCmd cmd) {

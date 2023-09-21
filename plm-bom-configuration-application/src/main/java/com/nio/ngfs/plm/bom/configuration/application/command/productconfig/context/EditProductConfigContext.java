@@ -24,6 +24,11 @@ import java.util.stream.Collectors;
 public class EditProductConfigContext {
 
     /**
+     * 车型
+     */
+    private String model;
+
+    /**
      * PC列表
      */
     private List<ProductConfigAggr> productConfigAggrList;
@@ -45,7 +50,9 @@ public class EditProductConfigContext {
 
     private Map<Long, Map<String, List<ProductConfigOptionAggr>>> pcFeatureOptionMap;
 
-    public EditProductConfigContext(List<ProductConfigAggr> productConfigAggrList, List<ProductConfigOptionAggr> productConfigOptionAggrList, List<ProductContextAggr> productContextAggrList) {
+    public EditProductConfigContext(String model, List<ProductConfigAggr> productConfigAggrList, List<ProductConfigOptionAggr> productConfigOptionAggrList,
+                                    List<ProductContextAggr> productContextAggrList) {
+        this.model = model;
         this.productConfigAggrList = productConfigAggrList;
         this.productConfigOptionAggrList = productConfigOptionAggrList;
         this.productContextAggrList = productContextAggrList;

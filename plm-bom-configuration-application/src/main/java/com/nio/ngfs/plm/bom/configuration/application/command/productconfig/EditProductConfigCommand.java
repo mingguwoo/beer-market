@@ -59,7 +59,7 @@ public class EditProductConfigCommand extends AbstractLockCommand<EditProductCon
         // 编辑Product Config勾选
         List<ProductConfigOptionAggr> saveProductConfigOptionAggrList = productConfigOptionApplicationService.editPcOptionConfig(cmd.getUpdatePcOptionConfigList(),
                 productConfigAggrList, productConfigOptionAggrList, cmd.getUpdateUser());
-        EditProductConfigContext context = new EditProductConfigContext(productConfigAggrList, productConfigOptionAggrList, productContextAggrList);
+        EditProductConfigContext context = new EditProductConfigContext(cmd.getModel(), productConfigAggrList, productConfigOptionAggrList, productContextAggrList);
         // edit时skipCheck校验
         productConfigOptionApplicationService.skipCheckBeforeEdit(context);
         // Product Context勾选校验

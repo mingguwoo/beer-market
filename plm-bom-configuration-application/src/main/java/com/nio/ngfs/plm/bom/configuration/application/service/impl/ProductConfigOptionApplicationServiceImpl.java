@@ -9,6 +9,8 @@ import com.nio.ngfs.plm.bom.configuration.application.command.productconfig.cont
 import com.nio.ngfs.plm.bom.configuration.application.service.ProductConfigOptionApplicationService;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigmodeloption.ProductConfigModelOptionAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigmodeloption.ProductConfigModelOptionRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.ProductConfigOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.ProductConfigOptionFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.ProductConfigOptionId;
@@ -32,6 +34,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ProductConfigOptionApplicationServiceImpl implements ProductConfigOptionApplicationService {
+
+    private final ProductConfigModelOptionRepository productConfigModelOptionRepository;
 
     @Override
     public List<ProductConfigOptionAggr> editPcOptionConfig(List<EditProductConfigCmd.PcOptionConfigDto> updatePcOptionConfigList, List<ProductConfigAggr> productConfigAggrList,
@@ -98,6 +102,9 @@ public class ProductConfigOptionApplicationServiceImpl implements ProductConfigO
             }
         });
 
+        // 查询Product Config的Feature/Option行
+        List<ProductConfigModelOptionAggr> configFeatureOptionRowList = productConfigModelOptionRepository.queryByModel(context.getModel());
+        Set<String> configFeatureCodeSet = configFeatureOptionRowList.stream().map(ProductConfigModelOptionAggr::getFeatureCode).collect(Collectors.toSet());
         // 按Model Year分组
         LambdaUtil.groupBy(context.getProductContextAggrList(), ProductContextAggr::getModelYear)
                 .forEach((modelYear, productContextOptionList) -> {
@@ -110,6 +117,10 @@ public class ProductConfigOptionApplicationServiceImpl implements ProductConfigO
                         }
                         Map<String, List<ProductConfigOptionAggr>> configFeatureOptionList = context.getPcFeatureOptionMap().getOrDefault(pc.getId(), Maps.newHashMap());
                         selectFeatureCodeSet.forEach(selectFeatureCode -> {
+                            // 过滤Product Config中不存在的Feature/Option行
+                            if (!configFeatureCodeSet.contains(selectFeatureCode)) {
+                                return;
+                            }
                             List<ProductConfigOptionAggr> optionList = configFeatureOptionList.get(selectFeatureCode);
                             // Feature下的Option在PC对应Model/Model Year下的Product Context中有勾选，则在该PC中至少勾选Feature下的其中1个Option
                             if (CollectionUtils.isEmpty(optionList) ||

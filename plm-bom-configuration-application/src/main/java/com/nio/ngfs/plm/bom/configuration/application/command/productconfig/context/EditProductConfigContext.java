@@ -1,8 +1,8 @@
 package com.nio.ngfs.plm.bom.configuration.application.command.productconfig.context;
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.ProductConfigOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.ProductContextAggr;
@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -46,7 +47,7 @@ public class EditProductConfigContext {
     /**
      * PC的错误提示信息列表集合
      */
-    private Map<String, List<String>> messageListMap = Maps.newHashMap();
+    private Map<String, Set<String>> messageListMap = Maps.newHashMap();
 
     private Map<Long, Map<String, List<ProductConfigOptionAggr>>> pcFeatureOptionMap;
 
@@ -62,7 +63,7 @@ public class EditProductConfigContext {
     }
 
     public void addMessage(String message, String featureCode) {
-        messageListMap.computeIfAbsent(message, i -> Lists.newArrayList()).add(featureCode);
+        messageListMap.computeIfAbsent(message, i -> Sets.newHashSet()).add(featureCode);
     }
 
     public List<String> getMessageList() {

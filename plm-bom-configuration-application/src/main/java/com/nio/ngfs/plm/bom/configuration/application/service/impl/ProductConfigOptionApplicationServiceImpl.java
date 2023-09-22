@@ -73,8 +73,8 @@ public class ProductConfigOptionApplicationServiceImpl implements ProductConfigO
                         .forEach((featureCode, optionList) -> {
                             // 1个Feature下最多只可勾选1个Option（可以不勾选）
                             if (optionList.stream().filter(ProductConfigOptionAggr::isSelect).count() > 1) {
-                                context.addMessage(pc.getPcId(), String.format("Please Choose One Option Of Feature %s In PC %s (Skip Check Button Is Closed)!",
-                                        featureCode, pc.getName()));
+                                context.addMessage(String.format("Please Choose One Option Of Feature %%s In PC %s (Skip Check Button Is Closed)!",
+                                        pc.getName()), featureCode);
                             }
                         })
         );
@@ -97,8 +97,8 @@ public class ProductConfigOptionApplicationServiceImpl implements ProductConfigO
                     productConfigAggr.getModelYear()));
             if (productContextAggr == null) {
                 // Product Config勾选了，Product Context未勾选，报错
-                context.addMessage(productConfigAggr.getPcId(), String.format("Option %s Is Not Applied In Product Context %s %s, Which Can Not Be Applied In Related PC Either!",
-                        productConfigOptionAggr.getOptionCode(), productConfigAggr.getModelCode(), productConfigAggr.getModelYear()));
+                context.addMessage(String.format("Option %%s Is Not Applied In Product Context %s %s, Which Can Not Be Applied In Related PC Either!",
+                        productConfigAggr.getModelCode(), productConfigAggr.getModelYear()), productConfigOptionAggr.getOptionCode());
             }
         });
 
@@ -125,8 +125,8 @@ public class ProductConfigOptionApplicationServiceImpl implements ProductConfigO
                             // Feature下的Option在PC对应Model/Model Year下的Product Context中有勾选，则在该PC中至少勾选Feature下的其中1个Option
                             if (CollectionUtils.isEmpty(optionList) ||
                                     optionList.stream().noneMatch(ProductConfigOptionAggr::isSelect)) {
-                                context.addMessage(pc.getPcId(), String.format("Feature %s Is Applied In Product Context %s, Please Choose At Least One Option Of The Feature In PC %s!",
-                                        selectFeatureCode, pc.getModelCode() + " " + pc.getModelYear(), pc.getName()));
+                                context.addMessage(String.format("Feature %%s Is Applied In Product Context %s, Please Choose At Least One Option Of The Feature In PC %s!",
+                                        pc.getModelCode() + " " + pc.getModelYear(), pc.getName()), selectFeatureCode);
                             }
                         });
                     });

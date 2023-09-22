@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.application.command.productconfig.context;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigAggr;
@@ -8,7 +9,6 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.ProductCon
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -61,12 +61,15 @@ public class EditProductConfigContext {
                 Collectors.groupingBy(ProductConfigOptionAggr::getFeatureCode, Collectors.toList())));
     }
 
-    public void addMessage(String pcId, String message) {
-        messageListMap.computeIfAbsent(pcId, i -> Lists.newArrayList()).add(message);
+    public void addMessage(String message, String featureCode) {
+        messageListMap.computeIfAbsent(message, i -> Lists.newArrayList()).add(featureCode);
     }
 
     public List<String> getMessageList() {
-        return messageListMap.values().stream().flatMap(Collection::stream).toList();
+        return messageListMap.entrySet().stream().map(entry ->
+                        String.format(entry.getKey(), Joiner.on(",").join(entry.getValue())))
+                .sorted(String::compareTo)
+                .toList();
     }
 
 }

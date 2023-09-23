@@ -310,17 +310,6 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
             return;
         }
 
-        //判断删除
-        featureMap.forEach((feature, rowInfo) -> {
-            if (OxoListRespDto.getOxoRowsResps().stream().noneMatch(x -> StringUtils.equals(String.format("%s:%s", versionName, x.getFeatureCode()), feature))) {
-
-                List<OxoRowsQry> oxoRowsQries = Lists.newArrayList(OxoListRespDto.getOxoRowsResps());
-                OxoRowsQry rowsQry = BeanConvertUtils.convertTo(rowInfo, OxoRowsQry::new);
-                rowsQry.setChangeType(CompareChangeTypeEnum.DELETE.getName());
-                // oxoRowsQries.add()
-            }
-        });
-
         OxoListRespDto.getOxoRowsResps().forEach(feature -> {
             String ipFeatureEntityKey = String.format("%s:%s", versionName, feature.getFeatureCode());
             if (!featureMap.containsKey(ipFeatureEntityKey)) {

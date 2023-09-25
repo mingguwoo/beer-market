@@ -191,7 +191,7 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, List
 
 
         if (CollectionUtils.isNotEmpty(options)) {
-            String message = MessageFormat.format(ConfigErrorCode.EDIT_OPTION_ERROR.getMessage(), options);
+            String message = MessageFormat.format(ConfigErrorCode.EDIT_OPTION_ERROR.getMessage(), String.join(",",options));
             throw new BusinessException(message);
         }
 
@@ -213,7 +213,7 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, List
         });
 
         if (CollectionUtils.isNotEmpty(featureCodes)) {
-            throw new BusinessException(MessageFormat.format(ConfigErrorCode.EDIT_FEATURE_ERROR.getMessage(), featureCodes.stream().distinct().toList()));
+            throw new BusinessException(MessageFormat.format(ConfigErrorCode.EDIT_FEATURE_ERROR.getMessage(), String.join(",",featureCodes)));
         }
     }
 

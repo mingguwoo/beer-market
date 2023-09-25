@@ -87,6 +87,16 @@ public class OxoController {
         return ResultInfo.success(deleteFeatureOptionCommand.execute(cmd));
     }
 
+
+
+    @NeedAuthorization
+    @NotLogResult
+    @PostMapping("/checkDelete")
+    public ResultInfo checkDelete(@Valid @RequestBody DeleteFeatureOptionCmd cmd) {
+        return ResultInfo.success(deleteFeatureOptionCommand.execute(cmd));
+    }
+
+
     /**
      * 添加oxo信息
      *

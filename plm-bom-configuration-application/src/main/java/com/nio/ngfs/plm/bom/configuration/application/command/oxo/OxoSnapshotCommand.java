@@ -191,7 +191,8 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, List
 
 
         if (CollectionUtils.isNotEmpty(options)) {
-            throw new BusinessException(MessageFormat.format(ConfigErrorCode.EDIT_OPTION_ERROR.getMessage(), options));
+            String message = MessageFormat.format(ConfigErrorCode.EDIT_OPTION_ERROR.getMessage(), options);
+            throw new BusinessException(message);
         }
 
 

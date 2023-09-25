@@ -43,6 +43,7 @@ public interface MapStructDataConverter<DO extends AbstractDo, Entity extends Ba
      * @param domainObject domainObject
      * @return entity
      */
+    @Override
     default Entity convertDoToEntity(DO domainObject) {
         if (domainObject == null) {
             return null;
@@ -61,6 +62,7 @@ public interface MapStructDataConverter<DO extends AbstractDo, Entity extends Ba
      * @param entity entity
      * @return domainObject
      */
+    @Override
     default DO convertEntityToDo(Entity entity) {
         if (entity == null) {
             return null;

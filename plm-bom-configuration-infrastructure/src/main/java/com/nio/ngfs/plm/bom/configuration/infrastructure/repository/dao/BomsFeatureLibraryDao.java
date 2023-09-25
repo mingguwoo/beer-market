@@ -91,7 +91,7 @@ public interface BomsFeatureLibraryDao extends IService<BomsFeatureLibraryEntity
 
     /**
      *
-     * @param modelCode
+     * @param featureCodes
      * @return
      */
     List<BomsFeatureLibraryEntity> findFeatureLibraryNotFeatureCodes(List<String> featureCodes);
@@ -125,7 +125,7 @@ public interface BomsFeatureLibraryDao extends IService<BomsFeatureLibraryEntity
 
     /**
      * 根据类型查找
-     * @param type
+     * @param catalog
      * @return
      */
     List<BomsFeatureLibraryEntity> queryByCatalog(String catalog);

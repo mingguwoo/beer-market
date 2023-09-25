@@ -220,6 +220,7 @@ public class BaseVehicleApplicationServiceImpl implements BaseVehicleApplication
         oxoOptionPackageRepository.saveOrUpdatebatch(editPoints);
     }
 
+    @Override
     public String queryModelYearOptionCodeByDisplayName(String modelYear){
         List<FeatureAggr> featureAggrList = featureRepository.queryByParentFeatureCodeAndType(ConfigConstants.FEATURE_CODE_AF00,FeatureTypeEnum.OPTION.getType());
         featureAggrList =  featureAggrList.stream().filter(aggr->Objects.equals(aggr.getDisplayName(),modelYear)).toList();

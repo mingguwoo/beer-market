@@ -62,6 +62,7 @@ public class ModelFacadeImpl implements ModelFacade {
         return response.getData().getModelYear();
     }
 
+    @Override
     public Set<String> getModelListByBrand(String brand) {
         ResultInfo<List<ModelDto>> response;
         try {

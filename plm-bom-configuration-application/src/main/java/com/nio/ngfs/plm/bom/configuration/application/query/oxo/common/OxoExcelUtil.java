@@ -12,6 +12,7 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoRowsQry;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
@@ -35,15 +36,15 @@ import java.util.stream.Collectors;
 public class OxoExcelUtil {
 
 
-    public static void oxoExport(OxoListRespDto OxoListRespDto, String modelCode, String version, HttpServletResponse response, HttpServletRequest request) {
+    public static void oxoExport(OxoListRespDto oxoListRespDto, String modelCode, String version, HttpServletResponse response, HttpServletRequest request) {
         //动态表头值
-        List<OxoHeadQry> oxoHeads = OxoListRespDto.getOxoHeadResps();
+        List<OxoHeadQry> oxoHeads = oxoListRespDto.getOxoHeadResps();
 
         List<OxoBasicVehicleDto> oxoBasicVehicles = BaseVehicleFactory.buildOxoBasicVehicles(oxoHeads, modelCode, version);
 
         XSSFWorkbook xssfWorkbook = buildHead(oxoBasicVehicles);
 
-        List<OxoRowsQry> dataList = OxoListRespDto.getOxoRowsResps();
+        List<OxoRowsQry> dataList = oxoListRespDto.getOxoRowsResps();
         AtomicInteger rowIndex = new AtomicInteger(3);
 
         //设置字体大小
@@ -64,7 +65,7 @@ public class OxoExcelUtil {
         //Feature样式
         XSSFCellStyle cellFeatureColorStyle = xssfWorkbook.createCellStyle();
         cellFeatureColorStyle.setFont(featureFont);
-        cellFeatureColorStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(192, 255, 255)));
+        cellFeatureColorStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(192, 255, 255), new DefaultIndexedColorMap()));
         cellFeatureColorStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         cellFeatureColorStyle.setAlignment(HorizontalAlignment.LEFT);
 
@@ -128,14 +129,18 @@ public class OxoExcelUtil {
                     OxoBasicVehicleDto oxoSalesExportModel = oxoBasicVehicles.get(i);
                     String key = String.format("%s-%s-%s-%s", oxoSalesExportModel.getModelYear(), oxoSalesExportModel.getRegionCode(), oxoSalesExportModel.getDriverOptionCode(), oxoSalesExportModel.getSalesOptionCode());
                     if (oxoConfigrationMap.containsKey(key)) {
-                        List<OxoEditCmd> ipdOXOOutputs = oxoConfigrationMap.get(key);
-                        if (CollectionUtils.isNotEmpty(ipdOXOOutputs)) {
+                        List<OxoEditCmd> ipdOxoOutputs = oxoConfigrationMap.get(key);
+                        if (CollectionUtils.isNotEmpty(ipdOxoOutputs)) {
                             //一条记录的oxo打点匹配一行
-                            OxoEditCmd oxoEditCmd = ipdOXOOutputs.get(0);
+                            OxoEditCmd oxoEditCmd = ipdOxoOutputs.get(0);
                             String packageNo = oxoEditCmd.getPackageCode();
                             StringBuilder packageCellValue = new StringBuilder();
                             //设置打点属性值
-                            cell.setCellValue(packageCellValue.append(OxoOptionPackageTypeEnum.getByType(packageNo).getCode()+oxoEditCmd.getDescription()).toString());
+                            packageCellValue.append(OxoOptionPackageTypeEnum.getByType(packageNo).getCode());
+                            if (StringUtils.isNotBlank(oxoEditCmd.getDescription())) {
+                                packageCellValue.append("/").append(oxoEditCmd.getDescription());
+                            }
+                            cell.setCellValue(packageCellValue.toString());
                         }
                     }
                 }
@@ -260,7 +265,7 @@ public class OxoExcelUtil {
         sheet.setColumnWidth(2, 18 * 256 + 200);
         sheet.setColumnWidth(3, 16 * 256 + 200);
         sheet.setColumnWidth(4, 15 * 256 + 200);
-        for (int i = 5; i < oxoBasicVehicles.size()+5; i++) {
+        for (int i = 5; i < oxoBasicVehicles.size() + 5; i++) {
             // sheet.autoSizeColumn(i, true);
             //  int width = sheet.getColumnWidth(i) * 2;
             sheet.setColumnWidth(i, 14 * 256 + 200);
@@ -321,7 +326,6 @@ public class OxoExcelUtil {
         commonHead.add("Comments");
         return commonHead;
     }
-
 
 
 }

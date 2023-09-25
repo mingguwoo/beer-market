@@ -35,7 +35,7 @@ public class AppExceptionHandler {
     @ResponseBody
     public ResultInfo<String> methodArgumentNotValidExceptionHandler(HttpServletRequest servletRequest, MethodArgumentNotValidException e) {
         String message = e.getBindingResult().getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.joining());
-        log.error("request method [{}] [{}] MethodArgumentNotValidException: [{}]", servletRequest.getMethod(), servletRequest.getRequestURI(), e.toString());
+        log.error("request method [{}] [{}] MethodArgumentNotValidException: []", servletRequest.getMethod(), servletRequest.getRequestURI(), e);
         return new ResultInfo<>(CommonErrorCode.PARAMETER_ERROR.getCode(), StringUtils.defaultString(message, CommonErrorCode.PARAMETER_ERROR.getMessage()));
     }
 
@@ -44,7 +44,7 @@ public class AppExceptionHandler {
     @ResponseBody
     public ResultInfo<String> constraintViolationExceptionHandler(HttpServletRequest servletRequest, ConstraintViolationException e) {
         String message = e.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.joining());
-        log.error("request method [{}] [{}] ConstraintViolationException: [{}]", servletRequest.getMethod(), servletRequest.getRequestURI(), e.toString());
+        log.error("request method [{}] [{}] ConstraintViolationException: []", servletRequest.getMethod(), servletRequest.getRequestURI(), e);
         return new ResultInfo<>(CommonErrorCode.PARAMETER_ERROR.getCode(), StringUtils.defaultString(message, CommonErrorCode.PARAMETER_ERROR.getMessage()));
     }
 
@@ -55,7 +55,7 @@ public class AppExceptionHandler {
         ResultInfo<String> res = new ResultInfo<>();
         res.setCode(CommonErrorCode.SERVER_ERROR.getCode());
         res.setMessage(ex.getMessage());
-        log.error("request method [{}] [{}] business exception: [{}]", servletRequest.getMethod(), servletRequest.getRequestURI(), ex.toString());
+        log.error("request method [{}] [{}] business exception: []", servletRequest.getMethod(), servletRequest.getRequestURI(), ex);
         return res;
     }
 
@@ -66,7 +66,7 @@ public class AppExceptionHandler {
         ResultInfo<String> res = new ResultInfo<>();
         res.setCode(CommonErrorCode.SERVER_ERROR.getCode());
         res.setMessage(ex.getMessage());
-        log.error("request method [{}] [{}] business silent exception: [{}]", servletRequest.getMethod(), servletRequest.getRequestURI(), ex.toString());
+        log.error("request method [{}] [{}] business silent exception: []", servletRequest.getMethod(), servletRequest.getRequestURI(), ex);
         return res;
     }
 
@@ -77,7 +77,7 @@ public class AppExceptionHandler {
         ResultInfo<String> res = new ResultInfo<>();
         res.setCode(CommonErrorCode.SERVER_ERROR.getCode());
         res.setMessage(ex.getMessage());
-        log.error("request method [{}] [{}] class not found exception: [{}]", servletRequest.getMethod(), servletRequest.getRequestURI(), ex.toString());
+        log.error("request method [{}] [{}] class not found exception: []", servletRequest.getMethod(), servletRequest.getRequestURI(), ex);
         return res;
     }
 
@@ -88,7 +88,7 @@ public class AppExceptionHandler {
         ResultInfo<String> res = new ResultInfo<>();
         res.setCode(CommonErrorCode.SERVER_ERROR.getCode());
         res.setMessage(ex.getMessage());
-        log.error("request method [{}] [{}] execution or interrupted exception: [{}]", servletRequest.getMethod(), servletRequest.getRequestURI(), ex.toString());
+        log.error("request method [{}] [{}] execution or interrupted exception: []", servletRequest.getMethod(), servletRequest.getRequestURI(), ex);
         return res;
     }
 
@@ -102,7 +102,7 @@ public class AppExceptionHandler {
         ResultInfo<String> res = new ResultInfo<>();
         res.setCode(e.getCode());
         res.setMessage(e.getMessage());
-        log.error("request method [{}] [{}] business exception: [{}]", servletRequest.getMethod(), servletRequest.getRequestURI(), e.toString());
+        log.error("request method [{}] [{}] business exception: []", servletRequest.getMethod(), servletRequest.getRequestURI(), e);
         return res;
     }
 
@@ -116,7 +116,7 @@ public class AppExceptionHandler {
         ResultInfo<String> res = new ResultInfo<>();
         res.setCode(CommonErrorCode.SERVER_ERROR.getCode());
         res.setMessage(e.getMessage());
-        log.error("request method [{}] [{}] exception: [{}]", servletRequest.getMethod(), servletRequest.getRequestURI(), e.toString());
+        log.error("request method [{}] [{}] exception: []", servletRequest.getMethod(), servletRequest.getRequestURI(), e);
         return res;
     }
 

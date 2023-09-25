@@ -87,6 +87,7 @@ public class ExportProductContextQuery extends AbstractExportQuery {
     /**
      * 设置Sheet样式
      */
+    @Override
     protected void configSheetStyle(XSSFSheet sheet) {
         sheet.setDefaultColumnWidth(15);
     }
@@ -247,6 +248,7 @@ public class ExportProductContextQuery extends AbstractExportQuery {
     /**
      * 创建product Context单元格
      */
+    @Override
     protected void createCell(XSSFRow row, int columnIndex, String value, XSSFCellStyle cellStyle) {
         XSSFCell cell = row.createCell(columnIndex);
         cell.setCellValue(value);

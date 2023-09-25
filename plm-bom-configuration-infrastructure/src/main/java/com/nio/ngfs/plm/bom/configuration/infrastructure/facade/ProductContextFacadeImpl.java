@@ -58,6 +58,8 @@ public class ProductContextFacadeImpl extends AbstractEnoviaFacade implements Pr
         dto.setFeature(featureList);
         return dto;
     }
+
+    @Override
     public void syncAddProductContextModelFeatureToEnovia(SyncProductContextModelFeatureDto modelFeature) {
         PlmSyncProductContextModelFeatureDto dto = new PlmSyncProductContextModelFeatureDto();
         dto.setFeatureCode(modelFeature.getFeatureCode());

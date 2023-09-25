@@ -6,7 +6,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.nio.bom.share.enums.BrandEnum;
 import com.nio.bom.share.utils.GZIPUtils;
-import com.nio.ngfs.common.utils.BeanConvertUtils;
 import com.nio.ngfs.plm.bom.configuration.application.service.OxoCompareApplicationService;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.EmailFacade;
@@ -64,10 +63,9 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
 
     /**
      * 高低版本对比
-     *
-     * @param baseQry    低版本
-     * @param compareQry 高版本
-     * @param showDiff   只展示不一样的结果
+     * @param baseQry      基础
+     * @param compareQry   对比
+     * @param showDiff     只展示不一样的结果
      * @return
      */
     @Override
@@ -100,7 +98,7 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
      */
     private OxoListRespDto filterDiffData(OxoListRespDto OxoListRespDto) {
         if (OxoListRespDto == null) {
-            return OxoListRespDto;
+            return null;
         }
         OxoListRespDto diffOxoFeatureEntity = new OxoListRespDto();
         filterDiffFeature(diffOxoFeatureEntity, OxoListRespDto.getOxoRowsResps().stream().sorted(Comparator.comparing(OxoRowsQry::getCatalog).thenComparing(OxoRowsQry::getGroup)
@@ -204,15 +202,6 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
                     }
                     //低版本和高版本比较(高版本没有，低版本有，则为删除)
                     regionInfo.setChangeType(CompareChangeTypeEnum.DELETE.getName());
-                    //todo
-//                    //基准添加删除的modelYearFeature
-//                    List<OxoHeadQry> oxoHeads = Lists.newArrayList();
-//                    oxoHeads.addAll(compareOxoFeatureModel.getBaseIpFeature().getOxoHeadResps());
-//                    oxoHeads.add(modelYear);
-//                    modelYear.add(modelYearFeatureOption);
-//                    compareOxoFeatureModel.getBaseIpFeature().getOxoRowsResps().put(k, modelYearFeatureOptionList);
-
-                    //  compareOxoFeatureModel.getBaseIpFeature().setOxoHeadResps(oxoHeads);
 
                     List<OxoHeadQry> oxoHeadQries = compareOxoFeatureModel.getBaseIpFeature().getOxoHeadResps();
                     List<OxoHeadQry> oxoHeadQryList = Lists.newArrayList(oxoHeadQries);
@@ -295,13 +284,13 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
     /**
      * 设置FeatureOptionChangeType
      *
-     * @param compareOxoFeatureModel
-     * @param OxoListRespDto
-     * @param baseVersion
-     * @param versionName
+     * @param compareOxoFeatureModel 对比oxo版本
+     * @param oxoListRespDto 对比版本
+     * @param baseVersion  是否是基本版本
+     * @param versionName  lowVersion baseVersion
      */
     private void wrapFeatureOptionChangeType(CompareOxoFeatureModelRespDto compareOxoFeatureModel,
-                                             OxoListRespDto OxoListRespDto, boolean baseVersion, String versionName) {
+                                             OxoListRespDto oxoListRespDto, boolean baseVersion, String versionName) {
         Map<String, OxoRowsQry> featureMap = compareOxoFeatureModel.getFeatureMap();
         Map<String, OxoRowsQry> optionMap = compareOxoFeatureModel.getOptionMap();
         Map<String, OxoEditCmd> oxoMap = compareOxoFeatureModel.getOxoMap();
@@ -310,7 +299,7 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
             return;
         }
 
-        OxoListRespDto.getOxoRowsResps().forEach(feature -> {
+        oxoListRespDto.getOxoRowsResps().forEach(feature -> {
             String ipFeatureEntityKey = String.format("%s:%s", versionName, feature.getFeatureCode());
             if (!featureMap.containsKey(ipFeatureEntityKey)) {
                 //feature高版本和低版本比较(高版本有，低版本没有，则新增)
@@ -488,7 +477,6 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
         List<OxoTemplateRequestCmd.DriveHandOptionCode> driveHandOptionCodes = new LinkedList<>();
         List<OxoTemplateRequestCmd.SalesOptionName> salesOptionNames = new LinkedList<>();
 
-        String userName = oxoVersionSnapshot.getCreateUser();
 
         //新老版本
         String oldVersion = oxoVersionSnapshot.getPreVersion();
@@ -667,10 +655,6 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
         emailFacade.sendEmail(emailParamDto);
     }
 
-
-    private void ss() {
-
-    }
 
     public List<OxoTemplateRequestCmd.PackageOption> convertPackageOptionAll(int titleSize, OxoRowsQry option,
                                                                              List<OxoBasicVehicleDto> oxoBasicVehicleDtos) {

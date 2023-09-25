@@ -102,7 +102,6 @@ public class AppExceptionHandler {
         ResultInfo<String> res = new ResultInfo<>();
         res.setCode(e.getCode());
         res.setMessage(e.getMessage());
-        res.setData(StringUtils.EMPTY);
         log.error("request method [{}] [{}] business exception: []", servletRequest.getMethod(), servletRequest.getRequestURI(), e);
         return res;
     }

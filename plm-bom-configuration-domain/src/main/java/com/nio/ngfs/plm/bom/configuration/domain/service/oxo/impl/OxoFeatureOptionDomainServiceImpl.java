@@ -103,41 +103,4 @@ public class OxoFeatureOptionDomainServiceImpl implements OxoFeatureOptionDomain
         Set<Long> repeatRows = driveHandRegionSalesVersionRows.stream().map(row -> row.getId()).collect(Collectors.toSet());
         return points.stream().filter(point -> !repeatRows.contains(point.getFeatureOptionId())).toList();
     }
-
-
-    /**
-     * OXO中是否存在
-     * 在所有Base Vehicle下打点都为“-”的Option（通过Delete Code删除的Option排除在外）
-     */
-    @Override
-    public List<String> checkOxoBasicVehicleOptions(String modelCode) {
-
-        List<OxoFeatureOptionAggr> oxoFeatureOptionAggrs =
-                oxoFeatureOptionRepository.queryFeatureListsByModelAndSortDelete(modelCode, true);
-
-        if (CollectionUtils.isEmpty(oxoFeatureOptionAggrs)) {
-            return Lists.newArrayList();
-        }
-
-        //行信息
-        List<Long> rowIds = oxoFeatureOptionAggrs.stream().map(OxoFeatureOptionAggr::getId).distinct().toList();
-
-        // 获取打点信息
-        List<OxoOptionPackageAggr> optionPackages = oxoOptionPackageRepository.queryByBaseVehicleIds(rowIds);
-
-        List<String> optionCodes = Lists.newArrayList();
-
-        optionPackages.stream().collect(Collectors.groupingBy(OxoOptionPackageAggr::getFeatureOptionId)).forEach((k, v) -> {
-            if (v.stream().allMatch(x ->
-                    StringUtils.equals(x.getPackageCode(), OxoOptionPackageTypeEnum.UNAVAILABLE.getType()) &&
-                            Objects.equals(x.getFeatureOptionId(), k))) {
-                optionCodes.add(
-                        oxoFeatureOptionAggrs.stream().filter(x -> Objects.equals(x.getId(), k))
-                                .findFirst().orElse(new OxoFeatureOptionAggr()).getFeatureCode());
-            }
-        });
-
-        return optionCodes;
-    }
-
 }

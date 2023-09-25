@@ -3,6 +3,7 @@ package com.nio.ngfs.plm.bom.configuration.application.command.oxo;
 import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockCommand;
 import com.nio.ngfs.plm.bom.configuration.application.service.OxoFeatureOptionApplicationService;
 import com.nio.ngfs.plm.bom.configuration.common.constants.RedisKeyConstant;
+import com.nio.ngfs.plm.bom.configuration.domain.model.oxo.enums.CompareChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.OxoOptionPackageAggr;
@@ -13,6 +14,7 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.DeleteFeatureOpti
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.compress.utils.Lists;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Component;
@@ -61,8 +63,13 @@ public class DeleteFeatureOptionCommand extends AbstractLockCommand<DeleteFeatur
         softDeleteList.forEach(OxoFeatureOptionAggr::softDelete);
         // 软删除的Feature/Option行，校验并删除打点
         Pair<List<OxoOptionPackageAggr>, List<String>> result = featureOptionApplicationService.checkAndDeleteOptionPackage(cmd.getModelCode(), softDeleteList);
-        // 事务保存到数据库
-        ((DeleteFeatureOptionCommand) AopContext.currentProxy()).saveFeatureOptionAndOptionPackage(physicalDeleteList, softDeleteList, result.getLeft());
+
+        if(StringUtils.equals(cmd.getType(), CompareChangeTypeEnum.DELETE.getName())) {
+            // 事务保存到数据库
+            ((DeleteFeatureOptionCommand) AopContext.currentProxy()).saveFeatureOptionAndOptionPackage(physicalDeleteList, softDeleteList, result.getLeft());
+            return new DeleteFeatureOptionRespDto();
+        }
+
         return new DeleteFeatureOptionRespDto(result.getRight());
     }
 

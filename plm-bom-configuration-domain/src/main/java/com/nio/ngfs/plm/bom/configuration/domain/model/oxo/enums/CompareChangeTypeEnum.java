@@ -14,7 +14,7 @@ public enum CompareChangeTypeEnum {
 
 
     DEL("Del");
-    private String name;
+    private final String name;
 
     CompareChangeTypeEnum(String name) {
         this.name = name;

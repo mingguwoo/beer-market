@@ -13,7 +13,7 @@ public enum OxoSnapshotEnum {
     INFORMAL("Informal"),
     ;
 
-    private String code;
+    private final String code;
 
     OxoSnapshotEnum(String code) {
         this.code = code;

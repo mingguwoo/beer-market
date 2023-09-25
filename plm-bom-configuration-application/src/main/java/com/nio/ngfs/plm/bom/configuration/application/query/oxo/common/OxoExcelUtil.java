@@ -83,8 +83,7 @@ public class OxoExcelUtil {
         cellColorStyle.setVerticalAlignment(VerticalAlignment.CENTER);    //上下居中
 
         //填充数据exportFeatureData
-        for (int i = 0; i < dataList.size(); i++) {
-            OxoRowsQry feature = dataList.get(i);
+        for (OxoRowsQry feature : dataList) {
             buildData(modelCode, version, rowIndex, feature, oxoBasicVehicles, xssfWorkbook, cellFeatureColorStyle, cellOptionColorStyle, cellOptionCodeColorStyle, cellColorStyle);
         }
         OutputStream output = null;
@@ -138,7 +137,8 @@ public class OxoExcelUtil {
                             //设置打点属性值
                             packageCellValue.append(OxoOptionPackageTypeEnum.getByType(packageNo).getCode());
                             if (StringUtils.isNotBlank(oxoEditCmd.getDescription())) {
-                                packageCellValue.append("/").append(oxoEditCmd.getDescription());
+                                packageCellValue.append("/");
+                                packageCellValue.append(oxoEditCmd.getDescription());
                             }
                             cell.setCellValue(packageCellValue.toString());
                         }
@@ -204,7 +204,7 @@ public class OxoExcelUtil {
         font.setFontHeightInPoints((short) 11);
 
         XSSFCellStyle cellColorStyle = xssfWorkbook.createCellStyle();
-        cellColorStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(141, 144, 144)));
+        cellColorStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(141, 144, 144), new DefaultIndexedColorMap()));
         cellColorStyle.setAlignment(HorizontalAlignment.CENTER);    //左右居中
         cellColorStyle.setVerticalAlignment(VerticalAlignment.CENTER);    //上下居中
         cellColorStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
@@ -214,7 +214,7 @@ public class OxoExcelUtil {
         XSSFCellStyle headStyle = xssfWorkbook.createCellStyle();
         headStyle.setAlignment(HorizontalAlignment.CENTER);    //左右居中
         headStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-        headStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(141, 144, 144)));
+        headStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(141, 144, 144), new DefaultIndexedColorMap()));
         headStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         headStyle.setFont(font);
 
@@ -223,7 +223,7 @@ public class OxoExcelUtil {
         cellCenterStyle.setAlignment(HorizontalAlignment.CENTER);    //左右居中
         cellCenterStyle.setVerticalAlignment(VerticalAlignment.CENTER);    //上下居中
         cellCenterStyle.setFont(font);
-        cellCenterStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(141, 144, 144)));
+        cellCenterStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(141, 144, 144), new DefaultIndexedColorMap()));
         cellCenterStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
         XSSFRow row1 = sheet.createRow(0);
@@ -280,7 +280,7 @@ public class OxoExcelUtil {
         }
         AtomicBoolean flag = new AtomicBoolean(true);
         AtomicInteger cellEnd = new AtomicInteger(cell + 1);
-        while (flag.get() == true && cellEnd.get() < maxCellSize) {
+        while (flag.get() && cellEnd.get() < maxCellSize) {
             AtomicBoolean atomicBoolean = cellCompare(sheet, row.getRowNum(), cell, cellEnd, flag);
             if (atomicBoolean.get()) {
                 cellEnd.incrementAndGet();
@@ -306,7 +306,7 @@ public class OxoExcelUtil {
 
 
     private static AtomicBoolean cellCompare(XSSFSheet sheet, Integer rowNum, Integer cellStart, AtomicInteger cellEnd, AtomicBoolean flag) {
-        while (rowNum >= 0 && flag.get() != false) {
+        while (rowNum >= 0 && flag.get()) {
             XSSFRow row = sheet.getRow(rowNum);
             if (!(row.getCell(cellStart).getStringCellValue().equals(row.getCell(cellEnd.get()).getStringCellValue()))) {
                 flag.set(false);

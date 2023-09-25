@@ -20,4 +20,9 @@ public class DeleteFeatureOptionCmd implements Cmd {
     @NotEmpty(message = "Feature Code List is empty")
     private List<String> featureCodeList;
 
+    /**
+     *  type check是校验 delete是删除
+     */
+    private String type;
+
 }

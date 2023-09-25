@@ -39,17 +39,17 @@ import java.util.stream.Collectors;
 public class OxoCompareExportUtil {
 
 
-    public static void compareExport(OxoListRespDto OxoListRespDto, OxoCompareQry compareCmd, HttpServletResponse response, HttpServletRequest request) {
+    public static void compareExport(OxoListRespDto oxoListRespDto, OxoCompareQry compareCmd, HttpServletResponse response, HttpServletRequest request) {
 
         String modelCode = compareCmd.getModelCode();
         String baseVersion = compareCmd.getBaseVersion();
         String compareVersion = compareCmd.getCompareVersion();
 
-        List<OxoBasicVehicleDto> oxoBasicVehicles = BaseVehicleFactory.buildOxoBasicVehicles(OxoListRespDto.getOxoHeadResps(), modelCode, "");
+        List<OxoBasicVehicleDto> oxoBasicVehicles = BaseVehicleFactory.buildOxoBasicVehicles(oxoListRespDto.getOxoHeadResps(), modelCode, "");
 
         XSSFWorkbook xssfWorkbook = buildHead(oxoBasicVehicles);
 
-        List<OxoRowsQry> dataList = OxoListRespDto.getOxoRowsResps();
+        List<OxoRowsQry> dataList = oxoListRespDto.getOxoRowsResps();
         AtomicInteger rowIndex = new AtomicInteger(4);
 
         //设置字体大小
@@ -70,7 +70,7 @@ public class OxoCompareExportUtil {
         //Feature样式
         XSSFCellStyle cellFeatureColorStyle = xssfWorkbook.createCellStyle();
         cellFeatureColorStyle.setFont(featureFont);
-        cellFeatureColorStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(241, 250, 250)));
+        cellFeatureColorStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(241, 250, 250), new DefaultIndexedColorMap()));
         cellFeatureColorStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         cellFeatureColorStyle.setAlignment(HorizontalAlignment.LEFT);
 
@@ -88,8 +88,7 @@ public class OxoCompareExportUtil {
         cellColorStyle.setVerticalAlignment(VerticalAlignment.CENTER);    //上下居中
 
         //填充数据exportFeatureData
-        for (int i = 0; i < dataList.size(); i++) {
-            OxoRowsQry feature = dataList.get(i);
+        for (OxoRowsQry feature : dataList) {
             buildData(rowIndex, feature, oxoBasicVehicles, xssfWorkbook, cellFeatureColorStyle, cellOptionColorStyle, cellOptionCodeColorStyle, cellColorStyle);
         }
         OutputStream output = null;
@@ -147,27 +146,28 @@ public class OxoCompareExportUtil {
                     OxoBasicVehicleDto oxoBasicVehicleDto = oxoBasicVehicles.get(i);
                     String key = String.format("%s-%s-%s-%s", oxoBasicVehicleDto.getModelYear(), oxoBasicVehicleDto.getRegionCode(), oxoBasicVehicleDto.getDriverOptionCode(), oxoBasicVehicleDto.getSalesOptionCode());
                     if (oxoConfigrationMap.containsKey(key)) {
-                        List<OxoEditCmd> ipdOXOOutputs = oxoConfigrationMap.get(key);
-                        if (CollectionUtils.isNotEmpty(ipdOXOOutputs)) {
+                        List<OxoEditCmd> ipdOxoOutputs = oxoConfigrationMap.get(key);
+                        if (CollectionUtils.isNotEmpty(ipdOxoOutputs)) {
                             //一条记录的oxo打点匹配一行
-                            OxoEditCmd ipdOXOOutput = ipdOXOOutputs.get(0);
-                            String packageCode = ipdOXOOutput.getPackageCode();
-                            OxoEditCmd compareIpdOXOOutput = ipdOXOOutput.getCompareOxoEdit();
-                            StringBuffer packageCellValue = new StringBuffer();
-                            if (Objects.nonNull(compareIpdOXOOutput)) {
-                                String compareIpdPackageNo = compareIpdOXOOutput.getPackageCode();
+                            OxoEditCmd ipdOxoOutput = ipdOxoOutputs.get(0);
+                            String packageCode = ipdOxoOutput.getPackageCode();
+                            OxoEditCmd compareIpdOxoOutput = ipdOxoOutput.getCompareOxoEdit();
+                            StringBuilder packageCellValue = new StringBuilder();
+                            if (Objects.nonNull(compareIpdOxoOutput)) {
+                                String compareIpdPackageNo = compareIpdOxoOutput.getPackageCode();
                                 if (StringUtils.isNotBlank(compareIpdPackageNo)) {
                                     packageCellValue.append(OxoOptionPackageTypeEnum.getByType(compareIpdPackageNo).getCode());
-                                    if (StringUtils.isNotBlank(compareIpdOXOOutput.getDescription())) {
-                                        packageCellValue.append("/").append(compareIpdOXOOutput.getDescription());
+                                    if (StringUtils.isNotBlank(compareIpdOxoOutput.getDescription())) {
+                                        packageCellValue.append("/").append(compareIpdOxoOutput.getDescription());
                                     }
                                     packageCellValue.append(" > ");
                                 }
                             }
                             //设置打点属性值
                             packageCellValue.append(OxoOptionPackageTypeEnum.getByType(packageCode).getCode());
-                            if (StringUtils.isNotBlank(ipdOXOOutput.getDescription())) {
-                                packageCellValue.append("/").append(ipdOXOOutput.getDescription());
+                            if (StringUtils.isNotBlank(ipdOxoOutput.getDescription())) {
+                                packageCellValue.append("/");
+                                packageCellValue.append(ipdOxoOutput.getDescription());
                             }
                             cell.setCellValue(packageCellValue.toString());
                         }
@@ -247,7 +247,7 @@ public class OxoCompareExportUtil {
         font.setFontHeightInPoints((short) 11);
 
         XSSFCellStyle cellColorStyle = xssfWorkbook.createCellStyle();
-        cellColorStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(230, 249, 249)));
+        cellColorStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(230, 249, 249), new DefaultIndexedColorMap()));
         cellColorStyle.setAlignment(HorizontalAlignment.CENTER);    //左右居中
         cellColorStyle.setVerticalAlignment(VerticalAlignment.CENTER);    //上下居中
         cellColorStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
@@ -330,7 +330,7 @@ public class OxoCompareExportUtil {
         }
         AtomicBoolean flag = new AtomicBoolean(true);
         AtomicInteger cellEnd = new AtomicInteger(cell + 1);
-        while (flag.get() == true && cellEnd.get() < maxCellSize) {
+        while (flag.get() && cellEnd.get() < maxCellSize) {
             AtomicBoolean atomicBoolean = cellCompare(sheet, row.getRowNum(), cell, cellEnd, flag);
             if (atomicBoolean.get()) {
                 cellEnd.incrementAndGet();
@@ -356,7 +356,7 @@ public class OxoCompareExportUtil {
 
 
     private static AtomicBoolean cellCompare(XSSFSheet sheet, Integer rowNum, Integer cellStart, AtomicInteger cellEnd, AtomicBoolean flag) {
-        while (rowNum >= 0 && flag.get() != false) {
+        while (rowNum >= 0 && flag.get()) {
             XSSFRow row = sheet.getRow(rowNum);
             if (!(row.getCell(cellStart).getStringCellValue().equals(row.getCell(cellEnd.get()).getStringCellValue()))) {
                 flag.set(false);

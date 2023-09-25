@@ -12,5 +12,5 @@ public interface MatrixRuleFacade {
 
 
 
-    public Map queryMatrixRuleValuesByAbscissaOrOrdinate(MatrixRuleQueryDto param);
+     Map queryMatrixRuleValuesByAbscissaOrOrdinate(MatrixRuleQueryDto param);
 }

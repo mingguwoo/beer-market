@@ -41,7 +41,4 @@ public interface OxoFeatureOptionDomainService {
      */
     List<OxoOptionPackageAggr> filterRepeatCopyfromPoints(List<OxoOptionPackageAggr> points, List<OxoFeatureOptionAggr> driveHandRegionSalesVersionRows);
 
-
-    List<String> checkOxoBasicVehicleOptions(String modelCode);
-
 }

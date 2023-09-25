@@ -170,7 +170,7 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
         getProductContextRespDto.setProductContextColumnDtoList(getProductContextRespDto.getProductContextColumnDtoList().stream().filter(column-> modelYearColumnIdSet.contains(column.getColumnId()) || columnIdSet.contains(column.getColumnId())).toList());
         sortProductContextRow(getProductContextRespDto,groupRecordMap);
         return getProductContextRespDto;
-    };
+    }
 
     /**
      * 对feature和option行进行排序

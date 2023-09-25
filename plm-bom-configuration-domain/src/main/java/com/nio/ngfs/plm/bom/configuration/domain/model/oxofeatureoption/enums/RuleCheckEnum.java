@@ -17,7 +17,7 @@ public enum RuleCheckEnum {
     N("N");
 
 
-    private String code;
+    private final String code;
 
 
     RuleCheckEnum(String code) {

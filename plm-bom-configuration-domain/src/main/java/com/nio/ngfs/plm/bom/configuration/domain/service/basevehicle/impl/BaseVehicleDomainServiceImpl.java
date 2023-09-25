@@ -43,7 +43,6 @@ public class BaseVehicleDomainServiceImpl implements BaseVehicleDomainService {
             if (!checkIsEdit(existedBaseVehicleAggrList, baseVehicleAggr)) {
                 throw new BusinessException(ConfigErrorCode.BASE_VEHICLE_REPEAT);
             }
-            ;
         }
     }
 

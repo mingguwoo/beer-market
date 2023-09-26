@@ -84,6 +84,8 @@ public class ProductContextApplicationServiceImpl implements ProductContextAppli
             //3de同步
             if (!addProductContextAggrList.isEmpty() || !addProductContextFeatureAggrList.isEmpty()){
                 buildSyncData(featureOptionMap,addProductContextAggrList,addProductContextFeatureAggrList);
+                //只传feature，不传option类型的行
+                addProductContextFeatureAggrList = addProductContextFeatureAggrList.stream().filter(aggr->Objects.equals(aggr.getType(), ProductContextFeatureEnum.FEATURE.getType())).collect(Collectors.toList());
                 eventPublisher.publish(new SyncProductContextEvent(addProductContextAggrList,addProductContextFeatureAggrList));
             }
         }
@@ -109,8 +111,6 @@ public class ProductContextApplicationServiceImpl implements ProductContextAppli
                         addProductContextAggrList.add(contextAggr);
                     }
             });
-            //只传feature，不传option类型的行
-            addProductContextFeatureAggrList = addProductContextFeatureAggrList.stream().filter(aggr->Objects.equals(aggr.getType(), ProductContextFeatureEnum.FEATURE.getType())).toList();
         }
     }
 

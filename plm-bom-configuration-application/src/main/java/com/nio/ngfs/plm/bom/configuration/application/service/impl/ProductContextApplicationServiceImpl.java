@@ -75,9 +75,9 @@ public class ProductContextApplicationServiceImpl implements ProductContextAppli
         ProductContextFeatureFactory.createModelYearProductContextFeature(productContextFeatureList,featureModelYearAggr,modelCode,modelYearMap,addProductContextFeatureAggrList,owner,modelYearList);
         ProductContextFactory.createModelYearProductContext(modelCode,modelYearList,modelYearMap,addProductContextAggrList,removeProductContextAggrList,existProductContextSet,owner);
         //去重
-        addProductContextFeatureAggrList = addProductContextFeatureAggrList.stream().distinct().toList();
-        addProductContextAggrList = addProductContextAggrList.stream().distinct().toList();
-        removeProductContextAggrList = removeProductContextAggrList.stream().distinct().toList();
+        addProductContextFeatureAggrList = addProductContextFeatureAggrList.stream().distinct().collect(Collectors.toList());
+        addProductContextAggrList = addProductContextAggrList.stream().distinct().collect(Collectors.toList());
+        removeProductContextAggrList = removeProductContextAggrList.stream().distinct().collect(Collectors.toList());
         //存库
         if (!addProductContextAggrList.isEmpty() || !addProductContextFeatureAggrList.isEmpty() || !removeProductContextAggrList.isEmpty()){
             saveProductContextToDb(addProductContextAggrList,addProductContextFeatureAggrList,removeProductContextAggrList);
@@ -89,6 +89,7 @@ public class ProductContextApplicationServiceImpl implements ProductContextAppli
         }
     }
 
+    //对要下发3de的数据进行处理
     private void buildSyncData(Map<OxoRowsQry,List<OxoRowsQry>> featureOptionMap,List<ProductContextAggr> addProductContextAggrList, List<ProductContextFeatureAggr> addProductContextFeatureAggrList){
         Set<String> selectedPoint = addProductContextAggrList.stream().map(aggr->aggr.getOptionCode()).collect(Collectors.toSet());
         Map<String,String> optionFeatureCodeMap = new HashMap<>();

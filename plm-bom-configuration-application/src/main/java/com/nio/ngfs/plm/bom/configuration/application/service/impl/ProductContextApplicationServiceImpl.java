@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author bill.wang
@@ -82,12 +83,33 @@ public class ProductContextApplicationServiceImpl implements ProductContextAppli
             saveProductContextToDb(addProductContextAggrList,addProductContextFeatureAggrList,removeProductContextAggrList);
             //3de同步
             if (!addProductContextAggrList.isEmpty() || !addProductContextFeatureAggrList.isEmpty()){
-                if (!addProductContextFeatureAggrList.isEmpty()){
-                    //只传feature，不传option类型的行
-                    addProductContextFeatureAggrList = addProductContextFeatureAggrList.stream().filter(aggr->Objects.equals(aggr.getType(), ProductContextFeatureEnum.FEATURE.getType())).toList();
-                }
+                buildSyncData(featureOptionMap,addProductContextAggrList,addProductContextFeatureAggrList);
                 eventPublisher.publish(new SyncProductContextEvent(addProductContextAggrList,addProductContextFeatureAggrList));
             }
+        }
+    }
+
+    private void buildSyncData(Map<OxoRowsQry,List<OxoRowsQry>> featureOptionMap,List<ProductContextAggr> addProductContextAggrList, List<ProductContextFeatureAggr> addProductContextFeatureAggrList){
+        Set<String> selectedPoint = addProductContextAggrList.stream().map(aggr->aggr.getOptionCode()).collect(Collectors.toSet());
+        Map<String,String> optionFeatureCodeMap = new HashMap<>();
+        featureOptionMap.forEach((k,v)->{
+            featureOptionMap.get(k).forEach(option->{
+                optionFeatureCodeMap.put(option.getFeatureCode(),k.getFeatureCode());
+            });
+        });
+        if (!addProductContextFeatureAggrList.isEmpty()){
+            //先处理未打勾的option，需要也加到同步option中去
+            addProductContextFeatureAggrList.forEach(aggr->{
+                    if (Objects.equals(aggr.getType(),ProductContextFeatureEnum.OPTION.getType()) && !selectedPoint.contains(aggr.getFeatureCode())){
+                        ProductContextAggr contextAggr = new ProductContextAggr();
+                        contextAggr.setModelCode(aggr.getModelCode());
+                        contextAggr.setOptionCode(aggr.getFeatureCode());
+                        contextAggr.setFeatureCode(optionFeatureCodeMap.get(aggr.getFeatureCode()));
+                        addProductContextAggrList.add(contextAggr);
+                    }
+            });
+            //只传feature，不传option类型的行
+            addProductContextFeatureAggrList = addProductContextFeatureAggrList.stream().filter(aggr->Objects.equals(aggr.getType(), ProductContextFeatureEnum.FEATURE.getType())).toList();
         }
     }
 

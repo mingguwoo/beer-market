@@ -40,9 +40,6 @@ public class SyncProductContextEventHandler implements EventHandler<SyncProductC
         List<SyncProductContextModelFeatureKafkaCmd> productContextModelFeatureDtoList = new ArrayList<>();
         SyncProductContextModelFeatureOptionDto syncProductContextModelFeatureOptionDto = new SyncProductContextModelFeatureOptionDto();
         buildData(event,productContextModelFeatureDtoList, syncProductContextModelFeatureOptionDto);
-        if (CollectionUtils.isNotEmpty(syncProductContextModelFeatureOptionDto.getFeature())){
-            productContextFacade.syncAddProductContextModelFeatureOptionToEnovia(syncProductContextModelFeatureOptionDto);
-        }
         try{
             if (CollectionUtils.isNotEmpty(productContextModelFeatureDtoList)){
                 productContextModelFeatureDtoList.forEach(modelFeature->{
@@ -51,6 +48,9 @@ public class SyncProductContextEventHandler implements EventHandler<SyncProductC
             }
         } catch (Exception e) {
             log.error("Kafka sendSyncProductContext error", e);
+        }
+        if (CollectionUtils.isNotEmpty(syncProductContextModelFeatureOptionDto.getFeature())){
+            productContextFacade.syncAddProductContextModelFeatureOptionToEnovia(syncProductContextModelFeatureOptionDto);
         }
     }
 

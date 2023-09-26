@@ -16,7 +16,7 @@ public class SyncProductContextModelFeatureKafkaCmd implements Cmd {
 
     private String featureCode;
 
-    private String featureSeq;
+    private String featureSeq = "0";
 
-    private String may;
+    private String may = "May";
 }

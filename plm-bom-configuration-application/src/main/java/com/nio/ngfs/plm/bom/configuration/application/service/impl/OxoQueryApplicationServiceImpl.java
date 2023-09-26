@@ -9,6 +9,7 @@ import com.nio.ngfs.plm.bom.configuration.application.service.OxoCompareApplicat
 import com.nio.ngfs.plm.bom.configuration.application.service.OxoQueryApplicationService;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureCatalogEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionRepository;
@@ -105,8 +106,13 @@ public class OxoQueryApplicationServiceImpl implements OxoQueryApplicationServic
 
             if (Objects.nonNull(oxoVersionSnapshot)) {
                 //return JSONObject.parseObject(oxoVersionSnapshot.getOxoSnapshot(), OxoListRespDto.class);
-                return JSONObject.parseObject(JSONArray.parse(oxoVersionSnapshot.getOxoSnapshot()).toString(), OxoListRespDto.class);
-
+                OxoListRespDto oxoListRespDto= JSONObject.parseObject(JSONArray.parse(oxoVersionSnapshot.getOxoSnapshot()).toString(), OxoListRespDto.class);
+                // 如果是 非 Configuration Admin ，展示所有Engineering类型的Feature/Option行
+                if(!roleNames.contains(ConfigConstants.CONFIG_ADMIN)) {
+                    oxoListRespDto.setOxoRowsResps(oxoListRespDto.getOxoRowsResps().stream().filter(x ->
+                            StringUtils.equals(x.getCatalog(), FeatureCatalogEnum.ENGINEERING.getCatalog())).collect(Collectors.toList()));
+                }
+                return oxoListRespDto;
             }
 
             // 查询working版本

@@ -34,6 +34,7 @@ public class ProductContextFacadeImpl extends AbstractEnoviaFacade implements Pr
     public void syncAddProductContextModelFeatureOptionToEnovia(SyncProductContextModelFeatureOptionDto syncProductContextModelFeatureOptionDto) {
 
         PlmSyncProductContextModelFeatureOptionDto dto = buildModelFeature(syncProductContextModelFeatureOptionDto);
+        log.info("ProductContextFacade syncProductContextModelFeatureOptionToEnovia data={}", GsonUtils.toJson(syncProductContextModelFeatureOptionDto));
         invokeEnovia(plmEnoviaClient::syncProductContextModelFeatureOption, dto,"PlmEnoviaClient.syncProductContextModelFeatureOption",(response, e)->
             configurationTo3deWarnSender.sendSyncProductContextModelFeatureOptionWarn(syncProductContextModelFeatureOptionDto, e != null ? e.getMessage() : GsonUtils.toJson(response))
         );

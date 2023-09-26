@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import com.nio.ngfs.plm.bom.configuration.application.event.EventHandler;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.ProductContextFacade;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncProductContextFeatureDto;
+import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncProductContextModelFeatureDto;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncProductContextModelFeatureOptionDto;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncProductContextOptionDto;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.event.SyncProductContextEvent;

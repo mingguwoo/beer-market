@@ -14,6 +14,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.event.Sync
 import com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature.ProductContextFeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature.ProductContextFeatureFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature.ProductContextFeatureRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature.enums.ProductContextFeatureEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.service.feature.FeatureDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoListRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.oxo.response.OxoRowsQry;
@@ -81,6 +82,10 @@ public class ProductContextApplicationServiceImpl implements ProductContextAppli
             saveProductContextToDb(addProductContextAggrList,addProductContextFeatureAggrList,removeProductContextAggrList);
             //3de同步
             if (!addProductContextAggrList.isEmpty() || !addProductContextFeatureAggrList.isEmpty()){
+                if (!addProductContextFeatureAggrList.isEmpty()){
+                    //只传feature，不传option类型的行
+                    addProductContextFeatureAggrList = addProductContextFeatureAggrList.stream().filter(aggr->Objects.equals(aggr.getType(), ProductContextFeatureEnum.FEATURE.getType())).toList();
+                }
                 eventPublisher.publish(new SyncProductContextEvent(addProductContextAggrList,addProductContextFeatureAggrList));
             }
         }

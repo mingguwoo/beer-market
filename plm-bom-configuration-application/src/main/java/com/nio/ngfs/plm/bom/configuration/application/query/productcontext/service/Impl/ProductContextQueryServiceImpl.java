@@ -116,6 +116,7 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
                 productContextFeatureRowDto.setCatalog(featureAggrMap.get(row.getFeatureCode()).getCatalog());
                 productContextFeatureRowDto.setFeatureCode(row.getFeatureCode());
                 productContextFeatureRowDto.setDisplayName(featureAggrMap.get(row.getFeatureCode()).getDisplayName());
+                productContextFeatureRowDto.setChineseName(featureAggrMap.get(row.getFeatureCode()).getChineseName());
                 getProductContextRespDto.getProductContextFeatureRowDtoList().add(productContextFeatureRowDto);
                 //记下featureCode对应的行信息
                 featureRowDtoMap.put(row.getFeatureCode(),productContextFeatureRowDto);
@@ -128,6 +129,7 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
                 //获取父级feature的code
                 String parentCode = featureAggrMap.get(row.getFeatureCode()).getParentFeatureCode();
                 productContextOptionRowDto.setDisplayName(featureAggrMap.get(row.getFeatureCode()).getDisplayName());
+                productContextOptionRowDto.setChineseName(featureAggrMap.get(row.getFeatureCode()).getChineseName());
                 productContextOptionRowDto.setRowId(row.getId());
                 productContextOptionRowDto.setCatalog(featureAggrMap.get(row.getFeatureCode()).getCatalog());
                 productContextOptionRowDto.setFeatureCode(row.getFeatureCode());

@@ -17,4 +17,6 @@ public class ProductContextOptionRowDto implements Dto {
     private String catalog;
 
     private String displayName;
+
+    private String chineseName;
 }

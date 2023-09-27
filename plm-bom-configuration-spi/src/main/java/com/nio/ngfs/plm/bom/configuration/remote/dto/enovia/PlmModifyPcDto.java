@@ -9,8 +9,15 @@ import lombok.Data;
 @Data
 public class PlmModifyPcDto {
 
-    private String pcId;
+    private SyncData paramMap = new SyncData();
 
-    private String name;
+    @Data
+    public class SyncData{
+
+        private String pcId;
+
+        private String name;
+    }
+
 
 }

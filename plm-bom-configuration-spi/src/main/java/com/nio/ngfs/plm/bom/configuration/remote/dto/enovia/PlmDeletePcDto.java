@@ -9,6 +9,14 @@ import lombok.Data;
 @Data
 public class PlmDeletePcDto {
 
-    private String pcId;
+    private SyncData paramMap = new SyncData();
+
+    @Data
+    public class SyncData{
+
+        private String pcId;
+    }
+
+
 
 }

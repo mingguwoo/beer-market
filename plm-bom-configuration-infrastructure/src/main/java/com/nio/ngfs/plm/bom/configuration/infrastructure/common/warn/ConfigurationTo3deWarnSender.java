@@ -108,7 +108,7 @@ public class ConfigurationTo3deWarnSender {
      */
     public void sendAddPcWarn(SyncAddPcDto dto, PlmSyncProductConfigurationDto syncDto, String errorMsg) {
         sendWarnMessage(PRODUCT_CONFIGURATION, syncDto, errorMsg, getProductConfigAtList(),
-                String.format("Model/Model Year %s Add Base PC %s Fail!", dto.getModel() + " " + dto.getModelYear(), syncDto.getPcId()));
+                String.format("Model/Model Year %s Add Base PC %s Fail!", dto.getModel() + " " + dto.getModelYear(), syncDto.getParamMap().getPcId()));
     }
 
     /**
@@ -116,7 +116,7 @@ public class ConfigurationTo3deWarnSender {
      */
     public void sendUpdatePcWarn(SyncUpdatePcDto dto, PlmModifyPcDto syncDto, String errorMsg) {
         sendWarnMessage(PRODUCT_CONFIGURATION, syncDto, errorMsg, getProductConfigAtList(),
-                String.format("Model/Model Year %s Update Base PC %s Fail!", dto.getModel() + " " + dto.getModelYear(), syncDto.getPcId()));
+                String.format("Model/Model Year %s Update Base PC %s Fail!", dto.getModel() + " " + dto.getModelYear(), syncDto.getParamMap().getPcId()));
     }
 
     /**
@@ -124,7 +124,7 @@ public class ConfigurationTo3deWarnSender {
      */
     public void sendDeletePcWarn(SyncDeletePcDto dto, PlmDeletePcDto syncDto, String errorMsg) {
         sendWarnMessage(PRODUCT_CONFIGURATION, syncDto, errorMsg, getProductConfigAtList(),
-                String.format("Model/Model Year %s Delete Base PC %s Fail!", dto.getModel() + " " + dto.getModelYear(), syncDto.getPcId()));
+                String.format("Model/Model Year %s Delete Base PC %s Fail!", dto.getModel() + " " + dto.getModelYear(), syncDto.getParamMap().getPcId()));
     }
 
     /**

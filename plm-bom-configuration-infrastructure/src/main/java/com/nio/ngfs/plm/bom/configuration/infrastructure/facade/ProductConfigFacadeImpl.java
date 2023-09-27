@@ -71,24 +71,24 @@ public class ProductConfigFacadeImpl extends AbstractEnoviaFacade implements Pro
 
     private PlmSyncProductConfigurationDto buildPlmSyncProductConfigurationDto(SyncAddPcDto dto) {
         PlmSyncProductConfigurationDto syncProductConfigurationDto = new PlmSyncProductConfigurationDto();
-        BeanUtils.copyProperties(dto, syncProductConfigurationDto);
-        syncProductConfigurationDto.setModelYear(dto.getModel() + " " + dto.getModelYear());
-        syncProductConfigurationDto.setRevision(dto.getModelYear());
-        syncProductConfigurationDto.setOwner(dto.getCreateUser());
-        syncProductConfigurationDto.setBrandName(dto.getBrand());
+        BeanUtils.copyProperties(dto, syncProductConfigurationDto.getParamMap());
+        syncProductConfigurationDto.getParamMap().setModelYear(dto.getModel() + " " + dto.getModelYear());
+        syncProductConfigurationDto.getParamMap().setRevision(dto.getModelYear());
+        syncProductConfigurationDto.getParamMap().setOwner(dto.getCreateUser());
+        syncProductConfigurationDto.getParamMap().setBrandName(dto.getBrand());
         return syncProductConfigurationDto;
     }
 
     private PlmModifyPcDto buildPlmModifyPcDto(SyncUpdatePcDto dto) {
         PlmModifyPcDto modifyPcDto = new PlmModifyPcDto();
-        modifyPcDto.setPcId(dto.getPcId());
-        modifyPcDto.setName(dto.getName());
+        modifyPcDto.getParamMap().setPcId(dto.getPcId());
+        modifyPcDto.getParamMap().setName(dto.getName());
         return modifyPcDto;
     }
 
     private PlmDeletePcDto buildPlmDeletePcDto(SyncDeletePcDto dto) {
         PlmDeletePcDto deletePcDto = new PlmDeletePcDto();
-        deletePcDto.setPcId(dto.getPcId());
+        deletePcDto.getParamMap().setPcId(dto.getPcId());
         return deletePcDto;
     }
 

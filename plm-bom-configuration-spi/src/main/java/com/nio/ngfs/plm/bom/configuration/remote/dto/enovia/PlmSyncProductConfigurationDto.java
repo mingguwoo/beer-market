@@ -9,22 +9,28 @@ import lombok.Data;
 @Data
 public class PlmSyncProductConfigurationDto {
 
-    private String pcId;
+    private SyncData paramMap = new SyncData();
 
-    private String name;
+    @Data
+    public class SyncData{
 
-    private String description;
+        private String pcId;
 
-    private String marketingName;
+        private String name;
 
-    private String model;
+        private String description;
 
-    private String modelYear;
+        private String marketingName;
 
-    private String revision;
+        private String model;
 
-    private String owner;
+        private String modelYear;
 
-    private String brandName;
+        private String revision;
+
+        private String owner;
+
+        private String brandName;
+    }
 
 }

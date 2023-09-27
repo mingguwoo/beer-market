@@ -9,8 +9,8 @@ import lombok.Data;
 @Data
 public class PlmDisconnectPcFeatureAndOptionDto {
 
-    private String pcId;
+        private String pcId;
 
-    private String optionCode;
+        private String optionCode;
 
 }

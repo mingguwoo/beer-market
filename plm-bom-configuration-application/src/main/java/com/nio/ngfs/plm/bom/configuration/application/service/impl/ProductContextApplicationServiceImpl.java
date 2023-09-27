@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.application.service.impl;
 
+import cn.hutool.core.lang.Pair;
 import com.nio.bom.share.constants.CommonConstants;
 import com.nio.ngfs.plm.bom.configuration.application.service.ProductContextApplicationService;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
@@ -83,16 +84,14 @@ public class ProductContextApplicationServiceImpl implements ProductContextAppli
             saveProductContextToDb(addProductContextAggrList,addProductContextFeatureAggrList,removeProductContextAggrList);
             //3de同步
             if (!addProductContextAggrList.isEmpty() || !addProductContextFeatureAggrList.isEmpty()){
-                buildSyncData(featureOptionMap,addProductContextAggrList,addProductContextFeatureAggrList);
-                //只传feature，不传option类型的行
-                addProductContextFeatureAggrList = addProductContextFeatureAggrList.stream().filter(aggr->Objects.equals(aggr.getType(), ProductContextFeatureEnum.FEATURE.getType())).collect(Collectors.toList());
-                eventPublisher.publish(new SyncProductContextEvent(addProductContextAggrList,addProductContextFeatureAggrList));
+                Pair<List<ProductContextAggr>,List<ProductContextFeatureAggr>> addList = buildSyncData(featureOptionMap,addProductContextAggrList,addProductContextFeatureAggrList);
+                eventPublisher.publish(new SyncProductContextEvent(addList.getKey(),addList.getValue()));
             }
         }
     }
 
     //对要下发3de的数据进行处理
-    private void buildSyncData(Map<OxoRowsQry,List<OxoRowsQry>> featureOptionMap,List<ProductContextAggr> addProductContextAggrList, List<ProductContextFeatureAggr> addProductContextFeatureAggrList){
+    private Pair<List<ProductContextAggr>,List<ProductContextFeatureAggr>> buildSyncData(Map<OxoRowsQry,List<OxoRowsQry>> featureOptionMap,List<ProductContextAggr> addProductContextAggrList, List<ProductContextFeatureAggr> addProductContextFeatureAggrList){
         Set<String> selectedPoint = addProductContextAggrList.stream().map(aggr->aggr.getOptionCode()).collect(Collectors.toSet());
         Map<String,String> optionFeatureCodeMap = new HashMap<>();
         featureOptionMap.forEach((k,v)->{
@@ -111,7 +110,10 @@ public class ProductContextApplicationServiceImpl implements ProductContextAppli
                         addProductContextAggrList.add(contextAggr);
                     }
             });
+            //行方面只传feature，不传option
+            addProductContextFeatureAggrList =  addProductContextFeatureAggrList.stream().filter(aggr->Objects.equals(aggr.getType(), ProductContextFeatureEnum.FEATURE.getType())).collect(Collectors.toList());
         }
+        return new Pair<>(addProductContextAggrList,addProductContextFeatureAggrList);
     }
 
     @Override

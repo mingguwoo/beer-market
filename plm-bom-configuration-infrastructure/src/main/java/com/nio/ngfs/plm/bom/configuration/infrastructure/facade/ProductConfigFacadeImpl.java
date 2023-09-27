@@ -12,6 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 /**
  * @author xiaozhou.tu
  * @date 2023/8/18
@@ -55,7 +58,7 @@ public class ProductConfigFacadeImpl extends AbstractEnoviaFacade implements Pro
     public void syncSelectPcOptionToEnovia(SyncSelectPcOptionDto dto) {
         log.info("ProductConfigFacade syncSelectPcOptionToEnovia data={}", GsonUtils.toJson(dto));
         PlmConnectPcFeatureAndOptionDto syncDto = buildPlmConnectPcFeatureAndOptionDto(dto);
-        invokeEnovia(plmEnoviaClient::connectConfigurationFeatureAndOption, syncDto, "PlmEnoviaClient.connectConfigurationFeatureAndOption", (response, e) ->
+        invokeEnovia(plmEnoviaClient::connectConfigurationFeatureAndOption, Arrays.asList(syncDto), "PlmEnoviaClient.connectConfigurationFeatureAndOption", (response, e) ->
                 configurationTo3deWarnSender.sendSelectPcOptionWarn(syncDto, e != null ? e.getMessage() : GsonUtils.toJson(response))
         );
     }
@@ -64,7 +67,7 @@ public class ProductConfigFacadeImpl extends AbstractEnoviaFacade implements Pro
     public void syncUnselectPcOptionToEnovia(SyncUnselectPcOptionDto dto) {
         log.info("ProductConfigFacade syncUnselectPcOptionToEnovia data={}", GsonUtils.toJson(dto));
         PlmDisconnectPcFeatureAndOptionDto syncDto = buildPlmDisconnectPcFeatureAndOptionDto(dto);
-        invokeEnovia(plmEnoviaClient::disconnectConfigurationFeatureAndOption, syncDto, "PlmEnoviaClient.disconnectConfigurationFeatureAndOption", (response, e) ->
+        invokeEnovia(plmEnoviaClient::disconnectConfigurationFeatureAndOption, Arrays.asList(syncDto), "PlmEnoviaClient.disconnectConfigurationFeatureAndOption", (response, e) ->
                 configurationTo3deWarnSender.sendUnselectPcOptionWarn(syncDto, e != null ? e.getMessage() : GsonUtils.toJson(response))
         );
     }

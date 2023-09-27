@@ -6,6 +6,8 @@ import com.nio.ngfs.plm.bom.configuration.remote.dto.feature.PlmFeatureOptionSyn
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.List;
+
 /**
  * @author xiaozhou.tu
  * @date 2023/7/25
@@ -25,20 +27,20 @@ public interface PlmEnoviaClient {
     /**
      * 同步Product Config勾选到3DE
      *
-     * @param dto 同步数据
+     * @param dtoList 同步数据
      * @return 结果
      */
     @PostMapping("/resources/NioPlm/configuration/connectConfigurationFeatureAndOption")
-    PlmEnoviaResult<Object> connectConfigurationFeatureAndOption(PlmConnectPcFeatureAndOptionDto dto);
+    PlmEnoviaResult<Object> connectConfigurationFeatureAndOption(List<PlmConnectPcFeatureAndOptionDto> dtoList);
 
     /**
      * 同步Product Config取消勾选到3DE
      *
-     * @param dto 同步数据
+     * @param dtoList 同步数据
      * @return 结果
      */
     @PostMapping("/resources/NioPlm/configuration/disconnectConfigurationFeatureAndOption")
-    PlmEnoviaResult<Object> disconnectConfigurationFeatureAndOption(PlmDisconnectPcFeatureAndOptionDto dto);
+    PlmEnoviaResult<Object> disconnectConfigurationFeatureAndOption(List<PlmDisconnectPcFeatureAndOptionDto> dtoList);
 
     /**
      * 同步新增PC到3DE

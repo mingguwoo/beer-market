@@ -12,8 +12,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * 日志告警UTIl
@@ -35,7 +34,10 @@ public class WarnLogUtils {
             return;
         }
         try {
-            SpringContextHolder.getBean(FeishuIntegrationClient.class).sendMessageToLogGroup(JSON.toJSONString(generateRequestBean(message, extMap)));
+            DingTextMessage dtMsg = generateRequestBean(message, extMap);
+            if (Objects.nonNull(dtMsg)) {
+                SpringContextHolder.getBean(FeishuIntegrationClient.class).sendMessageToLogGroup(JSON.toJSONString(dtMsg));
+            }
         } catch (Exception e) {
             log.warn("send warn msg error,dingUrl:{}", url, e);
         }
@@ -49,8 +51,11 @@ public class WarnLogUtils {
      * @return DingTextMessage
      */
     private static DingTextMessage generateRequestBean(String message, Map<String, String> extMap) {
-        DingTextMessage dingTextMessage = new DingTextMessage();
         WarnLogConfig warnLogConfig = SpringContextHolder.getApplicationContext().getBean(WarnLogConfig.class);
+        if (filter(warnLogConfig, message)) {
+            return null;
+        }
+        DingTextMessage dingTextMessage = new DingTextMessage();
         dingTextMessage.setMsg_type("text");
         DingTextMessage.Content content = new DingTextMessage.Content();
         StringBuilder stringBuilder = new StringBuilder();
@@ -63,7 +68,6 @@ public class WarnLogUtils {
             String podIp = Optional.ofNullable(SpringContextHolder.getApplicationContext().getEnvironment().getProperty("POD_IP")).orElse("localhost");
             //添加pod ip区分本地还是pod环境
             stringBuilder.append("pod_ip:").append(podIp).append("\n");
-            extMap.put("pod_ip", podIp);
         }
         if (MapUtils.isEmpty(extMap)) {
             for (Map.Entry<String, String> entry : extMap.entrySet()) {
@@ -76,6 +80,16 @@ public class WarnLogUtils {
         return dingTextMessage;
     }
 
+    /**
+     * 过滤不需要的报错
+     * */
+    private static boolean filter(WarnLogConfig warnLogConfig, String message) {
+        if ("test".equals(warnLogConfig.getEnv())) {
+            List<String> filterWords = Arrays.stream(warnLogConfig.getFilterWords().split(",")).toList();
+            return filterWords.stream().anyMatch(message::contains);
+        }
+        return false;
+    }
 
     @NoArgsConstructor
     @Data

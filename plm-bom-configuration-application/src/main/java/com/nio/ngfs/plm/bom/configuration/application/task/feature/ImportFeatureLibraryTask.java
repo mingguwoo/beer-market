@@ -7,10 +7,14 @@ import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.read.listener.ReadListener;
 import com.alibaba.excel.read.metadata.ReadSheet;
 import com.alibaba.excel.support.ExcelTypeEnum;
+import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import com.nio.bom.share.constants.CommonConstants;
 import com.nio.bom.share.enums.BrandEnum;
 import com.nio.bom.share.enums.CommonErrorCode;
 import com.nio.bom.share.enums.StatusEnum;
+import com.nio.bom.share.enums.YesOrNoEnum;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.DateUtils;
 import com.nio.bom.share.utils.LambdaUtil;
@@ -19,21 +23,25 @@ import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsFeatureLibraryDao;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsProductContextDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureLibraryEntity;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductContextEntity;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.ImportFeatureLibraryRespDto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.mapping;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * 导入Feature Library历史数据
@@ -51,10 +59,14 @@ public class ImportFeatureLibraryTask {
     private static final String CONFIGURATION_OPTION = "Configuration Option";
 
     private final BomsFeatureLibraryDao bomsFeatureLibraryDao;
+    private final BomsProductContextDao bomsProductContextDao;
 
     public ImportFeatureLibraryRespDto execute(MultipartFile file) {
         // 读取历史数据
         List<FeatureLibraryHistory> featureLibraryHistoryList = readData(file);
+        if (CollectionUtils.isEmpty(featureLibraryHistoryList)) {
+            return new ImportFeatureLibraryRespDto();
+        }
         // 校验数据
         checkData(featureLibraryHistoryList);
         // 导入Group
@@ -65,6 +77,8 @@ public class ImportFeatureLibraryTask {
         for (List<BomsFeatureLibraryEntity> partitionList : Lists.partition(featureOptionList, BATCH_SIZE)) {
             saveOrUpdate(partitionList);
         }
+        // 导入历史Related Model Year
+        importRelatedModelYear(featureLibraryHistoryList);
         return new ImportFeatureLibraryRespDto();
     }
 
@@ -230,6 +244,48 @@ public class ImportFeatureLibraryTask {
         }
     }
 
+    /**
+     * 导入历史Related Model Year
+     */
+    private void importRelatedModelYear(List<FeatureLibraryHistory> featureLibraryHistoryList) {
+        List<BomsProductContextEntity> contextEntityList = Lists.newArrayList();
+        featureLibraryHistoryList.stream().filter(FeatureLibraryHistory::isOption).forEach(option -> {
+            if (StringUtils.isBlank(option.getModelYear())) {
+                return;
+            }
+            Splitter.on(",").trimResults().omitEmptyStrings().splitToList(option.getModelYear()).forEach(modelAndModelYear -> {
+                String[] splitArr = modelAndModelYear.split(" ");
+                if (splitArr.length != CommonConstants.INT_TWO) {
+                    throw new BusinessException(CommonErrorCode.PARAMETER_ERROR, "Related Model Year Format Is Error modelAndModelYear=" + modelAndModelYear);
+                }
+                contextEntityList.add(buildProductContextEntity(option.getCode(), option.getParent().getCode(), splitArr[0], splitArr[1]));
+            });
+        });
+        // 查询已存在的Model Year
+        List<BomsProductContextEntity> existContextEntityList = bomsProductContextDao.queryAllIncludeDelete();
+        Map<String, Set<String>> existOptionCodeSetByModelYearMap = existContextEntityList.stream().collect(
+                Collectors.groupingBy(e -> e.getModelCode() + " " + e.getModelYear(), mapping(BomsProductContextEntity::getOptionCode, toSet()))
+        );
+        LambdaUtil.groupBy(contextEntityList, e -> e.getModelCode() + " " + e.getModelYear()).forEach((k, entityList) -> {
+            Set<String> existOptionCodeSet = existOptionCodeSetByModelYearMap.getOrDefault(k, Sets.newHashSet());
+            List<BomsProductContextEntity> saveEntityList = entityList.stream().filter(i -> !existOptionCodeSet.contains(i.getOptionCode())).toList();
+            bomsProductContextDao.saveBatch(saveEntityList);
+        });
+    }
+
+    private BomsProductContextEntity buildProductContextEntity(String optionCode, String featureCode, String modelCode, String modelYear) {
+        BomsProductContextEntity entity = new BomsProductContextEntity();
+        entity.setModelCode(modelCode);
+        entity.setModelYear(modelYear);
+        entity.setFeatureCode(featureCode);
+        entity.setOptionCode(optionCode);
+        // 此处设为逻辑删除，代表历史数据
+        entity.setDelFlag(YesOrNoEnum.YES.getCode());
+        entity.setCreateUser(ConfigConstants.SYSTEM_USER);
+        entity.setUpdateUser(ConfigConstants.SYSTEM_USER);
+        return entity;
+    }
+
     private static class FeatureLibraryReadListener implements ReadListener<FeatureLibraryHistory> {
 
         private final List<FeatureLibraryHistory> featureLibraryHistoryList = Lists.newArrayList();
@@ -297,6 +353,9 @@ public class ImportFeatureLibraryTask {
 
         @ExcelProperty("Status")
         private String status;
+
+        @ExcelProperty("Model Year")
+        private String modelYear;
 
         private transient FeatureLibraryHistory parent;
 

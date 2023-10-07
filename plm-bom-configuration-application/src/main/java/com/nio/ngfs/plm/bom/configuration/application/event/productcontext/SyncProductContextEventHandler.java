@@ -3,13 +3,9 @@ package com.nio.ngfs.plm.bom.configuration.application.event.productcontext;
 import cn.hutool.core.collection.CollectionUtil;
 import com.nio.ngfs.plm.bom.configuration.application.event.EventHandler;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.ProductContextFacade;
-import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncProductContextFeatureDto;
-import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncProductContextModelFeatureDto;
-import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncProductContextModelFeatureOptionDto;
-import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncProductContextOptionDto;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.event.SyncProductContextEvent;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.kafka.KafkaSender;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.kafka.SyncProductContextModelFeatureKafkaCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.kafka.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -38,32 +34,36 @@ public class SyncProductContextEventHandler implements EventHandler<SyncProductC
             return;
         }
         List<SyncProductContextModelFeatureKafkaCmd> productContextModelFeatureDtoList = new ArrayList<>();
-        SyncProductContextModelFeatureOptionDto syncProductContextModelFeatureOptionDto = new SyncProductContextModelFeatureOptionDto();
-        buildData(event,productContextModelFeatureDtoList, syncProductContextModelFeatureOptionDto);
+        SyncProductContextModelFeatureOptionKafkaCmd syncProductContextModelFeatureOptionKafkaCmd = new SyncProductContextModelFeatureOptionKafkaCmd();
+        buildData(event,productContextModelFeatureDtoList, syncProductContextModelFeatureOptionKafkaCmd);
         try{
             if (CollectionUtils.isNotEmpty(productContextModelFeatureDtoList)){
                 productContextModelFeatureDtoList.forEach(modelFeature->{
-                    kafkaSender.sendSyncProductContextFeature(modelFeature);
+                    SyncProductContextKafkaCmd kafkaCmd = new SyncProductContextKafkaCmd();
+                    kafkaCmd.setSyncProductContextModelFeatureKafkaCmd(modelFeature);
+                    kafkaSender.sendSyncProductContextFeature(kafkaCmd);
                 });
             }
         } catch (Exception e) {
             log.error("Kafka sendSyncProductContext error", e);
         }
-        if (CollectionUtils.isNotEmpty(syncProductContextModelFeatureOptionDto.getFeature())){
-            productContextFacade.syncAddProductContextModelFeatureOptionToEnovia(syncProductContextModelFeatureOptionDto);
+        if (CollectionUtils.isNotEmpty(syncProductContextModelFeatureOptionKafkaCmd.getFeature())){
+            SyncProductContextKafkaCmd kafkaCmd = new SyncProductContextKafkaCmd();
+            kafkaCmd.setSyncProductContextModelFeatureOptionKafkaCmd(syncProductContextModelFeatureOptionKafkaCmd);
+            kafkaSender.sendSyncProductContextFeatureoption(kafkaCmd);
         }
     }
 
-    public void buildData(SyncProductContextEvent event, List<SyncProductContextModelFeatureKafkaCmd> modelFeatureList, SyncProductContextModelFeatureOptionDto modelFeatureOption) {
+    public void buildData(SyncProductContextEvent event, List<SyncProductContextModelFeatureKafkaCmd> modelFeatureList, SyncProductContextModelFeatureOptionKafkaCmd kafkaCmd) {
         Set<String> existFeature = new HashSet<>();
-        Map<String, SyncProductContextFeatureDto> codeFeatureMap = new HashMap<>();
-        List<SyncProductContextFeatureDto> featureList = new ArrayList<>();
-        modelFeatureOption.setFeature(featureList);
+        Map<String, SyncProductContextFeatureKafkaCmd> codeFeatureMap = new HashMap<>();
+        List<SyncProductContextFeatureKafkaCmd> featureList = new ArrayList<>();
+        kafkaCmd.setFeature(featureList);
         if (!event.getProductContextAggrlist().isEmpty()){
-            modelFeatureOption.setModel(event.getProductContextAggrlist().get(0).getModelCode());
+            kafkaCmd.setModel(event.getProductContextAggrlist().get(0).getModelCode());
         }
         else{
-            modelFeatureOption.setModel(event.getProductContextFeatureAggrList().get(0).getModelCode());
+            kafkaCmd.setModel(event.getProductContextFeatureAggrList().get(0).getModelCode());
         }
         if (!event.getProductContextFeatureAggrList().isEmpty()){
             event.getProductContextFeatureAggrList().forEach(aggr->{
@@ -81,21 +81,21 @@ public class SyncProductContextEventHandler implements EventHandler<SyncProductC
                 if (!existFeature.contains(aggr.getFeatureCode())){
                     existFeature.add(aggr.getFeatureCode());
                     //新建打点中的Feature记录
-                    SyncProductContextFeatureDto featureDto = new SyncProductContextFeatureDto();
-                    List<SyncProductContextOptionDto> optionList = new ArrayList<>();
-                    SyncProductContextOptionDto optionDto = new SyncProductContextOptionDto();
+                    SyncProductContextFeatureKafkaCmd featureDto = new SyncProductContextFeatureKafkaCmd();
+                    List<SyncProductContextOptionKafkaCmd> optionList = new ArrayList<>();
+                    SyncProductContextOptionKafkaCmd optionDto = new SyncProductContextOptionKafkaCmd();
                     optionDto.setOptionCode(aggr.getOptionCode());
                     optionList.add(optionDto);
                     featureDto.setOption(optionList);
                     featureDto.setFeatureCode(aggr.getFeatureCode());
                     codeFeatureMap.put(aggr.getFeatureCode(),featureDto);
-                    modelFeatureOption.getFeature().add(featureDto);
+                    kafkaCmd.getFeature().add(featureDto);
                     existFeature.add(aggr.getFeatureCode());
 
                 }
                 else{
                     //option记录
-                    SyncProductContextOptionDto dto = new SyncProductContextOptionDto();
+                    SyncProductContextOptionKafkaCmd dto = new SyncProductContextOptionKafkaCmd();
                     dto.setOptionCode(aggr.getOptionCode());
                     codeFeatureMap.get(aggr.getFeatureCode()).getOption().add(dto);
                 }

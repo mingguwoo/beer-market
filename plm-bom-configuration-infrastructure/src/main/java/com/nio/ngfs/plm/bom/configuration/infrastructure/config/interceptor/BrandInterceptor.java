@@ -19,10 +19,11 @@ public class BrandInterceptor implements HandlerInterceptor {
 
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
 
         String brand = request.getHeader("lesseecode");
+
         if(StringUtils.isBlank(brand)){
             brand = CommonConstants.NIO;
         }
@@ -31,7 +32,7 @@ public class BrandInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         ConfigConstants.brandName.remove();
     }
 }

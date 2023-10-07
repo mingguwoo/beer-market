@@ -59,8 +59,7 @@ public class BaseVehicleDomainServiceImpl implements BaseVehicleDomainService {
 
     @Override
     public BaseVehicleAggr getBaseVehicleByBaseVehicleId(String baseVehicleId) {
-        BaseVehicleAggr baseVehicleAggr = baseVehicleRepository.queryBaseVehicleByBaseVehicleId(baseVehicleId);
-        return baseVehicleAggr;
+        return baseVehicleRepository.queryBaseVehicleByBaseVehicleId(baseVehicleId);
     }
 
     private boolean checkIsEdit(List<BaseVehicleAggr> existedBaseVehicleAggrList, BaseVehicleAggr baseVehicleAggr) {
@@ -101,7 +100,7 @@ public class BaseVehicleDomainServiceImpl implements BaseVehicleDomainService {
         }
 
         //查询AF00信息 排序
-        Map<String, String> featureAggrAF1 =
+        Map<String, String> featureAggrMap =
                 featureRepository.queryByParentFeatureCodeAndType(ConfigConstants.FEATURE_CODE_AF00, FeatureTypeEnum.OPTION.getType())
                         .stream().collect(Collectors.toMap(FeatureAggr::getDisplayName, x -> x.getFeatureId().getFeatureCode()));
 
@@ -176,6 +175,6 @@ public class BaseVehicleDomainServiceImpl implements BaseVehicleDomainService {
             oxoHeadQry.setRegionInfos(regionInfos);
             headQry.add(oxoHeadQry);
         });
-        return headQry.stream().sorted(Comparator.comparing(x -> featureAggrAF1.get(x.getModelYear()))).toList();
+        return headQry.stream().sorted(Comparator.comparing(x -> featureAggrMap.get(x.getModelYear()))).toList();
     }
 }

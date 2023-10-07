@@ -266,8 +266,6 @@ public class OxoExcelUtil {
         sheet.setColumnWidth(3, 16 * 256 + 200);
         sheet.setColumnWidth(4, 15 * 256 + 200);
         for (int i = 5; i < oxoBasicVehicles.size() + 5; i++) {
-            // sheet.autoSizeColumn(i, true);
-            //  int width = sheet.getColumnWidth(i) * 2;
             sheet.setColumnWidth(i, 14 * 256 + 200);
         }
         return xssfWorkbook;

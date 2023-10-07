@@ -269,6 +269,9 @@ public class ImportFeatureLibraryTask {
         LambdaUtil.groupBy(contextEntityList, e -> e.getModelCode() + " " + e.getModelYear()).forEach((k, entityList) -> {
             Set<String> existOptionCodeSet = existOptionCodeSetByModelYearMap.getOrDefault(k, Sets.newHashSet());
             List<BomsProductContextEntity> saveEntityList = entityList.stream().filter(i -> !existOptionCodeSet.contains(i.getOptionCode())).toList();
+            if (CollectionUtils.isEmpty(saveEntityList)) {
+                return;
+            }
             bomsProductContextDao.saveBatch(saveEntityList);
         });
     }

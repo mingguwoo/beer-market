@@ -1,14 +1,14 @@
 package com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.kafka;
 
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.Cmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.Dto;
 import lombok.Data;
 
 /**
  * @author xiaozhou.tu
- * @date 2023/9/15
+ * @date 2023/10/8
  */
 @Data
-public class SyncProductConfigOptionKafkaCmd implements Cmd {
+public class SyncProductConfigOptionKafkaDto implements Dto {
 
     private String pcId;
 

@@ -50,7 +50,7 @@ public class SyncProductContextEventHandler implements EventHandler<SyncProductC
         if (CollectionUtils.isNotEmpty(syncProductContextModelFeatureOptionKafkaCmd.getFeature())){
             SyncProductContextKafkaCmd kafkaCmd = new SyncProductContextKafkaCmd();
             kafkaCmd.setSyncProductContextModelFeatureOptionKafkaCmd(syncProductContextModelFeatureOptionKafkaCmd);
-            kafkaSender.sendSyncProductContextFeatureoption(kafkaCmd);
+            kafkaSender.sendSyncProductContextFeatureOption(kafkaCmd);
         }
     }
 

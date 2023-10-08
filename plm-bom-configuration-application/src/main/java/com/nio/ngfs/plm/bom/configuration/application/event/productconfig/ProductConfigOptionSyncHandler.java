@@ -8,7 +8,8 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConf
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.ProductConfigOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.event.ProductConfigOptionChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.kafka.KafkaSender;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.kafka.SyncProductConfigOptionKafkaCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.kafka.SyncProductConfigKafkaCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.kafka.SyncProductConfigOptionKafkaDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -44,20 +45,23 @@ public class ProductConfigOptionSyncHandler implements EventHandler<ProductConfi
                 if (productConfigAggr == null) {
                     throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_PC_NOT_EXIST);
                 }
-                kafkaSender.sendSyncProductConfig(buildSyncProductConfigOptionKafkaCmd(productConfigAggr, aggr));
+                SyncProductConfigKafkaCmd cmd = new SyncProductConfigKafkaCmd();
+                cmd.setPcId(productConfigAggr.getPcId());
+                cmd.setSyncProductConfigOptionKafkaDto(buildSyncProductConfigOptionKafkaDto(productConfigAggr, aggr));
+                kafkaSender.sendSyncProductConfig(cmd);
             } catch (Exception e) {
                 log.error("Kafka sendSyncProductConfig error", e);
             }
         });
     }
 
-    private SyncProductConfigOptionKafkaCmd buildSyncProductConfigOptionKafkaCmd(ProductConfigAggr productConfigAggr, ProductConfigOptionAggr productConfigOptionAggr) {
-        SyncProductConfigOptionKafkaCmd kafkaCmd = new SyncProductConfigOptionKafkaCmd();
-        kafkaCmd.setPcId(productConfigAggr.getPcId());
-        kafkaCmd.setOptionCode(productConfigOptionAggr.getOptionCode());
-        kafkaCmd.setFeatureCode(productConfigOptionAggr.getFeatureCode());
-        kafkaCmd.setSelect(productConfigOptionAggr.isSelect());
-        return kafkaCmd;
+    private SyncProductConfigOptionKafkaDto buildSyncProductConfigOptionKafkaDto(ProductConfigAggr productConfigAggr, ProductConfigOptionAggr productConfigOptionAggr) {
+        SyncProductConfigOptionKafkaDto kafkaDto = new SyncProductConfigOptionKafkaDto();
+        kafkaDto.setPcId(productConfigAggr.getPcId());
+        kafkaDto.setOptionCode(productConfigOptionAggr.getOptionCode());
+        kafkaDto.setFeatureCode(productConfigOptionAggr.getFeatureCode());
+        kafkaDto.setSelect(productConfigOptionAggr.isSelect());
+        return kafkaDto;
     }
 
 }

@@ -1,14 +1,14 @@
 package com.nio.ngfs.plm.bom.configuration.application.event.productconfig;
 
 import com.nio.ngfs.plm.bom.configuration.application.event.EventHandler;
-import com.nio.ngfs.plm.bom.configuration.domain.facade.ProductConfigFacade;
-import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncAddPcDto;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.ProductConfigAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfig.event.PcAddEvent;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.kafka.KafkaSender;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.kafka.SyncProductConfigKafkaCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.kafka.SyncProductConfigKafkaDto;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,20 +19,25 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class PcAddSyncHandler implements EventHandler<PcAddEvent> {
 
-    private final ProductConfigFacade productConfigFacade;
+    private final KafkaSender kafkaSender;
 
+    /**
+     * 此处需要同步处理
+     */
     @Override
-    @Async("eventExecutor")
     public void onApplicationEvent(@NotNull PcAddEvent event) {
-        productConfigFacade.syncAddPcToEnovia(buildSyncAddPcDto(event));
+        SyncProductConfigKafkaCmd cmd = new SyncProductConfigKafkaCmd();
+        cmd.setPcId(event.getProductConfigAggr().getPcId());
+        cmd.setSyncProductConfigKafkaDto(buildSyncProductConfigKafkaDto(event));
+        kafkaSender.sendSyncProductConfig(cmd);
     }
 
-    private SyncAddPcDto buildSyncAddPcDto(PcAddEvent event) {
+    private SyncProductConfigKafkaDto buildSyncProductConfigKafkaDto(PcAddEvent event) {
         ProductConfigAggr productConfigAggr = event.getProductConfigAggr();
-        SyncAddPcDto dto = new SyncAddPcDto();
-        BeanUtils.copyProperties(productConfigAggr, dto);
-        dto.setModel(productConfigAggr.getModelCode());
-        return dto;
+        SyncProductConfigKafkaDto kafkaDto = new SyncProductConfigKafkaDto();
+        BeanUtils.copyProperties(productConfigAggr, kafkaDto);
+        kafkaDto.setModel(productConfigAggr.getModelCode());
+        return kafkaDto;
     }
 
 }

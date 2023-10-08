@@ -2,7 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.infrastructure.kafka;
 
 import com.nio.bom.share.utils.GsonUtils;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.config.kafka.KafkaTopicProperties;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.kafka.SyncProductConfigOptionKafkaCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.kafka.SyncProductConfigKafkaCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.kafka.SyncProductContextKafkaCmd;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -22,18 +22,18 @@ public class KafkaSender {
     @Resource(name = "commonKafkaTemplate")
     private KafkaTemplate<String, String> commonKafkaTemplate;
 
-    public void sendSyncProductConfig(SyncProductConfigOptionKafkaCmd kafkaCmd) {
-        commonKafkaTemplate.send(kafkaTopicProperties.getSyncProductConfig(), String.format("%s::%s", kafkaCmd.getPcId(), kafkaCmd.getOptionCode())
-                , GsonUtils.toJson(kafkaCmd));
+    public void sendSyncProductConfig(SyncProductConfigKafkaCmd kafkaCmd) {
+        commonKafkaTemplate.send(kafkaTopicProperties.getSyncProductConfig(), kafkaCmd.getPcId(), GsonUtils.toJson(kafkaCmd));
     }
 
     public void sendSyncProductContextFeature(SyncProductContextKafkaCmd kafkaCmd) {
-        commonKafkaTemplate.send(kafkaTopicProperties.getSyncProductContext(),String.format("%s::%s", kafkaCmd.getSyncProductContextModelFeatureKafkaCmd().getModelCodeList().get(0),kafkaCmd.getSyncProductContextModelFeatureKafkaCmd().getFeatureCode())
-        ,GsonUtils.toJson(kafkaCmd));
+        commonKafkaTemplate.send(kafkaTopicProperties.getSyncProductContext(), String.format("%s::%s", kafkaCmd.getSyncProductContextModelFeatureKafkaCmd().getModelCodeList().get(0), kafkaCmd.getSyncProductContextModelFeatureKafkaCmd().getFeatureCode())
+                , GsonUtils.toJson(kafkaCmd));
     }
 
-    public void sendSyncProductContextFeatureoption(SyncProductContextKafkaCmd kafkaCmd) {
-        commonKafkaTemplate.send(kafkaTopicProperties.getSyncProductContext(),String.format("%s::%s", kafkaCmd.getSyncProductContextModelFeatureOptionKafkaCmd().getModel(),kafkaCmd.getSyncProductContextModelFeatureOptionKafkaCmd().getFeature().get(0).getOption().get(0).getOptionCode())
-        ,GsonUtils.toJson(kafkaCmd));
+    public void sendSyncProductContextFeatureOption(SyncProductContextKafkaCmd kafkaCmd) {
+        commonKafkaTemplate.send(kafkaTopicProperties.getSyncProductContext(), String.format("%s::%s", kafkaCmd.getSyncProductContextModelFeatureOptionKafkaCmd().getModel(), kafkaCmd.getSyncProductContextModelFeatureOptionKafkaCmd().getFeature().get(0).getOption().get(0).getOptionCode())
+                , GsonUtils.toJson(kafkaCmd));
     }
+
 }

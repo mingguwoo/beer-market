@@ -2,7 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.api.consumer;
 
 import com.nio.bom.share.utils.GsonUtils;
 import com.nio.ngfs.plm.bom.configuration.application.command.productconfig.SyncProductConfigCommand;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.kafka.SyncProductConfigOptionKafkaCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.kafka.SyncProductConfigKafkaCmd;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -20,7 +20,7 @@ public class SyncProductConfigConsumer {
 
     @KafkaListener(topics = "${kafka.topic.syncProductConfig}", containerFactory = "syncProductConfigKafkaContainerFactory")
     public void consume(ConsumerRecord<?, ?> consumerRecord) {
-        SyncProductConfigOptionKafkaCmd cmd = GsonUtils.fromJson((String) consumerRecord.value(), SyncProductConfigOptionKafkaCmd.class);
+        SyncProductConfigKafkaCmd cmd = GsonUtils.fromJson((String) consumerRecord.value(), SyncProductConfigKafkaCmd.class);
         syncProductConfigCommand.execute(cmd);
     }
 

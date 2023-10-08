@@ -1,7 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.kafka;
 
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.Cmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.kafka.SyncProductConfigOptionKafkaCmd;
 import lombok.Data;
 
 /**

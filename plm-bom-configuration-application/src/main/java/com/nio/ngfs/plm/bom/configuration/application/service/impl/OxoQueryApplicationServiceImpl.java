@@ -83,7 +83,12 @@ public class OxoQueryApplicationServiceImpl implements OxoQueryApplicationServic
         return oxoCompareDomainService.compareVersion(baseVersionQry, compareVersionQry, oxoCompareQry.isShowDiff());
     }
 
-
+    /**
+     * 根据车型，版本查询
+     * @param modelCode
+     * @param version
+     * @return
+     */
     public OxoListRespDto findQryByVersion(String modelCode, String version){
         OxoListRespDto compareVersionQry = queryOxoInfoByModelCode(modelCode, version, false, Lists.newArrayList());
 
@@ -108,7 +113,7 @@ public class OxoQueryApplicationServiceImpl implements OxoQueryApplicationServic
                 //return JSONObject.parseObject(oxoVersionSnapshot.getOxoSnapshot(), OxoListRespDto.class);
                 OxoListRespDto oxoListRespDto= JSONObject.parseObject(JSONArray.parse(oxoVersionSnapshot.getOxoSnapshot()).toString(), OxoListRespDto.class);
                 // 如果是 非 Configuration Admin ，展示所有Engineering类型的Feature/Option行
-                if(!roleNames.contains(ConfigConstants.CONFIG_ADMIN)) {
+                if(CollectionUtils.isNotEmpty(roleNames) && !roleNames.contains(ConfigConstants.CONFIG_ADMIN)) {
                     oxoListRespDto.setOxoRowsResps(oxoListRespDto.getOxoRowsResps().stream().filter(x ->
                             StringUtils.equals(x.getCatalog(), FeatureCatalogEnum.ENGINEERING.getCatalog())).collect(Collectors.toList()));
                 }

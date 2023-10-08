@@ -157,8 +157,7 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, List
             }
         }
         //非首发formal 版本 表头不能为空
-        if (StringUtils.equals(type, OxoSnapshotEnum.FORMAL.getCode()) &&
-                !StringUtils.contains(version, ConfigConstants.VERSION_AA) && CollectionUtils.isEmpty(oxoLists.getOxoHeadResps())) {
+        if (StringUtils.equals(type, OxoSnapshotEnum.FORMAL.getCode()) && CollectionUtils.isEmpty(oxoLists.getOxoHeadResps())) {
             throw new BusinessException(ConfigErrorCode.MATURITY_ERROR);
         }
 

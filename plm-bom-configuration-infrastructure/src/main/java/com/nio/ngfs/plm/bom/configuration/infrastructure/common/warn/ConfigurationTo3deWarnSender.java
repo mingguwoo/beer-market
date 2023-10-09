@@ -146,7 +146,7 @@ public class ConfigurationTo3deWarnSender {
      */
     public void sendSyncProductContextModelFeatureOptionWarn(SyncProductContextModelFeatureOptionDto dto, String errorMsg) {
         sendWarnMessage(PRODUCT_CONTEXT, dto, errorMsg, getProductContextAtList(),
-                String.format("Model %s Sync Code %s Fail!", dto.getModel(), dto.getFeature().get(0).getOption().get(0).getOptionCode()));
+                String.format("Model %s Sync Code Fail!", dto.getModel()));
     }
 
     private <Req> void sendWarnMessage(String module, Req request, String errorMsg, List<String> atList, String failMsg) {

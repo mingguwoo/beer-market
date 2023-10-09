@@ -91,7 +91,7 @@ public class ConfigurationTo3deWarnSender {
      * 发送同步勾选ProductConfig告警
      */
     public void sendSelectPcOptionWarn(PlmConnectPcFeatureAndOptionDto syncDto, String errorMsg) {
-        sendWarnMessage(PRODUCT_CONFIGURATION, syncDto, errorMsg, getProductConfigAtList(),
+        sendWarnMessage(PRODUCT_CONFIGURATION, Lists.newArrayList(syncDto), errorMsg, getProductConfigAtList(),
                 String.format("PC %s Sync Select Code %s Fail!", syncDto.getPcId(), syncDto.getOptionCode()));
     }
 
@@ -99,7 +99,7 @@ public class ConfigurationTo3deWarnSender {
      * 发送同步取消勾选ProductConfig告警
      */
     public void sendUnselectPcOptionWarn(PlmDisconnectPcFeatureAndOptionDto syncDto, String errorMsg) {
-        sendWarnMessage(PRODUCT_CONFIGURATION, syncDto, errorMsg, getProductConfigAtList(),
+        sendWarnMessage(PRODUCT_CONFIGURATION, Lists.newArrayList(syncDto), errorMsg, getProductConfigAtList(),
                 String.format("PC %s Sync Unselect Code %s Fail!", syncDto.getPcId(), syncDto.getOptionCode()));
     }
 

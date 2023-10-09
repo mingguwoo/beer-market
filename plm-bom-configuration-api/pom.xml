@@ -95,6 +95,11 @@
             <artifactId>core</artifactId>
             <version>${burningwave.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.nio.cat</groupId>
+            <artifactId>bom-cat-client</artifactId>
+            <version>3.1.0</version>
+        </dependency>
     </dependencies>
 
     <build>

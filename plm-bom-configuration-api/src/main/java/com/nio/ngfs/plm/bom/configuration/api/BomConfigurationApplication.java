@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.api;
 
+import com.nio.cat.EnableCatClient;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.servers.Server;
 import org.burningwave.core.assembler.StaticComponentContainer;
@@ -21,6 +22,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableAspectJAutoProxy(proxyTargetClass = true, exposeProxy = true)
 @OpenAPIDefinition(servers = {@Server(url = "/", description = "BOM Configuration application default URL")})
 @SpringBootApplication(scanBasePackages = {"com.nio.ngfs", "org.springdoc.webmvc.ui"})
+@EnableCatClient
 public class BomConfigurationApplication {
 
     public static void main(String[] args) {

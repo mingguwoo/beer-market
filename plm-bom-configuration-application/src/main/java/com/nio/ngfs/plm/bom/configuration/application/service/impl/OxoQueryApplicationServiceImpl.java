@@ -70,27 +70,30 @@ public class OxoQueryApplicationServiceImpl implements OxoQueryApplicationServic
 
         String compareVersion = oxoCompareQry.getCompareVersion();
 
+        List<String> permissionPoints = oxoCompareQry.getPermissionPoints();
+
         if (StringUtils.equals(baseVersion, compareVersion)) {
             throw new BusinessException(ConfigErrorCode.BASIC_VERSION_ERROR);
         }
 
         //查询oxo  info 基准数据
-        OxoListRespDto baseVersionQry = findQryByVersion(modelCode, baseVersion);
+        OxoListRespDto baseVersionQry = findQryByVersion(modelCode, baseVersion, permissionPoints);
 
         //查询对比数据
-        OxoListRespDto compareVersionQry = findQryByVersion(modelCode, compareVersion);
+        OxoListRespDto compareVersionQry = findQryByVersion(modelCode, compareVersion, permissionPoints);
 
         return oxoCompareDomainService.compareVersion(baseVersionQry, compareVersionQry, oxoCompareQry.isShowDiff());
     }
 
     /**
      * 根据车型，版本查询
+     *
      * @param modelCode
      * @param version
      * @return
      */
-    public OxoListRespDto findQryByVersion(String modelCode, String version){
-        OxoListRespDto compareVersionQry = queryOxoInfoByModelCode(modelCode, version, false, Lists.newArrayList());
+    public OxoListRespDto findQryByVersion(String modelCode, String version, List<String> permissionPoints) {
+        OxoListRespDto compareVersionQry = queryOxoInfoByModelCode(modelCode, version, false, permissionPoints);
 
         if (CollectionUtils.isEmpty(compareVersionQry.getOxoHeadResps()) || CollectionUtils.isEmpty(compareVersionQry.getOxoHeadResps())) {
             throw new BusinessException(MessageFormat.format(ConfigErrorCode.VERSION_ERROR.getMessage(), version));
@@ -111,9 +114,9 @@ public class OxoQueryApplicationServiceImpl implements OxoQueryApplicationServic
 
             if (Objects.nonNull(oxoVersionSnapshot)) {
                 //return JSONObject.parseObject(oxoVersionSnapshot.getOxoSnapshot(), OxoListRespDto.class);
-                OxoListRespDto oxoListRespDto= JSONObject.parseObject(JSONArray.parse(oxoVersionSnapshot.getOxoSnapshot()).toString(), OxoListRespDto.class);
+                OxoListRespDto oxoListRespDto = JSONObject.parseObject(JSONArray.parse(oxoVersionSnapshot.getOxoSnapshot()).toString(), OxoListRespDto.class);
                 // 如果是 非 Configuration Admin ，展示所有Engineering类型的Feature/Option行
-                if(CollectionUtils.isNotEmpty(roleNames) && !roleNames.contains(ConfigConstants.CONFIG_ADMIN)) {
+                if (CollectionUtils.isNotEmpty(roleNames) && !roleNames.contains(ConfigConstants.CONFIG_ADMIN)) {
                     oxoListRespDto.setOxoRowsResps(oxoListRespDto.getOxoRowsResps().stream().filter(x ->
                             StringUtils.equals(x.getCatalog(), FeatureCatalogEnum.ENGINEERING.getCatalog())).collect(Collectors.toList()));
                 }

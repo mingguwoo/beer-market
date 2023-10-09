@@ -23,7 +23,6 @@ import java.util.*;
 @RequiredArgsConstructor
 public class SyncProductContextEventHandler implements EventHandler<SyncProductContextEvent> {
 
-    private final ProductContextFacade productContextFacade;
     private final KafkaSender kafkaSender;
 
     @Override
@@ -58,6 +57,8 @@ public class SyncProductContextEventHandler implements EventHandler<SyncProductC
         Set<String> existFeature = new HashSet<>();
         Map<String, SyncProductContextFeatureKafkaCmd> codeFeatureMap = new HashMap<>();
         List<SyncProductContextFeatureKafkaCmd> featureList = new ArrayList<>();
+        //去重用，防止model year不同但code相同从而重复添加的情况
+        Set<String> optionSet = new HashSet<>();
         kafkaCmd.setFeature(featureList);
         if (!event.getProductContextAggrlist().isEmpty()){
             kafkaCmd.setModel(event.getProductContextAggrlist().get(0).getModelCode());
@@ -77,7 +78,7 @@ public class SyncProductContextEventHandler implements EventHandler<SyncProductC
         }
         if (!event.getProductContextAggrlist().isEmpty()){
             event.getProductContextAggrlist().forEach(aggr->{
-                //如果没有该feature，需要新建feature记录和featureOption中的featureList
+                //如果没有该feature，需要新建feature记录和featureOption中的optionList
                 if (!existFeature.contains(aggr.getFeatureCode())){
                     existFeature.add(aggr.getFeatureCode());
                     //新建打点中的Feature记录
@@ -91,13 +92,16 @@ public class SyncProductContextEventHandler implements EventHandler<SyncProductC
                     codeFeatureMap.put(aggr.getFeatureCode(),featureDto);
                     kafkaCmd.getFeature().add(featureDto);
                     existFeature.add(aggr.getFeatureCode());
-
+                    optionSet.add(aggr.getOptionCode());
                 }
                 else{
                     //option记录
-                    SyncProductContextOptionKafkaCmd dto = new SyncProductContextOptionKafkaCmd();
-                    dto.setOptionCode(aggr.getOptionCode());
-                    codeFeatureMap.get(aggr.getFeatureCode()).getOption().add(dto);
+                    if (!optionSet.contains(aggr.getOptionCode())){
+                        SyncProductContextOptionKafkaCmd dto = new SyncProductContextOptionKafkaCmd();
+                        dto.setOptionCode(aggr.getOptionCode());
+                        codeFeatureMap.get(aggr.getFeatureCode()).getOption().add(dto);
+                        optionSet.add(aggr.getOptionCode());
+                    }
                 }
             });
         }

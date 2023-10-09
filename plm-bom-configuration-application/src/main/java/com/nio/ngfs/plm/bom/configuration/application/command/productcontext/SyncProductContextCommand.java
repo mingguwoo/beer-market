@@ -12,9 +12,7 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.kafka.SyncProdu
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author bill.wang

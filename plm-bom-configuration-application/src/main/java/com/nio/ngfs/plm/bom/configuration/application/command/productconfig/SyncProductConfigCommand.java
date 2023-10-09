@@ -24,12 +24,14 @@ public class SyncProductConfigCommand extends AbstractCommand<SyncProductConfigK
 
     @Override
     protected Void executeCommand(SyncProductConfigKafkaCmd cmd) {
+        // 处理PC同步
         if (cmd.getSyncProductConfigKafkaDto() != null) {
             SyncProductConfigKafkaDto syncProductConfigKafkaDto = cmd.getSyncProductConfigKafkaDto();
             SyncAddPcDto syncAddPcDto = new SyncAddPcDto();
             BeanUtils.copyProperties(syncProductConfigKafkaDto, syncAddPcDto);
             productConfigFacade.syncAddPcToEnovia(syncAddPcDto);
         }
+        // 处理ProductConfig打点同步
         if (cmd.getSyncProductConfigOptionKafkaDto() != null) {
             SyncProductConfigOptionKafkaDto syncProductConfigOptionKafkaDto = cmd.getSyncProductConfigOptionKafkaDto();
             if (syncProductConfigOptionKafkaDto.isSelect()) {

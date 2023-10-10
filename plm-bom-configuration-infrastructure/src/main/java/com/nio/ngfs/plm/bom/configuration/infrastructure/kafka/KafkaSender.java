@@ -27,12 +27,12 @@ public class KafkaSender {
     }
 
     public void sendSyncProductContextFeature(SyncProductContextKafkaCmd kafkaCmd) {
-        commonKafkaTemplate.send(kafkaTopicProperties.getSyncProductContext(), String.format("%s::%s", kafkaCmd.getSyncProductContextModelFeatureKafkaCmd().getModelCodeList().get(0), kafkaCmd.getSyncProductContextModelFeatureKafkaCmd().getFeatureCode())
+        commonKafkaTemplate.send(kafkaTopicProperties.getSyncProductContext(), String.format("%s", kafkaCmd.getSyncProductContextModelFeatureKafkaCmd().getModelCodeList().get(0))
                 , GsonUtils.toJson(kafkaCmd));
     }
 
     public void sendSyncProductContextFeatureOption(SyncProductContextKafkaCmd kafkaCmd) {
-        commonKafkaTemplate.send(kafkaTopicProperties.getSyncProductContext(), String.format("%s::%s", kafkaCmd.getSyncProductContextModelFeatureOptionKafkaCmd().getModel(), kafkaCmd.getSyncProductContextModelFeatureOptionKafkaCmd().getFeature().get(0).getOption().get(0).getOptionCode())
+        commonKafkaTemplate.send(kafkaTopicProperties.getSyncProductContext(), String.format("%s", kafkaCmd.getSyncProductContextModelFeatureOptionKafkaCmd().getModel())
                 , GsonUtils.toJson(kafkaCmd));
     }
 

@@ -12,7 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -45,6 +47,16 @@ public class V36CodeLibraryApplicationServiceImpl implements V36CodeLibraryAppli
     public boolean isV36CodeIdInReleasedV36(V36CodeLibraryAggr aggr) {
         // todo
         return true;
+    }
+
+    @Override
+    public Map<String, FeatureAggr> queryAllSalesFeature() {
+        List<FeatureAggr> aggrList = featureRepository.queryFeatureByCatalog(FeatureCatalogEnum.SALES.getCatalog());
+        Map<String,FeatureAggr> featureMap = new HashMap<>();
+        aggrList.forEach(aggr->{
+            featureMap.put(aggr.getFeatureCode(),aggr);
+        });
+        return featureMap;
     }
 
 }

@@ -158,9 +158,10 @@ public class BomsFeatureLibraryDaoImpl extends AbstractDao<BomsFeatureLibraryMap
     }
 
     @Override
-    public List<BomsFeatureLibraryEntity> queryByCatalog(String catalog) {
+    public List<BomsFeatureLibraryEntity> queryFeatureByCatalog(String catalog) {
         LambdaQueryWrapper<BomsFeatureLibraryEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(Objects.nonNull(catalog),BomsFeatureLibraryEntity::getCatalog,catalog);
+        lambdaQueryWrapper.eq(BomsFeatureLibraryEntity::getType,FeatureTypeEnum.FEATURE.getType());
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 

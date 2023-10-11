@@ -128,6 +128,6 @@ public interface BomsFeatureLibraryDao extends IService<BomsFeatureLibraryEntity
      * @param catalog
      * @return
      */
-    List<BomsFeatureLibraryEntity> queryByCatalog(String catalog);
+    List<BomsFeatureLibraryEntity> queryFeatureByCatalog(String catalog);
 
 }

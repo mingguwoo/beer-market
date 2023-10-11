@@ -2,7 +2,6 @@ package com.nio.ngfs.plm.bom.configuration.application.event.productcontext;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.nio.ngfs.plm.bom.configuration.application.event.EventHandler;
-import com.nio.ngfs.plm.bom.configuration.domain.facade.ProductContextFacade;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productcontext.event.SyncProductContextEvent;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.kafka.KafkaSender;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.kafka.*;

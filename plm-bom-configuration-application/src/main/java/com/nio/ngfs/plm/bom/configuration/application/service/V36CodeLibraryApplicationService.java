@@ -1,6 +1,9 @@
 package com.nio.ngfs.plm.bom.configuration.application.service;
 
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.v36code.V36CodeLibraryAggr;
+
+import java.util.Map;
 
 /**
  * @author xiaozhou.tu
@@ -22,5 +25,11 @@ public interface V36CodeLibraryApplicationService {
      * @return true|false
      */
     boolean isV36CodeIdInReleasedV36(V36CodeLibraryAggr aggr);
+
+    /**
+     * 获取全部SalesFeature
+     * @return
+     */
+    Map<String, FeatureAggr> queryAllSalesFeature();
 
 }

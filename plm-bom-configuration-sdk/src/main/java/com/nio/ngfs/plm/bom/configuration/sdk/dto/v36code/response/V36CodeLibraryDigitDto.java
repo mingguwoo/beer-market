@@ -20,7 +20,7 @@ public class V36CodeLibraryDigitDto {
 
     private String chineseName;
 
-    private String salesFeatureList;
+    private SalesFeatureDto salesFeatureList;
 
     private String remark;
 

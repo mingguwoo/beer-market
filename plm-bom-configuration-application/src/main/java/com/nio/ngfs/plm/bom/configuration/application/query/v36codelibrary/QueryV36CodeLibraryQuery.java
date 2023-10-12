@@ -126,7 +126,7 @@ public class QueryV36CodeLibraryQuery {
         dto.setCreateTime(String.valueOf(entity.getCreateTime()));
         dto.setUpdateUser(entity.getUpdateUser());
         dto.setUpdateTime(String.valueOf(entity.getUpdateTime()));
-        List<String> v36SalesFeatureCodeList = Arrays.asList(entity.getSalesFeatureList().replace(",","|").split("\\|"));
+        List<String> v36SalesFeatureCodeList = Arrays.asList(entity.getSalesFeatureList().split(","));
         //加个兜底，理论上不会出现salesFeatureList为空的情况
         if (!StringUtils.isBlank(entity.getSalesFeatureList())){
             StringBuilder featureCode = new StringBuilder("");

@@ -9,6 +9,8 @@ import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.application.service.OxoFeatureOptionApplicationService;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
+import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
@@ -20,7 +22,6 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.oxooptionpackage.enums.Ox
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.OxoVersionSnapshotRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.oxoversionsnapshot.enums.OxoSnapshotEnum;
-import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoFeatureOptionDomainService;
 import com.nio.ngfs.plm.bom.configuration.domain.service.oxo.OxoVersionSnapshotDomainService;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsBaseVehicleDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsProductConfigDao;
@@ -56,14 +57,13 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
     private final FeatureRepository featureRepository;
     private final OxoFeatureOptionRepository oxoFeatureOptionRepository;
     private final OxoOptionPackageRepository oxoOptionPackageRepository;
-    private final OxoFeatureOptionDomainService featureOptionDomainService;
     private final OxoVersionSnapshotDomainService versionSnapshotDomainService;
     private final OxoVersionSnapshotRepository oxoVersionSnapshotRepository;
     private final BomsProductConfigModelOptionDao bomsProductConfigModelOptionDao;
     private final BomsProductConfigOptionDao bomsProductConfigOptionDao;
     private final BomsProductConfigDao bomsProductConfigDao;
     private final BomsBaseVehicleDao bomsBaseVehicleDao;
-
+    private final BaseVehicleRepository baseVehicleRepository;
 
     @Override
     public List<OxoFeatureOptionAggr> querySameSortGroupFeatureOption(String model, String featureOptionCode) {
@@ -168,11 +168,14 @@ public class OxoFeatureOptionApplicationServiceImpl implements OxoFeatureOptionA
     private Map<DeleteFeatureOptionCheckTypeEnum, Set<String>> checkDeleteOptionPackage(List<OxoOptionPackageAggr> optionPackageAggrList, Map<Long, OxoFeatureOptionAggr> featureOptionMapById,
                                                                                         String modelCode) {
         Map<DeleteFeatureOptionCheckTypeEnum, Set<String>> messageTypeMap = Maps.newHashMap();
+        // 查询Base Vehicle列表
+        List<BaseVehicleAggr> baseVehicleAggrList = baseVehicleRepository.queryByIdList(LambdaUtil.map(optionPackageAggrList, OxoOptionPackageAggr::getBaseVehicleId, true));
+        Set<Long> activeBaseVehicleIdSet = baseVehicleAggrList.stream().filter(BaseVehicleAggr::isStatusActive).map(BaseVehicleAggr::getId).collect(Collectors.toSet());
         // 打点按Option行分组
         Map<Long, List<OxoOptionPackageAggr>> optionPackageAggrMap = LambdaUtil.groupBy(optionPackageAggrList, OxoOptionPackageAggr::getFeatureOptionId);
         optionPackageAggrMap.forEach((featureOptionId, aggrList) -> {
-            // Option的打点全为-，跳过
-            if (aggrList.stream().allMatch(OxoOptionPackageAggr::isPackageUnavailable)) {
+            // Option的打点全为-，跳过（只校验Status为Active的Base Vehicle的打点）
+            if (aggrList.stream().filter(i -> activeBaseVehicleIdSet.contains(i.getBaseVehicleId())).allMatch(OxoOptionPackageAggr::isPackageUnavailable)) {
                 return;
             }
             OxoFeatureOptionAggr featureOptionAggr = featureOptionMapById.get(featureOptionId);

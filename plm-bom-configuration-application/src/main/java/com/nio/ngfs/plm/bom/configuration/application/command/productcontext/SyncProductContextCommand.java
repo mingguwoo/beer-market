@@ -6,13 +6,13 @@ import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncProductC
 import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncProductContextModelFeatureDto;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncProductContextModelFeatureOptionDto;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncProductContextOptionDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.kafka.SyncProductContextFeatureKafkaCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.kafka.SyncProductContextKafkaCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.kafka.SyncProductContextOptionKafkaCmd;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author bill.wang

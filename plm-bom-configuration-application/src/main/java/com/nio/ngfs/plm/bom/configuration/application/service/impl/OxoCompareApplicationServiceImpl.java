@@ -63,9 +63,10 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
 
     /**
      * 高低版本对比
-     * @param baseQry      基础
-     * @param compareQry   对比
-     * @param showDiff     只展示不一样的结果
+     *
+     * @param baseQry    基础
+     * @param compareQry 对比
+     * @param showDiff   只展示不一样的结果
      * @return
      */
     @Override
@@ -205,7 +206,16 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
 
                     List<OxoHeadQry> oxoHeadQries = compareOxoFeatureModel.getBaseIpFeature().getOxoHeadResps();
                     List<OxoHeadQry> oxoHeadQryList = Lists.newArrayList(oxoHeadQries);
-                    oxoHeadQryList.add(modelYear);
+                    // oxoHeadQryList.add(modelYear);
+                    Map<String, List<OxoHeadQry>> maps = oxoHeadQryList.stream().collect(Collectors.groupingBy(x -> x.getModelCode() + x.getModelYear()));
+
+                    String key = modelYear.getModelCode() + modelYear.getModelYear();
+                    if (maps.containsKey(key)) {
+                        List<OxoHeadQry> oxoHeadQriess = maps.get(key);
+                        oxoHeadQriess.get(0).getRegionInfos().add(regionInfo);
+                    } else {
+                        oxoHeadQryList.add(modelYear);
+                    }
                     compareOxoFeatureModel.getBaseIpFeature().setOxoHeadResps(oxoHeadQryList);
                     //子级直接继承
                     setRegionChildrenChangeType(regionInfo.getDriveHands(), CompareChangeTypeEnum.DELETE.getName());
@@ -285,9 +295,9 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
      * 设置FeatureOptionChangeType
      *
      * @param compareOxoFeatureModel 对比oxo版本
-     * @param oxoListRespDto 对比版本
-     * @param baseVersion  是否是基本版本
-     * @param versionName  lowVersion baseVersion
+     * @param oxoListRespDto         对比版本
+     * @param baseVersion            是否是基本版本
+     * @param versionName            lowVersion baseVersion
      */
     private void wrapFeatureOptionChangeType(CompareOxoFeatureModelRespDto compareOxoFeatureModel,
                                              OxoListRespDto oxoListRespDto, boolean baseVersion, String versionName) {
@@ -354,7 +364,11 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
 
                     log.info("option:{},delete count:{},unAvailableCount:{},changeType:{}", option.getFeatureCode(), count, unAvailableCount, option.getChangeType());
 
-                    if (unAvailableCount == count && count > 0) {
+                    long modifyCount = option.getPackInfos().stream().filter(s-> Objects.nonNull(s.getCompareOxoEdit()) && (StringUtils.equals(s.getCompareOxoEdit().getPackageCode(),
+                              s.getPackageCode())) && !(StringUtils.equals(s.getCompareOxoEdit().getDescription(),
+                              s.getDescription()))).count();
+
+                    if (unAvailableCount == count && count > 0 && modifyCount==0) {
                         option.setChangeType(CompareChangeTypeEnum.DELETE.getName());
                     }
 
@@ -641,11 +655,11 @@ public class OxoCompareApplicationServiceImpl implements OxoCompareApplicationSe
         emailParamDto.setTemplateNo(oxoEmailTemplateNo);
         List<String> finalUsers = Lists.newArrayList();
         users.forEach(user -> {
-            if(StringUtils.isBlank(user)){
+            if (StringUtils.isBlank(user)) {
                 return;
             }
             if (!StringUtils.contains(user, "@nio.com")) {
-                user= user + "@nio.com";
+                user = user + "@nio.com";
             }
             finalUsers.add(user);
         });

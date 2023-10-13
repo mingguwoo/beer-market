@@ -51,4 +51,12 @@ public interface BaseVehicleRepository extends Repository<BaseVehicleAggr,String
      */
     void batchSave(List<BaseVehicleAggr>baseVehicleList);
 
+    /**
+     * 根据id列表批量查询
+     *
+     * @param idList id列表
+     * @return BaseVehicleAggr列表
+     */
+    List<BaseVehicleAggr> queryByIdList(List<Long> idList);
+
 }

@@ -96,4 +96,10 @@ public interface FeatureRepository extends Repository<FeatureAggr, FeatureId> {
      */
     List<FeatureAggr> findFeatureLibraryNotFeatureCodes(List<String> featureCodes);
 
+    /**
+     * 根据catalog查找feature
+     * @param catalog
+     * @return
+     */
+    List<FeatureAggr> queryFeatureByCatalog(String catalog);
 }

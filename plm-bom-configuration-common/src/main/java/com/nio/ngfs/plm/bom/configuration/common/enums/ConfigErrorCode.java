@@ -89,6 +89,8 @@ public enum ConfigErrorCode implements ErrorCode {
     PRODUCT_CONFIG_BASED_ON_BASE_VEHICLE_OPTION_NOT_EXIST(83010, "Based On Base Vehicle Option Code Not Exist!"),
     PRODUCT_CONFIG_OPTION_CAN_NOT_EDIT(83011, "Product Config Can Not Edit!"),
     PRODUCT_CONFIG_PC_MODEL_NOT_MATCH(83012, "PC And Model Not Match!"),
+    PRODUCT_CONFIG_PC_IMPORT_ERROR(83013, "PC Import Error"),
+    PRODUCT_CONFIG_PRODUCT_CONFIG_OPTION_IMPORT_ERROR(83014, "Product Config Option Import Error"),
 
     /**
      * V36 Code

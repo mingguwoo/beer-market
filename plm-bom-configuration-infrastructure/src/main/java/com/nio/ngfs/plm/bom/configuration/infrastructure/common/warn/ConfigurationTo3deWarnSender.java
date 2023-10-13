@@ -10,6 +10,7 @@ import com.nio.ngfs.plm.bom.configuration.remote.dto.feature.PlmFeatureOptionSyn
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -146,10 +147,14 @@ public class ConfigurationTo3deWarnSender {
      */
     public void sendSyncProductContextModelFeatureOptionWarn(SyncProductContextModelFeatureOptionDto dto, String errorMsg) {
         sendWarnMessage(PRODUCT_CONTEXT, dto, errorMsg, getProductContextAtList(),
-                String.format("Model %s Sync Code %s Fail!", dto.getModel(), dto.getFeature().get(0).getOption().get(0).getOptionCode()));
+                String.format("Model %s Sync Code Fail!", dto.getModel()));
     }
 
     private <Req> void sendWarnMessage(String module, Req request, String errorMsg, List<String> atList, String failMsg) {
+        // 错误信息特殊转译符号处理
+        if (StringUtils.isNotBlank(errorMsg)) {
+            errorMsg = errorMsg.replaceAll("\u003d", "=");
+        }
         String message = FeishuPostMessageBuilder.buildPostMessage(
                 getTitle(),
                 Lists.newArrayList(String.format(CONTENT_TEMPLATE, module, failMsg, GsonUtils.toJson(request), errorMsg)),

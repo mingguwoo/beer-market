@@ -63,13 +63,11 @@ public class DeleteFeatureOptionCommand extends AbstractLockCommand<DeleteFeatur
         softDeleteList.forEach(OxoFeatureOptionAggr::softDelete);
         // 软删除的Feature/Option行，校验并删除打点
         Pair<List<OxoOptionPackageAggr>, List<String>> result = featureOptionApplicationService.checkAndDeleteOptionPackage(cmd.getModelCode(), softDeleteList);
-
-        if(StringUtils.equals(cmd.getType(), CompareChangeTypeEnum.DELETE.getName())) {
+        if (StringUtils.equals(cmd.getType(), CompareChangeTypeEnum.DELETE.getName())) {
             // 事务保存到数据库
             ((DeleteFeatureOptionCommand) AopContext.currentProxy()).saveFeatureOptionAndOptionPackage(physicalDeleteList, softDeleteList, result.getLeft());
             return new DeleteFeatureOptionRespDto();
         }
-
         return new DeleteFeatureOptionRespDto(result.getRight());
     }
 

@@ -31,4 +31,13 @@ public interface BomMiddlePlatformClient {
      */
     @GetMapping("/model/search/modelListByBrand")
     ResultInfo<List<ModelDto>> getModelListByBrand(@RequestParam("brand")  String brand);
+
+    /**
+     * 获取所有车型列表
+     *
+     * @return 车型列表
+     */
+    @GetMapping("/model/search/all")
+    ResultInfo<List<ModelDto>> getAllModelList();
+
 }

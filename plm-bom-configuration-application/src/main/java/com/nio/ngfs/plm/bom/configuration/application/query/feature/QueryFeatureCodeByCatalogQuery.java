@@ -5,10 +5,13 @@ import com.nio.ngfs.plm.bom.configuration.application.query.AbstractQuery;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureCatalogEnum;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsFeatureLibraryDao;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureLibraryEntity;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.QueryFeatureCodeByCatalogQry;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.response.QueryFeatureLibraryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,14 +21,23 @@ import java.util.Objects;
  */
 @Component
 @RequiredArgsConstructor
-public class QueryFeatureCodeByCatalogQuery extends AbstractQuery<QueryFeatureCodeByCatalogQry,List<String>> {
+public class QueryFeatureCodeByCatalogQuery extends AbstractQuery<QueryFeatureCodeByCatalogQry,List<QueryFeatureLibraryDto>> {
 
     private final BomsFeatureLibraryDao bomsFeatureLibraryDao;
 
     @Override
-    public List<String> executeQuery(QueryFeatureCodeByCatalogQry qry) {
+    public List<QueryFeatureLibraryDto> executeQuery(QueryFeatureCodeByCatalogQry qry) {
         checkType(qry);
-        return bomsFeatureLibraryDao.queryByCatalog(qry.getCatalog()).stream().map(entity->entity.getFeatureCode()).distinct().sorted().toList();
+        List<BomsFeatureLibraryEntity> entityList =  bomsFeatureLibraryDao.queryFeatureByCatalog(qry.getCatalog());
+        List<QueryFeatureLibraryDto> dtoList = new ArrayList<>();
+        entityList.forEach(entity->{
+            QueryFeatureLibraryDto dto = new QueryFeatureLibraryDto();
+            dto.setFeatureCode(entity.getFeatureCode());
+            dto.setChineseName(entity.getChineseName());
+            dto.setDisplayName(entity.getDisplayName());
+            dtoList.add(dto);
+        });
+        return dtoList;
     }
 
     private void checkType(QueryFeatureCodeByCatalogQry qry){

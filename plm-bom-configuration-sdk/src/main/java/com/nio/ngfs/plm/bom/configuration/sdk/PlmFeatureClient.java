@@ -123,6 +123,11 @@ public interface PlmFeatureClient {
     @PostMapping("/feature/queryFeatureLibrary")
     ResultInfo<List<QueryFeatureLibraryDto>> queryFeatureLibrary(QueryFeatureLibraryQry qry);
 
-    @PostMapping("/feature/queryFeatureCodeByCatalog")
-    ResultInfo<List<String>> getFeatureCodeByCatalog(QueryFeatureCodeByCatalogQry qry);
+    /**
+     * 因仅被V36 Code Library调用，此处仅返回featureCode，displayName，chineseName
+     * @param qry
+     * @return
+     */
+    @PostMapping("/feature/queryFeatureByCatalog")
+    ResultInfo<List<QueryFeatureLibraryDto>> getFeatureByCatalog(QueryFeatureCodeByCatalogQry qry);
 }

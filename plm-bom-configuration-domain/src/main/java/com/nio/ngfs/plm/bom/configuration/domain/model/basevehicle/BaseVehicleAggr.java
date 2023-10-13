@@ -129,4 +129,12 @@ public class BaseVehicleAggr extends AbstractDo implements AggrRoot<String>, Clo
             throw new BusinessException(ConfigErrorCode.BASE_VEHICLE_STATUS_INVALID);
         }
     }
+
+    /**
+     * Status是否为Active
+     */
+    public boolean isStatusActive() {
+        return Objects.equals(status, StatusEnum.ACTIVE.getStatus());
+    }
+
 }

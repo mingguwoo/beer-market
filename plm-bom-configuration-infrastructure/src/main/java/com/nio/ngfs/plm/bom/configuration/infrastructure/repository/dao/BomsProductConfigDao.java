@@ -69,4 +69,11 @@ public interface BomsProductConfigDao extends IService<BomsProductConfigEntity> 
      */
     List<BomsProductConfigEntity> queryByPcIdList(List<String> pcIdList, boolean includeDelete);
 
+    /**
+     * 查找所有
+     *
+     * @return BomsProductConfigEntity列表
+     */
+    List<BomsProductConfigEntity> queryAll();
+
 }

@@ -1,10 +1,14 @@
 package com.nio.ngfs.plm.bom.configuration.application.query.v36codelibrary;
 
+import com.alibaba.excel.util.StringUtils;
+import com.nio.ngfs.plm.bom.configuration.application.service.V36CodeLibraryApplicationService;
+import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.v36code.enums.V36CodeLibraryTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsV36CodeLibraryDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsV36CodeLibraryEntity;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.request.QueryV36CodeLibraryQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.response.QueryV36CodeLibraryRespDto;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.response.SalesFeatureDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.response.V36CodeLibraryDigitDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.response.V36CodeLibraryOptionDto;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +25,13 @@ import java.util.*;
 public class QueryV36CodeLibraryQuery {
 
     private final BomsV36CodeLibraryDao bomsV36CodeLibraryDao;
+    private final V36CodeLibraryApplicationService v36CodeLibraryApplicationService;
 
     public QueryV36CodeLibraryRespDto execute(QueryV36CodeLibraryQry qry){
         //先查找所有
         List<BomsV36CodeLibraryEntity> v36CodeLibraryEntityList = bomsV36CodeLibraryDao.queryAll();
         QueryV36CodeLibraryRespDto queryV36CodeLibraryRespDto = new QueryV36CodeLibraryRespDto(new ArrayList<>());
+        Map<String, FeatureAggr> featureMap = v36CodeLibraryApplicationService.queryAllSalesFeature();
         //记录所有对应关系
         Map<Long,BomsV36CodeLibraryEntity> entityMap = new HashMap<>();
         //记录digit
@@ -68,7 +74,7 @@ public class QueryV36CodeLibraryQuery {
         });
         //先存下所有被选中的digit
         digitSet.forEach(id->{
-            V36CodeLibraryDigitDto dto = buildDigit(entityMap.get(id));
+            V36CodeLibraryDigitDto dto = buildDigit(entityMap.get(id),featureMap);
             dto.setOptionList(digitOptionMap.get(id));
             queryV36CodeLibraryRespDto.getDigitList().add(dto);
         });
@@ -79,7 +85,7 @@ public class QueryV36CodeLibraryQuery {
             if (!digitSet.contains(entity.getId()) && !digitSet.contains(entity.getParentId())){
                 //如果没存过父级，就要新建
                 if (!digitMap.containsKey(entity.getParentId())){
-                    V36CodeLibraryDigitDto digitDto = buildDigit(entityMap.get(entity.getParentId()));
+                    V36CodeLibraryDigitDto digitDto = buildDigit(entityMap.get(entity.getParentId()),featureMap);
                     V36CodeLibraryOptionDto optionDto = buildOption(entity);
                     List<V36CodeLibraryOptionDto> optionList = new ArrayList<>();
                     optionList.add(optionDto);
@@ -109,18 +115,43 @@ public class QueryV36CodeLibraryQuery {
         return true;
     }
 
-    private V36CodeLibraryDigitDto buildDigit(BomsV36CodeLibraryEntity entity){
+    private V36CodeLibraryDigitDto buildDigit(BomsV36CodeLibraryEntity entity,Map<String,FeatureAggr> featureMap){
         V36CodeLibraryDigitDto dto = new V36CodeLibraryDigitDto();
         dto.setId(entity.getId());
         dto.setCode(entity.getCode());
-        dto.setChineseName(entity.getChineseName().replace(",","|"));
+        dto.setChineseName(entity.getChineseName());
         dto.setRemark(entity.getRemark());
-        dto.setDisplayName(entity.getDisplayName().replace(",","|"));
-        dto.setSalesFeatureList(entity.getSalesFeatureList().replace(",","|"));
+        dto.setDisplayName(entity.getDisplayName());
         dto.setCreateUser(entity.getCreateUser());
         dto.setCreateTime(String.valueOf(entity.getCreateTime()));
         dto.setUpdateUser(entity.getUpdateUser());
         dto.setUpdateTime(String.valueOf(entity.getUpdateTime()));
+        List<String> v36SalesFeatureCodeList = Arrays.asList(entity.getSalesFeatureList().split(","));
+        //加个兜底，理论上不会出现salesFeatureList为空的情况
+        if (!StringUtils.isBlank(entity.getSalesFeatureList())){
+            StringBuilder featureCode = new StringBuilder("");
+            StringBuilder featureDisplayName = new StringBuilder("");
+            StringBuilder featureChineseName = new StringBuilder("");
+            v36SalesFeatureCodeList.forEach(salesFeatureCode->{
+                if (!featureCode.isEmpty()){
+                    featureCode.append("|");
+                }
+                if (!featureDisplayName.isEmpty()){
+                    featureDisplayName.append("|");
+                }
+                if (!featureChineseName.isEmpty()){
+                    featureChineseName.append("|");
+                }
+                featureCode.append(salesFeatureCode);
+                featureDisplayName.append(featureMap.get(salesFeatureCode).getDisplayName());
+                featureChineseName.append(featureMap.get(salesFeatureCode).getChineseName());
+            });
+            SalesFeatureDto salesFeatureDto = new SalesFeatureDto();
+            salesFeatureDto.setFeatureCode(String.valueOf(featureCode));
+            salesFeatureDto.setDisplayName(String.valueOf(featureDisplayName));
+            salesFeatureDto.setChineseName(String.valueOf(featureChineseName));
+            dto.setSalesFeatureList(salesFeatureDto);
+        }
         return dto;
     }
 

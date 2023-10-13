@@ -3,6 +3,7 @@ package com.nio.ngfs.plm.bom.configuration.application.query.productcontext.serv
 import com.nio.ngfs.plm.bom.configuration.application.query.productcontext.service.ProductContextQueryService;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.common.util.ModelYearComparator;
+import com.nio.ngfs.plm.bom.configuration.domain.facade.ModelFacade;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature.enums.ProductContextFeatureEnum;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsFeatureLibraryDao;
@@ -29,6 +30,7 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
 
     private final BomsFeatureLibraryDao bomsFeatureLibraryDao;
     private final BomsOxoVersionSnapshotDao bomsOxoVersionSnapshotDao;
+    private final ModelFacade modelFacade;
 
     @Override
     public GetProductContextRespDto filterAndBuildResponse(List<ProductContextDto> pointList, List<BomsProductContextFeatureEntity> rowList, GetProductContextQry qry){
@@ -238,7 +240,8 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
     @Override
     public ProductContextOptionsRespDto queryProductContextOptions() {
         ProductContextOptionsRespDto productContextOptionsRespDto = new ProductContextOptionsRespDto();
-        productContextOptionsRespDto.setModelCode(bomsOxoVersionSnapshotDao.queryAll().stream().map(snapShot->snapShot.getModelCode()).distinct().toList());
+        //区分多租户
+        productContextOptionsRespDto.setModelCode(modelFacade.getModelListByBrand(ConfigConstants.brandName.get()).stream().toList());
         productContextOptionsRespDto.setGroupCode(bomsFeatureLibraryDao.getGroupList().stream().map(group->group.getFeatureCode()).toList());
         return productContextOptionsRespDto;
     }

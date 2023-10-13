@@ -8,6 +8,7 @@ import com.nio.ngfs.plm.bom.configuration.application.command.productconfig.Edit
 import com.nio.ngfs.plm.bom.configuration.application.command.productconfig.EditProductConfigCommand;
 import com.nio.ngfs.plm.bom.configuration.application.query.productconfig.*;
 import com.nio.ngfs.plm.bom.configuration.application.task.productconfig.ImportPcTask;
+import com.nio.ngfs.plm.bom.configuration.application.task.productconfig.ImportProductConfigOptionTask;
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmProductConfigClient;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.request.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.*;
@@ -43,6 +44,7 @@ public class ProductConfigController implements PlmProductConfigClient {
     private final EditProductConfigCommand editProductConfigCommand;
     private final ExportProductConfigQuery exportProductConfigQuery;
     private final ImportPcTask importPcTask;
+    private final ImportProductConfigOptionTask importProductConfigOptionTask;
 
     @Override
     @NotLogResult
@@ -120,6 +122,12 @@ public class ProductConfigController implements PlmProductConfigClient {
     @PostMapping("/productConfig/importPc")
     public ResultInfo<ImportPcRespDto> importPc(@RequestPart("file") MultipartFile file) {
         return ResultInfo.success(importPcTask.execute(file));
+    }
+
+    @NotLogResult
+    @PostMapping("/productConfig/importProductConfigOption")
+    public ResultInfo<ImportProductConfigOptionRespDto> importProductConfigOption(@RequestPart("file") MultipartFile file) {
+        return ResultInfo.success(importProductConfigOptionTask.execute(file));
     }
 
 }

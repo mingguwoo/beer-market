@@ -1,5 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.domain.facade;
 
+import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.response.ModelRespDto;
+
 import java.util.List;
 import java.util.Set;
 
@@ -30,5 +32,12 @@ public interface ModelFacade {
      * @return
      */
     Set<String> getModelListByBrand(String brand);
+
+    /**
+     * 获取所有车型列表
+     *
+     * @return 车型列表
+     */
+    List<ModelRespDto> getAllModelList();
 
 }

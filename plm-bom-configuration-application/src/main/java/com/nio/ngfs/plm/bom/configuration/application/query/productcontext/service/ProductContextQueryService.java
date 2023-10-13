@@ -20,7 +20,7 @@ public interface ProductContextQueryService {
     GetProductContextRespDto filterAndBuildResponse(List<ProductContextDto> pointList, List<BomsProductContextFeatureEntity> rowList, GetProductContextQry qry);
 
     /**
-     * 获取全部model code和group
+     * 获取model code和group
      * @return
      */
     ProductContextOptionsRespDto queryProductContextOptions();

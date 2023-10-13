@@ -81,4 +81,9 @@ public class BomsProductConfigDaoImpl extends AbstractDao<BomsProductConfigMappe
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 
+    @Override
+    public List<BomsProductConfigEntity> queryAll() {
+        return getBaseMapper().selectList(new LambdaQueryWrapper<>());
+    }
+
 }

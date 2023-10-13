@@ -7,29 +7,31 @@ import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.excel.read.metadata.ReadSheet;
 import com.alibaba.excel.support.ExcelTypeEnum;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.nio.bom.share.constants.CommonConstants;
 import com.nio.bom.share.enums.YesOrNoEnum;
 import com.nio.bom.share.exception.BusinessException;
+import com.nio.bom.share.utils.GsonUtils;
 import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.enums.ProductConfigOptionTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsProductConfigDao;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsProductConfigModelOptionDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsProductConfigOptionDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductConfigEntity;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductConfigModelOptionEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductConfigOptionEntity;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.ImportProductConfigOptionRespDto;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * 同步Product Config勾选历史数据
@@ -51,6 +53,7 @@ public class ImportProductConfigOptionTask {
 
     private final BomsProductConfigDao bomsProductConfigDao;
     private final BomsProductConfigOptionDao bomsProductConfigOptionDao;
+    private final BomsProductConfigModelOptionDao bomsProductConfigModelOptionDao;
 
     public ImportProductConfigOptionRespDto execute(MultipartFile file) {
         // 读取历史数据
@@ -64,12 +67,23 @@ public class ImportProductConfigOptionTask {
      * 导入打点
      */
     private void importProductConfigHistory(ProductConfigHistory productConfigHistory) {
+        // 校验PC Name存在
         BomsProductConfigEntity productConfigEntity = bomsProductConfigDao.getByName(productConfigHistory.getPcName());
         if (productConfigEntity == null) {
             throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_PRODUCT_CONFIG_OPTION_IMPORT_ERROR, "PC Name Not Exist");
         }
+        // 构建BomsProductConfigOptionEntity
         List<BomsProductConfigOptionEntity> optionEntityList = LambdaUtil.map(productConfigHistory.getProductConfigOptionHistoryList(),
                 i -> buildProductConfigOptionEntity(productConfigEntity, i));
+        // 校验打点的Feature/Option行必须存在
+        List<BomsProductConfigModelOptionEntity> modelOptionEntityList = bomsProductConfigModelOptionDao.queryByModel(productConfigEntity.getModelCode());
+        Set<String> modelOptionCodeSet = Sets.newHashSet(LambdaUtil.map(modelOptionEntityList, BomsProductConfigModelOptionEntity::getOptionCode));
+        List<String> notExistedModelOptionCodeList = optionEntityList.stream().map(BomsProductConfigOptionEntity::getOptionCode)
+                .filter(optionCode -> !modelOptionCodeSet.contains(optionCode)).toList();
+        if (CollectionUtils.isNotEmpty(notExistedModelOptionCodeList)) {
+            throw new BusinessException(ConfigErrorCode.PRODUCT_CONFIG_PRODUCT_CONFIG_OPTION_IMPORT_ERROR, "Model Feature/Option Row Not Exist OptionCodeList=" + GsonUtils.toJson(notExistedModelOptionCodeList));
+        }
+        // 打点已存在，赋值id
         List<BomsProductConfigOptionEntity> existOptionEntityList = bomsProductConfigOptionDao.queryByPcId(productConfigEntity.getId());
         Map<String, BomsProductConfigOptionEntity> existOptionEntityMap = LambdaUtil.toKeyMap(existOptionEntityList, BomsProductConfigOptionEntity::getOptionCode);
         optionEntityList.forEach(optionEntity ->
@@ -79,6 +93,7 @@ public class ImportProductConfigOptionTask {
         );
         // 只导入id不为空或勾选的打点
         optionEntityList = optionEntityList.stream().filter(i -> i.getId() != null || Objects.equals(i.getSelectStatus(), YesOrNoEnum.YES.getCode())).toList();
+        // 打点保存到数据库
         bomsProductConfigOptionDao.saveOrUpdateBatch(optionEntityList);
     }
 

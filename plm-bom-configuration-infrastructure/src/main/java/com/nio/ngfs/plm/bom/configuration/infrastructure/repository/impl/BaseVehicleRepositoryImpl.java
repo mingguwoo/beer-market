@@ -66,6 +66,11 @@ public class BaseVehicleRepositoryImpl implements BaseVehicleRepository {
     }
 
     @Override
+    public List<BaseVehicleAggr> queryByIdList(List<Long> idList) {
+        return baseVehicleConverter.convertEntityListToDoList(bomsBaseVehicleDao.listByIds(idList));
+    }
+
+    @Override
     public List<BaseVehicleAggr> queryByModel(String modelCode,Boolean isMaturity) {
         return baseVehicleConverter.convertEntityListToDoList(bomsBaseVehicleDao.queryByModel(modelCode,isMaturity));
     }

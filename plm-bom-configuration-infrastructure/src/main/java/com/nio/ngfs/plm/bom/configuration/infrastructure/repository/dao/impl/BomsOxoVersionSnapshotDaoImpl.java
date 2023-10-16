@@ -1,7 +1,9 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.common.model.page.WherePageRequest;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsOxoVersionSnapshotDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsOxoVersionSnapshotEntity;
@@ -71,4 +73,13 @@ public class BomsOxoVersionSnapshotDaoImpl extends AbstractDao<BomsOxoVersionSna
     public List<BomsOxoVersionSnapshotEntity> queryAll() {
         return getBaseMapper().selectList(new LambdaQueryWrapper<>());
     }
+
+    @Override
+    public List<String> getAllModelList() {
+        QueryWrapper<BomsOxoVersionSnapshotEntity> queryWrapper = new QueryWrapper<BomsOxoVersionSnapshotEntity>()
+                .select("DISTINCT model_code");
+        List<BomsOxoVersionSnapshotEntity> entityList = getBaseMapper().selectList(queryWrapper);
+        return LambdaUtil.map(entityList, BomsOxoVersionSnapshotEntity::getModelCode);
+    }
+
 }

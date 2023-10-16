@@ -63,4 +63,10 @@ public class OxoVersionSnapshotRepositoryImpl implements OxoVersionSnapshotRepos
         return oxoVersionSnapshotConverter.convertEntityListToDoList(bomsOxoVersionSnapshotDao.
                 queryBomsOxoVersionSnapshotsByModelOrVersionOrType(modelCode, null, null));
     }
+
+    @Override
+    public List<String> getAllModelList() {
+        return bomsOxoVersionSnapshotDao.getAllModelList();
+    }
+
 }

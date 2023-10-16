@@ -105,4 +105,13 @@ public interface PlmProductConfigClient {
     @PostMapping("/productConfig/editProductConfig")
     ResultInfo<EditProductConfigRespDto> editProductConfig(EditProductConfigCmd cmd);
 
+    /**
+     * 同步Product Config Feature/Option行
+     *
+     * @param cmd 命令
+     * @return 响应
+     */
+    @PostMapping("/productConfig/syncProductConfigModelOption")
+    ResultInfo<SyncProductConfigModelOptionRespDto> syncProductConfigModelOption(SyncProductConfigModelOptionCmd cmd);
+
 }

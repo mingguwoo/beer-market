@@ -6,6 +6,8 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.Cmd;
 import javax.annotation.Resource;
 
 /**
+ * 带redis分布式锁的Command，需要加锁控制并发的场景可使用
+ *
  * @author xiaozhou.tu
  * @date 2023/7/10
  */
@@ -16,7 +18,7 @@ public abstract class AbstractLockCommand<C extends Cmd, Resp> extends AbstractC
 
     @Override
     protected Resp executeCommand(C c) {
-        return redissonLocker.executeWithLock(getLockKey(c), () -> executeWithLock(c));
+        return redissonLocker.executeWithLock(getLockKey(c), getLockTime(c), () -> executeWithLock(c));
     }
 
     /**
@@ -26,6 +28,16 @@ public abstract class AbstractLockCommand<C extends Cmd, Resp> extends AbstractC
      * @return key
      */
     protected abstract String getLockKey(C c);
+
+    /**
+     * 获取最大加锁等待时间（秒）
+     *
+     * @param c c
+     * @return 加锁时间
+     */
+    protected Long getLockTime(C c) {
+        return null;
+    }
 
     /**
      * 执行加锁

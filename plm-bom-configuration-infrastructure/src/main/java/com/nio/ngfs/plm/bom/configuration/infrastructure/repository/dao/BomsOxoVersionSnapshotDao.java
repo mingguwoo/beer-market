@@ -49,4 +49,12 @@ public interface BomsOxoVersionSnapshotDao extends IService<BomsOxoVersionSnapsh
      * @return
      */
     List<BomsOxoVersionSnapshotEntity> queryAll();
+
+    /**
+     * 查询Release OXO的全部车型列表
+     *
+     * @return 车型列表
+     */
+    List<String> getAllModelList();
+
 }

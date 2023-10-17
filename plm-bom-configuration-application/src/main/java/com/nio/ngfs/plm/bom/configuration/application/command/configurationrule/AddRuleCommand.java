@@ -1,6 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.application.command.configurationrule;
 
-import com.nio.ngfs.plm.bom.configuration.application.command.AbstractLockCommand;
+import com.nio.ngfs.plm.bom.configuration.application.command.AbstractCommand;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.AddRuleCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.response.AddRuleRespDto;
 import lombok.RequiredArgsConstructor;
@@ -14,15 +14,10 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class AddRuleCommand extends AbstractLockCommand<AddRuleCmd, AddRuleRespDto> {
+public class AddRuleCommand extends AbstractCommand<AddRuleCmd, AddRuleRespDto> {
 
     @Override
-    protected String getLockKey(AddRuleCmd cmd) {
-        return null;
-    }
-
-    @Override
-    protected AddRuleRespDto executeWithLock(AddRuleCmd cmd) {
+    protected AddRuleRespDto executeCommand(AddRuleCmd cmd) {
         return null;
     }
 

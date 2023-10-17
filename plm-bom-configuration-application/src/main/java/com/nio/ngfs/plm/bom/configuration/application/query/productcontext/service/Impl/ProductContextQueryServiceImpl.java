@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author bill.wang
@@ -241,7 +242,9 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
     public ProductContextOptionsRespDto queryProductContextOptions() {
         ProductContextOptionsRespDto productContextOptionsRespDto = new ProductContextOptionsRespDto();
         //区分多租户
-        productContextOptionsRespDto.setModelCode(modelFacade.getModelListByBrand(ConfigConstants.brandName.get()).stream().toList());
+        Set<String> releasedModelList = bomsOxoVersionSnapshotDao.queryAll().stream().map(snapShot->snapShot.getModelCode()).collect(Collectors.toSet());
+        List<String> modelCodeList = modelFacade.getModelListByBrand(ConfigConstants.brandName.get()).stream().filter(modelCode->releasedModelList.contains(modelCode)).toList();
+        productContextOptionsRespDto.setModelCode(modelCodeList);
         productContextOptionsRespDto.setGroupCode(bomsFeatureLibraryDao.getGroupList().stream().map(group->group.getFeatureCode()).toList());
         return productContextOptionsRespDto;
     }

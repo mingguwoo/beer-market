@@ -41,7 +41,7 @@ public class ProductContextController implements PlmProductContextClient {
     }
 
     @Override
-    @NeedAuthorization
+    //@NeedAuthorization
     @NotLogResult
     public ResultInfo<ProductContextOptionsRespDto> queryProductContextOptions(@Valid @RequestBody QueryProductContextOptionsQry qry) {
         return ResultInfo.success(queryProductContextOptionsQuery.execute(qry));

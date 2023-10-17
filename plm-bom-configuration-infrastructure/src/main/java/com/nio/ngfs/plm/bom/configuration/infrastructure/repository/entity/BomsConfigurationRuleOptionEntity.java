@@ -49,23 +49,23 @@ public class BomsConfigurationRuleOptionEntity extends BaseEntity {
     /**
      * 矩阵打点，1-Inclusive，2-Exclusive，3-Unavailable
      */
-    private Byte matrixValue;
+    private Integer matrixValue;
 
     @Override
     public String toString() {
         return "BomsConfigurationRuleOption{" +
-            "id = " + getId() +
-            ", ruleId = " + ruleId +
-            ", drivingOptionCode = " + drivingOptionCode +
-            ", drivingFeatureCode = " + drivingFeatureCode +
-            ", constrainedOptionCode = " + constrainedOptionCode +
-            ", constrainedFeatureCode = " + constrainedFeatureCode +
-            ", matrixValue = " + matrixValue +
-            ", createUser = " + getCreateUser() +
-            ", updateUser = " + getUpdateUser() +
-            ", createTime = " + getCreateTime() +
-            ", updateTime = " + getUpdateTime() +
-            ", delFlag = " + getDelFlag() +
-        "}";
+                "id = " + getId() +
+                ", ruleId = " + ruleId +
+                ", drivingOptionCode = " + drivingOptionCode +
+                ", drivingFeatureCode = " + drivingFeatureCode +
+                ", constrainedOptionCode = " + constrainedOptionCode +
+                ", constrainedFeatureCode = " + constrainedFeatureCode +
+                ", matrixValue = " + matrixValue +
+                ", createUser = " + getCreateUser() +
+                ", updateUser = " + getUpdateUser() +
+                ", createTime = " + getCreateTime() +
+                ", updateTime = " + getUpdateTime() +
+                ", delFlag = " + getDelFlag() +
+                "}";
     }
 }

@@ -47,7 +47,7 @@ public class ConfigurationRuleOptionDo extends AbstractDo implements Entity<Long
     /**
      * 矩阵打点，1-Inclusive，2-Exclusive，3-Unavailable
      */
-    private Byte matrixValue;
+    private Integer matrixValue;
 
     @Override
     public Long getUniqId() {

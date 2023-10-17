@@ -41,7 +41,7 @@ public class BomsConfigurationRuleEntity extends BaseEntity {
     /**
      * 创建Rule的目的，1-（Sales —> Eng），2-（Sales —> Sales），3-（Sales <—> Sales），4-（Sales X Sales），5-（Base Vehicle —> Sales）
      */
-    private Byte purpose;
+    private Integer purpose;
 
     /**
      * Rule的类型，Inclusive、Exclusive、Default、Available
@@ -76,22 +76,22 @@ public class BomsConfigurationRuleEntity extends BaseEntity {
     @Override
     public String toString() {
         return "BomsConfigurationRule{" +
-            "id = " + getId() +
-            ", ruleId = " + ruleId +
-            ", ruleVersion = " + ruleVersion +
-            ", groupId = " + groupId +
-            ", purpose = " + purpose +
-            ", ruleType = " + ruleType +
-            ", changeType = " + changeType +
-            ", status = " + status +
-            ", effIn = " + effIn +
-            ", effOut = " + effOut +
-            ", releaseDate = " + releaseDate +
-            ", createUser = " + getCreateUser() +
-            ", updateUser = " + getUpdateUser() +
-            ", createTime = " + getCreateTime() +
-            ", updateTime = " + getUpdateTime() +
-            ", delFlag = " + getDelFlag() +
-        "}";
+                "id = " + getId() +
+                ", ruleId = " + ruleId +
+                ", ruleVersion = " + ruleVersion +
+                ", groupId = " + groupId +
+                ", purpose = " + purpose +
+                ", ruleType = " + ruleType +
+                ", changeType = " + changeType +
+                ", status = " + status +
+                ", effIn = " + effIn +
+                ", effOut = " + effOut +
+                ", releaseDate = " + releaseDate +
+                ", createUser = " + getCreateUser() +
+                ", updateUser = " + getUpdateUser() +
+                ", createTime = " + getCreateTime() +
+                ", updateTime = " + getUpdateTime() +
+                ", delFlag = " + getDelFlag() +
+                "}";
     }
 }

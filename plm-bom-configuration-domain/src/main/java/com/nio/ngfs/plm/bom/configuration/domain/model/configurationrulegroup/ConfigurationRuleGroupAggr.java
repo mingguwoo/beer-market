@@ -32,7 +32,7 @@ public class ConfigurationRuleGroupAggr extends AbstractDo implements AggrRoot<L
     /**
      * 创建Rule的目的，1-（Sales —> Eng），2-（Sales —> Sales），3-（Sales <—> Sales），4-（Sales X Sales），5-（Base Vehicle —> Sales）
      */
-    private Byte purpose;
+    private Integer purpose;
 
     /**
      * Rule适用范围

@@ -1,6 +1,5 @@
 package com.nio.ngfs.plm.bom.configuration.application.query.v36codelibrary;
 
-import com.alibaba.excel.util.StringUtils;
 import com.nio.ngfs.plm.bom.configuration.application.service.V36CodeLibraryApplicationService;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.v36code.enums.V36CodeLibraryTypeEnum;
@@ -12,9 +11,11 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.response.SalesFeatureD
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.response.V36CodeLibraryDigitDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.response.V36CodeLibraryOptionDto;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author bill.wang
@@ -100,14 +101,13 @@ public class QueryV36CodeLibraryQuery {
             }
         });
         //排序
-        queryV36CodeLibraryRespDto.setDigitList(queryV36CodeLibraryRespDto.getDigitList().stream().sorted(Comparator.comparing(V36CodeLibraryDigitDto::getCode).thenComparing(V36CodeLibraryDigitDto::getCreateTime)).toList());
+        queryV36CodeLibraryRespDto.setDigitList(queryV36CodeLibraryRespDto.getDigitList().stream().sorted(Comparator.comparingInt((V36CodeLibraryDigitDto digit)->Integer.parseInt(StringUtils.substringBefore(digit.getCode(),"-"))).thenComparing(V36CodeLibraryDigitDto::getCreateTime)).toList());
         queryV36CodeLibraryRespDto.getDigitList().stream().map(digit->{
             digit.setOptionList(digit.getOptionList().stream().sorted(Comparator.comparing(V36CodeLibraryOptionDto::getCode).thenComparing(V36CodeLibraryOptionDto::getCreateTime)).toList());
             return digit;
         });
         return queryV36CodeLibraryRespDto;
     }
-
     private boolean matchSearch(String content, String search){
         if (Objects.nonNull(search)){
             return content != null && content.contains(search);

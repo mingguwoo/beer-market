@@ -1,0 +1,10 @@
+package com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule;
+
+import com.nio.bom.share.domain.repository.Repository;
+
+/**
+ * @author xiaozhou.tu
+ * @date 2023/10/17
+ */
+public interface ConfigurationRuleRepository extends Repository<ConfigurationRuleAggr, Long> {
+}

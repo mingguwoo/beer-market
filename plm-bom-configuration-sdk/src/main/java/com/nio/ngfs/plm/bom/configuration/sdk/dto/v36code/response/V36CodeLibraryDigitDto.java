@@ -3,6 +3,7 @@ package com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.response;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -31,6 +32,9 @@ public class V36CodeLibraryDigitDto {
     private String updateUser;
 
     private String updateTime;
+
+    //排序用
+    private Date createTimeInDate;
 
     private List<V36CodeLibraryOptionDto> optionList = new ArrayList<>();
 }

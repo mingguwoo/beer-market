@@ -45,7 +45,7 @@ public class QueryV36CodeLibraryQuery {
         List<BomsV36CodeLibraryEntity> matchEntityList = v36CodeLibraryEntityList.stream().map(entity->{
             entityMap.put(entity.getId(),entity);
             return entity;
-        }).filter(entity-> matchSearch(entity.getSalesFeatureList(),qry.getSalesFeature()) && ( matchSearch(entity.getChineseName(),qry.getName()) || matchSearch(entity.getDisplayName(),qry.getName()) ))
+        }).filter(entity-> matchSearch(entity.getSalesFeatureList(),qry.getSalesFeature()) && ( matchSearch(entity.getCode(),qry.getName()) || matchSearch(entity.getChineseName(),qry.getName()) || matchSearch(entity.getDisplayName(),qry.getName()) ))
                 .map(entity->{
                     //先记录下被搜到的digit，到时候直接添加他所有的option
                     if (Objects.equals(entity.getType(),V36CodeLibraryTypeEnum.DIGIT.getType())){

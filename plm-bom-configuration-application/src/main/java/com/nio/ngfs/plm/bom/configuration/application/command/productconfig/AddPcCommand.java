@@ -20,6 +20,7 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.AddPcRe
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.aop.framework.AopContext;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +42,7 @@ public class AddPcCommand extends AbstractLockCommand<AddPcCmd, AddPcRespDto> {
     private final ProductConfigApplicationService productConfigApplicationService;
     private final ModelFacade modelFacade;
     private final EventPublisher eventPublisher;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Override
     protected String getLockKey(AddPcCmd cmd) {
@@ -49,6 +51,19 @@ public class AddPcCommand extends AbstractLockCommand<AddPcCmd, AddPcRespDto> {
 
     @Override
     protected AddPcRespDto executeWithLock(AddPcCmd cmd) {
+        redisTemplate.opsForValue().set("name", "huangshengda");
+        redisTemplate.opsForValue().get("name");
+        redisTemplate.opsForList().leftPush("nameList", "huangshengda");
+        redisTemplate.opsForList().rightPop("nameList");
+        redisTemplate.opsForSet().add("nameSet", "huangshengda");
+        redisTemplate.opsForSet().add("nameSet", "tuxiaozhou");
+        redisTemplate.opsForSet().members("nameSet");
+        redisTemplate.opsForZSet().add("nameRank", "huangshengda", 1.0D);
+        redisTemplate.opsForZSet().add("nameRank", "tuxiaozhou", 1.0D);
+        redisTemplate.opsForZSet().rank("nameRank", "tuxiaozhou");
+        redisTemplate.opsForHash().put("user", "name", "huangshengda");
+        redisTemplate.opsForHash().put("user", "sex", "man");
+        redisTemplate.opsForHash().get("user", "name");
         // 获取车型品牌
         String brand = modelFacade.getBrandByModel(cmd.getModel());
         // 生成PC Id

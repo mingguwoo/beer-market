@@ -1,5 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.facade;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.nio.bom.share.utils.GsonUtils;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.ProductContextFacade;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncProductContextModelFeatureDto;
@@ -34,9 +36,10 @@ public class ProductContextFacadeImpl extends AbstractEnoviaFacade implements Pr
     public void syncAddProductContextModelFeatureOptionToEnovia(SyncProductContextModelFeatureOptionDto syncProductContextModelFeatureOptionDto) {
 
         PlmSyncProductContextModelFeatureOptionDto dto = buildModelFeature(syncProductContextModelFeatureOptionDto);
-        log.info("ProductContextFacade syncProductContextModelFeatureOptionToEnovia data={}", GsonUtils.toJson(syncProductContextModelFeatureOptionDto));
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+        log.info("ProductContextFacade syncProductContextModelFeatureOptionToEnovia data={}", gson.toJson(syncProductContextModelFeatureOptionDto));
         invokeEnovia(plmEnoviaClient::syncProductContextModelFeatureOption, dto,"PlmEnoviaClient.syncProductContextModelFeatureOption",(response, e)->
-            configurationTo3deWarnSender.sendSyncProductContextModelFeatureOptionWarn(syncProductContextModelFeatureOptionDto, e != null ? e.getMessage() : GsonUtils.toJson(response))
+            configurationTo3deWarnSender.sendSyncProductContextModelFeatureOptionWarn(syncProductContextModelFeatureOptionDto, e != null ? e.getMessage() : gson.toJson(response))
         );
     }
 
@@ -67,9 +70,10 @@ public class ProductContextFacadeImpl extends AbstractEnoviaFacade implements Pr
         dto.setFeatureSeq(modelFeature.getFeatureSeq());
         dto.setMay(modelFeature.getMay());
         dto.setModelCodeList(modelFeature.getModelCodeList());
-        log.info("ProductContextFacade syncProductContextModelFeatureToEnovia data={}", GsonUtils.toJson(modelFeature));
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+        log.info("ProductContextFacade syncProductContextModelFeatureToEnovia data={}", gson.toJson(modelFeature));
         invokeEnovia(plmEnoviaClient::syncProductContextModelFeature,dto,"PlmEnoviaClient.syncProductContextModelFeature",(response,e)->{
-            configurationTo3deWarnSender.sendSyncProductContextFeatureModelWarn(modelFeature,e != null ? e.getMessage() : GsonUtils.toJson(response));
+            configurationTo3deWarnSender.sendSyncProductContextFeatureModelWarn(modelFeature,e != null ? e.getMessage() : gson.toJson(response));
         });
     }
 

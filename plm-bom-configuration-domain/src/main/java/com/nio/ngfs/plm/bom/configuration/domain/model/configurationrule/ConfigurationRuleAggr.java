@@ -24,9 +24,9 @@ import java.util.List;
 public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> {
 
     /**
-     * Rule Id
+     * Rule Number
      */
-    private String ruleId;
+    private String ruleNumber;
 
     /**
      * Rule的版本

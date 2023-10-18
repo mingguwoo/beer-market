@@ -24,9 +24,9 @@ import java.util.Date;
 public class BomsConfigurationRuleEntity extends BaseEntity {
 
     /**
-     * Rule Id
+     * Rule Number
      */
-    private String ruleId;
+    private String ruleNumber;
 
     /**
      * Rule的版本
@@ -77,7 +77,7 @@ public class BomsConfigurationRuleEntity extends BaseEntity {
     public String toString() {
         return "BomsConfigurationRule{" +
                 "id = " + getId() +
-                ", ruleId = " + ruleId +
+                ", ruleNumber = " + ruleNumber +
                 ", ruleVersion = " + ruleVersion +
                 ", groupId = " + groupId +
                 ", purpose = " + purpose +

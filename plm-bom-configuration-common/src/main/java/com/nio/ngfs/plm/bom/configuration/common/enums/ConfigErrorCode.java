@@ -103,8 +103,18 @@ public enum ConfigErrorCode implements ErrorCode {
     V36_CODE_OPTION_CODE_FORMAT_INVALID(84005, "The Option Code Format Is Invalid!"),
     V36_CODE_OPTION_LENGTH_NOT_MATCH(84006, "The Option Code Length Is Not Match!"),
     V36_CODE_SALES_FEATURE_NOT_MATCH(84007, "The Sales Feature Not Match!"),
-    V36_CODE_TYPE_NOT_MATCH(80008, "V36 Code Type Not Match!"),
-    V36_CODE_PARENT_NOT_DIGIT(80009, "Parent Not Digit!"),
+    V36_CODE_TYPE_NOT_MATCH(84008, "V36 Code Type Not Match!"),
+    V36_CODE_PARENT_NOT_DIGIT(84009, "Parent Not Digit!"),
+
+    /**
+     * Configuration Rule
+     */
+    CONFIGURATION_RULE_PURPOSE_ERROR(85000, "Configuration Rule Purpose Is Error!"),
+    CONFIGURATION_RULE_DEFINED_BY_ERROR(85001, "Configuration Rule Defined By Is Error!"),
+    CONFIGURATION_RULE_DEFINED_BY_MODEL_NOT_EXIST(85002, "Configuration Rule Defined By Model Not Exist!"),
+    CONFIGURATION_RULE_DEFINED_BY_MODEL_YEAR_NOT_EXIST(85003, "Configuration Rule Defined By Model Year Not Exist!"),
+    CONFIGURATION_RULE_CONSTRAINED_FEATURE_ONLY_SELECT_ONE(85004, "Configuration Rule Constrained Feature Can Only Select One!"),
+    CONFIGURATION_RULE_FEATURE_CATALOG_NOT_MATCH(85005, "Configuration Rule Feature Catalog Not Match!"),
 
     /**
      * Other

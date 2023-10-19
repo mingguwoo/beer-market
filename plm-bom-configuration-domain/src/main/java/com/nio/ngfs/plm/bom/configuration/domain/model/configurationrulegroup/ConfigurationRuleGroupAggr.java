@@ -1,11 +1,17 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.configurationrulegroup;
 
 import com.nio.bom.share.domain.model.AggrRoot;
+import com.nio.bom.share.exception.BusinessException;
+import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
+import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.ConfigurationRulePurposeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Configuration Rule Group
@@ -52,11 +58,34 @@ public class ConfigurationRuleGroupAggr extends AbstractDo implements AggrRoot<L
     /**
      * Group勾选的Constrained Feature Code列表
      */
-    private String constrainedFeatureList;
+    private List<String> constrainedFeatureList;
 
     @Override
     public Long getUniqId() {
         return id;
+    }
+
+    /**
+     * 新增Group
+     */
+    public void add() {
+        checkPurpose();
+    }
+
+    /**
+     * 校验Purpose
+     */
+    private void checkPurpose() {
+        if (ConfigurationRulePurposeEnum.getByCode(purpose) == null) {
+            throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_PURPOSE_ERROR);
+        }
+    }
+
+    /**
+     * 是否指定的Purpose
+     */
+    public boolean isPurpose(ConfigurationRulePurposeEnum purposeEnum) {
+        return Objects.equals(purpose, purposeEnum.getCode());
     }
 
 }

@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums;
 
+import com.nio.bom.share.utils.EnumUtils;
 import lombok.Getter;
 
 /**
@@ -22,6 +23,10 @@ public enum ConfigurationRulePurposeEnum {
     ConfigurationRulePurposeEnum(Integer code, String purpose) {
         this.code = code;
         this.purpose = purpose;
+    }
+
+    public static ConfigurationRulePurposeEnum getByCode(Integer code) {
+        return EnumUtils.getEnum(ConfigurationRulePurposeEnum.class, ConfigurationRulePurposeEnum::getCode, code);
     }
 
 }

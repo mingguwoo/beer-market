@@ -516,4 +516,11 @@ public class FeatureAggr extends AbstractDo implements AggrRoot<FeatureId>, Clon
         }
     }
 
+    /**
+     * 是否指定的Catalog
+     */
+    public boolean isCatalog(FeatureCatalogEnum catalogEnum) {
+        return Objects.equals(catalog, catalogEnum.getCatalog());
+    }
+
 }

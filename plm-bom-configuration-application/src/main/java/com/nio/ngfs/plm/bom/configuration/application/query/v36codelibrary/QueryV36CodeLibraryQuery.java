@@ -106,7 +106,7 @@ public class QueryV36CodeLibraryQuery {
         })).toList());
         queryV36CodeLibraryRespDto.setDigitList(queryV36CodeLibraryRespDto.getDigitList().stream().map(digit->{
             if (Objects.nonNull(digit.getOptionList())){
-                digit.setOptionList(digit.getOptionList().stream().sorted(Comparator.comparing((V36CodeLibraryOptionDto dto)->dto.getCode().charAt(0)).thenComparing((V36CodeLibraryOptionDto o1, V36CodeLibraryOptionDto o2)->{
+                digit.setOptionList(digit.getOptionList().stream().sorted(Comparator.comparing((V36CodeLibraryOptionDto dto)->dto.getCode()).thenComparing((V36CodeLibraryOptionDto o1, V36CodeLibraryOptionDto o2)->{
                     return o1.getCreateTimeInDate().compareTo(o2.getCreateTimeInDate());
                 })).toList());
             }

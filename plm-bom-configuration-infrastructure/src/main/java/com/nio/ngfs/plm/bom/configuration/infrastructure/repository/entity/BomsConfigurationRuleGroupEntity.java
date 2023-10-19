@@ -46,6 +46,16 @@ public class BomsConfigurationRuleGroupEntity extends BaseEntity {
      */
     private String description;
 
+    /**
+     * Group勾选的Driving Feature Code
+     */
+    private String drivingFeature;
+
+    /**
+     * Group勾选的Constrained Feature Code列表
+     */
+    private String constrainedFeatureList;
+
     @Override
     public String toString() {
         return "BomsConfigurationRuleGroup{" +
@@ -55,6 +65,8 @@ public class BomsConfigurationRuleGroupEntity extends BaseEntity {
                 ", purpose = " + purpose +
                 ", definedBy = " + definedBy +
                 ", description = " + description +
+                ", drivingFeature = " + drivingFeature +
+                ", constrainedFeatureList = " + constrainedFeatureList +
                 ", createUser = " + getCreateUser() +
                 ", updateUser = " + getUpdateUser() +
                 ", createTime = " + getCreateTime() +

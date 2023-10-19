@@ -44,6 +44,16 @@ public class ConfigurationRuleGroupAggr extends AbstractDo implements AggrRoot<L
      */
     private String description;
 
+    /**
+     * Group勾选的Driving Feature Code
+     */
+    private String drivingFeature;
+
+    /**
+     * Group勾选的Constrained Feature Code列表
+     */
+    private String constrainedFeatureList;
+
     @Override
     public Long getUniqId() {
         return id;

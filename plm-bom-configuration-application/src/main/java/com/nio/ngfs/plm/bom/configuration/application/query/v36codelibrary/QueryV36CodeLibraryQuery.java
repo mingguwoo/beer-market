@@ -188,7 +188,7 @@ public class QueryV36CodeLibraryQuery {
             if (isMatch.get()){
                 return;
             }
-            if (matchSearch(featureMap.get(featureCode).getDisplayName(),name) || matchSearch(featureMap.get(featureCode).getChineseName(),name)){
+            if (matchSearch(featureMap.get(featureCode).getFeatureCode(),name) || matchSearch(featureMap.get(featureCode).getDisplayName(),name) || matchSearch(featureMap.get(featureCode).getChineseName(),name)){
                 isMatch.set(true);
             }
         });

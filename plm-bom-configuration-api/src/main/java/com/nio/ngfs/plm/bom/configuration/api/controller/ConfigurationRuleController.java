@@ -28,4 +28,13 @@ public class ConfigurationRuleController implements PlmConfigurationRuleClient {
         return ResultInfo.success(addRuleCommand.execute(cmd));
     }
 
+
+
+
+
+
+
+
+
+
 }

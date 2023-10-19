@@ -104,12 +104,14 @@ public class QueryV36CodeLibraryQuery {
         queryV36CodeLibraryRespDto.setDigitList(queryV36CodeLibraryRespDto.getDigitList().stream().sorted(Comparator.comparingInt((V36CodeLibraryDigitDto digit)->Integer.parseInt(StringUtils.substringBefore(digit.getCode(),"-"))).thenComparing((V36CodeLibraryDigitDto o1, V36CodeLibraryDigitDto o2)->{
             return o1.getCreateTimeInDate().compareTo(o2.getCreateTimeInDate());
         })).toList());
-        queryV36CodeLibraryRespDto.getDigitList().stream().map(digit->{
-            digit.setOptionList(digit.getOptionList().stream().sorted(Comparator.comparing((V36CodeLibraryOptionDto dto)->dto.getCode().charAt(0)).thenComparing((V36CodeLibraryOptionDto o1, V36CodeLibraryOptionDto o2)->{
-                return o1.getCreateTimeInDate().compareTo(o2.getCreateTimeInDate());
-            })).toList());
+        queryV36CodeLibraryRespDto.setDigitList(queryV36CodeLibraryRespDto.getDigitList().stream().map(digit->{
+            if (Objects.nonNull(digit.getOptionList())){
+                digit.setOptionList(digit.getOptionList().stream().sorted(Comparator.comparing((V36CodeLibraryOptionDto dto)->dto.getCode().charAt(0)).thenComparing((V36CodeLibraryOptionDto o1, V36CodeLibraryOptionDto o2)->{
+                    return o1.getCreateTimeInDate().compareTo(o2.getCreateTimeInDate());
+                })).toList());
+            }
             return digit;
-        });
+        }).toList());
         return queryV36CodeLibraryRespDto;
     }
     private boolean matchSearch(String content, String search){

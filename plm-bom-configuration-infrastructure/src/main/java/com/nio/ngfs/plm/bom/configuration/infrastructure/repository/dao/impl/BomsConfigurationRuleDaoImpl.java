@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+import java.util.List;
+
 /**
  * @author xiaozhou.tu
  * @date 2023/10/17
@@ -29,4 +31,10 @@ public class BomsConfigurationRuleDaoImpl extends AbstractDao<BomsConfigurationR
         return Optional.ofNullable(entity).map(BomsConfigurationRuleEntity::getRuleNumber).orElse(null);
     }
 
+    @Override
+    public List<BomsConfigurationRuleEntity> queryByRuleNumber(String ruleNumber) {
+        LambdaQueryWrapper<BomsConfigurationRuleEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(BomsConfigurationRuleEntity::getRuleNumber,ruleNumber);
+        return getBaseMapper().selectList(lambdaQueryWrapper);
+    }
 }

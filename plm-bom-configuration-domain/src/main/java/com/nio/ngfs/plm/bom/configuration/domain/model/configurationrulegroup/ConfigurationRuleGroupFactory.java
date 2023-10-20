@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.configurationrulegroup;
 
+import com.google.common.base.Joiner;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.AddRuleCmd;
 
 /**
@@ -16,7 +17,7 @@ public class ConfigurationRuleGroupFactory {
                 .definedBy(cmd.getDefinedBy())
                 .description(cmd.getDescription())
                 .drivingFeature(cmd.getDrivingFeature())
-                .constrainedFeatureList(cmd.getConstrainedFeatureList())
+                .constrainedFeature(Joiner.on(",").skipNulls().join(cmd.getConstrainedFeatureList()))
                 .createUser(cmd.getCreateUser())
                 .updateUser(cmd.getCreateUser())
                 .build();

@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.configurationrulegroup;
 
+import com.google.common.base.Splitter;
 import com.nio.bom.share.domain.model.AggrRoot;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
@@ -56,9 +57,11 @@ public class ConfigurationRuleGroupAggr extends AbstractDo implements AggrRoot<L
     private String drivingFeature;
 
     /**
-     * Group勾选的Constrained Feature Code列表
+     * Group勾选的Constrained Feature Code列表，多个之间逗号分隔
      */
-    private List<String> constrainedFeatureList;
+    private String constrainedFeature;
+
+    private transient List<String> constrainedFeatureList;
 
     @Override
     public Long getUniqId() {
@@ -86,6 +89,13 @@ public class ConfigurationRuleGroupAggr extends AbstractDo implements AggrRoot<L
      */
     public boolean isPurpose(ConfigurationRulePurposeEnum purposeEnum) {
         return Objects.equals(purpose, purposeEnum.getCode());
+    }
+
+    public List<String> getConstrainedFeatureList() {
+        if (constrainedFeatureList == null) {
+            constrainedFeatureList = Splitter.on(",").trimResults().omitEmptyStrings().splitToList(constrainedFeature);
+        }
+        return constrainedFeatureList;
     }
 
 }

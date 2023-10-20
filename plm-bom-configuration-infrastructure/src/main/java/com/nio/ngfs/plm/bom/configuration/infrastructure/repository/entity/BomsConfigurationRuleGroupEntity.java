@@ -52,9 +52,9 @@ public class BomsConfigurationRuleGroupEntity extends BaseEntity {
     private String drivingFeature;
 
     /**
-     * Group勾选的Constrained Feature Code列表
+     * Group勾选的Constrained Feature Code列表，多个之间逗号分隔
      */
-    private String constrainedFeatureList;
+    private String constrainedFeature;
 
     @Override
     public String toString() {
@@ -66,7 +66,7 @@ public class BomsConfigurationRuleGroupEntity extends BaseEntity {
                 ", definedBy = " + definedBy +
                 ", description = " + description +
                 ", drivingFeature = " + drivingFeature +
-                ", constrainedFeatureList = " + constrainedFeatureList +
+                ", constrainedFeature = " + constrainedFeature +
                 ", createUser = " + getCreateUser() +
                 ", updateUser = " + getUpdateUser() +
                 ", createTime = " + getCreateTime() +

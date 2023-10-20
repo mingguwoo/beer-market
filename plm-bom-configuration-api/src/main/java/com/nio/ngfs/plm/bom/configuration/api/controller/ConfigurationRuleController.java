@@ -1,13 +1,17 @@
 package com.nio.ngfs.plm.bom.configuration.api.controller;
 
+import com.nio.bom.share.annotation.NeedAuthorization;
 import com.nio.bom.share.annotation.NotLogResult;
 import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.application.command.configurationrule.AddRuleCommand;
+import com.nio.ngfs.plm.bom.configuration.application.query.configurationrule.CheckReleaseAvailableQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.configurationrule.GetPurposeOptionListQuery;
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmConfigurationRuleClient;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.AddRuleCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.GetPurposeOptionListQry;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.CheckRuleReleaseQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.response.AddRuleRespDto;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.response.CheckRuleReleaseAvailableRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.response.GetPurposeOptionListRespDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +30,7 @@ public class ConfigurationRuleController implements PlmConfigurationRuleClient {
 
     private final AddRuleCommand addRuleCommand;
     private final GetPurposeOptionListQuery getPurposeOptionListQuery;
+    private final CheckReleaseAvailableQuery checkReleaseAvailableQuery;
 
     @Override
     @NotLogResult
@@ -37,6 +42,13 @@ public class ConfigurationRuleController implements PlmConfigurationRuleClient {
     @NotLogResult
     public ResultInfo<List<GetPurposeOptionListRespDto>> getPurposeOptionList(@Valid @RequestBody GetPurposeOptionListQry qry) {
         return ResultInfo.success(getPurposeOptionListQuery.execute(qry));
+    }
+
+    @Override
+    @NotLogResult
+    //@NeedAuthorization
+    public ResultInfo<CheckRuleReleaseAvailableRespDto> checkReviseAvailable(@Valid @RequestBody CheckRuleReleaseQry qry) {
+        return ResultInfo.success(checkReleaseAvailableQuery.execute(qry));
     }
 
 }

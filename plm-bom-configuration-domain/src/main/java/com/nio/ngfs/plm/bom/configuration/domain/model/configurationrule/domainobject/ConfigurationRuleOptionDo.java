@@ -4,11 +4,15 @@ import com.nio.bom.share.domain.model.Entity;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
+import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.RuleOptionMatrixValueEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.springframework.beans.BeanUtils;
+
+import java.util.Optional;
 
 /**
  * Configuration Rule Option
@@ -52,6 +56,8 @@ public class ConfigurationRuleOptionDo extends AbstractDo implements Entity<Long
      */
     private Integer matrixValue;
 
+    private transient ConfigurationRuleAggr rule;
+
     @Override
     public Long getUniqId() {
         return id;
@@ -68,9 +74,29 @@ public class ConfigurationRuleOptionDo extends AbstractDo implements Entity<Long
      * 校验矩阵打点
      */
     private void checkMatrixValue() {
-        if (RuleOptionMatrixValueEnum.getByCode(matrixValue) == null) {
-            throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_OPTION_MATRIX_VALUE);
+        RuleOptionMatrixValueEnum matrixValueEnum = RuleOptionMatrixValueEnum.getByCode(matrixValue);
+        if (matrixValueEnum == null) {
+            throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_OPTION_MATRIX_VALUE_ERROR);
         }
+        Optional.of(rule.getRulePurposeEnum().getMatrixValueList()).ifPresent(matrixValueList -> {
+            if (!matrixValueList.contains(matrixValueEnum)) {
+                throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_OPTION_MATRIX_VALUE_ERROR);
+            }
+        });
+    }
+
+    /**
+     * 复制双向Rule的打点
+     */
+    public ConfigurationRuleOptionDo copyBothWayRuleOption() {
+        ConfigurationRuleOptionDo copyRuleOptionDo = new ConfigurationRuleOptionDo();
+        BeanUtils.copyProperties(this, copyRuleOptionDo);
+        // Driving和Constrained调换
+        copyRuleOptionDo.setDrivingOptionCode(getConstrainedOptionCode());
+        copyRuleOptionDo.setDrivingFeatureCode(getConstrainedFeatureCode());
+        copyRuleOptionDo.setConstrainedOptionCode(getDrivingOptionCode());
+        copyRuleOptionDo.setConstrainedFeatureCode(getDrivingFeatureCode());
+        return copyRuleOptionDo;
     }
 
 }

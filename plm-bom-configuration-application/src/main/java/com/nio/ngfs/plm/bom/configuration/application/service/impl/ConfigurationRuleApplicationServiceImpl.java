@@ -5,6 +5,7 @@ import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.application.service.ConfigurationRuleApplicationService;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleFactory;
+import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.domainobject.ConfigurationRuleOptionDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.RuleOptionMatrixValueEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrulegroup.ConfigurationRuleGroupAggr;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.AddRuleCmd;
@@ -35,6 +36,20 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
         // 按drivingOptionCode分组，生成Rule聚合根
         return LambdaUtil.groupBy(ruleOptionList, AddRuleCmd.RuleOptionDto::getDrivingOptionCode)
                 .values().stream().map(ruleOptionDtoList -> ConfigurationRuleFactory.create(cmd, ruleOptionDtoList)).toList();
+    }
+
+    @Override
+    public void checkDrivingAndConstrainedFeature(List<ConfigurationRuleAggr> ruleAggrList) {
+        List<ConfigurationRuleOptionDo> optionList = ruleAggrList.stream().flatMap(ruleAggr -> ruleAggr.getOptionList().stream()).toList();
+        if (CollectionUtils.isEmpty(optionList)) {
+            return;
+        }
+        List<String> drivingFeatureCodeList = LambdaUtil.map(optionList, ConfigurationRuleOptionDo::getDrivingFeatureCode, true);
+        List<String> constrainedFeatureCodeCodeList = LambdaUtil.map(optionList, ConfigurationRuleOptionDo::getConstrainedFeatureCode, true);
+        if (drivingFeatureCodeList.size() > 1) {
+
+        }
+        String drivingFeatureCode = drivingFeatureCodeList.get(0);
     }
 
 }

@@ -35,9 +35,9 @@ public class RuleNumberGenerator {
         String sequence = redisTemplate.opsForValue().get(redisKey);
         if (StringUtils.isBlank(sequence)) {
             int sequenceNumber = getSequenceFromDB();
-            redisTemplate.opsForValue().setIfAbsent(redisKey, String.valueOf(sequenceNumber), 10, TimeUnit.SECONDS);
+            redisTemplate.opsForValue().setIfAbsent(redisKey, String.valueOf(sequenceNumber), 10, TimeUnit.MINUTES);
         } else {
-            redisTemplate.expire(redisKey, 10, TimeUnit.SECONDS);
+            redisTemplate.expire(redisKey, 10, TimeUnit.MINUTES);
         }
         Long incrResult = redisTemplate.opsForValue().increment(redisKey, size);
         if (incrResult == null) {
@@ -56,9 +56,17 @@ public class RuleNumberGenerator {
         if (StringUtils.isBlank(maxRuleNumber)) {
             return 0;
         }
-        for (int i = 0; i < maxRuleNumber.length(); i++) {
-            if (maxRuleNumber.charAt(i) != '0') {
-                return Integer.parseInt(maxRuleNumber.substring(i));
+        if (!maxRuleNumber.startsWith(RULE_NUMBER_PREFIX)) {
+            throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_MAX_RULE_NUMBER_FORMAT_ERROR);
+        }
+        String number = maxRuleNumber.substring(2);
+        for (int i = 0; i < number.length(); i++) {
+            if (number.charAt(i) != '0') {
+                try {
+                    return Integer.parseInt(number.substring(i));
+                } catch (Exception e) {
+                    throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_MAX_RULE_NUMBER_FORMAT_ERROR);
+                }
             }
         }
         return 0;

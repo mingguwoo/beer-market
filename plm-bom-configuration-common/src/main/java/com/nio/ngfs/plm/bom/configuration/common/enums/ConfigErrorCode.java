@@ -109,14 +109,16 @@ public enum ConfigErrorCode implements ErrorCode {
     /**
      * Configuration Rule
      */
-    CONFIGURATION_RULE_PURPOSE_ERROR(85000, "Configuration Rule Purpose Is Error!"),
-    CONFIGURATION_RULE_DEFINED_BY_ERROR(85001, "Configuration Rule Defined By Is Error!"),
-    CONFIGURATION_RULE_DEFINED_BY_MODEL_NOT_EXIST(85002, "Configuration Rule Defined By Model Not Exist!"),
-    CONFIGURATION_RULE_DEFINED_BY_MODEL_YEAR_NOT_EXIST(85003, "Configuration Rule Defined By Model Year Not Exist!"),
-    CONFIGURATION_RULE_CONSTRAINED_FEATURE_ONLY_SELECT_ONE(85004, "Configuration Rule Constrained Feature Can Only Select One!"),
-    CONFIGURATION_RULE_FEATURE_CATALOG_NOT_MATCH(85005, "Configuration Rule Feature Catalog Not Match!"),
-    CONFIGURATION_RULE_OPTION_MATRIX_VALUE(85006, "Configuration Rule Option Matrix Value Is Error!"),
-    CONFIGURATION_RULE_RULE_NUMBER_GENERATE_ERROR(85007, "Configuration Rule Rule Number Generate Error!"),
+    CONFIGURATION_RULE_PURPOSE_ERROR(85000, "Purpose Is Error!"),
+    CONFIGURATION_RULE_DEFINED_BY_ERROR(85001, "Defined By Is Error!"),
+    CONFIGURATION_RULE_DEFINED_BY_MODEL_NOT_EXIST(85002, "Defined By Model Not Exist!"),
+    CONFIGURATION_RULE_DEFINED_BY_MODEL_YEAR_NOT_EXIST(85003, "Defined By Model Year Not Exist!"),
+    CONFIGURATION_RULE_CONSTRAINED_FEATURE_ONLY_SELECT_ONE(85004, "Constrained Feature Can Only Select One!"),
+    CONFIGURATION_RULE_FEATURE_CATALOG_NOT_MATCH(85005, "Feature Catalog Not Match!"),
+    CONFIGURATION_RULE_OPTION_MATRIX_VALUE_ERROR(85006, "Option Matrix Value Is Error!"),
+    CONFIGURATION_RULE_RULE_NUMBER_GENERATE_ERROR(85007, "Rule Number Generate Error!"),
+    CONFIGURATION_RULE_BOTH_WAY_RULE_SELECT_ONE_CONSTRAINED(85008, "Both Way Rule Can Only Select One Constrained Option!"),
+    CONFIGURATION_RULE_MAX_RULE_NUMBER_FORMAT_ERROR(85009, "Max Rule Number Format Error!"),
 
     /**
      * Other

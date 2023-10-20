@@ -39,7 +39,6 @@ public class AddRuleCommand extends AbstractCommand<AddRuleCmd, AddRuleRespDto> 
 
     @Override
     protected AddRuleRespDto executeCommand(AddRuleCmd cmd) {
-        // 处理Group
         ConfigurationRuleGroupAggr ruleGroupAggr = ConfigurationRuleGroupFactory.create(cmd);
         // 新增Group
         ruleGroupAggr.add();
@@ -50,7 +49,11 @@ public class AddRuleCommand extends AbstractCommand<AddRuleCmd, AddRuleRespDto> 
         // 创建Rule
         List<ConfigurationRuleAggr> ruleAggrList = configurationRuleApplicationService.createNewRule(ruleGroupAggr, cmd);
         ruleAggrList.forEach(ConfigurationRuleAggr::add);
+        // 校验Driving Feature和Constrained Feature
+        configurationRuleApplicationService.checkDrivingAndConstrainedFeature(ruleAggrList);
         // 校验Rule打点信息不重复
+        // 处理双向Rule
+        ruleAggrList = configurationRuleDomainService.handleBothWayRule(ruleAggrList);
         // Rule分配Rule Number
         configurationRuleDomainService.generateRuleNumber(ruleAggrList);
         // 保存到数据库

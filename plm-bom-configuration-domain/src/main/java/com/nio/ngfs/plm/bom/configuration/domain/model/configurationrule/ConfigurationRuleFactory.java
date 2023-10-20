@@ -13,17 +13,18 @@ import java.util.List;
 public class ConfigurationRuleFactory {
 
     public static ConfigurationRuleAggr create(AddRuleCmd cmd, List<AddRuleCmd.RuleOptionDto> ruleOptionDtoList) {
-        return ConfigurationRuleAggr.builder()
+        ConfigurationRuleAggr ruleAggr = ConfigurationRuleAggr.builder()
                 .purpose(cmd.getPurpose())
-                .optionList(LambdaUtil.map(ruleOptionDtoList, option -> create(option, cmd.getCreateUser())))
                 .createUser(cmd.getCreateUser())
                 .updateUser(cmd.getCreateUser())
                 .build();
-
+        ruleAggr.setOptionList(LambdaUtil.map(ruleOptionDtoList, option -> create(option, cmd.getCreateUser(), ruleAggr)));
+        return ruleAggr;
     }
 
-    private static ConfigurationRuleOptionDo create(AddRuleCmd.RuleOptionDto ruleOptionDto, String createUser) {
+    private static ConfigurationRuleOptionDo create(AddRuleCmd.RuleOptionDto ruleOptionDto, String createUser, ConfigurationRuleAggr ruleAggr) {
         return ConfigurationRuleOptionDo.builder()
+                .rule(ruleAggr)
                 .drivingOptionCode(ruleOptionDto.getDrivingOptionCode())
                 .drivingFeatureCode(ruleOptionDto.getDrivingFeatureCode())
                 .constrainedOptionCode(ruleOptionDto.getConstrainedOptionCode())

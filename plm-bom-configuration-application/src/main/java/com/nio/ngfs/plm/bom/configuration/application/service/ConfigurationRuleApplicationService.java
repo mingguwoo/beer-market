@@ -21,4 +21,11 @@ public interface ConfigurationRuleApplicationService {
      */
     List<ConfigurationRuleAggr> createNewRule(ConfigurationRuleGroupAggr ruleGroupAggr, AddRuleCmd cmd);
 
+    /**
+     * 校验Driving Feature和Constrained Feature
+     *
+     * @param ruleAggrList ruleAggrList
+     */
+    void checkDrivingAndConstrainedFeature(List<ConfigurationRuleAggr> ruleAggrList);
+
 }

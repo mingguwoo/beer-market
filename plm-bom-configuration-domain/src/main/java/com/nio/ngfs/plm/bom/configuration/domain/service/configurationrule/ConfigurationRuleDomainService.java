@@ -17,4 +17,12 @@ public interface ConfigurationRuleDomainService {
      */
     void generateRuleNumber(List<ConfigurationRuleAggr> ruleAggrList);
 
+    /**
+     * 处理双向Rule
+     *
+     * @param ruleAggrList 聚合根列表
+     * @return 新的聚合根列表
+     */
+    List<ConfigurationRuleAggr> handleBothWayRule(List<ConfigurationRuleAggr> ruleAggrList);
+
 }

@@ -25,7 +25,7 @@ public class AddRuleCmd implements Cmd {
     @NotNull(message = "Purpose is null")
     private Integer purpose;
 
-    @NotBlank(message = "Defined By is null")
+    @NotBlank(message = "Defined By is blank")
     private String definedBy;
 
     @Size(max = 1024, message = "Description max length is 1024")
@@ -35,11 +35,13 @@ public class AddRuleCmd implements Cmd {
 
     private List<String> constrainedFeatureList;
 
+    private List<RuleOptionDto> ruleOptionList;
+
     @NotBlank(message = "Create User is blank")
     private String createUser;
 
     @Data
-    public static class OptionMatrix {
+    public static class RuleOptionDto {
 
         @NotBlank(message = "Driving Option Code is blank")
         private String drivingOptionCode;

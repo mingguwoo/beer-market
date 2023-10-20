@@ -2,6 +2,8 @@ package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.impl;
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.domainobject.ConfigurationRuleOptionDo;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.common.generator.RuleNumberGenerator;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.ConfigurationRuleConverter;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.ConfigurationRuleOptionConverter;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsConfigurationRuleDao;
@@ -10,6 +12,8 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.common.D
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @author xiaozhou.tu
@@ -23,6 +27,7 @@ public class ConfigurationRuleRepositoryImpl implements ConfigurationRuleReposit
     private final BomsConfigurationRuleOptionDao bomsConfigurationRuleOptionDao;
     private final ConfigurationRuleConverter configurationRuleConverter;
     private final ConfigurationRuleOptionConverter configurationRuleOptionConverter;
+    private final RuleNumberGenerator ruleNumberGenerator;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -42,6 +47,20 @@ public class ConfigurationRuleRepositoryImpl implements ConfigurationRuleReposit
             ));
         }
         return aggr;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void batchSave(List<ConfigurationRuleAggr> aggrList) {
+        DaoSupport.batchSaveOrUpdate(bomsConfigurationRuleDao, configurationRuleConverter, aggrList);
+        aggrList.forEach(rule -> rule.getOptionList().forEach(option -> option.setRuleId(rule.getId())));
+        List<ConfigurationRuleOptionDo> optionList = aggrList.stream().flatMap(i -> i.getOptionList().stream()).toList();
+        DaoSupport.batchSaveOrUpdate(bomsConfigurationRuleOptionDao, configurationRuleOptionConverter.convertDoListToEntityList(optionList));
+    }
+
+    @Override
+    public List<String> applyRuleNumber(int size) {
+        return ruleNumberGenerator.applyRuleNumber(size);
     }
 
 }

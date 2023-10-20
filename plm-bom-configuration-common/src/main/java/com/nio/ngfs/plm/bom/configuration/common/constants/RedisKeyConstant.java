@@ -55,4 +55,9 @@ public interface RedisKeyConstant {
 
     String V36_CODE_OPTION_LOCK_KEY_PREFIX = CONFIGURATION_PREFIX + "v36Code:option:lock:";
 
+    /**
+     * Configuration Rule
+     */
+    String CONFIGURATION_RULE_RULE_NUMBER_INCR_LOCK = CONFIGURATION_PREFIX + "configurationRule:ruleNumber:incr:lock";
+
 }

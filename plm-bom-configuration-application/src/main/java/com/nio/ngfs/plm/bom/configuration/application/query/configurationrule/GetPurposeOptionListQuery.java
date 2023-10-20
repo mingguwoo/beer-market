@@ -22,7 +22,7 @@ public class GetPurposeOptionListQuery extends AbstractQuery<GetPurposeOptionLis
 
     @Override
     protected List<GetPurposeOptionListRespDto> executeQuery(GetPurposeOptionListQry qry) {
-        return Stream.of(ConfigurationRulePurposeEnum.values()).map(i -> {
+        return Stream.of(ConfigurationRulePurposeEnum.values()).filter(ConfigurationRulePurposeEnum::isSelectOption).map(i -> {
             GetPurposeOptionListRespDto respDto = new GetPurposeOptionListRespDto();
             respDto.setCode(i.getCode());
             respDto.setPurpose(i.getPurpose());

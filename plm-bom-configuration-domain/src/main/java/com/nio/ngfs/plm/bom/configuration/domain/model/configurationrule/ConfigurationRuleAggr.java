@@ -1,8 +1,14 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule;
 
 import com.nio.bom.share.domain.model.AggrRoot;
+import com.nio.bom.share.exception.BusinessException;
+import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
+import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.domainobject.ConfigurationRuleOptionDo;
+import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.ConfigurationRuleChangeTypeEnum;
+import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.ConfigurationRulePurposeEnum;
+import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.ConfigurationRuleStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -78,6 +84,28 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
     @Override
     public Long getUniqId() {
         return id;
+    }
+
+    /**
+     * 新增Rule
+     */
+    public void add() {
+        checkPurpose();
+        // 字段赋值
+        setRuleVersion(ConfigConstants.VERSION_AA);
+        setRuleType(ConfigurationRulePurposeEnum.getByCode(purpose).getRuleType().getRuleType());
+        setChangeType(ConfigurationRuleChangeTypeEnum.ADD.getChangeType());
+        setStatus(ConfigurationRuleStatusEnum.IN_WORK.getStatus());
+        optionList.forEach(ConfigurationRuleOptionDo::add);
+    }
+
+    /**
+     * 校验Purpose
+     */
+    private void checkPurpose() {
+        if (ConfigurationRulePurposeEnum.getByCode(purpose) == null) {
+            throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_PURPOSE_ERROR);
+        }
     }
 
 }

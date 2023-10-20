@@ -10,19 +10,28 @@ import lombok.Getter;
 @Getter
 public enum ConfigurationRulePurposeEnum {
 
-    SALES_TO_ENG(1, "Sales —> Eng"),
-    SALES_TO_SALES(2, "Sales —> Sales"),
-    SALES_INCLUSIVE_SALES(3, "Sales <—> Sales"),
-    SALES_EXCLUSIVE_SALES(4, "Sales X Sales"),
-    BASE_VEHICLE_TO_SALES(5, "Base Vehicle —> Sales");
+    SALES_TO_ENG(1, "Sales —> Eng", true, ConfigurationRuleTypeEnum.INCLUSIVE),
+    SALES_TO_SALES(2, "Sales —> Sales", true, ConfigurationRuleTypeEnum.INCLUSIVE),
+    SALES_INCLUSIVE_SALES(3, "Sales <—> Sales", true, ConfigurationRuleTypeEnum.INCLUSIVE),
+    SALES_EXCLUSIVE_SALES(4, "Sales X Sales", true, ConfigurationRuleTypeEnum.EXCLUSIVE),
+    BASE_VEHICLE_TO_SALES(5, "Base Vehicle —> Sales", false, ConfigurationRuleTypeEnum.INCLUSIVE);
 
     private final Integer code;
 
     private final String purpose;
 
-    ConfigurationRulePurposeEnum(Integer code, String purpose) {
+    /**
+     * 是否前端可选项
+     */
+    private final boolean selectOption;
+
+    private final ConfigurationRuleTypeEnum ruleType;
+
+    ConfigurationRulePurposeEnum(Integer code, String purpose, boolean selectOption, ConfigurationRuleTypeEnum ruleType) {
         this.code = code;
         this.purpose = purpose;
+        this.selectOption = selectOption;
+        this.ruleType = ruleType;
     }
 
     public static ConfigurationRulePurposeEnum getByCode(Integer code) {

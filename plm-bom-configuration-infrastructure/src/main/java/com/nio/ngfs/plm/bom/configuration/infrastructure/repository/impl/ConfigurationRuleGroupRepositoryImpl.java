@@ -21,7 +21,11 @@ public class ConfigurationRuleGroupRepositoryImpl implements ConfigurationRuleGr
 
     @Override
     public void save(ConfigurationRuleGroupAggr aggr) {
-        DaoSupport.saveOrUpdate(bomsConfigurationRuleGroupDao, configurationRuleGroupConverter.convertDoToEntity(aggr));
+        DaoSupport.saveOrUpdate(bomsConfigurationRuleGroupDao, configurationRuleGroupConverter.convertDoToEntity(aggr), entity -> {
+            if (aggr.getId() == null) {
+                aggr.setId(entity.getId());
+            }
+        });
     }
 
     @Override

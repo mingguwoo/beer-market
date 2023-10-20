@@ -115,6 +115,8 @@ public enum ConfigErrorCode implements ErrorCode {
     CONFIGURATION_RULE_DEFINED_BY_MODEL_YEAR_NOT_EXIST(85003, "Configuration Rule Defined By Model Year Not Exist!"),
     CONFIGURATION_RULE_CONSTRAINED_FEATURE_ONLY_SELECT_ONE(85004, "Configuration Rule Constrained Feature Can Only Select One!"),
     CONFIGURATION_RULE_FEATURE_CATALOG_NOT_MATCH(85005, "Configuration Rule Feature Catalog Not Match!"),
+    CONFIGURATION_RULE_OPTION_MATRIX_VALUE(85006, "Configuration Rule Option Matrix Value Is Error!"),
+    CONFIGURATION_RULE_RULE_NUMBER_GENERATE_ERROR(85007, "Configuration Rule Rule Number Generate Error!"),
 
     /**
      * Other

@@ -2,6 +2,8 @@ package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.common;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.nio.bom.share.utils.LambdaUtil;
+import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
+import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.converter.common.DataConverter;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BaseEntity;
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -59,6 +61,28 @@ public class DaoSupport {
         }
         if (CollectionUtils.isNotEmpty(updateList)) {
             dao.updateBatchById(updateList);
+        }
+    }
+
+    /**
+     * 批量新增或更新，并回填主键id
+     */
+    public static <E extends BaseEntity, D extends AbstractDo> void batchSaveOrUpdate(IService<E> dao, DataConverter<D, E> converter, List<D> aggrList) {
+        if (CollectionUtils.isEmpty(aggrList)) {
+            return;
+        }
+        List<D> saveList = LambdaUtil.map(aggrList, aggr -> aggr.getId() == null, Function.identity());
+        List<D> updateList = LambdaUtil.map(aggrList, aggr -> aggr.getId() != null, Function.identity());
+        if (CollectionUtils.isNotEmpty(saveList)) {
+            List<E> entityList = converter.convertDoListToEntityList(saveList);
+            dao.saveBatch(entityList);
+            // 回填主键id
+            for (int i = 0; i < entityList.size(); i++) {
+                saveList.get(i).setId(entityList.get(i).getId());
+            }
+        }
+        if (CollectionUtils.isNotEmpty(updateList)) {
+            dao.updateBatchById(converter.convertDoListToEntityList(updateList));
         }
     }
 

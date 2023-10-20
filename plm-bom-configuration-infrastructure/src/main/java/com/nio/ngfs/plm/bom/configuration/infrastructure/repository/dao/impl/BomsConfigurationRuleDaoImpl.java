@@ -7,6 +7,8 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsC
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsConfigurationRuleMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 /**
  * @author xiaozhou.tu
  * @date 2023/10/17
@@ -16,6 +18,15 @@ public class BomsConfigurationRuleDaoImpl extends AbstractDao<BomsConfigurationR
 
     @Override
     protected void fuzzyConditions(WherePageRequest<BomsConfigurationRuleEntity> bomsConfigurationRuleEntityWherePageRequest, LambdaQueryWrapper<BomsConfigurationRuleEntity> queryWrapper) {
+    }
+
+    @Override
+    public String getMaxRuleNumber() {
+        LambdaQueryWrapper<BomsConfigurationRuleEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.orderByDesc(BomsConfigurationRuleEntity::getRuleNumber);
+        lambdaQueryWrapper.last("limit 1");
+        BomsConfigurationRuleEntity entity = getBaseMapper().selectOne(lambdaQueryWrapper);
+        return Optional.ofNullable(entity).map(BomsConfigurationRuleEntity::getRuleNumber).orElse(null);
     }
 
 }

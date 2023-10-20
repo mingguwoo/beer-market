@@ -8,4 +8,12 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsC
  * @date 2023/10/17
  */
 public interface BomsConfigurationRuleDao extends IService<BomsConfigurationRuleEntity> {
+
+    /**
+     * 获取最大的Rule Number
+     *
+     * @return Rule Number
+     */
+    String getMaxRuleNumber();
+
 }

@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums;
 
+import com.nio.bom.share.utils.EnumUtils;
 import lombok.Getter;
 
 /**
@@ -20,6 +21,10 @@ public enum RuleOptionMatrixValueEnum {
     RuleOptionMatrixValueEnum(Integer code, String matrixValue) {
         this.code = code;
         this.matrixValue = matrixValue;
+    }
+
+    public static RuleOptionMatrixValueEnum getByCode(Integer code) {
+        return EnumUtils.getEnum(RuleOptionMatrixValueEnum.class, RuleOptionMatrixValueEnum::getCode, code);
     }
 
 }

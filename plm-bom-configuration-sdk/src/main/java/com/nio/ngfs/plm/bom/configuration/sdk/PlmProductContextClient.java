@@ -2,11 +2,11 @@ package com.nio.ngfs.plm.bom.configuration.sdk;
 
 import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.request.GetProductContextQry;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.request.QueryProductContextFeatureOptionQry;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.request.QueryFeatureOptionQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.request.QueryProductContextOptionsQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.response.GetProductContextRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.response.ProductContextOptionsRespDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.response.QueryProductContextFeatureOptionRespDto;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.response.QueryFeatureOptionRespDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -26,11 +26,12 @@ public interface PlmProductContextClient {
     ResultInfo<ProductContextOptionsRespDto> queryProductContextOptions(QueryProductContextOptionsQry qry);
 
     /**
+     * 查询Feature/Option行
      *
      * @param qry 查询
      * @return 结果
      */
-    @PostMapping("/productContext/queryProductContextFeatureOption")
-    ResultInfo<List<QueryProductContextFeatureOptionRespDto>> queryProductContextFeatureOption(QueryProductContextFeatureOptionQry qry);
+    @PostMapping("/productContext/queryFeatureOption")
+    ResultInfo<List<QueryFeatureOptionRespDto>> queryFeatureOption(QueryFeatureOptionQry qry);
 
 }

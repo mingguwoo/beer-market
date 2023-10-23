@@ -5,16 +5,16 @@ import com.nio.bom.share.annotation.NotLogResult;
 import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.application.query.productcontext.ExportProductContextQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.productcontext.GetProductContextQuery;
-import com.nio.ngfs.plm.bom.configuration.application.query.productcontext.QueryProductContextFeatureOptionQuery;
+import com.nio.ngfs.plm.bom.configuration.application.query.productcontext.QueryFeatureOptionQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.productcontext.QueryProductContextOptionsQuery;
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmProductContextClient;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.request.ExportProductContextQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.request.GetProductContextQry;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.request.QueryProductContextFeatureOptionQry;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.request.QueryFeatureOptionQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.request.QueryProductContextOptionsQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.response.GetProductContextRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.response.ProductContextOptionsRespDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.response.QueryProductContextFeatureOptionRespDto;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.productcontext.response.QueryFeatureOptionRespDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,7 +37,7 @@ public class ProductContextController implements PlmProductContextClient {
     private final GetProductContextQuery getProductContextQuery;
     private final ExportProductContextQuery exportProductContextQuery;
     private final QueryProductContextOptionsQuery queryProductContextOptionsQuery;
-    private final QueryProductContextFeatureOptionQuery queryProductContextFeatureOptionQuery;
+    private final QueryFeatureOptionQuery queryFeatureOptionQuery;
 
     @Override
     @NeedAuthorization
@@ -55,8 +55,8 @@ public class ProductContextController implements PlmProductContextClient {
 
     @Override
     @NotLogResult
-    public ResultInfo<List<QueryProductContextFeatureOptionRespDto>> queryProductContextFeatureOption(@Valid @RequestBody QueryProductContextFeatureOptionQry qry) {
-        return ResultInfo.success(queryProductContextFeatureOptionQuery.execute(qry));
+    public ResultInfo<List<QueryFeatureOptionRespDto>> queryFeatureOption(@Valid @RequestBody QueryFeatureOptionQry qry) {
+        return ResultInfo.success(queryFeatureOptionQuery.execute(qry));
     }
 
     @NeedAuthorization

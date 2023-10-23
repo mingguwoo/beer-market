@@ -10,7 +10,7 @@ import java.util.List;
  * @date 2023/10/19
  */
 @Data
-public class QueryProductContextFeatureOptionRespDto implements Dto {
+public class QueryFeatureOptionRespDto implements Dto {
 
     private String featureCode;
 

@@ -51,7 +51,8 @@ public class AddRuleCommand extends AbstractCommand<AddRuleCmd, AddRuleRespDto> 
         ruleAggrList.forEach(ConfigurationRuleAggr::add);
         // 校验Driving Feature和Constrained Feature
         configurationRuleApplicationService.checkDrivingAndConstrainedFeature(ruleAggrList);
-        // 校验Rule打点信息不重复
+        // 校验Rule Driving下的Constrained打点不重复
+        String message = configurationRuleDomainService.checkRuleDrivingConstrainedRepeat(ruleAggrList);
         // 处理双向Rule
         ruleAggrList = configurationRuleDomainService.handleBothWayRule(ruleAggrList);
         // Rule分配Rule Number

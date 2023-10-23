@@ -25,4 +25,12 @@ public interface ConfigurationRuleDomainService {
      */
     List<ConfigurationRuleAggr> handleBothWayRule(List<ConfigurationRuleAggr> ruleAggrList);
 
+    /**
+     * 校验Rule Driving下的Constrained打点不重复
+     *
+     * @param ruleAggrList 聚合根列表
+     * @return 错误提示信息
+     */
+    String checkRuleDrivingConstrainedRepeat(List<ConfigurationRuleAggr> ruleAggrList);
+
 }

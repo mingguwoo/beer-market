@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.beans.BeanUtils;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -97,6 +98,13 @@ public class ConfigurationRuleOptionDo extends AbstractDo implements Entity<Long
         copyRuleOptionDo.setConstrainedOptionCode(getDrivingOptionCode());
         copyRuleOptionDo.setConstrainedFeatureCode(getDrivingFeatureCode());
         return copyRuleOptionDo;
+    }
+
+    /**
+     * 是否指定的矩阵打点
+     */
+    public boolean isMatrixValue(RuleOptionMatrixValueEnum matrixValueEnum) {
+        return Objects.equals(matrixValue, matrixValueEnum.getCode());
     }
 
 }

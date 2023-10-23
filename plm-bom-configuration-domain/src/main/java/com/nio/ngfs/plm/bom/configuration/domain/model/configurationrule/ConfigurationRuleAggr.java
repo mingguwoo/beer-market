@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule;
 
+import com.google.common.collect.Lists;
 import com.nio.bom.share.domain.model.AggrRoot;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.LambdaUtil;
@@ -81,7 +82,7 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
      */
     private Date releaseDate;
 
-    private transient List<ConfigurationRuleOptionDo> optionList;
+    private transient List<ConfigurationRuleOptionDo> optionList = Lists.newArrayList();
 
     @Override
     public Long getUniqId() {

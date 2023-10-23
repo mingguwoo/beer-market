@@ -5,6 +5,7 @@ import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.ModelFacade;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.response.ModelRespDto;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrulegroup.ConfigurationRuleGroupAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrulegroup.ConfigurationRuleGroupRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.service.configurationrule.ConfigurationRuleGroupDomainService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -18,7 +19,17 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ConfigurationRuleGroupDomainServiceImpl implements ConfigurationRuleGroupDomainService {
 
+    private final ConfigurationRuleGroupRepository configurationRuleGroupRepository;
     private final ModelFacade modelFacade;
+
+    @Override
+    public ConfigurationRuleGroupAggr getAndCheckAggr(Long id) {
+        ConfigurationRuleGroupAggr aggr = configurationRuleGroupRepository.find(id);
+        if (aggr == null) {
+            throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_RULE_GROUP_NOT_EXIST);
+        }
+        return aggr;
+    }
 
     @Override
     public void checkDefinedBy(ConfigurationRuleGroupAggr aggr) {

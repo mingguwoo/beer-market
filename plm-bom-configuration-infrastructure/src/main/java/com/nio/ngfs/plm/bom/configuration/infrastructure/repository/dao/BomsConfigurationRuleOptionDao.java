@@ -19,4 +19,12 @@ public interface BomsConfigurationRuleOptionDao extends IService<BomsConfigurati
      */
     List<BomsConfigurationRuleOptionEntity> queryByRuleId(Long ruleId);
 
+    /**
+     * 根据ruleId列表批量查询
+     *
+     * @param ruleIdList ruleId列表
+     * @return BomsConfigurationRuleOptionEntity列表
+     */
+    List<BomsConfigurationRuleOptionEntity> queryByRuleIdList(List<Long> ruleIdList);
+
 }

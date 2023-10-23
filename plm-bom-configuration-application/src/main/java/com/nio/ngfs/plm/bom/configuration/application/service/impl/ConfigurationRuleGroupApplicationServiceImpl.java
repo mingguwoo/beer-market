@@ -4,8 +4,11 @@ import com.google.common.collect.Lists;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.application.service.ConfigurationRuleGroupApplicationService;
+import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
+import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.ConfigurationRulePurposeEnum;
+import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.ConfigurationRuleStatusEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrulegroup.ConfigurationRuleGroupAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -58,6 +62,16 @@ public class ConfigurationRuleGroupApplicationServiceImpl implements Configurati
                 }
             });
         }
+    }
+
+    @Override
+    public void checkDeleteGroup(List<ConfigurationRuleAggr> ruleAggrList) {
+        ruleAggrList.forEach(ruleAggr -> {
+            if (!(Objects.equals(ruleAggr.getRuleVersion(), ConfigConstants.VERSION_AA) &&
+                    ruleAggr.isStatus(ConfigurationRuleStatusEnum.IN_WORK))) {
+                throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_RULE_GROUP_CAN_NOT_DELETE);
+            }
+        });
     }
 
     /**

@@ -9,6 +9,14 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrulegroup.Co
 public interface ConfigurationRuleGroupDomainService {
 
     /**
+     * 获取并校验聚合根
+     *
+     * @param id id
+     * @return 聚合根
+     */
+    ConfigurationRuleGroupAggr getAndCheckAggr(Long id);
+
+    /**
      * 校验Defined By
      *
      * @param aggr 聚合根

@@ -1,6 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule;
 
 import com.google.common.collect.Lists;
+import com.nio.bom.share.constants.CommonConstants;
 import com.nio.bom.share.domain.model.AggrRoot;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.LambdaUtil;
@@ -15,10 +16,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Configuration Rule
@@ -103,6 +106,19 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
     }
 
     /**
+     * 删除Rule
+     */
+    public void delete() {
+        ConfigurationRulePurposeEnum purposeEnum = ConfigurationRulePurposeEnum.getAndCheckByCode(purpose);
+        if (!purposeEnum.isCanDeleteRule()) {
+            throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_RULE_CAN_NOT_DELETE);
+        }
+        if (!isStatus(ConfigurationRuleStatusEnum.IN_WORK)) {
+            throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_RULE_CAN_NOT_DELETE);
+        }
+    }
+
+    /**
      * 复制双向Rule
      */
     public ConfigurationRuleAggr copyBothWayRule() {
@@ -120,9 +136,7 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
      * 校验Purpose
      */
     private void checkPurpose() {
-        if (ConfigurationRulePurposeEnum.getByCode(purpose) == null) {
-            throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_PURPOSE_ERROR);
-        }
+        ConfigurationRulePurposeEnum.getAndCheckByCode(purpose);
     }
 
     /**
@@ -130,6 +144,47 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
      */
     public ConfigurationRulePurposeEnum getRulePurposeEnum() {
         return ConfigurationRulePurposeEnum.getByCode(purpose);
+    }
+
+    /**
+     * 是否指定状态
+     */
+    public boolean isStatus(ConfigurationRuleStatusEnum statusEnum) {
+        return Objects.equals(status, statusEnum.getStatus());
+    }
+
+    /**
+     * 是否双向Rule
+     */
+    public boolean isBothWayRule(ConfigurationRuleAggr another) {
+        return !Objects.equals(this.getId(), another.getId()) &&
+                Objects.equals(this.getRuleVersion(), another.getRuleVersion()) &&
+                Objects.equals(this.getStatus(), another.getStatus()) &&
+                CollectionUtils.size(this.getOptionList()) == 1 &&
+                CollectionUtils.size(another.getOptionList()) == 1 &&
+                this.getOptionList().get(0).isBothWayRuleOption(another.getOptionList().get(0));
+    }
+
+    @Override
+    public String toString() {
+        return "ConfigurationRuleAggr{" +
+                "id=" + id +
+                ", ruleNumber='" + ruleNumber + '\'' +
+                ", ruleVersion='" + ruleVersion + '\'' +
+                ", groupId=" + groupId +
+                ", purpose=" + purpose +
+                ", ruleType='" + ruleType + '\'' +
+                ", changeType='" + changeType + '\'' +
+                ", status='" + status + '\'' +
+                ", effIn=" + effIn +
+                ", effOut=" + effOut +
+                ", releaseDate=" + releaseDate +
+                ", createUser='" + createUser + '\'' +
+                ", updateUser='" + updateUser + '\'' +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                ", delFlag=" + delFlag +
+                '}';
     }
 
 }

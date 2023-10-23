@@ -1,11 +1,13 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.configurationrulegroup;
 
 import com.google.common.base.Splitter;
+import com.nio.bom.share.constants.CommonConstants;
 import com.nio.bom.share.domain.model.AggrRoot;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.ConfigurationRulePurposeEnum;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.DeleteGroupCmd;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -76,12 +78,20 @@ public class ConfigurationRuleGroupAggr extends AbstractDo implements AggrRoot<L
     }
 
     /**
+     * 删除Group
+     */
+    public void delete() {
+        ConfigurationRulePurposeEnum purposeEnum = ConfigurationRulePurposeEnum.getAndCheckByCode(purpose);
+        if (!purposeEnum.isCanDeleteGroup()) {
+            throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_RULE_GROUP_CAN_NOT_DELETE);
+        }
+    }
+
+    /**
      * 校验Purpose
      */
     private void checkPurpose() {
-        if (ConfigurationRulePurposeEnum.getByCode(purpose) == null) {
-            throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_PURPOSE_ERROR);
-        }
+        ConfigurationRulePurposeEnum.getAndCheckByCode(purpose);
     }
 
     /**

@@ -119,6 +119,11 @@ public enum ConfigErrorCode implements ErrorCode {
     CONFIGURATION_RULE_RULE_NUMBER_GENERATE_ERROR(85007, "Rule Number Generate Error!"),
     CONFIGURATION_RULE_BOTH_WAY_RULE_SELECT_ONE_CONSTRAINED(85008, "Both Way Rule Can Only Select One Constrained Option!"),
     CONFIGURATION_RULE_MAX_RULE_NUMBER_FORMAT_ERROR(85009, "Max Rule Number Format Error!"),
+    CONFIGURATION_RULE_RULE_GROUP_NOT_EXIST(83010, "Rule Group Not Exist!"),
+    CONFIGURATION_RULE_RULE_GROUP_CAN_NOT_DELETE(83011, "Rule Group Can Not Delete!"),
+    CONFIGURATION_RULE_RULE_CAN_NOT_DELETE(83012, "Rule Can Not Delete!"),
+    CONFIGURATION_RULE_RULE_NOT_EXIST(83013, "Rule Not Exist!"),
+    CONFIGURATION_RULE_BOTH_WAY_RULE_NOT_FOUND(83014, "Both Way Rule Not Found!"),
 
     /**
      * Other

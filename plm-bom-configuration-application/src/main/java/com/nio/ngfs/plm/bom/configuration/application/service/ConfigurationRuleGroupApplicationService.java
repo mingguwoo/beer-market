@@ -1,6 +1,9 @@
 package com.nio.ngfs.plm.bom.configuration.application.service;
 
+import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrulegroup.ConfigurationRuleGroupAggr;
+
+import java.util.List;
 
 /**
  * @author xiaozhou.tu
@@ -14,5 +17,12 @@ public interface ConfigurationRuleGroupApplicationService {
      * @param aggr 聚合根
      */
     void checkDrivingAndConstrainedFeature(ConfigurationRuleGroupAggr aggr);
+
+    /**
+     * 校验删除Group
+     *
+     * @param ruleAggrList 聚合根列表
+     */
+    void checkDeleteGroup(List<ConfigurationRuleAggr> ruleAggrList);
 
 }

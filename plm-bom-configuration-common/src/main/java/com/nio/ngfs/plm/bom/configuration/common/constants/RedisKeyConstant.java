@@ -60,4 +60,8 @@ public interface RedisKeyConstant {
      */
     String CONFIGURATION_RULE_RULE_NUMBER_INCR_LOCK = CONFIGURATION_PREFIX + "configurationRule:ruleNumber:incr:lock";
 
+    String CONFIGURATION_RULE_GROUP_DELETE_LOCK = CONFIGURATION_PREFIX + "configurationRule:group:delete:lock:";
+
+    String CONFIGURATION_RULE_RULE_DELETE_LOCK = CONFIGURATION_PREFIX + "configurationRule:rule:delete:lock:";
+
 }

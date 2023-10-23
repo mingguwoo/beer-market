@@ -1,5 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.impl;
 
+import com.google.common.collect.Lists;
+import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.domainobject.ConfigurationRuleOptionDo;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author xiaozhou.tu
@@ -42,9 +45,7 @@ public class ConfigurationRuleRepositoryImpl implements ConfigurationRuleReposit
     public ConfigurationRuleAggr find(Long id) {
         ConfigurationRuleAggr aggr = configurationRuleConverter.convertEntityToDo(bomsConfigurationRuleDao.getById(id));
         if (aggr != null) {
-            aggr.setOptionList(configurationRuleOptionConverter.convertEntityListToDoList(
-                    bomsConfigurationRuleOptionDao.queryByRuleId(aggr.getId())
-            ));
+            queryAndBuildRuleOptionList(Lists.newArrayList(aggr));
         }
         return aggr;
     }
@@ -56,6 +57,33 @@ public class ConfigurationRuleRepositoryImpl implements ConfigurationRuleReposit
         aggrList.forEach(rule -> rule.getOptionList().forEach(option -> option.setRuleId(rule.getId())));
         List<ConfigurationRuleOptionDo> optionList = aggrList.stream().flatMap(i -> i.getOptionList().stream()).toList();
         DaoSupport.batchSaveOrUpdate(bomsConfigurationRuleOptionDao, configurationRuleOptionConverter.convertDoListToEntityList(optionList));
+    }
+
+    @Override
+    public void batchRemove(List<ConfigurationRuleAggr> aggrList) {
+        bomsConfigurationRuleDao.removeBatchByIds(LambdaUtil.map(aggrList, ConfigurationRuleAggr::getId));
+        bomsConfigurationRuleOptionDao.removeBatchByIds(aggrList.stream()
+                .flatMap(aggr -> LambdaUtil.map(aggr.getOptionList(), ConfigurationRuleOptionDo::getId).stream()).toList());
+    }
+
+    @Override
+    public List<ConfigurationRuleAggr> queryByGroupId(Long groupId) {
+        List<ConfigurationRuleAggr> ruleAggrList = configurationRuleConverter.convertEntityListToDoList(
+                bomsConfigurationRuleDao.queryByGroupId(groupId)
+        );
+        queryAndBuildRuleOptionList(ruleAggrList);
+        return ruleAggrList;
+    }
+
+    private void queryAndBuildRuleOptionList(List<ConfigurationRuleAggr> ruleAggrList) {
+        List<ConfigurationRuleOptionDo> ruleOptionDoList = configurationRuleOptionConverter.convertEntityListToDoList(
+                bomsConfigurationRuleOptionDao.queryByRuleIdList(LambdaUtil.map(ruleAggrList, ConfigurationRuleAggr::getId))
+        );
+        Map<Long, List<ConfigurationRuleOptionDo>> optionListMap = LambdaUtil.groupBy(ruleOptionDoList, ConfigurationRuleOptionDo::getRuleId);
+        ruleAggrList.forEach(ruleAggr -> {
+            ruleAggr.setOptionList(optionListMap.getOrDefault(ruleAggr.getId(), Lists.newArrayList()));
+            ruleAggr.getOptionList().forEach(option -> option.setRule(ruleAggr));
+        });
     }
 
     @Override

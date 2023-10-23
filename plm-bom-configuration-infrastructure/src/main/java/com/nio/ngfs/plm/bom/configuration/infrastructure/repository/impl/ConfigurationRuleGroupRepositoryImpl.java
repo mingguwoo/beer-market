@@ -33,4 +33,9 @@ public class ConfigurationRuleGroupRepositoryImpl implements ConfigurationRuleGr
         return configurationRuleGroupConverter.convertEntityToDo(bomsConfigurationRuleGroupDao.getById(id));
     }
 
+    @Override
+    public void remove(ConfigurationRuleGroupAggr aggr) {
+        bomsConfigurationRuleGroupDao.removeById(aggr.getId());
+    }
+
 }

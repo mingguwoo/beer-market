@@ -18,6 +18,21 @@ public interface ConfigurationRuleRepository extends Repository<ConfigurationRul
     void batchSave(List<ConfigurationRuleAggr> aggrList);
 
     /**
+     * 批量删除
+     *
+     * @param aggrList 聚合根列表
+     */
+    void batchRemove(List<ConfigurationRuleAggr> aggrList);
+
+    /**
+     * 根据Group Id查询
+     *
+     * @param groupId Group Id
+     * @return 聚合根列表
+     */
+    List<ConfigurationRuleAggr> queryByGroupId(Long groupId);
+
+    /**
      * 申请Rule Number
      *
      * @param size 申请数量

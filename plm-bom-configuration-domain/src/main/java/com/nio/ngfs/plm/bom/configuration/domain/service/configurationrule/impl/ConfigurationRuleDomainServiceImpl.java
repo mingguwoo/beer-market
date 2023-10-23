@@ -2,6 +2,8 @@ package com.nio.ngfs.plm.bom.configuration.domain.service.configurationrule.impl
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.nio.bom.share.exception.BusinessException;
+import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.domainobject.ConfigurationRuleOptionDo;
@@ -13,10 +15,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayDeque;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -28,6 +27,15 @@ import java.util.stream.Collectors;
 public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDomainService {
 
     private final ConfigurationRuleRepository configurationRuleRepository;
+
+    @Override
+    public ConfigurationRuleAggr getAndCheckAggr(Long id) {
+        ConfigurationRuleAggr aggr = configurationRuleRepository.find(id);
+        if (aggr == null) {
+            throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_RULE_NOT_EXIST);
+        }
+        return aggr;
+    }
 
     @Override
     public void generateRuleNumber(List<ConfigurationRuleAggr> ruleAggrList) {
@@ -44,6 +52,18 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
         List<ConfigurationRuleAggr> newRuleAggrList = Lists.newArrayList(ruleAggrList);
         ruleAggrList.forEach(ruleAggr -> newRuleAggrList.add(ruleAggr.copyBothWayRule()));
         return newRuleAggrList;
+    }
+
+    @Override
+    public ConfigurationRuleAggr findAnotherBothWayRule(ConfigurationRuleAggr ruleAggr) {
+        List<ConfigurationRuleAggr> ruleAggrList = configurationRuleRepository.queryByGroupId(ruleAggr.getGroupId());
+        if (CollectionUtils.isNotEmpty(ruleAggrList)) {
+            ConfigurationRuleAggr anotherAggr = ruleAggrList.stream().filter(ruleAggr::isBothWayRule).findFirst().orElse(null);
+            if (anotherAggr != null) {
+                return anotherAggr;
+            }
+        }
+        throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_BOTH_WAY_RULE_NOT_FOUND);
     }
 
     @Override

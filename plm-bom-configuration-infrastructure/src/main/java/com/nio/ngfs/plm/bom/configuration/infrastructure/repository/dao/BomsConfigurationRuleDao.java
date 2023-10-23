@@ -18,6 +18,14 @@ public interface BomsConfigurationRuleDao extends IService<BomsConfigurationRule
      */
     String getMaxRuleNumber();
 
+    /**
+     * 根据Group Id查询
+     *
+     * @param groupId Group Id
+     * @return BomsConfigurationRuleEntity列表
+     */
+    List<BomsConfigurationRuleEntity> queryByGroupId(Long groupId);
+
 
     List<BomsConfigurationRuleEntity> queryByRuleNumber(String ruleNumber);
 }

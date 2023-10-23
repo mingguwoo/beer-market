@@ -6,6 +6,7 @@ import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.application.command.configurationrule.AddRuleCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.configurationrule.DeleteGroupCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.configurationrule.DeleteRuleCommand;
+import com.nio.ngfs.plm.bom.configuration.application.command.configurationrule.ReleaseRuleCommand;
 import com.nio.ngfs.plm.bom.configuration.application.query.configurationrule.CheckReleaseAvailableQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.configurationrule.GetPurposeOptionListQuery;
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmConfigurationRuleClient;
@@ -29,6 +30,7 @@ public class ConfigurationRuleController implements PlmConfigurationRuleClient {
     private final AddRuleCommand addRuleCommand;
     private final DeleteGroupCommand deleteGroupCommand;
     private final DeleteRuleCommand deleteRuleCommand;
+    private final ReleaseRuleCommand releaseRuleCommand;
     private final GetPurposeOptionListQuery getPurposeOptionListQuery;
     private final CheckReleaseAvailableQuery checkReleaseAvailableQuery;
 
@@ -48,6 +50,12 @@ public class ConfigurationRuleController implements PlmConfigurationRuleClient {
     @NotLogResult
     public ResultInfo<DeleteRuleRespDto> deleteRule(@Valid @RequestBody DeleteRuleCmd cmd) {
         return ResultInfo.success(deleteRuleCommand.execute(cmd));
+    }
+
+    @Override
+    @NotLogResult
+    public ResultInfo<ReleaseRuleRespDto> releaseRule(@Valid @RequestBody ReleaseRuleCmd cmd) {
+        return ResultInfo.success(releaseRuleCommand.execute(cmd));
     }
 
     @Override

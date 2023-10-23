@@ -33,6 +33,22 @@ public interface ConfigurationRuleRepository extends Repository<ConfigurationRul
     List<ConfigurationRuleAggr> queryByGroupId(Long groupId);
 
     /**
+     * 根据Group Id列表批量查询
+     *
+     * @param groupIdList Group Id列表
+     * @return 聚合根列表
+     */
+    List<ConfigurationRuleAggr> queryByGroupIdList(List<Long> groupIdList);
+
+    /**
+     * 根据Rule Id列表批量查询
+     *
+     * @param ruleIdList Rule Id列表
+     * @return 聚合根列表
+     */
+    List<ConfigurationRuleAggr> queryByRuleIdList(List<Long> ruleIdList);
+
+    /**
      * 申请Rule Number
      *
      * @param size 申请数量

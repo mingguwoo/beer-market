@@ -43,6 +43,15 @@ public interface PlmConfigurationRuleClient {
     ResultInfo<DeleteRuleRespDto> deleteRule(DeleteRuleCmd cmd);
 
     /**
+     * 发布Rule
+     *
+     * @param cmd 命令
+     * @return 响应
+     */
+    @PostMapping("/configurationRule/releaseRule")
+    ResultInfo<ReleaseRuleRespDto> releaseRule(ReleaseRuleCmd cmd);
+
+    /**
      * 查询Purpose选项列表
      */
     @PostMapping("/configurationRule/getPurposeOptionList")

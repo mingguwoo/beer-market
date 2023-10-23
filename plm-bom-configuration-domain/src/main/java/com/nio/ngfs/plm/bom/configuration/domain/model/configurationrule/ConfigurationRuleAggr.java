@@ -87,6 +87,8 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
 
     private transient List<ConfigurationRuleOptionDo> optionList = Lists.newArrayList();
 
+    private transient boolean bothWayPairMatch = false;
+
     @Override
     public Long getUniqId() {
         return id;
@@ -116,6 +118,24 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
         if (!isStatus(ConfigurationRuleStatusEnum.IN_WORK)) {
             throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_RULE_CAN_NOT_DELETE);
         }
+    }
+
+    /**
+     * 发布
+     */
+    public boolean release() {
+        if (isStatus(ConfigurationRuleStatusEnum.IN_WORK)) {
+            setStatus(ConfigurationRuleStatusEnum.RELEASED.getStatus());
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 是否可以Release
+     */
+    public boolean canRelease() {
+        return isStatus(ConfigurationRuleStatusEnum.IN_WORK);
     }
 
     /**

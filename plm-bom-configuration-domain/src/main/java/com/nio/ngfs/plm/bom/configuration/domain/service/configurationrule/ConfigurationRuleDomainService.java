@@ -49,4 +49,9 @@ public interface ConfigurationRuleDomainService {
      */
     String checkRuleDrivingConstrainedRepeat(List<ConfigurationRuleAggr> ruleAggrList);
 
+    /**
+     * 双向Rule Release
+     */
+    void releaseBothWayRule(List<ConfigurationRuleAggr> ruleAggrList);
+
 }

@@ -64,4 +64,6 @@ public interface RedisKeyConstant {
 
     String CONFIGURATION_RULE_RULE_DELETE_LOCK = CONFIGURATION_PREFIX + "configurationRule:rule:delete:lock:";
 
+    String CONFIGURATION_RULE_RULE_RELEASE_LOCK = CONFIGURATION_PREFIX + "configurationRule:rule:release:lock";
+
 }

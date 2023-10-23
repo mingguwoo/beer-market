@@ -1,10 +1,12 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.google.common.collect.Lists;
 import com.nio.ngfs.common.model.page.WherePageRequest;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsConfigurationRuleDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsConfigurationRuleEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsConfigurationRuleMapper;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -39,9 +41,19 @@ public class BomsConfigurationRuleDaoImpl extends AbstractDao<BomsConfigurationR
     }
 
     @Override
+    public List<BomsConfigurationRuleEntity> queryByGroupIdList(List<Long> groupIdList) {
+        if (CollectionUtils.isEmpty(groupIdList)) {
+            return Lists.newArrayList();
+        }
+        LambdaQueryWrapper<BomsConfigurationRuleEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.in(BomsConfigurationRuleEntity::getGroupId, groupIdList);
+        return getBaseMapper().selectList(lambdaQueryWrapper);
+    }
+
+    @Override
     public List<BomsConfigurationRuleEntity> queryByRuleNumber(String ruleNumber) {
         LambdaQueryWrapper<BomsConfigurationRuleEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(BomsConfigurationRuleEntity::getRuleNumber,ruleNumber);
+        lambdaQueryWrapper.eq(BomsConfigurationRuleEntity::getRuleNumber, ruleNumber);
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 }

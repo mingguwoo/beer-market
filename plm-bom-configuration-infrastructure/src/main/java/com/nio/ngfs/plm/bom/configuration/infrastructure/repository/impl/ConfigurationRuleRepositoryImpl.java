@@ -71,11 +71,26 @@ public class ConfigurationRuleRepositoryImpl implements ConfigurationRuleReposit
         List<ConfigurationRuleAggr> ruleAggrList = configurationRuleConverter.convertEntityListToDoList(
                 bomsConfigurationRuleDao.queryByGroupId(groupId)
         );
-        queryAndBuildRuleOptionList(ruleAggrList);
-        return ruleAggrList;
+        return queryAndBuildRuleOptionList(ruleAggrList);
     }
 
-    private void queryAndBuildRuleOptionList(List<ConfigurationRuleAggr> ruleAggrList) {
+    @Override
+    public List<ConfigurationRuleAggr> queryByGroupIdList(List<Long> groupIdList) {
+        List<ConfigurationRuleAggr> ruleAggrList = configurationRuleConverter.convertEntityListToDoList(
+                bomsConfigurationRuleDao.queryByGroupIdList(groupIdList)
+        );
+        return queryAndBuildRuleOptionList(ruleAggrList);
+    }
+
+    @Override
+    public List<ConfigurationRuleAggr> queryByRuleIdList(List<Long> ruleIdList) {
+        List<ConfigurationRuleAggr> ruleAggrList = configurationRuleConverter.convertEntityListToDoList(
+                bomsConfigurationRuleDao.listByIds(ruleIdList)
+        );
+        return queryAndBuildRuleOptionList(ruleAggrList);
+    }
+
+    private List<ConfigurationRuleAggr> queryAndBuildRuleOptionList(List<ConfigurationRuleAggr> ruleAggrList) {
         List<ConfigurationRuleOptionDo> ruleOptionDoList = configurationRuleOptionConverter.convertEntityListToDoList(
                 bomsConfigurationRuleOptionDao.queryByRuleIdList(LambdaUtil.map(ruleAggrList, ConfigurationRuleAggr::getId))
         );
@@ -84,6 +99,7 @@ public class ConfigurationRuleRepositoryImpl implements ConfigurationRuleReposit
             ruleAggr.setOptionList(optionListMap.getOrDefault(ruleAggr.getId(), Lists.newArrayList()));
             ruleAggr.getOptionList().forEach(option -> option.setRule(ruleAggr));
         });
+        return ruleAggrList;
     }
 
     @Override

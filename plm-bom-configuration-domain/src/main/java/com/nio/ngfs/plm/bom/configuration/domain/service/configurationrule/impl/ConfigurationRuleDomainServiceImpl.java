@@ -3,6 +3,7 @@ package com.nio.ngfs.plm.bom.configuration.domain.service.configurationrule.impl
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.nio.bom.share.exception.BusinessException;
+import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleRepository;
@@ -100,6 +101,43 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
             return message;
         }
         return "The Same Rule Existed In Driving Criteria Option " + message + ", Please Check!";
+    }
+
+    @Override
+    public void releaseBothWayRule(List<ConfigurationRuleAggr> ruleAggrList) {
+        List<ConfigurationRuleAggr> bothWayRuleAggrList = ruleAggrList.stream().filter(i -> i.getRulePurposeEnum().isBothWay()).toList();
+        if (CollectionUtils.isEmpty(bothWayRuleAggrList)) {
+            return;
+        }
+        // 已经匹配的双向Rule打标记
+        for (ConfigurationRuleAggr aggr : bothWayRuleAggrList) {
+            if (aggr.isBothWayPairMatch()) {
+                continue;
+            }
+            for (ConfigurationRuleAggr anotherAggr : bothWayRuleAggrList) {
+                if (aggr == anotherAggr || anotherAggr.isBothWayPairMatch()) {
+                    continue;
+                }
+                if (aggr.isBothWayRule(anotherAggr)) {
+                    aggr.setBothWayPairMatch(true);
+                    anotherAggr.setBothWayPairMatch(true);
+                }
+            }
+        }
+        List<ConfigurationRuleAggr> lackBothWayRuleAggrList = bothWayRuleAggrList.stream().filter(i -> !i.isBothWayPairMatch()).toList();
+        List<ConfigurationRuleAggr> groupRuleAggrList = configurationRuleRepository.queryByGroupIdList(LambdaUtil.map(lackBothWayRuleAggrList, ConfigurationRuleAggr::getGroupId));
+        Map<Long, List<ConfigurationRuleAggr>> groupRuleAggrListGroup = LambdaUtil.groupBy(groupRuleAggrList, ConfigurationRuleAggr::getGroupId);
+        lackBothWayRuleAggrList.forEach(aggr -> {
+            List<ConfigurationRuleAggr> allGroupRuleAggrList = groupRuleAggrListGroup.getOrDefault(aggr.getGroupId(), Lists.newArrayList());
+            ConfigurationRuleAggr anotherAggr = allGroupRuleAggrList.stream().filter(aggr::isBothWayRule).findFirst().orElse(null);
+            if (anotherAggr != null) {
+                if (anotherAggr.canRelease()) {
+                    ruleAggrList.add(anotherAggr);
+                }
+            } else {
+                throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_BOTH_WAY_RULE_NOT_FOUND);
+            }
+        });
     }
 
     @Data

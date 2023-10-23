@@ -140,18 +140,30 @@ public class QueryConfigurationRuleQuery extends AbstractQuery<QueryConfiguratio
                 }
                 ruleOptionMap.get(rule.getId()).forEach(optionEntity->{
                     Pair<CriteriaDto,CriteriaDto> criteriaPair = buildCriteria(optionEntity,featureOptionMap);
+                    rule.getDrivingCriteria().add(criteriaPair.getKey());
+                    rule.getDrivingCriteria().add(criteriaPair.getValue());
                 });
 
             });
         });
-        return null;
+        return respDto;
     }
 
     private Pair<CriteriaDto,CriteriaDto> buildCriteria(BomsConfigurationRuleOptionEntity optionEntity,Map<String, BomsFeatureLibraryEntity> featureOptionMap){
         CriteriaDto drivingCriteria = new CriteriaDto();
         CriteriaDto constrainedCriteria = new CriteriaDto();
-        drivingCriteria.setFeatureChineseName(featureOptionMap.get(optionEntity.getDrivingFeatureCode()).getChineseName());
         drivingCriteria.setFeatureCode(optionEntity.getDrivingFeatureCode());
+        drivingCriteria.setFeatureChineseName(featureOptionMap.get(optionEntity.getDrivingFeatureCode()).getChineseName());
+        drivingCriteria.setFeatureDisplayName(featureOptionMap.get(optionEntity.getDrivingFeatureCode()).getDisplayName());
+        drivingCriteria.setOptionCode(optionEntity.getDrivingOptionCode());
+        drivingCriteria.setOptionDisplayName(featureOptionMap.get(optionEntity.getDrivingOptionCode()).getDisplayName());
+        drivingCriteria.setOptionDisplayName(featureOptionMap.get(optionEntity.getDrivingOptionCode()).getDisplayName());
+        constrainedCriteria.setFeatureCode(optionEntity.getConstrainedFeatureCode());
+        constrainedCriteria.setFeatureChineseName(featureOptionMap.get(optionEntity.getConstrainedFeatureCode()).getChineseName());
+        constrainedCriteria.setFeatureDisplayName(featureOptionMap.get(optionEntity.getConstrainedFeatureCode()).getDisplayName());
+        constrainedCriteria.setOptionCode(optionEntity.getConstrainedOptionCode());
+        constrainedCriteria.setOptionChineseName(featureOptionMap.get(optionEntity.getConstrainedOptionCode()).getChineseName());
+        constrainedCriteria.setOptionDisplayName(featureOptionMap.get(optionEntity.getConstrainedOptionCode()).getDisplayName());
         return Pair.of(drivingCriteria,constrainedCriteria);
     }
 

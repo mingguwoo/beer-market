@@ -7,6 +7,8 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsC
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsConfigurationRuleGroupMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author xiaozhou.tu
  * @date 2023/10/17
@@ -18,4 +20,10 @@ public class BomsConfigurationRuleGroupDaoImpl extends AbstractDao<BomsConfigura
     protected void fuzzyConditions(WherePageRequest<BomsConfigurationRuleGroupEntity> bomsConfigurationRuleGroupEntityWherePageRequest, LambdaQueryWrapper<BomsConfigurationRuleGroupEntity> queryWrapper) {
     }
 
+    @Override
+    public List<BomsConfigurationRuleGroupEntity> queryByDefinedBy(String definedBy) {
+        LambdaQueryWrapper<BomsConfigurationRuleGroupEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.like(BomsConfigurationRuleGroupEntity::getDefinedBy,definedBy);
+        return getBaseMapper().selectList(lambdaQueryWrapper);
+    }
 }

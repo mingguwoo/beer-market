@@ -13,4 +13,11 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsC
  */
 public interface BomsConfigurationRuleMapper extends BaseMapper<BomsConfigurationRuleEntity> {
 
+    /**
+     * 获取最大的Rule Number
+     *
+     * @return 最大的Rule Number
+     */
+    String getMaxRuleNumber();
+
 }

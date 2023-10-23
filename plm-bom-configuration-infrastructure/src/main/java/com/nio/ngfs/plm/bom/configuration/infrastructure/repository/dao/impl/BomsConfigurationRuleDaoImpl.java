@@ -9,8 +9,6 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsC
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 import java.util.List;
 
 /**
@@ -26,11 +24,7 @@ public class BomsConfigurationRuleDaoImpl extends AbstractDao<BomsConfigurationR
 
     @Override
     public String getMaxRuleNumber() {
-        LambdaQueryWrapper<BomsConfigurationRuleEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.orderByDesc(BomsConfigurationRuleEntity::getRuleNumber);
-        lambdaQueryWrapper.last("limit 1");
-        BomsConfigurationRuleEntity entity = getBaseMapper().selectOne(lambdaQueryWrapper);
-        return Optional.ofNullable(entity).map(BomsConfigurationRuleEntity::getRuleNumber).orElse(null);
+        return getBaseMapper().getMaxRuleNumber();
     }
 
     @Override

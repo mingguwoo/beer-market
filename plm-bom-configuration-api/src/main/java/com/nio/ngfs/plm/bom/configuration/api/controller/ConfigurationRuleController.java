@@ -1,12 +1,8 @@
 package com.nio.ngfs.plm.bom.configuration.api.controller;
 
 import com.nio.bom.share.annotation.NotLogResult;
-import com.nio.bom.share.result.Result;
 import com.nio.bom.share.result.ResultInfo;
-import com.nio.ngfs.plm.bom.configuration.application.command.configurationrule.AddRuleCommand;
-import com.nio.ngfs.plm.bom.configuration.application.command.configurationrule.DeleteGroupCommand;
-import com.nio.ngfs.plm.bom.configuration.application.command.configurationrule.DeleteRuleCommand;
-import com.nio.ngfs.plm.bom.configuration.application.command.configurationrule.ReleaseRuleCommand;
+import com.nio.ngfs.plm.bom.configuration.application.command.configurationrule.*;
 import com.nio.ngfs.plm.bom.configuration.application.query.configurationrule.GetPurposeOptionListQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.configurationrule.QueryConfigurationRuleQuery;
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmConfigurationRuleClient;
@@ -33,6 +29,7 @@ public class ConfigurationRuleController implements PlmConfigurationRuleClient {
     private final ReleaseRuleCommand releaseRuleCommand;
     private final GetPurposeOptionListQuery getPurposeOptionListQuery;
     private final QueryConfigurationRuleQuery queryConfigurationRuleQuery;
+    private final ReviseRuleCommand reviseRuleCommand;
 
     @Override
     @NotLogResult
@@ -68,6 +65,12 @@ public class ConfigurationRuleController implements PlmConfigurationRuleClient {
     @NotLogResult
     public ResultInfo<QueryConfigurationRuleRespDto> queryConfigurationRule(@Valid @RequestBody QueryConfigurationRuleQry qry) {
         return ResultInfo.success(queryConfigurationRuleQuery.execute(qry));
+    }
+
+    @Override
+    @NotLogResult
+    public ResultInfo<ReviseRuleRespDto> reviseRule(@Valid @RequestBody ReviseRuleCmd cmd) {
+        return ResultInfo.success(reviseRuleCommand.execute(cmd));
     }
 
 }

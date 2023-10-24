@@ -57,7 +57,15 @@ public interface PlmConfigurationRuleClient {
     @PostMapping("/configurationRule/getPurposeOptionList")
     ResultInfo<List<GetPurposeOptionListRespDto>> getPurposeOptionList(GetPurposeOptionListQry qry);
 
+    /**
+     * 查询group和rule
+     * @param qry
+     * @return
+     */
     @PostMapping("/configurationRule/queryConfigurationRule")
     ResultInfo<QueryConfigurationRuleRespDto> queryConfigurationRule(QueryConfigurationRuleQry qry);
+
+    @PostMapping("/configurationRule/reviseRule")
+    ResultInfo<ReviseRuleRespDto> reviseRule(ReviseRuleCmd cmd);
 
 }

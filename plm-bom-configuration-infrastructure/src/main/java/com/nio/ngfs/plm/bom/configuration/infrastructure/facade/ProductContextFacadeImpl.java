@@ -2,7 +2,6 @@ package com.nio.ngfs.plm.bom.configuration.infrastructure.facade;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.nio.bom.share.utils.GsonUtils;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.ProductContextFacade;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncProductContextModelFeatureDto;
 import com.nio.ngfs.plm.bom.configuration.domain.facade.dto.request.SyncProductContextModelFeatureOptionDto;

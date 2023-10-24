@@ -9,7 +9,6 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.response.QueryV36CodeL
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;

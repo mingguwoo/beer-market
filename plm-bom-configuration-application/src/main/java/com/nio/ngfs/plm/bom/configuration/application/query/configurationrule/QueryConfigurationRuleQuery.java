@@ -98,8 +98,11 @@ public class QueryConfigurationRuleQuery extends AbstractQuery<QueryConfiguratio
         List<BomsConfigurationRuleOptionEntity> optionEntityList = bomsConfigurationRuleOptionDao.queryByRuleIdList(ruleEntityList.stream().map(entity->entity.getId()).toList());
         optionEntityList.forEach(entity->{
             if (matchSearch(entity.getConstrainedFeatureCode(),qry.getSearchContent()) || matchSearch(entity.getConstrainedOptionCode(),qry.getSearchContent())
+            || (matchSearch(entity.getDrivingFeatureCode(),qry.getSearchContent()) || matchSearch(entity.getDrivingOptionCode(),qry.getSearchContent()))
             || matchSearch(featureOptionMap.get(entity.getConstrainedOptionCode()).getDisplayName(),qry.getSearchContent()) || matchSearch(featureOptionMap.get(entity.getConstrainedOptionCode()).getChineseName(),qry.getSearchContent())
-            || matchSearch(featureOptionMap.get(entity.getConstrainedFeatureCode()).getDisplayName(),qry.getSearchContent()) || matchSearch(featureOptionMap.get(entity.getConstrainedFeatureCode()).getChineseName(),qry.getSearchContent())){
+            || matchSearch(featureOptionMap.get(entity.getConstrainedFeatureCode()).getDisplayName(),qry.getSearchContent()) || matchSearch(featureOptionMap.get(entity.getConstrainedFeatureCode()).getChineseName(),qry.getSearchContent())
+            || matchSearch(featureOptionMap.get(entity.getDrivingOptionCode()).getDisplayName(),qry.getSearchContent()) || matchSearch(featureOptionMap.get(entity.getDrivingOptionCode()).getChineseName(),qry.getSearchContent())
+            || matchSearch(featureOptionMap.get(entity.getDrivingFeatureCode()).getDisplayName(),qry.getSearchContent()) || matchSearch(featureOptionMap.get(entity.getDrivingFeatureCode()).getChineseName(),qry.getSearchContent())){
                 ruleMatchSet.add(entity.getRuleId());
             }
             //将所有rule对应的criteria记录下来
@@ -204,7 +207,7 @@ public class QueryConfigurationRuleQuery extends AbstractQuery<QueryConfiguratio
 
     private boolean matchSearch(String content, String search){
         if (Objects.nonNull(search)){
-            return content != null && content.contains(search);
+            return content != null && content.toUpperCase().contains(search.toUpperCase());
         }
         return true;
     }

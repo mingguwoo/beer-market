@@ -1,7 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.response;
 
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.Dto;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,9 +10,18 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class AddRuleRespDto implements Dto {
 
     private String message;
+
+    private Long groupId;
+
+    public AddRuleRespDto(String message) {
+        this.message = message;
+    }
+
+    public AddRuleRespDto(Long groupId) {
+        this.groupId = groupId;
+    }
 
 }

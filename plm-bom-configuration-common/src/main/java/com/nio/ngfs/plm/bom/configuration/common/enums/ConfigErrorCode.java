@@ -126,6 +126,7 @@ public enum ConfigErrorCode implements ErrorCode {
     CONFIGURATION_RULE_BOTH_WAY_RULE_NOT_FOUND(83014, "Both Way Rule Not Found!"),
     CONFIGURATION_RULE_BOTH_WAY_RULE_ALREADY_RELEASED(85015, "Both Way Rule Already Released!"),
     CONFIGURATION_RULE_BOTH_WAY_RULE_IS_MORE_THAN_TWO(85016, "Both Way Rule Is More Than Two!"),
+    CONFIGURATION_RULE_BOTH_WAY_DRIVING_FEATURE_ONLY_SELECT_ONE(85017, "Driving Feature Can Only Select One!"),
 
     /**
      * Other

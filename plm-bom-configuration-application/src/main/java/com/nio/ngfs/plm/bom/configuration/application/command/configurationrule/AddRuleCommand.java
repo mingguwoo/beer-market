@@ -59,7 +59,7 @@ public class AddRuleCommand extends AbstractCommand<AddRuleCmd, AddRuleRespDto> 
         configurationRuleDomainService.generateRuleNumber(ruleAggrList);
         // 保存到数据库
         ((AddRuleCommand) AopContext.currentProxy()).saveRuleAndGroup(ruleGroupAggr, ruleAggrList);
-        return new AddRuleRespDto();
+        return new AddRuleRespDto(ruleGroupAggr.getId());
     }
 
     @Transactional(rollbackFor = Exception.class)

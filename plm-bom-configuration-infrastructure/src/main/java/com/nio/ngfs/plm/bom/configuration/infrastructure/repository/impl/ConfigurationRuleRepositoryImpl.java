@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author xiaozhou.tu
@@ -54,7 +55,7 @@ public class ConfigurationRuleRepositoryImpl implements ConfigurationRuleReposit
     @Transactional(rollbackFor = Exception.class)
     public void batchSave(List<ConfigurationRuleAggr> aggrList) {
         DaoSupport.batchSaveOrUpdate(bomsConfigurationRuleDao, configurationRuleConverter, aggrList);
-        aggrList.forEach(rule -> rule.getOptionList().forEach(option -> option.setRuleId(rule.getId())));
+        aggrList.forEach(rule -> rule.getOptionList().stream().filter(option -> Objects.isNull(option.getRuleId())).forEach(option -> option.setRuleId(rule.getId())));
         List<ConfigurationRuleOptionDo> optionList = aggrList.stream().flatMap(i -> i.getOptionList().stream()).toList();
         DaoSupport.batchSaveOrUpdate(bomsConfigurationRuleOptionDao, configurationRuleOptionConverter.convertDoListToEntityList(optionList));
     }

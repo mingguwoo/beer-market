@@ -24,6 +24,14 @@ public interface ConfigurationRuleRepository extends Repository<ConfigurationRul
      */
     void batchRemove(List<ConfigurationRuleAggr> aggrList);
 
+
+    /**
+     *
+     * @param aggrList
+     */
+    void batchUpdate(List<ConfigurationRuleAggr> aggrList);
+
+
     /**
      * 根据Group Id查询
      *
@@ -46,7 +54,15 @@ public interface ConfigurationRuleRepository extends Repository<ConfigurationRul
      * @param ruleIdList Rule Id列表
      * @return 聚合根列表
      */
-    List<ConfigurationRuleAggr> queryByRuleIdList(List<Long> ruleIdList);
+    List<ConfigurationRuleAggr> queryByRuleIdList(List<Long> ruleIdList,Boolean optionFlag);
+
+
+    /**
+     * 根据rule_number批量查询
+     * @param ruleNumbers
+     * @return
+     */
+    List<ConfigurationRuleAggr> queryByRuleNumbers(List<String> ruleNumbers);
 
     /**
      * 申请Rule Number

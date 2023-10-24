@@ -251,6 +251,8 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
         throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_VERSION_OVERFLOW);
     }
 
+
+
     @Override
     public String toString() {
         return "ConfigurationRuleAggr{" +

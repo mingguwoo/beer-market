@@ -45,9 +45,9 @@ public class BomsConfigurationRuleDaoImpl extends AbstractDao<BomsConfigurationR
     }
 
     @Override
-    public List<BomsConfigurationRuleEntity> queryByRuleNumber(String ruleNumber) {
+    public List<BomsConfigurationRuleEntity> queryByRuleNumbers(List<String> ruleNumbers) {
         LambdaQueryWrapper<BomsConfigurationRuleEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(BomsConfigurationRuleEntity::getRuleNumber, ruleNumber);
+        lambdaQueryWrapper.in(BomsConfigurationRuleEntity::getRuleNumber, ruleNumbers);
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 

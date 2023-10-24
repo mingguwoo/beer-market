@@ -68,4 +68,13 @@ public interface PlmConfigurationRuleClient {
     @PostMapping("/configurationRule/reviseRule")
     ResultInfo<ReviseRuleRespDto> reviseRule(ReviseRuleCmd cmd);
 
+
+    /**
+     * 删除 对当前Rev的Rule条目进行工程端的失效处理
+     * @param removeRuleCmd
+     * @return
+     */
+    @PostMapping("/remove")
+    ResultInfo<Boolean> remove(RemoveRuleCmd removeRuleCmd);
+
 }

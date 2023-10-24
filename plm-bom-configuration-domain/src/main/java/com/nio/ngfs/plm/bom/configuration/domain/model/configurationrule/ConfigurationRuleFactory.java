@@ -1,10 +1,15 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule;
 
+import com.google.common.collect.Lists;
 import com.nio.bom.share.utils.LambdaUtil;
+import com.nio.ngfs.common.utils.BeanConvertUtils;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.domainobject.ConfigurationRuleOptionDo;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.AddRuleCmd;
+import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author xiaozhou.tu
@@ -33,6 +38,28 @@ public class ConfigurationRuleFactory {
                 .createUser(createUser)
                 .updateUser(createUser)
                 .build();
+    }
+
+
+    public static List<ConfigurationRuleAggr> buildRemoveRuleAggr(List<ConfigurationRuleAggr> ruleAggrList,String userName){
+
+        List<ConfigurationRuleAggr> configurationRuleAggrs= Lists.newArrayList();
+
+        Date updateTime = new Date();
+        ruleAggrList.forEach(rule->{
+            ConfigurationRuleAggr ruleAggr=new ConfigurationRuleAggr();
+            ruleAggr.setId(ruleAggr.getId());
+            ruleAggr.setCreateUser(userName);
+            ruleAggr.setUpdateTime(updateTime);
+            configurationRuleAggrs.add(ruleAggr);
+
+            if(Objects.nonNull(rule.getRulePairId()) && rule.getRulePairId()>0){
+                ConfigurationRuleAggr copyRuleAggr = BeanConvertUtils.convertTo(ruleAggr,ConfigurationRuleAggr::new);
+                copyRuleAggr.setId(rule.getRulePairId());
+                configurationRuleAggrs.add(copyRuleAggr);
+            }
+        });
+        return configurationRuleAggrs;
     }
 
 }

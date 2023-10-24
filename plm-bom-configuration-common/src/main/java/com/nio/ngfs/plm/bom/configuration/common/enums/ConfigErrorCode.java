@@ -155,6 +155,18 @@ public enum ConfigErrorCode implements ErrorCode {
 
     EDIT_FEATURE_ERROR(89008,"Edit Fail! Feature Code {0} Has More Than One Standard Configuration!"),
 
+
+    RULE_ID_ERROR(89009,"ruleIds is error!"),
+
+    RULE_CHANGE_TYPE_ERROR(89010,"ruleNumber:{0},rev:{1} has bean removed "),
+
+    PURPOSE_ERROR(89011,"ruleNumber:{0},rev:{1} purpose is error"),
+
+
+    REMOVE_ERROR(89012,"ruleNumber:{0},rev:{1} purpose is error"),
+
+
+
     ;
 
     /**

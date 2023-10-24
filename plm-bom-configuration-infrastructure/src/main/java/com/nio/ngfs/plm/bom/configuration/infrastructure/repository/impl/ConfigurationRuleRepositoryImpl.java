@@ -73,6 +73,13 @@ public class ConfigurationRuleRepositoryImpl implements ConfigurationRuleReposit
                 .flatMap(aggr -> LambdaUtil.map(aggr.getOptionList(), ConfigurationRuleOptionDo::getId).stream()).toList());
     }
 
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void batchUpdate(List<ConfigurationRuleAggr> aggrList) {
+        bomsConfigurationRuleDao.updateBatchById(configurationRuleConverter.convertDoListToEntityList(aggrList));
+    }
+
     @Override
     public List<ConfigurationRuleAggr> queryByGroupId(Long groupId) {
         List<ConfigurationRuleAggr> ruleAggrList = configurationRuleConverter.convertEntityListToDoList(
@@ -90,11 +97,19 @@ public class ConfigurationRuleRepositoryImpl implements ConfigurationRuleReposit
     }
 
     @Override
-    public List<ConfigurationRuleAggr> queryByRuleIdList(List<Long> ruleIdList) {
+    public List<ConfigurationRuleAggr> queryByRuleIdList(List<Long> ruleIdList,Boolean optionFlag) {
         List<ConfigurationRuleAggr> ruleAggrList = configurationRuleConverter.convertEntityListToDoList(
                 bomsConfigurationRuleDao.listByIds(ruleIdList)
         );
-        return queryAndBuildRuleOptionList(ruleAggrList);
+        if(optionFlag) {
+            return queryAndBuildRuleOptionList(ruleAggrList);
+        }
+        return ruleAggrList;
+    }
+
+    @Override
+    public List<ConfigurationRuleAggr> queryByRuleNumbers(List<String> ruleNumbers) {
+        return configurationRuleConverter.convertEntityListToDoList(bomsConfigurationRuleDao.queryByRuleNumbers(ruleNumbers));
     }
 
     private List<ConfigurationRuleAggr> queryAndBuildRuleOptionList(List<ConfigurationRuleAggr> ruleAggrList) {

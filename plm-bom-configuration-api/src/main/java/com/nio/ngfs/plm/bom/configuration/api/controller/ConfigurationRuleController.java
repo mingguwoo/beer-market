@@ -29,7 +29,6 @@ public class ConfigurationRuleController implements PlmConfigurationRuleClient {
     private final ReleaseRuleCommand releaseRuleCommand;
     private final GetPurposeOptionListQuery getPurposeOptionListQuery;
     private final QueryConfigurationRuleQuery queryConfigurationRuleQuery;
-    private final ReviseRuleCommand reviseRuleCommand;
 
     @Override
     @NotLogResult
@@ -72,5 +71,12 @@ public class ConfigurationRuleController implements PlmConfigurationRuleClient {
     public ResultInfo<ReviseRuleRespDto> reviseRule(@Valid @RequestBody ReviseRuleCmd cmd) {
         return ResultInfo.success(reviseRuleCommand.execute(cmd));
     }
+
+    @Override
+    @NotLogResult
+    public ResultInfo<Boolean> remove(RemoveRuleCmd removeRuleCmd) {
+        return ResultInfo.success(removeRuleCommand.execute(removeRuleCmd));
+    }
+
 
 }

@@ -65,7 +65,7 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
     @Override
     public List<ConfigurationRuleAggr> handleBothWayRule(List<ConfigurationRuleAggr> ruleAggrList) {
         if (CollectionUtils.isEmpty(ruleAggrList) || !ruleAggrList.get(0).isBothWayRule()) {
-            return Lists.newArrayList();
+            return ruleAggrList;
         }
         List<ConfigurationRuleAggr> newRuleAggrList = Lists.newArrayList();
         ruleAggrList.forEach(ruleAggr -> {
@@ -175,14 +175,13 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
     public String getReviseVersion(String version) {
         char lastChar = 'Z';
         StringBuilder newVersion = new StringBuilder(version);
-        for (int i = version.length()-1; i >= 0; i--){
-            if (version.charAt(i) < lastChar){
-                char newChar = (char)(version.charAt(i)+1);
-                newVersion.replace(i,i+1,String.valueOf(newChar));
+        for (int i = version.length() - 1; i >= 0; i--) {
+            if (version.charAt(i) < lastChar) {
+                char newChar = (char) (version.charAt(i) + 1);
+                newVersion.replace(i, i + 1, String.valueOf(newChar));
                 return newVersion.toString();
-            }
-            else{
-                newVersion.replace(i,i+1,"A");
+            } else {
+                newVersion.replace(i, i + 1, "A");
             }
         }
         throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_VERSION_OVERFLOW);

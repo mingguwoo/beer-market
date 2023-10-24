@@ -128,6 +128,38 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
     }
 
     /**
+     * configuration rule 升版
+     * @param newVersion
+     * @param reviser
+     */
+    public void revise(String newVersion,String reviser){
+        setRuleVersion(newVersion);
+        setChangeType(ConfigurationRuleChangeTypeEnum.MODIFY.getChangeType());
+        setReleaseDate(null);
+        setEffIn(null);
+        setEffOut(null);
+        setCreateUser(reviser);
+        setUpdateUser(reviser);
+        setStatus(ConfigurationRuleStatusEnum.IN_WORK.getStatus());
+        setOptionList(getOptionList().stream().map(aggr->{
+            aggr.setRuleId(null);
+            aggr.setId(null);
+            return aggr;
+        }).toList());
+    }
+
+    /**
+     * 重置rulePairId
+     */
+    public void resetRulePairId(){
+        setRulePairId(IdWorker.getId());
+    }
+
+    public void resetRulePairId(Long pairId){
+        setRulePairId(pairId);
+    }
+
+    /**
      * 发布
      */
     public boolean release() {
@@ -137,7 +169,6 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
         }
         return false;
     }
-
     /**
      * 是否可以Release
      */

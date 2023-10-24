@@ -63,4 +63,10 @@ public interface ConfigurationRuleDomainService {
      */
     void releaseBothWayRule(List<ConfigurationRuleAggr> ruleAggrList);
 
+    /**
+     * 生成生版版本号
+     * @param version
+     * @return
+     */
+    String getReviseVersion(String version);
 }

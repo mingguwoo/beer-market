@@ -36,7 +36,12 @@ public class ConfigurationRuleRepositoryImpl implements ConfigurationRuleReposit
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void save(ConfigurationRuleAggr aggr) {
-        DaoSupport.saveOrUpdate(bomsConfigurationRuleDao, configurationRuleConverter.convertDoToEntity(aggr));
+        DaoSupport.saveOrUpdate(bomsConfigurationRuleDao, configurationRuleConverter.convertDoToEntity(aggr),entity -> {
+            if (aggr.getId() == null) {
+                aggr.setId(entity.getId());
+            }
+        });
+        aggr.getOptionList().forEach(option->option.setRuleId(aggr.getId()));
         bomsConfigurationRuleOptionDao.saveOrUpdateBatch(
                 configurationRuleOptionConverter.convertDoListToEntityList(aggr.getOptionList())
         );

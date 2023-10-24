@@ -1,6 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.application.query.configurationrule;
 
 import cn.hutool.core.lang.Pair;
+import com.nio.bom.share.utils.DateUtils;
 import com.nio.ngfs.plm.bom.configuration.application.query.AbstractQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.configurationrule.service.ConfigurationRuleQueryService;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.ConfigurationRuleChangeTypeEnum;
@@ -20,6 +21,8 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.response.Que
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -208,6 +211,18 @@ public class QueryConfigurationRuleQuery extends AbstractQuery<QueryConfiguratio
     private boolean matchSearch(String content, String search){
         if (Objects.nonNull(search)){
             return content != null && content.toUpperCase().contains(search.toUpperCase());
+        }
+        return true;
+    }
+
+    private boolean matchTime(String effIn, String effOut, String begin, String end) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DateUtils.YYYY_MM_DD_HH_MM_SS);
+        if (Objects.isNull(begin) && Objects.isNull(end)){
+            Date effInDate = dateFormat.parse(effIn);
+            Date effOutDate = dateFormat.parse(effOut);
+            Date beginDate = dateFormat.parse(begin);
+            Date endDate = dateFormat.parse(end);
+            return ((beginDate.after(effInDate) ||  beginDate.equals(effInDate)) && (endDate.before(effOutDate) || endDate.equals(effOutDate)));
         }
         return true;
     }

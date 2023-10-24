@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 public class ConfigurationGroupDto implements Dto {
 
-    private Long Id;
+    private Long id;
 
     private String chineseName;
 

@@ -29,25 +29,18 @@ public class ReviseRuleCommand extends AbstractCommand<ReviseRuleCmd, ReviseRule
 
         //创建聚合根并升版
         ConfigurationRuleAggr originalAggr = configurationRuleDomainService.getAndCheckAggr(cmd.getRuleId());
-        String newVersion = configurationRuleDomainService.getReviseVersion(originalAggr.getRuleVersion());
-            //此时id先不置为null，防止后续找不到双向rule
-        originalAggr.revise(newVersion,cmd.getReviser());
+        ConfigurationRuleAggr newAggr = originalAggr.revise(cmd.getReviser());
         //考虑双向rule
-        if (Objects.equals(originalAggr.getPurpose(), CommonConstants.INT_THREE) || Objects.equals(originalAggr.getPurpose(),CommonConstants.INT_FOUR)){
+        if (originalAggr.isBothWayRule()){
             ConfigurationRuleAggr originalDoubleAggr = configurationRuleDomainService.findAnotherBothWayRule(originalAggr);
-            //id置为null
-            originalAggr.setId(null);
-            originalDoubleAggr.setId(null);
-            originalDoubleAggr.revise(newVersion,cmd.getReviser());
+            ConfigurationRuleAggr newDoubleAggr = originalDoubleAggr.revise(cmd.getReviser());
             //重新分配rulePairId
-            originalAggr.resetRulePairId();
-            originalDoubleAggr.resetRulePairId(originalAggr.getRulePairId());
-            configurationRuleRepository.batchSave(Arrays.asList(originalAggr,originalDoubleAggr));
+            newAggr.resetRulePairId();
+            newDoubleAggr.resetRulePairId(originalAggr.getRulePairId());
+            configurationRuleRepository.batchSave(Arrays.asList(newAggr,newDoubleAggr));
         }
         else{
-            //id置为null
-            originalAggr.setId(null);
-            configurationRuleRepository.save(originalAggr);
+            configurationRuleRepository.save(newAggr);
         }
         return new ReviseRuleRespDto();
     }

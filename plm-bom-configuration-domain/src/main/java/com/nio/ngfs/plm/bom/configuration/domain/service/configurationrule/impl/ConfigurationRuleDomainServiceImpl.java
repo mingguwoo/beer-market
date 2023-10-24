@@ -171,22 +171,6 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
         return anotherRuleAggrList.get(0);
     }
 
-    @Override
-    public String getReviseVersion(String version) {
-        char lastChar = 'Z';
-        StringBuilder newVersion = new StringBuilder(version);
-        for (int i = version.length() - 1; i >= 0; i--) {
-            if (version.charAt(i) < lastChar) {
-                char newChar = (char) (version.charAt(i) + 1);
-                newVersion.replace(i, i + 1, String.valueOf(newChar));
-                return newVersion.toString();
-            } else {
-                newVersion.replace(i, i + 1, "A");
-            }
-        }
-        throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_VERSION_OVERFLOW);
-    }
-
     @Data
     private static class RuleConstrainedOptionCompare {
 

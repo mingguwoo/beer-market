@@ -129,23 +129,26 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
 
     /**
      * configuration rule 升版
-     * @param newVersion
      * @param reviser
      */
-    public void revise(String newVersion,String reviser){
-        setRuleVersion(newVersion);
-        setChangeType(ConfigurationRuleChangeTypeEnum.MODIFY.getChangeType());
-        setReleaseDate(null);
-        setEffIn(null);
-        setEffOut(null);
-        setCreateUser(reviser);
-        setUpdateUser(reviser);
-        setStatus(ConfigurationRuleStatusEnum.IN_WORK.getStatus());
-        setOptionList(getOptionList().stream().map(aggr->{
+    public ConfigurationRuleAggr revise(String reviser){
+        ConfigurationRuleAggr newAggr = new ConfigurationRuleAggr();
+        BeanUtils.copyProperties(this,newAggr);
+        newAggr.setId(null);
+        newAggr.setRuleVersion(productReviseVersion(getRuleVersion()));
+        newAggr.setChangeType(ConfigurationRuleChangeTypeEnum.MODIFY.getChangeType());
+        newAggr.setReleaseDate(null);
+        newAggr.setEffIn(null);
+        newAggr.setEffOut(null);
+        newAggr.setCreateUser(reviser);
+        newAggr.setUpdateUser(reviser);
+        newAggr.setStatus(ConfigurationRuleStatusEnum.IN_WORK.getStatus());
+        newAggr.setOptionList(getOptionList().stream().map(aggr->{
             aggr.setRuleId(null);
             aggr.setId(null);
             return aggr;
         }).toList());
+        return newAggr;
     }
 
     /**
@@ -225,6 +228,27 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
      */
     public boolean isBothWayRule() {
         return getRulePurposeEnum().isBothWay();
+    }
+
+    /**
+     * 生成升版号
+     * @param version
+     * @return
+     */
+    private String productReviseVersion(String version) {
+        char lastChar = 'Z';
+        StringBuilder newVersion = new StringBuilder(version);
+        for (int i = version.length()-1; i >= 0; i--){
+            if (version.charAt(i) < lastChar){
+                char newChar = (char)(version.charAt(i)+1);
+                newVersion.replace(i,i+1,String.valueOf(newChar));
+                return newVersion.toString();
+            }
+            else{
+                newVersion.replace(i,i+1,"A");
+            }
+        }
+        throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_VERSION_OVERFLOW);
     }
 
     @Override

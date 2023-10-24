@@ -15,4 +15,8 @@ public class QueryConfigurationRuleQry implements Qry {
     private String modelYear;
 
     private String searchContent;
+
+    private String beginDate;
+
+    private String endDate;
 }

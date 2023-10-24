@@ -60,6 +60,7 @@ public class ConfigurationRuleRepositoryImpl implements ConfigurationRuleReposit
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void batchRemove(List<ConfigurationRuleAggr> aggrList) {
         bomsConfigurationRuleDao.removeBatchByIds(LambdaUtil.map(aggrList, ConfigurationRuleAggr::getId));
         bomsConfigurationRuleOptionDao.removeBatchByIds(aggrList.stream()

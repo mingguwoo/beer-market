@@ -1,7 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule;
 
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.google.common.collect.Lists;
-import com.nio.bom.share.constants.CommonConstants;
 import com.nio.bom.share.domain.model.AggrRoot;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.LambdaUtil;
@@ -85,6 +85,11 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
      */
     private Date releaseDate;
 
+    /**
+     * 双向Rule对的id
+     */
+    private Long rulePairId;
+
     private transient List<ConfigurationRuleOptionDo> optionList = Lists.newArrayList();
 
     private transient boolean bothWayPairMatch = false;
@@ -104,6 +109,9 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
         setRuleType(getRulePurposeEnum().getRuleType().getRuleType());
         setChangeType(ConfigurationRuleChangeTypeEnum.ADD.getChangeType());
         setStatus(ConfigurationRuleStatusEnum.IN_WORK.getStatus());
+        if (getRulePurposeEnum().isBothWay()) {
+            setRulePairId(IdWorker.getId());
+        }
         optionList.forEach(ConfigurationRuleOptionDo::add);
     }
 
@@ -123,12 +131,10 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
     /**
      * 发布
      */
-    public boolean release() {
+    public void release() {
         if (isStatus(ConfigurationRuleStatusEnum.IN_WORK)) {
             setStatus(ConfigurationRuleStatusEnum.RELEASED.getStatus());
-            return true;
         }
-        return false;
     }
 
     /**
@@ -199,6 +205,7 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
                 ", effIn=" + effIn +
                 ", effOut=" + effOut +
                 ", releaseDate=" + releaseDate +
+                ", rulePairId=" + rulePairId +
                 ", createUser='" + createUser + '\'' +
                 ", updateUser='" + updateUser + '\'' +
                 ", createTime=" + createTime +

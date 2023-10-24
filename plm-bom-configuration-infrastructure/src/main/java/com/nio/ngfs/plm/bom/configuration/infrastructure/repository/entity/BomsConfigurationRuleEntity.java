@@ -73,6 +73,11 @@ public class BomsConfigurationRuleEntity extends BaseEntity {
      */
     private Date releaseDate;
 
+    /**
+     * 双向Rule对的id
+     */
+    private Long rulePairId;
+
     @Override
     public String toString() {
         return "BomsConfigurationRule{" +
@@ -87,6 +92,7 @@ public class BomsConfigurationRuleEntity extends BaseEntity {
                 ", effIn = " + effIn +
                 ", effOut = " + effOut +
                 ", releaseDate = " + releaseDate +
+                ", rulePairId = " + rulePairId +
                 ", createUser = " + getCreateUser() +
                 ", updateUser = " + getUpdateUser() +
                 ", createTime = " + getCreateTime() +

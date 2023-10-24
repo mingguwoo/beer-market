@@ -26,6 +26,10 @@
             <artifactId>plm-bom-configuration-sdk</artifactId>
             <version>${revision}</version>
         </dependency>
+        <dependency>
+            <groupId>com.nio.ngfs</groupId>
+            <artifactId>ngfs-starter-mybatis</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

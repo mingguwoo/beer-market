@@ -6,7 +6,6 @@ import com.nio.ngfs.plm.bom.configuration.application.command.configurationrule.
 import com.nio.ngfs.plm.bom.configuration.application.command.configurationrule.DeleteGroupCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.configurationrule.DeleteRuleCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.configurationrule.ReleaseRuleCommand;
-import com.nio.ngfs.plm.bom.configuration.application.query.configurationrule.CheckReleaseAvailableQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.configurationrule.GetPurposeOptionListQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.configurationrule.QueryConfigurationRuleQuery;
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmConfigurationRuleClient;

@@ -1,6 +1,5 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.domainobject;
 
-import com.nio.bom.share.constants.CommonConstants;
 import com.nio.bom.share.domain.model.Entity;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
@@ -106,15 +105,6 @@ public class ConfigurationRuleOptionDo extends AbstractDo implements Entity<Long
      */
     public boolean isMatrixValue(RuleOptionMatrixValueEnum matrixValueEnum) {
         return Objects.equals(matrixValue, matrixValueEnum.getCode());
-    }
-
-    /**
-     * 是否双向Rule的Option
-     */
-    public boolean isBothWayRuleOption(ConfigurationRuleOptionDo another) {
-        return Objects.equals(this.getDrivingOptionCode(), another.getConstrainedOptionCode()) &&
-                Objects.equals(this.getConstrainedOptionCode(), another.getDrivingOptionCode()) &&
-                Objects.equals(this.getMatrixValue(), another.getMatrixValue());
     }
 
     @Override

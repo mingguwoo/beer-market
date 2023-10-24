@@ -16,7 +16,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 
 import java.util.Date;
@@ -184,11 +183,7 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
      */
     public boolean isBothWayRule(ConfigurationRuleAggr another) {
         return !Objects.equals(this.getId(), another.getId()) &&
-                Objects.equals(this.getRuleVersion(), another.getRuleVersion()) &&
-                Objects.equals(this.getStatus(), another.getStatus()) &&
-                CollectionUtils.size(this.getOptionList()) == 1 &&
-                CollectionUtils.size(another.getOptionList()) == 1 &&
-                this.getOptionList().get(0).isBothWayRuleOption(another.getOptionList().get(0));
+                Objects.equals(this.getRulePairId(), another.getRulePairId());
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.application.command.configurationrule;
 
 import com.nio.ngfs.plm.bom.configuration.application.command.AbstractCommand;
-import com.nio.ngfs.plm.bom.configuration.application.service.ConfigurationRuleApplicationService;
 import com.nio.ngfs.plm.bom.configuration.application.service.ConfigurationRuleGroupApplicationService;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleRepository;
@@ -14,6 +13,7 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.AddR
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.response.AddRuleRespDto;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +35,6 @@ public class AddRuleCommand extends AbstractCommand<AddRuleCmd, AddRuleRespDto> 
     private final ConfigurationRuleGroupDomainService configurationRuleGroupDomainService;
     private final ConfigurationRuleDomainService configurationRuleDomainService;
     private final ConfigurationRuleGroupApplicationService configurationRuleGroupApplicationService;
-    private final ConfigurationRuleApplicationService configurationRuleApplicationService;
 
     @Override
     protected AddRuleRespDto executeCommand(AddRuleCmd cmd) {
@@ -44,17 +43,18 @@ public class AddRuleCommand extends AbstractCommand<AddRuleCmd, AddRuleRespDto> 
         ruleGroupAggr.add();
         // 校验Defined By
         configurationRuleGroupDomainService.checkDefinedBy(ruleGroupAggr);
-        // 校验Driving Feature和Constrained Feature
-        configurationRuleGroupApplicationService.checkDrivingAndConstrainedFeature(ruleGroupAggr);
         // 创建Rule
-        List<ConfigurationRuleAggr> ruleAggrList = configurationRuleApplicationService.createNewRule(ruleGroupAggr, cmd);
+        List<ConfigurationRuleAggr> ruleAggrList = configurationRuleDomainService.createNewRule(cmd);
         ruleAggrList.forEach(ConfigurationRuleAggr::add);
         // 校验Driving Feature和Constrained Feature
-        configurationRuleApplicationService.checkDrivingAndConstrainedFeature(ruleAggrList);
-        // 校验Rule Driving下的Constrained打点不重复
-        String message = configurationRuleDomainService.checkRuleDrivingConstrainedRepeat(ruleAggrList);
+        configurationRuleGroupApplicationService.checkDrivingAndConstrainedFeature(ruleGroupAggr, ruleAggrList);
         // 处理双向Rule
         ruleAggrList = configurationRuleDomainService.handleBothWayRule(ruleAggrList);
+        // 校验Rule Driving下的Constrained打点不重复
+        String message = configurationRuleDomainService.checkRuleDrivingConstrainedRepeat(ruleAggrList);
+        if (StringUtils.isNotBlank(message)) {
+            return new AddRuleRespDto(message);
+        }
         // Rule分配Rule Number
         configurationRuleDomainService.generateRuleNumber(ruleAggrList);
         // 保存到数据库

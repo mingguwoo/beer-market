@@ -124,6 +124,8 @@ public enum ConfigErrorCode implements ErrorCode {
     CONFIGURATION_RULE_RULE_CAN_NOT_DELETE(83012, "Rule Can Not Delete!"),
     CONFIGURATION_RULE_RULE_NOT_EXIST(83013, "Rule Not Exist!"),
     CONFIGURATION_RULE_BOTH_WAY_RULE_NOT_FOUND(83014, "Both Way Rule Not Found!"),
+    CONFIGURATION_RULE_BOTH_WAY_RULE_ALREADY_RELEASED(85015, "Both Way Rule Already Released!"),
+    CONFIGURATION_RULE_BOTH_WAY_RULE_IS_MORE_THAN_TWO(85016, "Both Way Rule Is More Than Two!"),
 
     /**
      * Other

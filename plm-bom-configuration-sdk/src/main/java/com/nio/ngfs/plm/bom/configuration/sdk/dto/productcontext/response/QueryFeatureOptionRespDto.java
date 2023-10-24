@@ -14,6 +14,21 @@ public class QueryFeatureOptionRespDto implements Dto {
 
     private String featureCode;
 
-    private List<String> optionCodeList;
+    private String chineseName;
+
+    private String displayName;
+
+    private List<OptionItemDto> optionList;
+
+    @Data
+    public static class OptionItemDto {
+
+        private String optionCode;
+
+        private String chineseName;
+
+        private String displayName;
+
+    }
 
 }

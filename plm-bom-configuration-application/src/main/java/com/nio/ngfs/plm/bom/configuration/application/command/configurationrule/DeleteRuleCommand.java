@@ -34,7 +34,8 @@ public class DeleteRuleCommand extends AbstractLockCommand<DeleteRuleCmd, Delete
         ConfigurationRuleAggr ruleAggr = configurationRuleDomainService.getAndCheckAggr(cmd.getRuleId());
         // 删除Rule
         ruleAggr.delete();
-        if (ruleAggr.getRulePurposeEnum().isBothWay()) {
+        if (ruleAggr.isBothWayRule()) {
+            // 处理双向Rule删除
             ConfigurationRuleAggr anotherRuleAggr = configurationRuleDomainService.findAnotherBothWayRule(ruleAggr);
             anotherRuleAggr.delete();
             configurationRuleRepository.batchRemove(Lists.newArrayList(ruleAggr, anotherRuleAggr));

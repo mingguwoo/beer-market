@@ -33,13 +33,14 @@ public class ReleaseRuleCommand extends AbstractLockCommand<ReleaseRuleCmd, Rele
 
     @Override
     protected ReleaseRuleRespDto executeWithLock(ReleaseRuleCmd cmd) {
+        // 查找Rule聚合根列表
         List<ConfigurationRuleAggr> ruleAggrList = configurationRuleRepository.queryByRuleIdList(cmd.getRuleIdList());
         // 筛选可以Release的Rule
         ruleAggrList = ruleAggrList.stream().filter(ConfigurationRuleAggr::canRelease).collect(Collectors.toList());
-        // 双向Rule Release
+        // 处理双向Rule Release
         configurationRuleDomainService.releaseBothWayRule(ruleAggrList);
         // 发布Rule
-        ruleAggrList.forEach(ConfigurationRuleAggr::release);
+        ruleAggrList = ruleAggrList.stream().filter(ConfigurationRuleAggr::release).toList();
         // 保存到数据库
         configurationRuleRepository.batchSave(ruleAggrList);
         return new ReleaseRuleRespDto();

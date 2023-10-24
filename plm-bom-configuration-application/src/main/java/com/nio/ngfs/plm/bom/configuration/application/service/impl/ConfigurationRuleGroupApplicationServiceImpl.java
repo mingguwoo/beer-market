@@ -34,7 +34,7 @@ public class ConfigurationRuleGroupApplicationServiceImpl implements Configurati
     private final FeatureRepository featureRepository;
 
     @Override
-    public void checkDrivingAndConstrainedFeature(ConfigurationRuleGroupAggr aggr) {
+    public void checkDrivingAndConstrainedFeature(ConfigurationRuleGroupAggr aggr, List<ConfigurationRuleAggr> ruleAggrList) {
         List<String> featureCodeList = Lists.newArrayList();
         Optional.ofNullable(aggr.getDrivingFeature()).ifPresent(featureCodeList::add);
         Optional.ofNullable(aggr.getConstrainedFeatureList()).ifPresent(featureCodeList::addAll);

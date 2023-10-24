@@ -108,7 +108,7 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
         setRuleType(getRulePurposeEnum().getRuleType().getRuleType());
         setChangeType(ConfigurationRuleChangeTypeEnum.ADD.getChangeType());
         setStatus(ConfigurationRuleStatusEnum.IN_WORK.getStatus());
-        if (getRulePurposeEnum().isBothWay()) {
+        if (isBothWayRule()) {
             setRulePairId(IdWorker.getId());
         }
         optionList.forEach(ConfigurationRuleOptionDo::add);
@@ -130,10 +130,12 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
     /**
      * 发布
      */
-    public void release() {
+    public boolean release() {
         if (isStatus(ConfigurationRuleStatusEnum.IN_WORK)) {
             setStatus(ConfigurationRuleStatusEnum.RELEASED.getStatus());
+            return true;
         }
+        return false;
     }
 
     /**
@@ -183,7 +185,15 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
      */
     public boolean isBothWayRule(ConfigurationRuleAggr another) {
         return !Objects.equals(this.getId(), another.getId()) &&
+                Objects.equals(this.getGroupId(), another.getGroupId()) &&
                 Objects.equals(this.getRulePairId(), another.getRulePairId());
+    }
+
+    /**
+     * 是否双向Rule
+     */
+    public boolean isBothWayRule() {
+        return getRulePurposeEnum().isBothWay();
     }
 
     @Override

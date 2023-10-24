@@ -2,14 +2,17 @@ package com.nio.ngfs.plm.bom.configuration.domain.service.configurationrule.impl
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.nio.bom.share.constants.CommonConstants;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.domainobject.ConfigurationRuleOptionDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.RuleOptionMatrixValueEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.service.configurationrule.ConfigurationRuleDomainService;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.AddRuleCmd;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -17,6 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -39,6 +43,19 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
     }
 
     @Override
+    public List<ConfigurationRuleAggr> createNewRule(AddRuleCmd cmd) {
+        // 筛选有效的打点
+        List<AddRuleCmd.RuleOptionDto> ruleOptionList = LambdaUtil.map(cmd.getRuleOptionList(), i -> !Objects.equals(i.getMatrixValue(),
+                RuleOptionMatrixValueEnum.UNAVAILABLE.getCode()), Function.identity());
+        if (CollectionUtils.isEmpty(ruleOptionList)) {
+            return Lists.newArrayList();
+        }
+        // 按drivingOptionCode分组，生成Rule聚合根
+        return LambdaUtil.groupBy(ruleOptionList, AddRuleCmd.RuleOptionDto::getDrivingOptionCode)
+                .values().stream().map(ruleOptionDtoList -> ConfigurationRuleFactory.create(cmd, ruleOptionDtoList)).toList();
+    }
+
+    @Override
     public void generateRuleNumber(List<ConfigurationRuleAggr> ruleAggrList) {
         ruleAggrList = ruleAggrList.stream().filter(i -> StringUtils.isBlank(i.getRuleNumber())).toList();
         ArrayDeque<String> ruleNumberQueue = new ArrayDeque<>(configurationRuleRepository.applyRuleNumber(ruleAggrList.size()));
@@ -47,24 +64,21 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
 
     @Override
     public List<ConfigurationRuleAggr> handleBothWayRule(List<ConfigurationRuleAggr> ruleAggrList) {
-        if (CollectionUtils.isEmpty(ruleAggrList) || !ruleAggrList.get(0).getRulePurposeEnum().isBothWay()) {
+        if (CollectionUtils.isEmpty(ruleAggrList) || !ruleAggrList.get(0).isBothWayRule()) {
             return Lists.newArrayList();
         }
-        List<ConfigurationRuleAggr> newRuleAggrList = Lists.newArrayList(ruleAggrList);
-        ruleAggrList.forEach(ruleAggr -> newRuleAggrList.add(ruleAggr.copyBothWayRule()));
+        List<ConfigurationRuleAggr> newRuleAggrList = Lists.newArrayList();
+        ruleAggrList.forEach(ruleAggr -> {
+            newRuleAggrList.add(ruleAggr);
+            newRuleAggrList.add(ruleAggr.copyBothWayRule());
+        });
         return newRuleAggrList;
     }
 
     @Override
     public ConfigurationRuleAggr findAnotherBothWayRule(ConfigurationRuleAggr ruleAggr) {
         List<ConfigurationRuleAggr> ruleAggrList = configurationRuleRepository.queryByGroupId(ruleAggr.getGroupId());
-        if (CollectionUtils.isNotEmpty(ruleAggrList)) {
-            ConfigurationRuleAggr anotherAggr = ruleAggrList.stream().filter(ruleAggr::isBothWayRule).findFirst().orElse(null);
-            if (anotherAggr != null) {
-                return anotherAggr;
-            }
-        }
-        throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_BOTH_WAY_RULE_NOT_FOUND);
+        return findAnotherBothWayRule(ruleAggr, ruleAggrList);
     }
 
     @Override
@@ -105,7 +119,8 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
 
     @Override
     public void releaseBothWayRule(List<ConfigurationRuleAggr> ruleAggrList) {
-        List<ConfigurationRuleAggr> bothWayRuleAggrList = ruleAggrList.stream().filter(i -> i.getRulePurposeEnum().isBothWay()).toList();
+        // 过滤双向Rule
+        List<ConfigurationRuleAggr> bothWayRuleAggrList = ruleAggrList.stream().filter(ConfigurationRuleAggr::isBothWayRule).toList();
         if (CollectionUtils.isEmpty(bothWayRuleAggrList)) {
             return;
         }
@@ -129,15 +144,31 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
         Map<Long, List<ConfigurationRuleAggr>> groupRuleAggrListGroup = LambdaUtil.groupBy(groupRuleAggrList, ConfigurationRuleAggr::getGroupId);
         lackBothWayRuleAggrList.forEach(aggr -> {
             List<ConfigurationRuleAggr> allGroupRuleAggrList = groupRuleAggrListGroup.getOrDefault(aggr.getGroupId(), Lists.newArrayList());
-            ConfigurationRuleAggr anotherAggr = allGroupRuleAggrList.stream().filter(aggr::isBothWayRule).findFirst().orElse(null);
-            if (anotherAggr != null) {
-                if (anotherAggr.canRelease()) {
-                    ruleAggrList.add(anotherAggr);
-                }
+            ConfigurationRuleAggr anotherAggr = findAnotherBothWayRule(aggr, allGroupRuleAggrList);
+            if (anotherAggr.canRelease()) {
+                // 添加另一个双向Rule
+                ruleAggrList.add(anotherAggr);
             } else {
-                throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_BOTH_WAY_RULE_NOT_FOUND);
+                throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_BOTH_WAY_RULE_ALREADY_RELEASED);
             }
         });
+    }
+
+    /**
+     * 查找另一个双向Rule
+     *
+     * @param ruleAggr          其中一个双向Rule
+     * @param groupRuleAggrList Group下的Rule列表
+     * @return 另一个双向Rule
+     */
+    private ConfigurationRuleAggr findAnotherBothWayRule(ConfigurationRuleAggr ruleAggr, List<ConfigurationRuleAggr> groupRuleAggrList) {
+        List<ConfigurationRuleAggr> anotherRuleAggrList = Optional.ofNullable(groupRuleAggrList).orElse(Lists.newArrayList()).stream().filter(ruleAggr::isBothWayRule).toList();
+        if (CollectionUtils.isEmpty(anotherRuleAggrList)) {
+            throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_BOTH_WAY_RULE_NOT_FOUND);
+        } else if (anotherRuleAggrList.size() > CommonConstants.INT_ONE) {
+            throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_BOTH_WAY_RULE_IS_MORE_THAN_TWO);
+        }
+        return anotherRuleAggrList.get(0);
     }
 
     @Data

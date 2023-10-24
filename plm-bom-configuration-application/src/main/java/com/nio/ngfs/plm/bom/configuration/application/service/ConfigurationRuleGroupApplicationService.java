@@ -14,9 +14,10 @@ public interface ConfigurationRuleGroupApplicationService {
     /**
      * 校验Driving Feature和Constrained Feature
      *
-     * @param aggr 聚合根
+     * @param aggr         聚合根
+     * @param ruleAggrList Rule聚合根列表
      */
-    void checkDrivingAndConstrainedFeature(ConfigurationRuleGroupAggr aggr);
+    void checkDrivingAndConstrainedFeature(ConfigurationRuleGroupAggr aggr, List<ConfigurationRuleAggr> ruleAggrList);
 
     /**
      * 校验删除Group

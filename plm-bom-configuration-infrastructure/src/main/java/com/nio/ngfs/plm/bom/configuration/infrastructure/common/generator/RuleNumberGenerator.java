@@ -31,6 +31,9 @@ public class RuleNumberGenerator {
      * 批量申请Rule Number
      */
     public List<String> applyRuleNumber(int size) {
+        if (size <= 0) {
+            return Lists.newArrayList();
+        }
         String redisKey = RedisKeyConstant.CONFIGURATION_RULE_RULE_NUMBER_INCR_LOCK;
         String sequence = redisTemplate.opsForValue().get(redisKey);
         if (StringUtils.isBlank(sequence)) {

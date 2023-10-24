@@ -1,6 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service.configurationrule;
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleAggr;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.AddRuleCmd;
 
 import java.util.List;
 
@@ -17,6 +18,14 @@ public interface ConfigurationRuleDomainService {
      * @return 聚合根
      */
     ConfigurationRuleAggr getAndCheckAggr(Long id);
+
+    /**
+     * 创建新的Rule
+     *
+     * @param cmd 命令
+     * @return ConfigurationRuleAggr列表
+     */
+    List<ConfigurationRuleAggr> createNewRule(AddRuleCmd cmd);
 
     /**
      * 生成RuleNumber
@@ -50,7 +59,7 @@ public interface ConfigurationRuleDomainService {
     String checkRuleDrivingConstrainedRepeat(List<ConfigurationRuleAggr> ruleAggrList);
 
     /**
-     * 双向Rule Release
+     * 处理双向Rule Release
      */
     void releaseBothWayRule(List<ConfigurationRuleAggr> ruleAggrList);
 

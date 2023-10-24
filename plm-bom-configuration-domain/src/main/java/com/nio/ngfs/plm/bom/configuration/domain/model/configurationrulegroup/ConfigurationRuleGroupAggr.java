@@ -1,13 +1,11 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.configurationrulegroup;
 
 import com.google.common.base.Splitter;
-import com.nio.bom.share.constants.CommonConstants;
 import com.nio.bom.share.domain.model.AggrRoot;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.ConfigurationRulePurposeEnum;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.DeleteGroupCmd;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

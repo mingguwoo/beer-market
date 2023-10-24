@@ -1,14 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.sdk;
 
 import com.nio.bom.share.result.ResultInfo;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.AddRuleCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.GetPurposeOptionListQry;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.CheckRuleReleaseQry;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.QueryConfigurationRuleQry;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.response.AddRuleRespDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.response.CheckRuleReleaseAvailableRespDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.response.GetPurposeOptionListRespDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.response.QueryConfigurationRuleRespDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.response.*;
 import org.springframework.cloud.openfeign.FeignClient;

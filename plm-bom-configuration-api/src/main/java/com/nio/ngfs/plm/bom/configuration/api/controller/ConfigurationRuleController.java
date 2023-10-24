@@ -1,6 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.api.controller;
 
 import com.nio.bom.share.annotation.NotLogResult;
+import com.nio.bom.share.result.Result;
 import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.application.command.configurationrule.AddRuleCommand;
 import com.nio.ngfs.plm.bom.configuration.application.command.configurationrule.DeleteGroupCommand;
@@ -11,14 +12,6 @@ import com.nio.ngfs.plm.bom.configuration.application.query.configurationrule.Qu
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmConfigurationRuleClient;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.response.*;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.AddRuleCmd;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.GetPurposeOptionListQry;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.CheckRuleReleaseQry;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.QueryConfigurationRuleQry;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.response.AddRuleRespDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.response.CheckRuleReleaseAvailableRespDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.response.GetPurposeOptionListRespDto;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.response.QueryConfigurationRuleRespDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -72,8 +65,9 @@ public class ConfigurationRuleController implements PlmConfigurationRuleClient {
     }
 
     @Override
-    public ResultInfo<QueryConfigurationRuleRespDto> queryConfigurationRule(QueryConfigurationRuleQry qry) {
-        return null;
+    @NotLogResult
+    public ResultInfo<QueryConfigurationRuleRespDto> queryConfigurationRule(@Valid @RequestBody QueryConfigurationRuleQry qry) {
+        return ResultInfo.success(queryConfigurationRuleQuery.execute(qry));
     }
 
 }

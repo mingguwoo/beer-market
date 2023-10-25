@@ -4,6 +4,7 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.Dto;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -48,4 +49,6 @@ public class ConfigurationRuleDto implements Dto {
     private String status;
 
     private boolean reviseAvailable = false;
+
+    private Date createTimeForSorted;
 }

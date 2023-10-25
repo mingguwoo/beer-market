@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.nio.bom.share.utils.DateUtils;
 import com.nio.ngfs.plm.bom.configuration.application.query.AbstractExportQuery;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.ConfigurationRulePurposeEnum;
-import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.ConfigurationRuleTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.ExportConfigurationRuleQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.response.ConfigurationGroupDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.response.ConfigurationRuleDto;
@@ -14,13 +13,19 @@ import lombok.RequiredArgsConstructor;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.xssf.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 /**
  * @author bill.wang
@@ -67,7 +72,7 @@ public class ExportConfigurationRuleQuery extends AbstractExportQuery {
     private void writeConfigurationRow(QueryConfigurationRuleRespDto dto, XSSFWorkbook workbook, XSSFSheet sheet) {
         XSSFCellStyle groupCellStyle = createConfigurationRuleCellStyle(workbook, true);
         XSSFCellStyle ruleCellStyle = createConfigurationRuleCellStyle(workbook, false);
-        int rowIndex = 1;
+        int rowIndex = 0;
         for(ConfigurationGroupDto group: dto.getGroup()){
             //先弄group
             int columnIndex = -1;
@@ -76,13 +81,12 @@ public class ExportConfigurationRuleQuery extends AbstractExportQuery {
             try{
                 Date groupCreateTime = cstFormat.parse(group.getCreateTime());
                 Date groupUpdateTime = cstFormat.parse(group.getUpdateTime());
-                XSSFRow row = sheet.createRow(rowIndex++);
-
+                XSSFRow row = sheet.createRow(++rowIndex);
                 createCell(row, ++columnIndex, group.getChineseName(),groupCellStyle);
                 createCell(row, ++columnIndex, group.getDisplayName(),groupCellStyle);
                 createCell(row, ++columnIndex, null, groupCellStyle);
                 createCell(row, ++columnIndex, null, groupCellStyle);
-                createCell(row, ++columnIndex, ConfigurationRulePurposeEnum.getByCode(group.getPurpose()).toString(),groupCellStyle);
+                createCell(row, ++columnIndex, ConfigurationRulePurposeEnum.getByCode(group.getPurpose()).getPurpose(),groupCellStyle);
                 createCell(row, ++columnIndex, null, groupCellStyle);
                 createCell(row, ++columnIndex, group.getDefinedBy(),groupCellStyle);
                 createCell(row, ++columnIndex, null, groupCellStyle);
@@ -108,12 +112,12 @@ public class ExportConfigurationRuleQuery extends AbstractExportQuery {
                     String drivingCriteria = produceCriteriaList(rule.getDrivingCriteria());
                     String constrainedCriteria = produceCriteriaList(rule.getConstrainedCriteria());
                     int ruleColumnIndex = -1;
-                    XSSFRow ruleRow = sheet.createRow(rowIndex++);
+                    XSSFRow ruleRow = sheet.createRow(++rowIndex);
                     createCell(ruleRow, ++ruleColumnIndex, group.getChineseName(),ruleCellStyle);
                     createCell(ruleRow, ++ruleColumnIndex, group.getDisplayName(),ruleCellStyle);
                     createCell(ruleRow, ++ruleColumnIndex, drivingCriteria,ruleCellStyle);
                     createCell(ruleRow, ++ruleColumnIndex, constrainedCriteria,ruleCellStyle);
-                    createCell(ruleRow, ++ruleColumnIndex, ConfigurationRulePurposeEnum.getByCode(group.getPurpose()).toString(),null);
+                    createCell(ruleRow, ++ruleColumnIndex, ConfigurationRulePurposeEnum.getByCode(group.getPurpose()).getPurpose(),null);
                     createCell(ruleRow, ++ruleColumnIndex, rule.getRuleType(),ruleCellStyle);
                     createCell(ruleRow, ++ruleColumnIndex, group.getDefinedBy(),ruleCellStyle);
                     createCell(ruleRow, ++ruleColumnIndex, dateFormat.format(ruleEffIn),ruleCellStyle);

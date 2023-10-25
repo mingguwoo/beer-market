@@ -84,6 +84,7 @@ public class ConfigurationRuleController implements PlmConfigurationRuleClient {
     public ResultInfo<Boolean> remove(RemoveRuleCmd removeRuleCmd) {
         return ResultInfo.success(removeRuleCommand.execute(removeRuleCmd));
     }
+
     @NotLogResult
     @PostMapping("/configurationRule/exportConfigurationRule")
     public void exportConfigurationRule(@Valid @RequestBody ExportConfigurationRuleQry qry, HttpServletResponse response) {

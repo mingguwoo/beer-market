@@ -3,15 +3,18 @@ package com.nio.ngfs.plm.bom.configuration.api.controller;
 import com.nio.bom.share.annotation.NotLogResult;
 import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.application.command.configurationrule.*;
+import com.nio.ngfs.plm.bom.configuration.application.query.configurationrule.ExportConfigurationRuleQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.configurationrule.GetPurposeOptionListQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.configurationrule.QueryConfigurationRuleQuery;
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmConfigurationRuleClient;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.response.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -32,6 +35,7 @@ public class ConfigurationRuleController implements PlmConfigurationRuleClient {
     private final QueryConfigurationRuleQuery queryConfigurationRuleQuery;
     private final ReviseRuleCommand reviseRuleCommand;
     private final RemoveRuleCommand removeRuleCommand;
+    private final ExportConfigurationRuleQuery exportConfigurationRuleQuery;
 
     @Override
     @NotLogResult
@@ -85,6 +89,12 @@ public class ConfigurationRuleController implements PlmConfigurationRuleClient {
     @NotLogResult
     public ResultInfo<Boolean> remove(RemoveRuleCmd removeRuleCmd) {
         return ResultInfo.success(removeRuleCommand.execute(removeRuleCmd));
+    }
+
+    @NotLogResult
+    @PostMapping("/configurationRule/exportConfigurationRule")
+    public void exportConfigurationRule(@Valid @RequestBody ExportConfigurationRuleQry qry, HttpServletResponse response) {
+            exportConfigurationRuleQuery.execute(qry,response);
     }
 
 

@@ -155,12 +155,18 @@ public class QueryConfigurationRuleQuery extends AbstractQuery<QueryConfiguratio
                 ruleOptionMap.get(rule.getId()).forEach(optionEntity->{
                     Pair<CriteriaDto,CriteriaDto> criteriaPair = buildCriteria(optionEntity,featureOptionMap);
                     rule.getDrivingCriteria().add(criteriaPair.getKey());
-                    rule.getDrivingCriteria().add(criteriaPair.getValue());
+                    rule.getConstrainedCriteria().add(criteriaPair.getValue());
                 });
 
             });
         });
-        respDto.setGroup(respDto.getGroup().stream().filter(group->!group.getRule().isEmpty()).collect(Collectors.toList()));
+        respDto.setGroup(respDto.getGroup().stream().filter(group->!group.getRule().isEmpty())
+                .sorted(Comparator.comparing(ConfigurationGroupDto::getPurpose)
+                .thenComparing(ConfigurationGroupDto::getCreateTimeForSorted)).map(group->{
+                    group.setRule(group.getRule().stream().sorted(Comparator.comparing(ConfigurationRuleDto::getCreateTimeForSorted).reversed()
+                            .thenComparing(ConfigurationRuleDto::getRuleNumber)).toList());
+                    return group;
+                }).collect(Collectors.toList()));
         return respDto;
     }
 
@@ -199,6 +205,7 @@ public class QueryConfigurationRuleQuery extends AbstractQuery<QueryConfiguratio
         dto.setUpdateUser(entity.getUpdateUser());
         dto.setUpdateTime(String.valueOf(entity.getUpdateTime()));
         dto.setStatus(entity.getStatus());
+        dto.setCreateTimeForSorted(entity.getCreateTime());
         return dto;
     }
 
@@ -214,6 +221,7 @@ public class QueryConfigurationRuleQuery extends AbstractQuery<QueryConfiguratio
         dto.setCreateTime(String.valueOf(entity.getCreateTime()));
         dto.setUpdateUser(entity.getUpdateUser());
         dto.setUpdateTime(String.valueOf(entity.getUpdateTime()));
+        dto.setCreateTimeForSorted(entity.getCreateTime());
         return dto;
     }
 

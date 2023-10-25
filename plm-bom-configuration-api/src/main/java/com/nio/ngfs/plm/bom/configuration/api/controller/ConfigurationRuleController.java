@@ -29,6 +29,8 @@ public class ConfigurationRuleController implements PlmConfigurationRuleClient {
     private final ReleaseRuleCommand releaseRuleCommand;
     private final GetPurposeOptionListQuery getPurposeOptionListQuery;
     private final QueryConfigurationRuleQuery queryConfigurationRuleQuery;
+    private final ReviseRuleCommand reviseRuleCommand;
+    private final RemoveRuleCommand removeRuleCommand;
 
     @Override
     @NotLogResult

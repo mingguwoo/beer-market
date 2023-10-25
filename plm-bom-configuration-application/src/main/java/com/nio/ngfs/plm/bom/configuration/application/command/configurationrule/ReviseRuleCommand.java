@@ -1,6 +1,5 @@
 package com.nio.ngfs.plm.bom.configuration.application.command.configurationrule;
 
-import com.nio.bom.share.constants.CommonConstants;
 import com.nio.ngfs.plm.bom.configuration.application.command.AbstractCommand;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleRepository;
@@ -11,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
-import java.util.Objects;
 
 /**
  * @author bill.wang

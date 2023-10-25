@@ -5,7 +5,6 @@ import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.common.utils.BeanConvertUtils;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.domainobject.ConfigurationRuleOptionDo;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.AddRuleCmd;
-import lombok.Data;
 
 import java.util.Date;
 import java.util.List;

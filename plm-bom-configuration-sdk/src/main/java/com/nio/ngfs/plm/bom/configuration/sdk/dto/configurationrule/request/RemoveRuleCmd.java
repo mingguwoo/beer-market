@@ -4,7 +4,6 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.common.Cmd;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**

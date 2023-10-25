@@ -139,6 +139,14 @@ public class QueryConfigurationRuleQuery extends AbstractQuery<QueryConfiguratio
         //遍历RespDto里的所有rule，设置Revise按钮和Constrained Criteria和Driving Criteria
         Set<Integer> reviseSet = new HashSet<>(Arrays.asList(1,2,3,4));
         respDto.getGroup().forEach(group->{
+            //根据时间筛选
+            group.setRule(group.getRule().stream().filter(rule-> {
+                try {
+                    return matchTime( rule.getEffIn(),rule.getEffOut(),qry.getBeginDate(), qry.getEndDate());
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+            }).toList());
             group.getRule().forEach(rule->{
                 if (reviseSet.contains(rule.getPurpose()) && Objects.equals(ruleRevisionMap.get(rule.getRuleNumber()),rule.getRuleRevision())
                         && Objects.equals(rule.getStatus(), ConfigurationRuleStatusEnum.RELEASED.getStatus()) && !Objects.equals(rule.getChangeType(), ConfigurationRuleChangeTypeEnum.REMOVE.getChangeType())){
@@ -152,6 +160,7 @@ public class QueryConfigurationRuleQuery extends AbstractQuery<QueryConfiguratio
 
             });
         });
+        respDto.setGroup(respDto.getGroup().stream().filter(group->!group.getRule().isEmpty()).collect(Collectors.toList()));
         return respDto;
     }
 
@@ -217,9 +226,10 @@ public class QueryConfigurationRuleQuery extends AbstractQuery<QueryConfiguratio
 
     private boolean matchTime(String effIn, String effOut, String begin, String end) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat(DateUtils.YYYY_MM_DD_HH_MM_SS);
-        if (Objects.isNull(begin) && Objects.isNull(end)){
-            Date effInDate = dateFormat.parse(effIn);
-            Date effOutDate = dateFormat.parse(effOut);
+        SimpleDateFormat cstFormat = new SimpleDateFormat(DateUtils.EEE_MMM_dd_HH_mm_ss_zz_yyyy, Locale.US);
+        if (Objects.nonNull(begin) && Objects.nonNull(end)){
+            Date effInDate = cstFormat.parse(effIn);
+            Date effOutDate = cstFormat.parse(effOut);
             Date beginDate = dateFormat.parse(begin);
             Date endDate = dateFormat.parse(end);
             return ((beginDate.after(effInDate) ||  beginDate.equals(effInDate)) && (endDate.before(effOutDate) || endDate.equals(effOutDate)));

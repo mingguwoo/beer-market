@@ -16,18 +16,19 @@ import java.util.List;
 public enum ConfigurationRulePurposeEnum {
 
     SALES_TO_ENG(1, "Sales —> Eng", false, true, ConfigurationRuleTypeEnum.INCLUSIVE, Lists.newArrayList(
-            RuleOptionMatrixValueEnum.INCLUSIVE, RuleOptionMatrixValueEnum.UNAVAILABLE
-    ), true, true),
+            RuleOptionMatrixValueEnum.INCLUSIVE, RuleOptionMatrixValueEnum.UNAVAILABLE),
+            true, true, true),
     SALES_TO_SALES(2, "Sales —> Sales", false, true, ConfigurationRuleTypeEnum.INCLUSIVE, Lists.newArrayList(
-            RuleOptionMatrixValueEnum.INCLUSIVE, RuleOptionMatrixValueEnum.UNAVAILABLE
-    ), true, true),
+            RuleOptionMatrixValueEnum.INCLUSIVE, RuleOptionMatrixValueEnum.UNAVAILABLE),
+            true, true, true),
     SALES_INCLUSIVE_SALES(3, "Sales <—> Sales", true, true, ConfigurationRuleTypeEnum.INCLUSIVE, Lists.newArrayList(
-            RuleOptionMatrixValueEnum.INCLUSIVE, RuleOptionMatrixValueEnum.UNAVAILABLE
-    ), true, true),
+            RuleOptionMatrixValueEnum.INCLUSIVE, RuleOptionMatrixValueEnum.UNAVAILABLE),
+            true, true, true),
     SALES_EXCLUSIVE_SALES(4, "Sales X Sales", true, true, ConfigurationRuleTypeEnum.EXCLUSIVE, Lists.newArrayList(
-            RuleOptionMatrixValueEnum.EXCLUSIVE, RuleOptionMatrixValueEnum.UNAVAILABLE
-    ), true, true),
-    BASE_VEHICLE_TO_SALES(5, "Base Vehicle —> Sales", false, false, null, null, false, false);
+            RuleOptionMatrixValueEnum.EXCLUSIVE, RuleOptionMatrixValueEnum.UNAVAILABLE),
+            true, true, true),
+    BASE_VEHICLE_TO_SALES(5, "Base Vehicle —> Sales", false, false, null, null,
+            false, false, false);
 
     private final Integer code;
 
@@ -48,6 +49,11 @@ public enum ConfigurationRulePurposeEnum {
     private final List<RuleOptionMatrixValueEnum> matrixValueList;
 
     /**
+     * 是否可编辑Group
+     */
+    private final boolean canEditGroup;
+
+    /**
      * 是否可删除Group
      */
     private final boolean canDeleteGroup;
@@ -59,13 +65,14 @@ public enum ConfigurationRulePurposeEnum {
 
     ConfigurationRulePurposeEnum(Integer code, String purpose, boolean bothWay, boolean selectOption,
                                  ConfigurationRuleTypeEnum ruleType, List<RuleOptionMatrixValueEnum> matrixValueList,
-                                 boolean canDeleteGroup, boolean canDeleteRule) {
+                                 boolean canEditGroup, boolean canDeleteGroup, boolean canDeleteRule) {
         this.code = code;
         this.purpose = purpose;
         this.bothWay = bothWay;
         this.selectOption = selectOption;
         this.ruleType = ruleType;
         this.matrixValueList = matrixValueList;
+        this.canEditGroup = canEditGroup;
         this.canDeleteGroup = canDeleteGroup;
         this.canDeleteRule = canDeleteRule;
     }

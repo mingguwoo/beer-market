@@ -24,6 +24,7 @@ import java.util.List;
 public class ConfigurationRuleController implements PlmConfigurationRuleClient {
 
     private final AddRuleCommand addRuleCommand;
+    private final EditGroupAndRuleCommand editGroupAndRuleCommand;
     private final DeleteGroupCommand deleteGroupCommand;
     private final DeleteRuleCommand deleteRuleCommand;
     private final ReleaseRuleCommand releaseRuleCommand;
@@ -36,6 +37,12 @@ public class ConfigurationRuleController implements PlmConfigurationRuleClient {
     @NotLogResult
     public ResultInfo<AddRuleRespDto> addRule(@Valid @RequestBody AddRuleCmd cmd) {
         return ResultInfo.success(addRuleCommand.execute(cmd));
+    }
+
+    @Override
+    @NotLogResult
+    public ResultInfo<EditGroupAndRuleRespDto> editGroupAndRule(@Valid @RequestBody EditGroupAndRuleCmd cmd) {
+        return ResultInfo.success(editGroupAndRuleCommand.execute(cmd));
     }
 
     @Override

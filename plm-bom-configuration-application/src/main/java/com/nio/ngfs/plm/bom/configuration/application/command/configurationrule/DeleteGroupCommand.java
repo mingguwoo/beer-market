@@ -34,7 +34,7 @@ public class DeleteGroupCommand extends AbstractLockCommand<DeleteGroupCmd, Dele
 
     @Override
     protected String getLockKey(DeleteGroupCmd cmd) {
-        return RedisKeyConstant.CONFIGURATION_RULE_GROUP_DELETE_LOCK + cmd.getGroupId();
+        return RedisKeyConstant.CONFIGURATION_RULE_GROUP_LOCK + cmd.getGroupId();
     }
 
     @Override

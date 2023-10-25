@@ -25,6 +25,14 @@ public interface PlmConfigurationRuleClient {
     ResultInfo<AddRuleRespDto> addRule(AddRuleCmd cmd);
 
     /**
+     * 编辑Group和Rule
+     * @param cmd 命令
+     * @return 响应
+     */
+    @PostMapping("/configurationRule/editGroupAndRule")
+    ResultInfo<EditGroupAndRuleRespDto> editGroupAndRule(EditGroupAndRuleCmd cmd);
+
+    /**
      * 删除Group
      *
      * @param cmd 命令

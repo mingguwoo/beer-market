@@ -128,6 +128,9 @@ public enum ConfigErrorCode implements ErrorCode {
     CONFIGURATION_RULE_BOTH_WAY_RULE_IS_MORE_THAN_TWO(85016, "Both Way Rule Is More Than Two!"),
     CONFIGURATION_RULE_VERSION_OVERFLOW(85017, "Rule Version Is Limited!"),
     CONFIGURATION_RULE_BOTH_WAY_DRIVING_FEATURE_ONLY_SELECT_ONE(85018, "Driving Feature Can Only Select One!"),
+    CONFIGURATION_RULE_RULE_GROUP_CAN_NOT_EDIT(85019, "Rule Group Can Not Edit!"),
+    CONFIGURATION_RULE_RULE_OPTION_LIST_IS_EMPTY(85020, "Rule Option List Is Empty!"),
+    CONFIGURATION_RULE_RULE_IN_WORK_RULE_AT_MOST_ONE(85021, "In Can Only Has At Most One In Work Status Rule With Same Driving Criteria!"),
 
     /**
      * Other

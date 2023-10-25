@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.common.utils.BeanConvertUtils;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.domainobject.ConfigurationRuleOptionDo;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.AddRuleCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.RuleOptionDto;
 
 import java.util.Date;
 import java.util.List;
@@ -16,17 +16,27 @@ import java.util.Objects;
  */
 public class ConfigurationRuleFactory {
 
-    public static ConfigurationRuleAggr create(AddRuleCmd cmd, List<AddRuleCmd.RuleOptionDto> ruleOptionDtoList) {
+    public static ConfigurationRuleAggr createWithOptionList(Integer purpose, String createUser, List<ConfigurationRuleOptionDo> optionList) {
         ConfigurationRuleAggr ruleAggr = ConfigurationRuleAggr.builder()
-                .purpose(cmd.getPurpose())
-                .createUser(cmd.getCreateUser())
-                .updateUser(cmd.getCreateUser())
+                .purpose(purpose)
+                .createUser(createUser)
+                .updateUser(createUser)
                 .build();
-        ruleAggr.setOptionList(LambdaUtil.map(ruleOptionDtoList, option -> create(option, cmd.getCreateUser(), ruleAggr)));
+        ruleAggr.setOptionList(optionList);
         return ruleAggr;
     }
 
-    private static ConfigurationRuleOptionDo create(AddRuleCmd.RuleOptionDto ruleOptionDto, String createUser, ConfigurationRuleAggr ruleAggr) {
+    public static ConfigurationRuleAggr create(Integer purpose, String createUser, List<RuleOptionDto> ruleOptionDtoList) {
+        ConfigurationRuleAggr ruleAggr = ConfigurationRuleAggr.builder()
+                .purpose(purpose)
+                .createUser(createUser)
+                .updateUser(createUser)
+                .build();
+        ruleAggr.setOptionList(LambdaUtil.map(ruleOptionDtoList, option -> create(option, createUser, ruleAggr)));
+        return ruleAggr;
+    }
+
+    private static ConfigurationRuleOptionDo create(RuleOptionDto ruleOptionDto, String createUser, ConfigurationRuleAggr ruleAggr) {
         return ConfigurationRuleOptionDo.builder()
                 .rule(ruleAggr)
                 .drivingOptionCode(ruleOptionDto.getDrivingOptionCode())
@@ -39,21 +49,31 @@ public class ConfigurationRuleFactory {
                 .build();
     }
 
+    public static ConfigurationRuleOptionDo create(RuleOptionDto ruleOptionDto, String updateUser) {
+        return ConfigurationRuleOptionDo.builder()
+                .drivingOptionCode(ruleOptionDto.getDrivingOptionCode())
+                .drivingFeatureCode(ruleOptionDto.getDrivingFeatureCode())
+                .constrainedOptionCode(ruleOptionDto.getConstrainedOptionCode())
+                .constrainedFeatureCode(ruleOptionDto.getConstrainedFeatureCode())
+                .matrixValue(ruleOptionDto.getMatrixValue())
+                .updateUser(updateUser)
+                .build();
+    }
 
-    public static List<ConfigurationRuleAggr> buildRemoveRuleAggr(List<ConfigurationRuleAggr> ruleAggrList,String userName){
+    public static List<ConfigurationRuleAggr> buildRemoveRuleAggr(List<ConfigurationRuleAggr> ruleAggrList, String userName) {
 
-        List<ConfigurationRuleAggr> configurationRuleAggrs= Lists.newArrayList();
+        List<ConfigurationRuleAggr> configurationRuleAggrs = Lists.newArrayList();
 
         Date updateTime = new Date();
-        ruleAggrList.forEach(rule->{
-            ConfigurationRuleAggr ruleAggr=new ConfigurationRuleAggr();
+        ruleAggrList.forEach(rule -> {
+            ConfigurationRuleAggr ruleAggr = new ConfigurationRuleAggr();
             ruleAggr.setId(ruleAggr.getId());
             ruleAggr.setCreateUser(userName);
             ruleAggr.setUpdateTime(updateTime);
             configurationRuleAggrs.add(ruleAggr);
 
-            if(Objects.nonNull(rule.getRulePairId()) && rule.getRulePairId()>0){
-                ConfigurationRuleAggr copyRuleAggr = BeanConvertUtils.convertTo(ruleAggr,ConfigurationRuleAggr::new);
+            if (Objects.nonNull(rule.getRulePairId()) && rule.getRulePairId() > 0) {
+                ConfigurationRuleAggr copyRuleAggr = BeanConvertUtils.convertTo(ruleAggr, ConfigurationRuleAggr::new);
                 copyRuleAggr.setId(rule.getRulePairId());
                 configurationRuleAggrs.add(copyRuleAggr);
             }

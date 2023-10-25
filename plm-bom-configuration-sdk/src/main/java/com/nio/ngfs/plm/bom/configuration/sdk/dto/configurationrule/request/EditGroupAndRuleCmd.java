@@ -10,10 +10,13 @@ import java.util.List;
 
 /**
  * @author xiaozhou.tu
- * @date 2023/10/17
+ * @date 2023/10/25
  */
 @Data
-public class AddRuleCmd implements Cmd {
+public class EditGroupAndRuleCmd implements Cmd {
+
+    @NotNull(message = "Group Id is null")
+    private Long groupId;
 
     @NotBlank(message = "Chinese Name is blank")
     @Size(max = 128, message = "Chinese Name max length is 128")
@@ -21,12 +24,6 @@ public class AddRuleCmd implements Cmd {
 
     @Size(max = 128, message = "Display Name max length is 128")
     private String displayName;
-
-    @NotNull(message = "Purpose is null")
-    private Integer purpose;
-
-    @NotBlank(message = "Defined By is blank")
-    private String definedBy;
 
     @Size(max = 1024, message = "Description max length is 1024")
     private String description;
@@ -37,7 +34,7 @@ public class AddRuleCmd implements Cmd {
 
     private List<RuleOptionDto> ruleOptionList;
 
-    @NotBlank(message = "Create User is blank")
-    private String createUser;
+    @NotBlank(message = "Update User is blank")
+    private String updateUser;
 
 }

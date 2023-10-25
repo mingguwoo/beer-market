@@ -97,11 +97,11 @@ public class ConfigurationRuleRepositoryImpl implements ConfigurationRuleReposit
     }
 
     @Override
-    public List<ConfigurationRuleAggr> queryByRuleIdList(List<Long> ruleIdList,Boolean optionFlag) {
+    public List<ConfigurationRuleAggr> queryByRuleIdList(List<Long> ruleIdList, boolean optionFlag) {
         List<ConfigurationRuleAggr> ruleAggrList = configurationRuleConverter.convertEntityListToDoList(
                 bomsConfigurationRuleDao.listByIds(ruleIdList)
         );
-        if(optionFlag) {
+        if (optionFlag) {
             return queryAndBuildRuleOptionList(ruleAggrList);
         }
         return ruleAggrList;

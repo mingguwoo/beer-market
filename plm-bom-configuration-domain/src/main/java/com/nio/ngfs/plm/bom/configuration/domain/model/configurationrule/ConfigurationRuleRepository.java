@@ -54,7 +54,7 @@ public interface ConfigurationRuleRepository extends Repository<ConfigurationRul
      * @param ruleIdList Rule Id列表
      * @return 聚合根列表
      */
-    List<ConfigurationRuleAggr> queryByRuleIdList(List<Long> ruleIdList,Boolean optionFlag);
+    List<ConfigurationRuleAggr> queryByRuleIdList(List<Long> ruleIdList, boolean optionFlag);
 
 
     /**

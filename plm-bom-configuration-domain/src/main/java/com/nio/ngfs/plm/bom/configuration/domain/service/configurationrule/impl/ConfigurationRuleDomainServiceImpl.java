@@ -9,10 +9,12 @@ import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleRepository;
+import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.context.EditConfigurationRuleContext;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.domainobject.ConfigurationRuleOptionDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.RuleOptionMatrixValueEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.service.configurationrule.ConfigurationRuleDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.AddRuleCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.RuleOptionDto;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -45,14 +47,14 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
     @Override
     public List<ConfigurationRuleAggr> createNewRule(AddRuleCmd cmd) {
         // 筛选有效的打点
-        List<AddRuleCmd.RuleOptionDto> ruleOptionList = LambdaUtil.map(cmd.getRuleOptionList(), i -> !Objects.equals(i.getMatrixValue(),
+        List<RuleOptionDto> ruleOptionList = LambdaUtil.map(cmd.getRuleOptionList(), i -> !Objects.equals(i.getMatrixValue(),
                 RuleOptionMatrixValueEnum.UNAVAILABLE.getCode()), Function.identity());
         if (CollectionUtils.isEmpty(ruleOptionList)) {
             return Lists.newArrayList();
         }
         // 按drivingOptionCode分组，生成Rule聚合根
-        return LambdaUtil.groupBy(ruleOptionList, AddRuleCmd.RuleOptionDto::getDrivingOptionCode)
-                .values().stream().map(ruleOptionDtoList -> ConfigurationRuleFactory.create(cmd, ruleOptionDtoList)).toList();
+        return LambdaUtil.groupBy(ruleOptionList, RuleOptionDto::getDrivingOptionCode)
+                .values().stream().map(ruleOptionDtoList -> ConfigurationRuleFactory.create(cmd.getPurpose(), cmd.getCreateUser(), ruleOptionDtoList)).toList();
     }
 
     @Override
@@ -82,9 +84,22 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
     }
 
     @Override
+    public ConfigurationRuleAggr findAnotherBothWayRule(ConfigurationRuleAggr ruleAggr, List<ConfigurationRuleAggr> groupRuleAggrList) {
+        List<ConfigurationRuleAggr> anotherRuleAggrList = Optional.ofNullable(groupRuleAggrList).orElse(Lists.newArrayList()).stream().filter(ruleAggr::isBothWayRule).toList();
+        if (CollectionUtils.isEmpty(anotherRuleAggrList)) {
+            throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_BOTH_WAY_RULE_NOT_FOUND);
+        } else if (anotherRuleAggrList.size() > CommonConstants.INT_ONE) {
+            throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_BOTH_WAY_RULE_IS_MORE_THAN_TWO);
+        }
+        return anotherRuleAggrList.get(0);
+    }
+
+    @Override
     public String checkRuleDrivingConstrainedRepeat(List<ConfigurationRuleAggr> ruleAggrList) {
         List<RuleConstrainedOptionCompare> optionCompareList = ruleAggrList.stream().map(ruleAggr -> {
-            Set<String> constrainedOptionCodeSet = ruleAggr.getOptionList().stream().filter(i -> !i.isMatrixValue(RuleOptionMatrixValueEnum.UNAVAILABLE))
+            Set<String> constrainedOptionCodeSet = ruleAggr.getOptionList().stream()
+                    .filter(ConfigurationRuleOptionDo::isNotDeleted)
+                    .filter(i -> !i.isMatrixValue(RuleOptionMatrixValueEnum.UNAVAILABLE))
                     .map(ConfigurationRuleOptionDo::getConstrainedOptionCode).collect(Collectors.toSet());
             if (CollectionUtils.isEmpty(constrainedOptionCodeSet)) {
                 return null;
@@ -115,6 +130,65 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
             return message;
         }
         return "The Same Rule Existed In Driving Criteria Option " + message + ", Please Check!";
+    }
+
+    @Override
+    public void editRule(EditConfigurationRuleContext context) {
+        context.getEditRuleList().forEach(editRule -> {
+            // 处理Rule新增
+            handleRuleAddWithEdit(context, editRule);
+            // 处理Rule更新
+            handleRuleUpdateWithEdit(context, editRule);
+            // 处理Rule删除
+            handleRuleDeleteWithEdit(context, editRule);
+        });
+    }
+
+    @Override
+    public List<ConfigurationRuleAggr> deleteRule(List<ConfigurationRuleAggr> ruleAggrList) {
+        ruleAggrList.forEach(ConfigurationRuleAggr::delete);
+        return null;
+    }
+
+    /**
+     * 处理Rule新增（不存在In Work状态的Rule、打点不为空）
+     */
+    private void handleRuleAddWithEdit(EditConfigurationRuleContext context, EditConfigurationRuleContext.EditConfigurationRule editRule) {
+        if (!(Objects.isNull(editRule.getInWorkRule()) && !editRule.isOptionEmptyOrAllUnavailable())) {
+            return;
+        }
+        // Driving Criteria Option下有已发布的Rule版本，不可新增Rule
+        if (CollectionUtils.isNotEmpty(editRule.getReleasedRuleList())) {
+            context.addErrorMessage(String.format("The Rule Of Driving Criteria Option %s (Rev:%s) Is Already Released, Can Not Create The Same Rule In Driving Criteria Option" +
+                    " %s, Please Check!", editRule.getDrivingOptionCode(), editRule.getLatestReleasedRule().getRuleVersion(), editRule.getDrivingOptionCode()));
+            return;
+        }
+        // 新增Rule
+        ConfigurationRuleAggr ruleAggr = ConfigurationRuleFactory.createWithOptionList(context.getPurposeEnum().getCode(), context.getUpdateUser(), editRule.getRuleOptionList());
+        context.getAddRuleList().add(ruleAggr);
+    }
+
+    /**
+     * 处理Rule更新（存在In Work状态的Rule、打点不为空）
+     */
+    private void handleRuleUpdateWithEdit(EditConfigurationRuleContext context, EditConfigurationRuleContext.EditConfigurationRule editRule) {
+        if (!(Objects.nonNull(editRule.getInWorkRule()) && !editRule.isOptionEmptyOrAllUnavailable())) {
+            return;
+        }
+        // 编辑打点
+        editRule.getInWorkRule().editOption(editRule.getRuleOptionList());
+        context.getUpdateRuleList().add(editRule.getInWorkRule());
+
+    }
+
+    /**
+     * 处理Rule删除（存在In Work状态的Rule、打点为空）
+     */
+    private void handleRuleDeleteWithEdit(EditConfigurationRuleContext context, EditConfigurationRuleContext.EditConfigurationRule editRule) {
+        if (!(Objects.nonNull(editRule.getInWorkRule()) && editRule.isOptionEmptyOrAllUnavailable())) {
+            return;
+        }
+        context.getDeleteRuleList().add(editRule.getInWorkRule());
     }
 
     @Override
@@ -152,23 +226,6 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
                 throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_BOTH_WAY_RULE_ALREADY_RELEASED);
             }
         });
-    }
-
-    /**
-     * 查找另一个双向Rule
-     *
-     * @param ruleAggr          其中一个双向Rule
-     * @param groupRuleAggrList Group下的Rule列表
-     * @return 另一个双向Rule
-     */
-    private ConfigurationRuleAggr findAnotherBothWayRule(ConfigurationRuleAggr ruleAggr, List<ConfigurationRuleAggr> groupRuleAggrList) {
-        List<ConfigurationRuleAggr> anotherRuleAggrList = Optional.ofNullable(groupRuleAggrList).orElse(Lists.newArrayList()).stream().filter(ruleAggr::isBothWayRule).toList();
-        if (CollectionUtils.isEmpty(anotherRuleAggrList)) {
-            throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_BOTH_WAY_RULE_NOT_FOUND);
-        } else if (anotherRuleAggrList.size() > CommonConstants.INT_ONE) {
-            throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_BOTH_WAY_RULE_IS_MORE_THAN_TWO);
-        }
-        return anotherRuleAggrList.get(0);
     }
 
     @Data

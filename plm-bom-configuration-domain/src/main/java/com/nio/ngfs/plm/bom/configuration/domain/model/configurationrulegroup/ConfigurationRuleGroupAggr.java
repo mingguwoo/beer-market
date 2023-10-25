@@ -1,11 +1,14 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.configurationrulegroup;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 import com.nio.bom.share.domain.model.AggrRoot;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.AbstractDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.ConfigurationRulePurposeEnum;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.EditGroupAndRuleCmd;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +16,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Configuration Rule Group
@@ -76,6 +80,22 @@ public class ConfigurationRuleGroupAggr extends AbstractDo implements AggrRoot<L
     }
 
     /**
+     * 编辑Group
+     */
+    public void edit(EditGroupAndRuleCmd cmd) {
+        ConfigurationRulePurposeEnum purposeEnum = ConfigurationRulePurposeEnum.getAndCheckByCode(purpose);
+        if (!purposeEnum.isCanEditGroup()) {
+            throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_RULE_GROUP_CAN_NOT_EDIT);
+        }
+        setChineseName(cmd.getChineseName());
+        setDisplayName(cmd.getDisplayName());
+        setDescription(cmd.getDescription());
+        setDrivingFeature(cmd.getDrivingFeature());
+        setConstrainedFeature(Joiner.on(",").skipNulls().join(Optional.ofNullable(cmd.getConstrainedFeatureList()).orElse(Lists.newArrayList())));
+        setUpdateUser(cmd.getUpdateUser());
+    }
+
+    /**
      * 删除Group
      */
     public void delete() {
@@ -90,6 +110,13 @@ public class ConfigurationRuleGroupAggr extends AbstractDo implements AggrRoot<L
      */
     private void checkPurpose() {
         ConfigurationRulePurposeEnum.getAndCheckByCode(purpose);
+    }
+
+    /**
+     * 获取Purpose枚举
+     */
+    public ConfigurationRulePurposeEnum getRulePurposeEnum() {
+        return ConfigurationRulePurposeEnum.getByCode(purpose);
     }
 
     /**

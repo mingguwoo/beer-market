@@ -16,11 +16,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Configuration Rule
@@ -111,7 +111,40 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
         if (isBothWayRule()) {
             setRulePairId(IdWorker.getId());
         }
+        if (CollectionUtils.isEmpty(optionList)) {
+            throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_RULE_OPTION_LIST_IS_EMPTY);
+        }
         optionList.forEach(ConfigurationRuleOptionDo::add);
+    }
+
+    /**
+     * 编辑打点
+     */
+    public void editOption(List<ConfigurationRuleOptionDo> ruleOptionList) {
+        // 新增打点
+        Set<String> oldConstrainedOptionCodeSet = optionList.stream().map(ConfigurationRuleOptionDo::getConstrainedOptionCode).collect(Collectors.toSet());
+        ruleOptionList.stream().filter(i -> !oldConstrainedOptionCodeSet.contains(i.getConstrainedOptionCode())).forEach(option -> {
+            option.add(option.getUpdateUser());
+            optionList.add(option);
+        });
+        // 更新打点
+        Map<String, ConfigurationRuleOptionDo> newConstrainedOptionMap = LambdaUtil.toKeyMap(ruleOptionList, ConfigurationRuleOptionDo::getConstrainedOptionCode);
+        optionList.forEach(option ->
+                Optional.ofNullable(newConstrainedOptionMap.get(option.getConstrainedOptionCode())).ifPresent(newOption -> {
+                    if (Objects.equals(option.getMatrixValue(), newOption.getMatrixValue())) {
+                        return;
+                    }
+                    // 打点变更
+                    option.update(newOption.getMatrixValue(), newOption.getUpdateUser());
+                })
+        );
+        // 删除打点
+        optionList.forEach(option -> {
+            if (newConstrainedOptionMap.containsKey(option.getConstrainedOptionCode())) {
+                return;
+            }
+            option.delete();
+        });
     }
 
     /**
@@ -129,11 +162,10 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
 
     /**
      * configuration rule 升版
-     * @param reviser
      */
-    public ConfigurationRuleAggr revise(String reviser){
+    public ConfigurationRuleAggr revise(String reviser) {
         ConfigurationRuleAggr newAggr = new ConfigurationRuleAggr();
-        BeanUtils.copyProperties(this,newAggr);
+        BeanUtils.copyProperties(this, newAggr);
         newAggr.setId(null);
         newAggr.setRuleVersion(productReviseVersion(getRuleVersion()));
         newAggr.setChangeType(ConfigurationRuleChangeTypeEnum.MODIFY.getChangeType());
@@ -143,10 +175,9 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
         newAggr.setCreateUser(reviser);
         newAggr.setUpdateUser(reviser);
         newAggr.setStatus(ConfigurationRuleStatusEnum.IN_WORK.getStatus());
-        newAggr.setOptionList(getOptionList().stream().map(aggr->{
+        newAggr.setOptionList(getOptionList().stream().peek(aggr -> {
             aggr.setRuleId(null);
             aggr.setId(null);
-            return aggr;
         }).toList());
         return newAggr;
     }
@@ -154,11 +185,11 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
     /**
      * 重置rulePairId
      */
-    public void resetRulePairId(){
+    public void resetRulePairId() {
         setRulePairId(IdWorker.getId());
     }
 
-    public void resetRulePairId(Long pairId){
+    public void resetRulePairId(Long pairId) {
         setRulePairId(pairId);
     }
 
@@ -172,6 +203,7 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
         }
         return false;
     }
+
     /**
      * 是否可以Release
      */
@@ -215,6 +247,20 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
     }
 
     /**
+     * 是否In Work状态
+     */
+    public boolean isStatusInWork() {
+        return isStatus(ConfigurationRuleStatusEnum.IN_WORK);
+    }
+
+    /**
+     * 是否Released状态
+     */
+    public boolean isStatusReleased() {
+        return isStatus(ConfigurationRuleStatusEnum.RELEASED);
+    }
+
+    /**
      * 是否双向Rule
      */
     public boolean isBothWayRule(ConfigurationRuleAggr another) {
@@ -232,25 +278,21 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
 
     /**
      * 生成升版号
-     * @param version
-     * @return
      */
     private String productReviseVersion(String version) {
         char lastChar = 'Z';
         StringBuilder newVersion = new StringBuilder(version);
-        for (int i = version.length()-1; i >= 0; i--){
-            if (version.charAt(i) < lastChar){
-                char newChar = (char)(version.charAt(i)+1);
-                newVersion.replace(i,i+1,String.valueOf(newChar));
+        for (int i = version.length() - 1; i >= 0; i--) {
+            if (version.charAt(i) < lastChar) {
+                char newChar = (char) (version.charAt(i) + 1);
+                newVersion.replace(i, i + 1, String.valueOf(newChar));
                 return newVersion.toString();
-            }
-            else{
-                newVersion.replace(i,i+1,"A");
+            } else {
+                newVersion.replace(i, i + 1, "A");
             }
         }
         throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_VERSION_OVERFLOW);
     }
-
 
 
     @Override

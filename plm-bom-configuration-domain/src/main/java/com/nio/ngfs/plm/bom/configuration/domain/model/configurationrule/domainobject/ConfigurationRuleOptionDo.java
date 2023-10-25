@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.domainobject;
 
+import com.nio.bom.share.constants.CommonConstants;
 import com.nio.bom.share.domain.model.Entity;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
@@ -72,6 +73,31 @@ public class ConfigurationRuleOptionDo extends AbstractDo implements Entity<Long
     }
 
     /**
+     * 新增打点
+     */
+    public void add(String createUser) {
+        checkMatrixValue();
+        setCreateUser(createUser);
+        setUpdateUser(createUser);
+    }
+
+    /**
+     * 更新打点
+     */
+    public void update(Integer matrixValue, String updateUser) {
+        checkMatrixValue();
+        setMatrixValue(matrixValue);
+        setUpdateUser(updateUser);
+    }
+
+    /**
+     * 删除打点
+     */
+    public void delete() {
+        setDelFlag(CommonConstants.DEL_FLAG);
+    }
+
+    /**
      * 校验矩阵打点
      */
     private void checkMatrixValue() {
@@ -105,6 +131,13 @@ public class ConfigurationRuleOptionDo extends AbstractDo implements Entity<Long
      */
     public boolean isMatrixValue(RuleOptionMatrixValueEnum matrixValueEnum) {
         return Objects.equals(matrixValue, matrixValueEnum.getCode());
+    }
+
+    /**
+     * 打点是否为Unavailable
+     */
+    public boolean isMatrixValueUnavailable() {
+        return isMatrixValue(RuleOptionMatrixValueEnum.UNAVAILABLE);
     }
 
     @Override

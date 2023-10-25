@@ -1,7 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.application.command.configurationrule;
 
 import com.nio.ngfs.plm.bom.configuration.application.command.AbstractCommand;
-import com.nio.ngfs.plm.bom.configuration.application.service.ConfigurationRuleGroupApplicationService;
+import com.nio.ngfs.plm.bom.configuration.application.service.ConfigurationRuleApplicationService;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrulegroup.ConfigurationRuleGroupAggr;
@@ -34,7 +34,7 @@ public class AddRuleCommand extends AbstractCommand<AddRuleCmd, AddRuleRespDto> 
     private final ConfigurationRuleRepository configurationRuleRepository;
     private final ConfigurationRuleGroupDomainService configurationRuleGroupDomainService;
     private final ConfigurationRuleDomainService configurationRuleDomainService;
-    private final ConfigurationRuleGroupApplicationService configurationRuleGroupApplicationService;
+    private final ConfigurationRuleApplicationService configurationRuleApplicationService;
 
     @Override
     protected AddRuleRespDto executeCommand(AddRuleCmd cmd) {
@@ -47,7 +47,8 @@ public class AddRuleCommand extends AbstractCommand<AddRuleCmd, AddRuleRespDto> 
         List<ConfigurationRuleAggr> ruleAggrList = configurationRuleDomainService.createNewRule(cmd);
         ruleAggrList.forEach(ConfigurationRuleAggr::add);
         // 校验Driving Feature和Constrained Feature
-        configurationRuleGroupApplicationService.checkDrivingAndConstrainedFeature(ruleGroupAggr, ruleAggrList);
+        configurationRuleApplicationService.checkDrivingAndConstrainedFeature(ruleGroupAggr.getRulePurposeEnum(), ruleGroupAggr.getDrivingFeature(),
+                ruleGroupAggr.getConstrainedFeatureList(), ruleAggrList);
         // 处理双向Rule
         ruleAggrList = configurationRuleDomainService.handleBothWayRule(ruleAggrList);
         // 校验Rule Driving下的Constrained打点不重复

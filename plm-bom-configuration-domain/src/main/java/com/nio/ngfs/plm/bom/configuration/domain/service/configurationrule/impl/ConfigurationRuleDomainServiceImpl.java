@@ -90,7 +90,7 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
                 return null;
             }
             RuleConstrainedOptionCompare optionCompare = new RuleConstrainedOptionCompare();
-            optionCompare.setDrivingOptionCode(ruleAggr.getOptionList().get(0).getConstrainedOptionCode());
+            optionCompare.setDrivingOptionCode(ruleAggr.getOptionList().get(0).getDrivingOptionCode());
             optionCompare.setConstrainedOptionCodeSet(constrainedOptionCodeSet);
             return optionCompare;
         }).filter(Objects::nonNull).toList();
@@ -110,7 +110,7 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
             }
         }
         String message = optionCompareList.stream().filter(i -> CollectionUtils.isNotEmpty(i.getRepeatDrivingOptionCodeSet()))
-                .map(i -> String.join("/", i.getRepeatDrivingOptionCodeSet())).collect(Collectors.joining(","));
+                .map(i -> String.join("/", i.getRepeatDrivingOptionCodeSet().stream().sorted(String::compareTo).toList())).collect(Collectors.joining(","));
         if (StringUtils.isBlank(message)) {
             return message;
         }

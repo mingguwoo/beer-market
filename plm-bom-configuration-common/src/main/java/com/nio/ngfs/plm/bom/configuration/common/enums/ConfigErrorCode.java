@@ -166,7 +166,7 @@ public enum ConfigErrorCode implements ErrorCode {
     PURPOSE_ERROR(89011,"ruleNumber:{0},rev:{1} purpose is error"),
 
 
-    REMOVE_ERROR(89012,"ruleNumber:{0},rev:{1} purpose is error"),
+    ID_ERROR(89012,"Id is error"),
 
 
 

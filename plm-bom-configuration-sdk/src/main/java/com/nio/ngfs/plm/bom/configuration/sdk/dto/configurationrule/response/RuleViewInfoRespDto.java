@@ -23,7 +23,7 @@ public class RuleViewInfoRespDto {
     /**
      * 行信息
      */
-    public List<RuleViewConstrainedRespDto> ruleViewConstrainedResps;
+    public List<RuleViewConstrainedRespDto> ruleViewConstrainedLists;
 
 
     /**

@@ -1,6 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.application.query.configurationrule.service;
 
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsFeatureLibraryEntity;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.response.RuleViewInfoRespDto;
 
 import java.util.Map;
 
@@ -15,4 +16,13 @@ public interface ConfigurationRuleQueryService {
      * @return
      */
     Map<String, BomsFeatureLibraryEntity> queryFeatureOptionMap();
+
+
+    /**
+     * 查询view
+     * @param groupId
+     * @return
+     */
+    RuleViewInfoRespDto queryView(Long groupId);
+
 }

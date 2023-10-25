@@ -6,6 +6,7 @@ import com.nio.ngfs.plm.bom.configuration.application.command.configurationrule.
 import com.nio.ngfs.plm.bom.configuration.application.query.configurationrule.ExportConfigurationRuleQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.configurationrule.GetPurposeOptionListQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.configurationrule.QueryConfigurationRuleQuery;
+import com.nio.ngfs.plm.bom.configuration.application.query.configurationrule.QueryConfigurationRuleViewQuery;
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmConfigurationRuleClient;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.response.*;
@@ -33,6 +34,7 @@ public class ConfigurationRuleController implements PlmConfigurationRuleClient {
     private final ReleaseRuleCommand releaseRuleCommand;
     private final GetPurposeOptionListQuery getPurposeOptionListQuery;
     private final QueryConfigurationRuleQuery queryConfigurationRuleQuery;
+    private final QueryConfigurationRuleViewQuery queryConfigurationRuleViewQuery;
     private final ReviseRuleCommand reviseRuleCommand;
     private final RemoveRuleCommand removeRuleCommand;
     private final ExportConfigurationRuleQuery exportConfigurationRuleQuery;
@@ -95,6 +97,12 @@ public class ConfigurationRuleController implements PlmConfigurationRuleClient {
     @PostMapping("/configurationRule/exportConfigurationRule")
     public void exportConfigurationRule(@Valid @RequestBody ExportConfigurationRuleQry qry, HttpServletResponse response) {
             exportConfigurationRuleQuery.execute(qry,response);
+    }
+
+    @Override
+    @NotLogResult
+    public ResultInfo<RuleViewInfoRespDto> view(QueryViewQry qry) {
+        return ResultInfo.success(queryConfigurationRuleViewQuery.execute(qry));
     }
 
 

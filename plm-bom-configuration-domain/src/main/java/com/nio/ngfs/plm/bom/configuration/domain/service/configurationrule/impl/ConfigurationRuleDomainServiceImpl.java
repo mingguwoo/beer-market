@@ -164,8 +164,9 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
             return;
         }
         // 新增Rule
-        ConfigurationRuleAggr ruleAggr = ConfigurationRuleFactory.createWithOptionList(context.getPurposeEnum().getCode(), context.getUpdateUser(), editRule.getRuleOptionList());
-        context.getAddRuleList().add(ruleAggr);
+        ConfigurationRuleAggr addRule = ConfigurationRuleFactory.createWithOptionList(context.getPurposeEnum().getCode(), context.getUpdateUser(), editRule.getRuleOptionList());
+        addRule.add();
+        context.getAddRuleList().add(addRule);
     }
 
     /**
@@ -176,9 +177,9 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
             return;
         }
         // 编辑打点
-        editRule.getInWorkRule().editOption(editRule.getRuleOptionList());
-        context.getUpdateRuleList().add(editRule.getInWorkRule());
-
+        ConfigurationRuleAggr updateRule = editRule.getInWorkRule();
+        updateRule.updateOption(editRule.getRuleOptionList());
+        context.getUpdateRuleList().add(updateRule);
     }
 
     /**
@@ -188,7 +189,9 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
         if (!(Objects.nonNull(editRule.getInWorkRule()) && editRule.isOptionEmptyOrAllUnavailable())) {
             return;
         }
-        context.getDeleteRuleList().add(editRule.getInWorkRule());
+        ConfigurationRuleAggr deleteRule = editRule.getInWorkRule();
+        deleteRule.delete();
+        context.getDeleteRuleList().add(deleteRule);
     }
 
     @Override

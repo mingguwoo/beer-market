@@ -120,7 +120,7 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
     /**
      * 编辑打点
      */
-    public void editOption(List<ConfigurationRuleOptionDo> ruleOptionList) {
+    public void updateOption(List<ConfigurationRuleOptionDo> ruleOptionList) {
         // 新增打点
         Set<String> oldConstrainedOptionCodeSet = optionList.stream().map(ConfigurationRuleOptionDo::getConstrainedOptionCode).collect(Collectors.toSet());
         ruleOptionList.stream().filter(i -> !oldConstrainedOptionCodeSet.contains(i.getConstrainedOptionCode())).forEach(option -> {

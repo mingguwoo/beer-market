@@ -76,13 +76,13 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
         checkAndProcessDeleteRule(context);
         // 校验Driving Feature和Constrained Feature
         checkDrivingAndConstrainedFeature(context.getPurposeEnum(), context.getDrivingFeature(), context.getConstrainedFeatureList(), context.getAddOrUpdateRuleList());
-        // 校验并处理新增的Rule
-        checkAndProcessAddRule(context);
         // 校验Rule Driving下的Constrained打点不重复
         String message = configurationRuleDomainService.checkRuleDrivingConstrainedRepeat(context.getAddOrUpdateRuleList());
         if (StringUtils.isNotBlank(message)) {
             context.getErrorMessageList().add(0, message);
         }
+        // 校验并处理新增的Rule
+        checkAndProcessAddRule(context);
     }
 
     /**
@@ -90,7 +90,6 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
      */
     private void checkAndProcessAddRule(EditConfigurationRuleContext context) {
         List<ConfigurationRuleAggr> addRuleList = context.getAddRuleList();
-        addRuleList.forEach(ConfigurationRuleAggr::add);
         // 处理双向Rule
         addRuleList = configurationRuleDomainService.handleBothWayRule(addRuleList);
         // 分配Rule Number
@@ -109,7 +108,6 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
      */
     private void checkAndProcessDeleteRule(EditConfigurationRuleContext context) {
         List<ConfigurationRuleAggr> deleteRuleList = context.getDeleteRuleList();
-        deleteRuleList.forEach(ConfigurationRuleAggr::delete);
         if (context.getPurposeEnum().isBothWay()) {
             List<ConfigurationRuleAggr> ruleAggrList = configurationRuleRepository.queryByGroupId(context.getGroupId());
             // 处理双向Rule删除

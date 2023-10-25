@@ -34,7 +34,7 @@ public class ReviseRuleCommand extends AbstractCommand<ReviseRuleCmd, ReviseRule
             ConfigurationRuleAggr newDoubleAggr = originalDoubleAggr.revise(cmd.getReviser());
             //重新分配rulePairId
             newAggr.resetRulePairId();
-            newDoubleAggr.resetRulePairId(originalAggr.getRulePairId());
+            newDoubleAggr.resetRulePairId(newAggr.getRulePairId());
             configurationRuleRepository.batchSave(Arrays.asList(newAggr,newDoubleAggr));
         }
         else{

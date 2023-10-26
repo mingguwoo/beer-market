@@ -28,7 +28,6 @@ public class QueryConfigurationRuleViewQuery extends AbstractQuery<QueryViewQry,
 
         Long groupId = qry.getGroupId();
 
-        bomsConfigurationRuleGroupDao.
 
 
 

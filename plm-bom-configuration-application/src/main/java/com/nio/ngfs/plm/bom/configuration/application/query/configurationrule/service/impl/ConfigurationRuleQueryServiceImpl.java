@@ -148,7 +148,6 @@ public class ConfigurationRuleQueryServiceImpl implements ConfigurationRuleQuery
                             rulePackageInfos.add(rulePackageInfo);
                         });
                         constrainOption.setPackageCodes(rulePackageInfos);
-                        //constrainOption.setStatus();
                         constrainedOptionList.add(constrainOption);
                     });
 

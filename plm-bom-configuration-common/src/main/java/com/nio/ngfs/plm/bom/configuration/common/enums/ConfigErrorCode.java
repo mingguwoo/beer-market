@@ -169,6 +169,7 @@ public enum ConfigErrorCode implements ErrorCode {
 
     ID_ERROR(89012,"Id is error"),
 
+    EFF_OUT_TIME_ERROR(89013,"Eff-out Of Rule (ID:{0}，Version:{1})  Is Earlier Than The Input Date!")
 
 
     ;

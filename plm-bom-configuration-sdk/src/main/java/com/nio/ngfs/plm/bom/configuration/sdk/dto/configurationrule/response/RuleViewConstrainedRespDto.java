@@ -35,8 +35,6 @@ public class RuleViewConstrainedRespDto implements Serializable {
         private String constrainedOptionName;
 
         private List<RulePackageInfo> packageCodes;
-
-        private String status;
     }
 
     @Getter

@@ -37,6 +37,7 @@ public class ConfigurationRuleController implements PlmConfigurationRuleClient {
     private final QueryConfigurationRuleViewQuery queryConfigurationRuleViewQuery;
     private final ReviseRuleCommand reviseRuleCommand;
     private final RemoveRuleCommand removeRuleCommand;
+    private final SetBreakPointCommand setBreakPointCommand;
     private final ExportConfigurationRuleQuery exportConfigurationRuleQuery;
 
     @Override
@@ -105,5 +106,10 @@ public class ConfigurationRuleController implements PlmConfigurationRuleClient {
         return ResultInfo.success(queryConfigurationRuleViewQuery.execute(qry));
     }
 
+    @Override
+    @NotLogResult
+    public ResultInfo<Boolean> setBreakPoint(SetBreakPointCmd setBreakPointCmd) {
+        return ResultInfo.success(setBreakPointCommand.execute(setBreakPointCmd));
+    }
 
 }

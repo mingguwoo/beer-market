@@ -28,7 +28,7 @@ public class RuleViewHeadInfoRespDto implements Serializable {
     @Getter
     @Setter
     @ToString
-    static class DriveOptionInfo {
+    public static class DriveOptionInfo {
 
 
         private String changeType;
@@ -42,6 +42,8 @@ public class RuleViewHeadInfoRespDto implements Serializable {
         private String driveOptionName;
 
         private String revision;
+
+        private Long  ruleId;
     }
 
 

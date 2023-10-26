@@ -81,7 +81,7 @@ public class RemoveRuleCommand extends AbstractLockCommand<RemoveRuleCmd, Boolea
          * 系统需自动Remove另一条相应版本的Rule
          * 确保同时Remove成对Rule的相同版本条目
          */
-        configurationRuleRepository.batchUpdate(ConfigurationRuleFactory.buildRemoveRuleAggr(ruleAggrList,userName));
+        configurationRuleRepository.batchUpdate(ConfigurationRuleFactory.buildRemoveRuleAggr(ruleAggrList,configurationRules,userName));
         return true;
     }
 }

@@ -4,7 +4,9 @@ import com.google.common.collect.Lists;
 import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.common.utils.BeanConvertUtils;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.domainobject.ConfigurationRuleOptionDo;
+import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.ConfigurationRulePurposeEnum;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.RuleOptionDto;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -62,10 +64,17 @@ public class ConfigurationRuleFactory {
                 .build();
     }
 
-    public static List<ConfigurationRuleAggr> buildRemoveRuleAggr(List<ConfigurationRuleAggr> ruleAggrList, String userName) {
 
+    /**
+     * @param ruleAggrList       根据ruleId查询的
+     * @param configurationRules 根据ruleId查询的
+     * @param userName
+     * @return
+     */
+    public static List<ConfigurationRuleAggr> buildRemoveRuleAggr(List<ConfigurationRuleAggr> ruleAggrList,
+                                                                  List<ConfigurationRuleAggr> configurationRules,
+                                                                  String userName) {
         List<ConfigurationRuleAggr> configurationRuleAggrs = Lists.newArrayList();
-
         Date updateTime = new Date();
         ruleAggrList.forEach(rule -> {
             ConfigurationRuleAggr ruleAggr = new ConfigurationRuleAggr();
@@ -73,11 +82,16 @@ public class ConfigurationRuleFactory {
             ruleAggr.setCreateUser(userName);
             ruleAggr.setUpdateTime(updateTime);
             configurationRuleAggrs.add(ruleAggr);
-
-            if (Objects.nonNull(rule.getRulePairId()) && rule.getRulePairId() > 0) {
-                ConfigurationRuleAggr copyRuleAggr = BeanConvertUtils.convertTo(ruleAggr, ConfigurationRuleAggr::new);
-                copyRuleAggr.setId(rule.getRulePairId());
-                configurationRuleAggrs.add(copyRuleAggr);
+            if (ConfigurationRulePurposeEnum.SALES_INCLUSIVE_SALES.getCode().equals(rule.getPurpose()) ||
+                    ConfigurationRulePurposeEnum.SALES_EXCLUSIVE_SALES.getCode().equals(rule.getPurpose())) {
+                List<Long> ids = configurationRules.stream().filter(x -> StringUtils.equals(rule.getRuleNumber(), x.getRuleNumber()) &&
+                        StringUtils.equals(rule.getRuleVersion(), x.getRuleVersion()) && !Objects.equals(x.getId(), rule.getId())
+                        && !Objects.equals(x.getPurpose(), rule.getPurpose())).map(ConfigurationRuleAggr::getId).distinct().toList();
+                ids.forEach(id -> {
+                    ConfigurationRuleAggr copyRuleAggr = BeanConvertUtils.convertTo(ruleAggr, ConfigurationRuleAggr::new);
+                    copyRuleAggr.setId(id);
+                    configurationRuleAggrs.add(copyRuleAggr);
+                });
             }
         });
         return configurationRuleAggrs;

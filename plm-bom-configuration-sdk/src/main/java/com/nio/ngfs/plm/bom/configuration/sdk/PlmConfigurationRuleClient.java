@@ -96,4 +96,12 @@ public interface PlmConfigurationRuleClient {
     @GetMapping("/view")
     ResultInfo<RuleViewInfoRespDto> view(QueryViewQry qry);
 
+    /**
+     * 给Rule条目设置Eff-in、Eff-out时间
+     * @param setBreakPointCmd
+     * @return
+     */
+    @PostMapping("/setBreakPoint")
+    ResultInfo<Boolean> setBreakPoint(SetBreakPointCmd setBreakPointCmd);
+
 }

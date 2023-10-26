@@ -28,7 +28,7 @@ public class RuleViewConstrainedRespDto implements Serializable {
     @Getter
     @Setter
     @ToString
-    private static class RuleViewConstrainedOption {
+    public static class RuleViewConstrainedOption {
 
         private String constrainedOptionCode;
 
@@ -42,7 +42,7 @@ public class RuleViewConstrainedRespDto implements Serializable {
     @Getter
     @Setter
     @ToString
-    static class RulePackageInfo {
+    public static class RulePackageInfo {
 
         private Long id;
 

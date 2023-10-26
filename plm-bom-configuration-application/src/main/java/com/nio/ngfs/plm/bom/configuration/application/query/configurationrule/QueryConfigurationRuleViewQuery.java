@@ -2,6 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.application.query.configurationrule;
 
 
 import com.nio.ngfs.plm.bom.configuration.application.query.AbstractQuery;
+import com.nio.ngfs.plm.bom.configuration.application.query.configurationrule.service.ConfigurationRuleQueryService;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsConfigurationRuleDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsConfigurationRuleGroupDao;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.QueryConfigurationRuleQry;
@@ -19,18 +20,11 @@ import org.springframework.stereotype.Component;
 public class QueryConfigurationRuleViewQuery extends AbstractQuery<QueryViewQry, RuleViewInfoRespDto> {
 
 
-    private final BomsConfigurationRuleDao configurationRuleDao;
-    private final BomsConfigurationRuleGroupDao bomsConfigurationRuleGroupDao;
+    private final ConfigurationRuleQueryService configurationRuleQueryService;
 
 
     @Override
     protected RuleViewInfoRespDto executeQuery(QueryViewQry qry) {
-
-        Long groupId = qry.getGroupId();
-
-
-
-
-        return null;
+        return configurationRuleQueryService.queryView(qry.getGroupId());
     }
 }

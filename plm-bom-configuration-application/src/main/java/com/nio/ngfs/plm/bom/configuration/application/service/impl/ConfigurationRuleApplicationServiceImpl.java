@@ -52,8 +52,9 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
             editConfigurationRule.setRuleOptionList(ruleOptionDoListGroup.getOrDefault(drivingOptionCode, Lists.newArrayList()));
             editConfigurationRule.setOptionEmptyOrAllUnavailable(CollectionUtils.isEmpty(editConfigurationRule.getRuleOptionList()) ||
                     editConfigurationRule.getRuleOptionList().stream().allMatch(ConfigurationRuleOptionDo::isMatrixValueUnavailable));
+            // 按版本倒排
             List<ConfigurationRuleAggr> ruleList = ruleAggrListMap.getOrDefault(drivingOptionCode, Lists.newArrayList())
-                    .stream().sorted(Comparator.comparing(ConfigurationRuleAggr::getRuleVersion)).toList();
+                    .stream().sorted(Comparator.comparing(ConfigurationRuleAggr::getRuleVersion).reversed()).toList();
             editConfigurationRule.setReleasedRuleList(ruleList.stream().filter(ConfigurationRuleAggr::isStatusReleased).toList());
             List<ConfigurationRuleAggr> inWorkRuleList = ruleList.stream().filter(ConfigurationRuleAggr::isStatusInWork).toList();
             if (inWorkRuleList.size() > 1) {
@@ -85,11 +86,10 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
             return;
         }
         // Driving Criteria Option下有已发布的Rule版本，不可新增Rule
-        if (CollectionUtils.isNotEmpty(editRule.getReleasedRuleList())) {
-            context.addErrorMessage(String.format("The Rule Of Driving Criteria Option %s (Rev:%s) Is Already Released, Can Not Create The Same Rule In Driving Criteria Option" +
-                    " %s, Please Check!", editRule.getDrivingOptionCode(), editRule.getLatestReleasedRule().getRuleVersion(), editRule.getDrivingOptionCode()));
-            return;
-        }
+        editRule.getReleasedRuleList().stream().filter(i -> !i.isChangeTypeRemove()).findFirst().ifPresent(releaseRule ->
+                context.addErrorMessage(String.format("The Rule Of Driving Criteria Option %s (Rev:%s) Is Already Released, Can Not Create The Same Rule In Driving Criteria Option" +
+                        " %s, Please Check!", editRule.getDrivingOptionCode(), releaseRule.getRuleVersion(), editRule.getDrivingOptionCode()))
+        );
         // 新增Rule
         ConfigurationRuleAggr addRule = ConfigurationRuleFactory.createWithOptionList(context.getRuleGroup().getPurpose(), context.getRuleGroup().getUpdateUser(),
                 editRule.getRuleOptionList());
@@ -106,8 +106,9 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
         }
         // 编辑打点
         ConfigurationRuleAggr updateRule = editRule.getInWorkRule();
-        updateRule.updateOption(editRule.getRuleOptionList());
-        context.getUpdateRuleList().add(updateRule);
+        if (updateRule.updateOption(editRule.getRuleOptionList())) {
+            context.getUpdateRuleList().add(updateRule);
+        }
     }
 
     /**
@@ -124,8 +125,6 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
 
     @Override
     public void checkAndProcessEditRule(EditConfigurationRuleContext context) {
-        // 校验并处理更新的Rule
-        checkAndProcessUpdateRule(context);
         // 校验并处理删除的Rule
         checkAndProcessDeleteRule(context);
         // 校验Driving Feature和Constrained Feature
@@ -152,19 +151,16 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
     }
 
     /**
-     * 校验并处理更新的Rule
-     */
-    private void checkAndProcessUpdateRule(EditConfigurationRuleContext context) {
-    }
-
-    /**
      * 校验并处理删除的Rule
      */
     private void checkAndProcessDeleteRule(EditConfigurationRuleContext context) {
         List<ConfigurationRuleAggr> deleteRuleList = context.getDeleteRuleList();
+        if (CollectionUtils.isEmpty(deleteRuleList)) {
+            return;
+        }
         if (context.getRuleGroup().getRulePurposeEnum().isBothWay()) {
-            List<ConfigurationRuleAggr> ruleAggrList = configurationRuleRepository.queryByGroupId(context.getRuleGroup().getId());
             // 处理双向Rule删除
+            List<ConfigurationRuleAggr> ruleAggrList = configurationRuleRepository.queryByGroupId(context.getRuleGroup().getId());
             deleteRuleList.forEach(deleteRule -> {
                 ConfigurationRuleAggr anotherDeleteRuleAggr = configurationRuleDomainService.findAnotherBothWayRule(deleteRule, ruleAggrList);
                 anotherDeleteRuleAggr.delete();
@@ -180,11 +176,17 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
         Optional.ofNullable(ruleGroupAggr.getDrivingFeature()).ifPresent(featureCodeSet::add);
         Optional.ofNullable(ruleGroupAggr.getConstrainedFeatureList()).ifPresent(featureCodeSet::addAll);
         // 矩阵打点的Driving Feature和Constrained Feature
-        List<ConfigurationRuleOptionDo> optionList = ruleAggrList.stream().flatMap(ruleAggr -> ruleAggr.getOptionList().stream()).toList();
+        List<ConfigurationRuleOptionDo> optionList = ruleAggrList.stream().flatMap(ruleAggr -> ruleAggr.getOptionList().stream())
+                .filter(ConfigurationRuleOptionDo::isNotDeleted).toList();
         List<String> drivingFeatureCodeList = LambdaUtil.map(optionList, ConfigurationRuleOptionDo::getDrivingFeatureCode, true);
         List<String> constrainedFeatureCodeCodeList = LambdaUtil.map(optionList, ConfigurationRuleOptionDo::getConstrainedFeatureCode, true);
         if (drivingFeatureCodeList.size() > 1) {
             throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_BOTH_WAY_DRIVING_FEATURE_ONLY_SELECT_ONE);
+        }
+        // 校验Group选择的Driving Feature和矩阵打点的Driving Feature必须一致
+        if (StringUtils.isNotBlank(ruleGroupAggr.getDrivingFeature()) && drivingFeatureCodeList.size() > 0 &&
+                !Objects.equals(ruleGroupAggr.getDrivingFeature(), drivingFeatureCodeList.get(0))) {
+            throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_DRIVING_FEATURE_NOT_THE_SAME);
         }
         featureCodeSet.addAll(drivingFeatureCodeList);
         featureCodeSet.addAll(constrainedFeatureCodeCodeList);

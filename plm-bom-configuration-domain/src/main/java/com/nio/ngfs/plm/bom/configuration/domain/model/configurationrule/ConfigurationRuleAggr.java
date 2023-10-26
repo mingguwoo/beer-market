@@ -20,6 +20,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 /**
@@ -108,11 +109,16 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
         setRuleType(getRulePurposeEnum().getRuleType().getRuleType());
         setChangeType(ConfigurationRuleChangeTypeEnum.ADD.getChangeType());
         setStatus(ConfigurationRuleStatusEnum.IN_WORK.getStatus());
-        if (isBothWayRule()) {
-            setRulePairId(IdWorker.getId());
-        }
+        // 校验option打点不为空
         if (CollectionUtils.isEmpty(optionList)) {
             throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_RULE_OPTION_LIST_IS_EMPTY);
+        }
+        if (isBothWayRule()) {
+            // 校验双向Rule打点一对一
+            if (optionList.size() > 1) {
+                throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_BOTH_WAY_RULE_SELECT_ONE_CONSTRAINED);
+            }
+            setRulePairId(IdWorker.getId());
         }
         optionList.forEach(ConfigurationRuleOptionDo::add);
     }
@@ -120,31 +126,34 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
     /**
      * 编辑打点
      */
-    public void updateOption(List<ConfigurationRuleOptionDo> ruleOptionList) {
+    public boolean updateOption(List<ConfigurationRuleOptionDo> ruleOptionList) {
+        AtomicBoolean changed = new AtomicBoolean(false);
         // 新增打点
         Set<String> oldConstrainedOptionCodeSet = optionList.stream().map(ConfigurationRuleOptionDo::getConstrainedOptionCode).collect(Collectors.toSet());
         ruleOptionList.stream().filter(i -> !oldConstrainedOptionCodeSet.contains(i.getConstrainedOptionCode())).forEach(option -> {
-            option.add(option.getUpdateUser());
+            option.add();
             optionList.add(option);
+            changed.set(true);
         });
         // 更新打点
         Map<String, ConfigurationRuleOptionDo> newConstrainedOptionMap = LambdaUtil.toKeyMap(ruleOptionList, ConfigurationRuleOptionDo::getConstrainedOptionCode);
-        optionList.forEach(option ->
-                Optional.ofNullable(newConstrainedOptionMap.get(option.getConstrainedOptionCode())).ifPresent(newOption -> {
-                    if (Objects.equals(option.getMatrixValue(), newOption.getMatrixValue())) {
-                        return;
-                    }
-                    // 打点变更
-                    option.update(newOption.getMatrixValue(), newOption.getUpdateUser());
-                })
-        );
-        // 删除打点
         optionList.forEach(option -> {
-            if (newConstrainedOptionMap.containsKey(option.getConstrainedOptionCode())) {
-                return;
+            ConfigurationRuleOptionDo newOption = newConstrainedOptionMap.get(option.getConstrainedOptionCode());
+            if (newOption != null) {
+                if (Objects.equals(option.getMatrixValue(), newOption.getMatrixValue())) {
+                    // 打点未变更
+                    return;
+                }
+                // 打点变更
+                option.update(newOption.getMatrixValue(), newOption.getUpdateUser());
+                changed.set(true);
+            } else {
+                // 删除打点
+                option.delete();
+                changed.set(true);
             }
-            option.delete();
         });
+        return changed.get();
     }
 
     /**
@@ -258,6 +267,13 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
      */
     public boolean isStatusReleased() {
         return isStatus(ConfigurationRuleStatusEnum.RELEASED);
+    }
+
+    /**
+     * ChangeType是否为Remove
+     */
+    public boolean isChangeTypeRemove() {
+        return Objects.equals(changeType, ConfigurationRuleChangeTypeEnum.REMOVE.getChangeType());
     }
 
     /**

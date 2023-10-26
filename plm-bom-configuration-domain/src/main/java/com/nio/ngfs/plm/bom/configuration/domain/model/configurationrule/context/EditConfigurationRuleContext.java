@@ -19,6 +19,9 @@ import java.util.List;
 @NoArgsConstructor
 public class EditConfigurationRuleContext {
 
+    /**
+     * Rule Group
+     */
     private ConfigurationRuleGroupAggr ruleGroup;
 
     /**
@@ -41,6 +44,9 @@ public class EditConfigurationRuleContext {
      */
     private List<ConfigurationRuleAggr> deleteRuleList = Lists.newArrayList();
 
+    /**
+     * 错误信息列表
+     */
     private List<String> errorMessageList = Lists.newArrayList();
 
     public void addErrorMessage(String errorMessage) {

@@ -23,6 +23,7 @@ public class ConfigurationRuleFactory {
                 .updateUser(createUser)
                 .build();
         ruleAggr.setOptionList(optionList);
+        optionList.forEach(option -> option.setRule(ruleAggr));
         return ruleAggr;
     }
 
@@ -56,6 +57,7 @@ public class ConfigurationRuleFactory {
                 .constrainedOptionCode(ruleOptionDto.getConstrainedOptionCode())
                 .constrainedFeatureCode(ruleOptionDto.getConstrainedFeatureCode())
                 .matrixValue(ruleOptionDto.getMatrixValue())
+                .createUser(updateUser)
                 .updateUser(updateUser)
                 .build();
     }

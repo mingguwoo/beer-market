@@ -12,6 +12,7 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsConf
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsConfigurationRuleOptionDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.common.DaoSupport;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,12 +37,12 @@ public class ConfigurationRuleRepositoryImpl implements ConfigurationRuleReposit
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void save(ConfigurationRuleAggr aggr) {
-        DaoSupport.saveOrUpdate(bomsConfigurationRuleDao, configurationRuleConverter.convertDoToEntity(aggr),entity -> {
+        DaoSupport.saveOrUpdate(bomsConfigurationRuleDao, configurationRuleConverter.convertDoToEntity(aggr), entity -> {
             if (aggr.getId() == null) {
                 aggr.setId(entity.getId());
             }
         });
-        aggr.getOptionList().forEach(option->option.setRuleId(aggr.getId()));
+        aggr.getOptionList().forEach(option -> option.setRuleId(aggr.getId()));
         bomsConfigurationRuleOptionDao.saveOrUpdateBatch(
                 configurationRuleOptionConverter.convertDoListToEntityList(aggr.getOptionList())
         );
@@ -62,7 +63,14 @@ public class ConfigurationRuleRepositoryImpl implements ConfigurationRuleReposit
         DaoSupport.batchSaveOrUpdate(bomsConfigurationRuleDao, configurationRuleConverter, aggrList);
         aggrList.forEach(rule -> rule.getOptionList().stream().filter(option -> Objects.isNull(option.getRuleId())).forEach(option -> option.setRuleId(rule.getId())));
         List<ConfigurationRuleOptionDo> optionList = aggrList.stream().flatMap(i -> i.getOptionList().stream()).toList();
-        DaoSupport.batchSaveOrUpdate(bomsConfigurationRuleOptionDao, configurationRuleOptionConverter.convertDoListToEntityList(optionList));
+        List<ConfigurationRuleOptionDo> saveOrUpdateOptionList = optionList.stream().filter(ConfigurationRuleOptionDo::isNotDeleted).toList();
+        List<ConfigurationRuleOptionDo> deleteOptionList = optionList.stream().filter(ConfigurationRuleOptionDo::isDeleted).toList();
+        if (CollectionUtils.isNotEmpty(saveOrUpdateOptionList)) {
+            DaoSupport.batchSaveOrUpdate(bomsConfigurationRuleOptionDao, configurationRuleOptionConverter.convertDoListToEntityList(saveOrUpdateOptionList));
+        }
+        if (CollectionUtils.isNotEmpty(deleteOptionList)) {
+            bomsConfigurationRuleOptionDao.removeBatchByIds(LambdaUtil.map(deleteOptionList, ConfigurationRuleOptionDo::getId));
+        }
     }
 
     @Override

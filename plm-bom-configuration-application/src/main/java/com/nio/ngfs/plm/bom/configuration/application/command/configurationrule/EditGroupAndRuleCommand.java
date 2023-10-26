@@ -10,11 +10,14 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.Configu
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.context.EditConfigurationRuleContext;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.domainobject.ConfigurationRuleOptionDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrulegroup.ConfigurationRuleGroupAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrulegroup.ConfigurationRuleGroupRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.service.configurationrule.ConfigurationRuleGroupDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.EditGroupAndRuleCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.response.EditGroupAndRuleRespDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -29,6 +32,7 @@ import java.util.List;
 public class EditGroupAndRuleCommand extends AbstractLockCommand<EditGroupAndRuleCmd, EditGroupAndRuleRespDto> {
 
     private final ConfigurationRuleRepository configurationRuleRepository;
+    private final ConfigurationRuleGroupRepository configurationRuleGroupRepository;
     private final ConfigurationRuleGroupDomainService configurationRuleGroupDomainService;
     private final ConfigurationRuleApplicationService configurationRuleApplicationService;
 
@@ -39,6 +43,7 @@ public class EditGroupAndRuleCommand extends AbstractLockCommand<EditGroupAndRul
 
     @Override
     protected EditGroupAndRuleRespDto executeWithLock(EditGroupAndRuleCmd cmd) {
+        // 获取Group聚合根
         ConfigurationRuleGroupAggr ruleGroupAggr = configurationRuleGroupDomainService.getAndCheckAggr(cmd.getGroupId());
         // 编辑Group
         ruleGroupAggr.edit(cmd);
@@ -52,7 +57,24 @@ public class EditGroupAndRuleCommand extends AbstractLockCommand<EditGroupAndRul
         configurationRuleApplicationService.preHandleEditRule(context);
         // 校验并处理Rule编辑
         configurationRuleApplicationService.checkAndProcessEditRule(context);
+        // 保存到数据库
+        ((EditGroupAndRuleCommand) AopContext.currentProxy()).saveRuleAndGroup(ruleGroupAggr, context);
         return new EditGroupAndRuleRespDto();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void saveRuleAndGroup(ConfigurationRuleGroupAggr ruleGroupAggr, EditConfigurationRuleContext context) {
+        configurationRuleGroupRepository.save(ruleGroupAggr);
+        // 新增或更新Rule
+        List<ConfigurationRuleAggr> addOrUpdateRuleAggrList = context.getAddOrUpdateRuleList();
+        addOrUpdateRuleAggrList.forEach(ruleAggr -> {
+            if (ruleAggr.getGroupId() == null) {
+                ruleAggr.setGroupId(ruleGroupAggr.getId());
+            }
+        });
+        configurationRuleRepository.batchSave(addOrUpdateRuleAggrList);
+        // 删除Rule
+        configurationRuleRepository.batchRemove(context.getDeleteRuleList());
     }
 
 }

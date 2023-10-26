@@ -131,6 +131,7 @@ public enum ConfigErrorCode implements ErrorCode {
     CONFIGURATION_RULE_RULE_GROUP_CAN_NOT_EDIT(85019, "Rule Group Can Not Edit!"),
     CONFIGURATION_RULE_RULE_OPTION_LIST_IS_EMPTY(85020, "Rule Option List Is Empty!"),
     CONFIGURATION_RULE_RULE_IN_WORK_RULE_AT_MOST_ONE(85021, "In Can Only Has At Most One In Work Status Rule With Same Driving Criteria!"),
+    CONFIGURATION_RULE_DRIVING_FEATURE_NOT_THE_SAME(85022, "Driving Criteria Feature Not The Same!"),
 
     /**
      * Other

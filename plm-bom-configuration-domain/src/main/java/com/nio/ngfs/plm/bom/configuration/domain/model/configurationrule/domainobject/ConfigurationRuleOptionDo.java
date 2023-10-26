@@ -73,15 +73,6 @@ public class ConfigurationRuleOptionDo extends AbstractDo implements Entity<Long
     }
 
     /**
-     * 新增打点
-     */
-    public void add(String createUser) {
-        checkMatrixValue();
-        setCreateUser(createUser);
-        setUpdateUser(createUser);
-    }
-
-    /**
      * 更新打点
      */
     public void update(Integer matrixValue, String updateUser) {
@@ -94,6 +85,7 @@ public class ConfigurationRuleOptionDo extends AbstractDo implements Entity<Long
      * 删除打点
      */
     public void delete() {
+        // 设置删除标记
         setDelFlag(CommonConstants.DEL_FLAG);
     }
 

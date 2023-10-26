@@ -128,14 +128,7 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
      */
     public boolean updateOption(List<ConfigurationRuleOptionDo> ruleOptionList) {
         AtomicBoolean changed = new AtomicBoolean(false);
-        // 新增打点
-        Set<String> oldConstrainedOptionCodeSet = optionList.stream().map(ConfigurationRuleOptionDo::getConstrainedOptionCode).collect(Collectors.toSet());
-        ruleOptionList.stream().filter(i -> !oldConstrainedOptionCodeSet.contains(i.getConstrainedOptionCode())).forEach(option -> {
-            option.add();
-            optionList.add(option);
-            changed.set(true);
-        });
-        // 更新打点
+        // 先处理更新打点
         Map<String, ConfigurationRuleOptionDo> newConstrainedOptionMap = LambdaUtil.toKeyMap(ruleOptionList, ConfigurationRuleOptionDo::getConstrainedOptionCode);
         optionList.forEach(option -> {
             ConfigurationRuleOptionDo newOption = newConstrainedOptionMap.get(option.getConstrainedOptionCode());
@@ -152,6 +145,14 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
                 option.delete();
                 changed.set(true);
             }
+        });
+        // 新增打点
+        Set<String> oldConstrainedOptionCodeSet = optionList.stream().map(ConfigurationRuleOptionDo::getConstrainedOptionCode).collect(Collectors.toSet());
+        ruleOptionList.stream().filter(i -> !oldConstrainedOptionCodeSet.contains(i.getConstrainedOptionCode())).forEach(option -> {
+            option.setRule(this);
+            option.add();
+            optionList.add(option);
+            changed.set(true);
         });
         return changed.get();
     }

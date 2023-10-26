@@ -13,7 +13,8 @@ CREATE TABLE `boms_configuration_rule_group`
     `create_time`         timestamp     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time`         timestamp     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     `del_flag`            tinyint(4) NOT NULL DEFAULT 0 COMMENT '是否逻辑删除，0：否，1：是',
-    PRIMARY KEY (`id`) USING BTREE
+    PRIMARY KEY (`id`) USING BTREE,
+    INDEX `idx_defined_by` (`defined_by`) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   ROW_FORMAT = DYNAMIC COMMENT ='配置管理-Rule Group表';

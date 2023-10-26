@@ -60,6 +60,9 @@ public class ConfigurationRuleRepositoryImpl implements ConfigurationRuleReposit
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void batchSave(List<ConfigurationRuleAggr> aggrList) {
+        if (CollectionUtils.isEmpty(aggrList)) {
+            return;
+        }
         DaoSupport.batchSaveOrUpdate(bomsConfigurationRuleDao, configurationRuleConverter, aggrList);
         aggrList.forEach(rule -> rule.getOptionList().stream().filter(option -> Objects.isNull(option.getRuleId())).forEach(option -> option.setRuleId(rule.getId())));
         List<ConfigurationRuleOptionDo> optionList = aggrList.stream().flatMap(i -> i.getOptionList().stream()).toList();
@@ -76,6 +79,9 @@ public class ConfigurationRuleRepositoryImpl implements ConfigurationRuleReposit
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void batchRemove(List<ConfigurationRuleAggr> aggrList) {
+        if (CollectionUtils.isEmpty(aggrList)) {
+            return;
+        }
         bomsConfigurationRuleDao.removeBatchByIds(LambdaUtil.map(aggrList, ConfigurationRuleAggr::getId));
         bomsConfigurationRuleOptionDao.removeBatchByIds(aggrList.stream()
                 .flatMap(aggr -> LambdaUtil.map(aggr.getOptionList(), ConfigurationRuleOptionDo::getId).stream()).toList());

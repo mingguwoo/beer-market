@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -64,8 +65,6 @@ public class ConfigurationRuleGroupAggr extends AbstractDo implements AggrRoot<L
      * Group勾选的Constrained Feature Code列表，多个之间逗号分隔
      */
     private String constrainedFeature;
-
-    private transient List<String> constrainedFeatureList;
 
     @Override
     public Long getUniqId() {
@@ -127,10 +126,10 @@ public class ConfigurationRuleGroupAggr extends AbstractDo implements AggrRoot<L
     }
 
     public List<String> getConstrainedFeatureList() {
-        if (constrainedFeatureList == null) {
-            constrainedFeatureList = Splitter.on(",").trimResults().omitEmptyStrings().splitToList(constrainedFeature);
+        if (StringUtils.isBlank(constrainedFeature)) {
+            return Lists.newArrayList();
         }
-        return constrainedFeatureList;
+        return Splitter.on(",").trimResults().omitEmptyStrings().splitToList(constrainedFeature);
     }
 
 }

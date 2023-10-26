@@ -9,7 +9,6 @@ import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleRepository;
-import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.context.EditConfigurationRuleContext;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.domainobject.ConfigurationRuleOptionDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.RuleOptionMatrixValueEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.service.configurationrule.ConfigurationRuleDomainService;
@@ -133,65 +132,9 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
     }
 
     @Override
-    public void editRule(EditConfigurationRuleContext context) {
-        context.getEditRuleList().forEach(editRule -> {
-            // 处理Rule新增
-            handleRuleAddWithEdit(context, editRule);
-            // 处理Rule更新
-            handleRuleUpdateWithEdit(context, editRule);
-            // 处理Rule删除
-            handleRuleDeleteWithEdit(context, editRule);
-        });
-    }
-
-    @Override
     public List<ConfigurationRuleAggr> deleteRule(List<ConfigurationRuleAggr> ruleAggrList) {
         ruleAggrList.forEach(ConfigurationRuleAggr::delete);
         return null;
-    }
-
-    /**
-     * 处理Rule新增（不存在In Work状态的Rule、打点不为空）
-     */
-    private void handleRuleAddWithEdit(EditConfigurationRuleContext context, EditConfigurationRuleContext.EditConfigurationRule editRule) {
-        if (!(Objects.isNull(editRule.getInWorkRule()) && !editRule.isOptionEmptyOrAllUnavailable())) {
-            return;
-        }
-        // Driving Criteria Option下有已发布的Rule版本，不可新增Rule
-        if (CollectionUtils.isNotEmpty(editRule.getReleasedRuleList())) {
-            context.addErrorMessage(String.format("The Rule Of Driving Criteria Option %s (Rev:%s) Is Already Released, Can Not Create The Same Rule In Driving Criteria Option" +
-                    " %s, Please Check!", editRule.getDrivingOptionCode(), editRule.getLatestReleasedRule().getRuleVersion(), editRule.getDrivingOptionCode()));
-            return;
-        }
-        // 新增Rule
-        ConfigurationRuleAggr addRule = ConfigurationRuleFactory.createWithOptionList(context.getPurposeEnum().getCode(), context.getUpdateUser(), editRule.getRuleOptionList());
-        addRule.add();
-        context.getAddRuleList().add(addRule);
-    }
-
-    /**
-     * 处理Rule更新（存在In Work状态的Rule、打点不为空）
-     */
-    private void handleRuleUpdateWithEdit(EditConfigurationRuleContext context, EditConfigurationRuleContext.EditConfigurationRule editRule) {
-        if (!(Objects.nonNull(editRule.getInWorkRule()) && !editRule.isOptionEmptyOrAllUnavailable())) {
-            return;
-        }
-        // 编辑打点
-        ConfigurationRuleAggr updateRule = editRule.getInWorkRule();
-        updateRule.updateOption(editRule.getRuleOptionList());
-        context.getUpdateRuleList().add(updateRule);
-    }
-
-    /**
-     * 处理Rule删除（存在In Work状态的Rule、打点为空）
-     */
-    private void handleRuleDeleteWithEdit(EditConfigurationRuleContext context, EditConfigurationRuleContext.EditConfigurationRule editRule) {
-        if (!(Objects.nonNull(editRule.getInWorkRule()) && editRule.isOptionEmptyOrAllUnavailable())) {
-            return;
-        }
-        ConfigurationRuleAggr deleteRule = editRule.getInWorkRule();
-        deleteRule.delete();
-        context.getDeleteRuleList().add(deleteRule);
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.application.service.ConfigurationRuleApplicationService;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.context.EditConfigurationRuleContext;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.domainobject.ConfigurationRuleOptionDo;
@@ -44,11 +45,7 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
         Map<String, List<ConfigurationRuleAggr>> ruleAggrListMap = LambdaUtil.groupBy(ruleAggrList, i -> i.getOptionList().get(0).getDrivingOptionCode());
         Map<String, List<ConfigurationRuleOptionDo>> ruleOptionDoListGroup = LambdaUtil.groupBy(ruleOptionDoList, ConfigurationRuleOptionDo::getDrivingOptionCode);
         EditConfigurationRuleContext context = new EditConfigurationRuleContext();
-        context.setGroupId(ruleGroupAggr.getId());
-        context.setPurposeEnum(ruleGroupAggr.getRulePurposeEnum());
-        context.setDrivingFeature(ruleGroupAggr.getDrivingFeature());
-        context.setConstrainedFeatureList(ruleGroupAggr.getConstrainedFeatureList());
-        context.setUpdateUser(ruleGroupAggr.getUpdateUser());
+        context.setRuleGroup(ruleGroupAggr);
         context.setEditRuleList(LambdaUtil.map(drivingOptionCodeSet, drivingOptionCode -> {
             EditConfigurationRuleContext.EditConfigurationRule editConfigurationRule = new EditConfigurationRuleContext.EditConfigurationRule();
             editConfigurationRule.setDrivingOptionCode(drivingOptionCode);
@@ -69,13 +66,70 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
     }
 
     @Override
+    public void preHandleEditRule(EditConfigurationRuleContext context) {
+        context.getEditRuleList().forEach(editRule -> {
+            // 预处理Rule新增
+            preHandleRuleAddWithEdit(context, editRule);
+            // 预处理Rule更新
+            preHandleRuleUpdateWithEdit(context, editRule);
+            // 预处理Rule删除
+            preHandleRuleDeleteWithEdit(context, editRule);
+        });
+    }
+
+    /**
+     * 预处理Rule新增（不存在In Work状态的Rule、打点不为空）
+     */
+    private void preHandleRuleAddWithEdit(EditConfigurationRuleContext context, EditConfigurationRuleContext.EditConfigurationRule editRule) {
+        if (!(Objects.isNull(editRule.getInWorkRule()) && !editRule.isOptionEmptyOrAllUnavailable())) {
+            return;
+        }
+        // Driving Criteria Option下有已发布的Rule版本，不可新增Rule
+        if (CollectionUtils.isNotEmpty(editRule.getReleasedRuleList())) {
+            context.addErrorMessage(String.format("The Rule Of Driving Criteria Option %s (Rev:%s) Is Already Released, Can Not Create The Same Rule In Driving Criteria Option" +
+                    " %s, Please Check!", editRule.getDrivingOptionCode(), editRule.getLatestReleasedRule().getRuleVersion(), editRule.getDrivingOptionCode()));
+            return;
+        }
+        // 新增Rule
+        ConfigurationRuleAggr addRule = ConfigurationRuleFactory.createWithOptionList(context.getRuleGroup().getPurpose(), context.getRuleGroup().getUpdateUser(),
+                editRule.getRuleOptionList());
+        addRule.add();
+        context.getAddRuleList().add(addRule);
+    }
+
+    /**
+     * 预处理Rule更新（存在In Work状态的Rule、打点不为空）
+     */
+    private void preHandleRuleUpdateWithEdit(EditConfigurationRuleContext context, EditConfigurationRuleContext.EditConfigurationRule editRule) {
+        if (!(Objects.nonNull(editRule.getInWorkRule()) && !editRule.isOptionEmptyOrAllUnavailable())) {
+            return;
+        }
+        // 编辑打点
+        ConfigurationRuleAggr updateRule = editRule.getInWorkRule();
+        updateRule.updateOption(editRule.getRuleOptionList());
+        context.getUpdateRuleList().add(updateRule);
+    }
+
+    /**
+     * 预处理Rule删除（存在In Work状态的Rule、打点为空）
+     */
+    private void preHandleRuleDeleteWithEdit(EditConfigurationRuleContext context, EditConfigurationRuleContext.EditConfigurationRule editRule) {
+        if (!(Objects.nonNull(editRule.getInWorkRule()) && editRule.isOptionEmptyOrAllUnavailable())) {
+            return;
+        }
+        ConfigurationRuleAggr deleteRule = editRule.getInWorkRule();
+        deleteRule.delete();
+        context.getDeleteRuleList().add(deleteRule);
+    }
+
+    @Override
     public void checkAndProcessEditRule(EditConfigurationRuleContext context) {
         // 校验并处理更新的Rule
         checkAndProcessUpdateRule(context);
         // 校验并处理删除的Rule
         checkAndProcessDeleteRule(context);
         // 校验Driving Feature和Constrained Feature
-        checkDrivingAndConstrainedFeature(context.getPurposeEnum(), context.getDrivingFeature(), context.getConstrainedFeatureList(), context.getAddOrUpdateRuleList());
+        checkDrivingAndConstrainedFeature(context.getRuleGroup(), context.getAddOrUpdateRuleList());
         // 校验Rule Driving下的Constrained打点不重复
         String message = configurationRuleDomainService.checkRuleDrivingConstrainedRepeat(context.getAddOrUpdateRuleList());
         if (StringUtils.isNotBlank(message)) {
@@ -108,8 +162,8 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
      */
     private void checkAndProcessDeleteRule(EditConfigurationRuleContext context) {
         List<ConfigurationRuleAggr> deleteRuleList = context.getDeleteRuleList();
-        if (context.getPurposeEnum().isBothWay()) {
-            List<ConfigurationRuleAggr> ruleAggrList = configurationRuleRepository.queryByGroupId(context.getGroupId());
+        if (context.getRuleGroup().getRulePurposeEnum().isBothWay()) {
+            List<ConfigurationRuleAggr> ruleAggrList = configurationRuleRepository.queryByGroupId(context.getRuleGroup().getId());
             // 处理双向Rule删除
             deleteRuleList.forEach(deleteRule -> {
                 ConfigurationRuleAggr anotherDeleteRuleAggr = configurationRuleDomainService.findAnotherBothWayRule(deleteRule, ruleAggrList);
@@ -120,11 +174,11 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
     }
 
     @Override
-    public void checkDrivingAndConstrainedFeature(ConfigurationRulePurposeEnum purposeEnum, String drivingFeature, List<String> constrainedFeatureList, List<ConfigurationRuleAggr> ruleAggrList) {
+    public void checkDrivingAndConstrainedFeature(ConfigurationRuleGroupAggr ruleGroupAggr, List<ConfigurationRuleAggr> ruleAggrList) {
         Set<String> featureCodeSet = Sets.newHashSet();
         // Group选择的Driving Feature和Constrained Feature
-        Optional.ofNullable(drivingFeature).ifPresent(featureCodeSet::add);
-        Optional.ofNullable(constrainedFeatureList).ifPresent(featureCodeSet::addAll);
+        Optional.ofNullable(ruleGroupAggr.getDrivingFeature()).ifPresent(featureCodeSet::add);
+        Optional.ofNullable(ruleGroupAggr.getConstrainedFeatureList()).ifPresent(featureCodeSet::addAll);
         // 矩阵打点的Driving Feature和Constrained Feature
         List<ConfigurationRuleOptionDo> optionList = ruleAggrList.stream().flatMap(ruleAggr -> ruleAggr.getOptionList().stream()).toList();
         List<String> drivingFeatureCodeList = LambdaUtil.map(optionList, ConfigurationRuleOptionDo::getDrivingFeatureCode, true);
@@ -138,8 +192,8 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
             return;
         }
         List<FeatureAggr> featureAggrList = featureRepository.queryByFeatureOptionCodeList(Lists.newArrayList(featureCodeSet));
-        checkDrivingAndConstrainedFeature2(purposeEnum, drivingFeature, constrainedFeatureList, featureAggrList);
-        checkDrivingAndConstrainedFeature2(purposeEnum, drivingFeatureCodeList.size() > 0 ? drivingFeatureCodeList.get(0) : null,
+        checkDrivingAndConstrainedFeature2(ruleGroupAggr.getRulePurposeEnum(), ruleGroupAggr.getDrivingFeature(), ruleGroupAggr.getConstrainedFeatureList(), featureAggrList);
+        checkDrivingAndConstrainedFeature2(ruleGroupAggr.getRulePurposeEnum(), drivingFeatureCodeList.size() > 0 ? drivingFeatureCodeList.get(0) : null,
                 constrainedFeatureCodeCodeList, featureAggrList);
     }
 

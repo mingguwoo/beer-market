@@ -1,7 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.domain.service.configurationrule;
 
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleAggr;
-import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.context.EditConfigurationRuleContext;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.AddRuleCmd;
 
 import java.util.List;
@@ -67,13 +66,6 @@ public interface ConfigurationRuleDomainService {
      * @return 错误提示信息
      */
     String checkRuleDrivingConstrainedRepeat(List<ConfigurationRuleAggr> ruleAggrList);
-
-    /**
-     * 编辑Group下的Rule
-     *
-     * @param context 上下文
-     */
-    void editRule(EditConfigurationRuleContext context);
 
     /**
      * 删除Rule

@@ -10,7 +10,6 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.Configu
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.context.EditConfigurationRuleContext;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.domainobject.ConfigurationRuleOptionDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrulegroup.ConfigurationRuleGroupAggr;
-import com.nio.ngfs.plm.bom.configuration.domain.service.configurationrule.ConfigurationRuleDomainService;
 import com.nio.ngfs.plm.bom.configuration.domain.service.configurationrule.ConfigurationRuleGroupDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.EditGroupAndRuleCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.response.EditGroupAndRuleRespDto;
@@ -30,7 +29,6 @@ import java.util.List;
 public class EditGroupAndRuleCommand extends AbstractLockCommand<EditGroupAndRuleCmd, EditGroupAndRuleRespDto> {
 
     private final ConfigurationRuleRepository configurationRuleRepository;
-    private final ConfigurationRuleDomainService configurationRuleDomainService;
     private final ConfigurationRuleGroupDomainService configurationRuleGroupDomainService;
     private final ConfigurationRuleApplicationService configurationRuleApplicationService;
 
@@ -50,8 +48,8 @@ public class EditGroupAndRuleCommand extends AbstractLockCommand<EditGroupAndRul
         List<ConfigurationRuleOptionDo> ruleOptionDoList = LambdaUtil.map(cmd.getRuleOptionList(), i -> ConfigurationRuleFactory.create(i, cmd.getUpdateUser()));
         // 构建编辑Rule上下文
         EditConfigurationRuleContext context = configurationRuleApplicationService.buildEditConfigurationRuleContext(ruleGroupAggr, ruleAggrList, ruleOptionDoList);
-        // 编辑Group下的Rule
-        configurationRuleDomainService.editRule(context);
+        // 编辑Rule预处理
+        configurationRuleApplicationService.preHandleEditRule(context);
         // 校验并处理Rule编辑
         configurationRuleApplicationService.checkAndProcessEditRule(context);
         return new EditGroupAndRuleRespDto();

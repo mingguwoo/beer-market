@@ -3,7 +3,7 @@ package com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.contex
 import com.google.common.collect.Lists;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.domainobject.ConfigurationRuleOptionDo;
-import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.ConfigurationRulePurposeEnum;
+import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrulegroup.ConfigurationRuleGroupAggr;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,15 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 public class EditConfigurationRuleContext {
 
-    private Long groupId;
-
-    private ConfigurationRulePurposeEnum purposeEnum;
-
-    private String drivingFeature;
-
-    private List<String> constrainedFeatureList;
-
-    private String updateUser;
+    private ConfigurationRuleGroupAggr ruleGroup;
 
     /**
      * 编辑的Rule列表

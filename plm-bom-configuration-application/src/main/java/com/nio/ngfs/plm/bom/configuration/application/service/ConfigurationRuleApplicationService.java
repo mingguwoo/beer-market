@@ -3,7 +3,6 @@ package com.nio.ngfs.plm.bom.configuration.application.service;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.context.EditConfigurationRuleContext;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.domainobject.ConfigurationRuleOptionDo;
-import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.ConfigurationRulePurposeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrulegroup.ConfigurationRuleGroupAggr;
 
 import java.util.List;
@@ -24,6 +23,12 @@ public interface ConfigurationRuleApplicationService {
     EditConfigurationRuleContext buildEditConfigurationRuleContext(ConfigurationRuleGroupAggr ruleGroupAggr, List<ConfigurationRuleAggr> ruleAggrList,
                                                                    List<ConfigurationRuleOptionDo> ruleOptionDoList);
 
+    /**
+     * 编辑Rule预处理
+     *
+     * @param context 上下文
+     */
+    void preHandleEditRule(EditConfigurationRuleContext context);
 
     /**
      * 校验并处理Rule编辑
@@ -35,12 +40,9 @@ public interface ConfigurationRuleApplicationService {
     /**
      * 校验Driving Feature和Constrained Feature
      *
-     * @param purposeEnum            Purpose
-     * @param drivingFeature         Driving Feature
-     * @param constrainedFeatureList Constrained Feature列表
-     * @param ruleAggrList           聚合根列表
+     * @param ruleGroupAggr Rule Group聚合根
+     * @param ruleAggrList  Rule聚合根列表
      */
-    void checkDrivingAndConstrainedFeature(ConfigurationRulePurposeEnum purposeEnum, String drivingFeature,
-                                           List<String> constrainedFeatureList, List<ConfigurationRuleAggr> ruleAggrList);
+    void checkDrivingAndConstrainedFeature(ConfigurationRuleGroupAggr ruleGroupAggr, List<ConfigurationRuleAggr> ruleAggrList);
 
 }

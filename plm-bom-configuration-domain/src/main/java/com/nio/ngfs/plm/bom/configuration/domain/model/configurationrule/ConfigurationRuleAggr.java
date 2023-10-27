@@ -3,6 +3,7 @@ package com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.google.common.collect.Lists;
 import com.nio.bom.share.domain.model.AggrRoot;
+import com.nio.bom.share.enums.YesOrNoEnum;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.common.constants.ConfigConstants;
@@ -114,6 +115,7 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
         setRuleType(getRulePurposeEnum().getRuleType().getRuleType());
         setChangeType(ConfigurationRuleChangeTypeEnum.ADD.getChangeType());
         setStatus(ConfigurationRuleStatusEnum.IN_WORK.getStatus());
+        setInvisible(YesOrNoEnum.NO.getCode());
         // 校验option打点不为空
         if (CollectionUtils.isEmpty(optionList)) {
             throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_RULE_OPTION_LIST_IS_EMPTY);
@@ -236,6 +238,8 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
         }
         ConfigurationRuleAggr copyRuleAggr = new ConfigurationRuleAggr();
         BeanUtils.copyProperties(this, copyRuleAggr);
+        // 不可见的Rule
+        copyRuleAggr.setInvisible(YesOrNoEnum.YES.getCode());
         copyRuleAggr.setOptionList(LambdaUtil.map(optionList, ConfigurationRuleOptionDo::copyBothWayRuleOption));
         return copyRuleAggr;
     }
@@ -280,6 +284,20 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
      */
     public boolean isChangeTypeRemove() {
         return Objects.equals(changeType, ConfigurationRuleChangeTypeEnum.REMOVE.getChangeType());
+    }
+
+    /**
+     * 是否可见的Rule
+     */
+    public boolean isVisible() {
+        return !isInvisible();
+    }
+
+    /**
+     * 是否不可见的Rule
+     */
+    public boolean isInvisible() {
+        return Objects.equals(invisible, YesOrNoEnum.YES.getCode());
     }
 
     /**

@@ -132,6 +132,9 @@ public enum ConfigErrorCode implements ErrorCode {
     CONFIGURATION_RULE_RULE_OPTION_LIST_IS_EMPTY(85020, "Rule Option List Is Empty!"),
     CONFIGURATION_RULE_RULE_IN_WORK_RULE_AT_MOST_ONE(85021, "In Can Only Has At Most One In Work Status Rule With Same Driving Criteria!"),
     CONFIGURATION_RULE_DRIVING_FEATURE_NOT_THE_SAME(85022, "Driving Criteria Feature Not The Same!"),
+    CONFIGURATION_RULE_CONSTRAINED_FEATURE_NOT_THE_SAME(85023, "Constrained Criteria Feature Not The Same!"),
+    CONFIGURATION_RULE_DRIVING_AND_CONSTRAINED_FEATURE_IS_REPEAT(85024, "Driving Criteria Feature And Constrained Criteria Feature Is Repeat!"),
+    CONFIGURATION_RULE_BOTH_WAY_RULE_UPDATE_ERROR(85025, "Both Way Rule Update Error!"),
 
     /**
      * Other

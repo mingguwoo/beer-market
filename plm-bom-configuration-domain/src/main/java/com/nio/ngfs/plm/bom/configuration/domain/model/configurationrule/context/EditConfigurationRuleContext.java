@@ -25,6 +25,11 @@ public class EditConfigurationRuleContext {
     private ConfigurationRuleGroupAggr ruleGroup;
 
     /**
+     * Group下的Rule列表
+     */
+    private List<ConfigurationRuleAggr> groupRuleList = Lists.newArrayList();
+
+    /**
      * 编辑的Rule列表
      */
     private List<EditConfigurationRule> editRuleList = Lists.newArrayList();

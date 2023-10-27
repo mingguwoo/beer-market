@@ -109,12 +109,14 @@ public class ConfigurationRuleOptionDo extends AbstractDo implements Entity<Long
      */
     public ConfigurationRuleOptionDo copyBothWayRuleOption() {
         ConfigurationRuleOptionDo copyRuleOptionDo = new ConfigurationRuleOptionDo();
-        BeanUtils.copyProperties(this, copyRuleOptionDo);
         // Driving和Constrained调换
         copyRuleOptionDo.setDrivingOptionCode(getConstrainedOptionCode());
         copyRuleOptionDo.setDrivingFeatureCode(getConstrainedFeatureCode());
         copyRuleOptionDo.setConstrainedOptionCode(getDrivingOptionCode());
         copyRuleOptionDo.setConstrainedFeatureCode(getDrivingFeatureCode());
+        copyRuleOptionDo.setMatrixValue(getMatrixValue());
+        copyRuleOptionDo.setCreateUser(getCreateUser());
+        copyRuleOptionDo.setUpdateUser(getUpdateUser());
         return copyRuleOptionDo;
     }
 

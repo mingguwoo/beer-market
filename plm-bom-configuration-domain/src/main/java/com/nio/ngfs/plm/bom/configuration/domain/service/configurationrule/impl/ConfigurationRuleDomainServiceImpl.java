@@ -141,7 +141,7 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
 
     @Override
     public String checkRuleDrivingConstrainedRepeat(List<ConfigurationRuleAggr> ruleAggrList) {
-        List<RuleConstrainedOptionCompare> optionCompareList = ruleAggrList.stream().map(ruleAggr -> {
+        List<RuleConstrainedOptionCompare> optionCompareList = ruleAggrList.stream().filter(ConfigurationRuleAggr::isVisible).map(ruleAggr -> {
             Set<String> constrainedOptionCodeSet = ruleAggr.getOptionList().stream()
                     .filter(ConfigurationRuleOptionDo::isNotDeleted)
                     .filter(i -> !i.isMatrixValue(RuleOptionMatrixValueEnum.UNAVAILABLE))
@@ -210,26 +210,26 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
             //当勾选Rule条目的Change Type为Add或Modify时，系统判断是否存在相邻的下一个Rev条目
             if (ruleAggrs.stream().noneMatch(y -> StringUtils.equals(y.getRuleNumber(), x.getRuleNumber()) &&
                     StringUtils.equals(y.getRuleVersion(), nextRev))) {
-               throw new BusinessException(ConfigErrorCode.RULE_ID_ERROR.getCode(),
-                       MessageFormat.format(ConfigErrorCode.RULE_ID_ERROR.getMessage(),x.getRuleNumber(),x.getRuleVersion()));
+                throw new BusinessException(ConfigErrorCode.RULE_ID_ERROR.getCode(),
+                        MessageFormat.format(ConfigErrorCode.RULE_ID_ERROR.getMessage(), x.getRuleNumber(), x.getRuleVersion()));
             }
         });
     }
 
     @Override
     public void updateEffInOrEffOut(List<Long> ruleIds, ConfigurationRuleAggr updateInfo) {
-        Date date=new Date();
-        Date  effIn = updateInfo.getEffIn();
-        Date  effOut= updateInfo.getEffOut();
-        String userName =  updateInfo.getUpdateUser();
+        Date date = new Date();
+        Date effIn = updateInfo.getEffIn();
+        Date effOut = updateInfo.getEffOut();
+        String userName = updateInfo.getUpdateUser();
 
-        configurationRuleRepository.batchUpdate(ruleIds.stream().map(x->{
-            ConfigurationRuleAggr ruleAggr=new ConfigurationRuleAggr();
+        configurationRuleRepository.batchUpdate(ruleIds.stream().map(x -> {
+            ConfigurationRuleAggr ruleAggr = new ConfigurationRuleAggr();
             ruleAggr.setId(x);
-            if(Objects.nonNull(effIn)) {
+            if (Objects.nonNull(effIn)) {
                 ruleAggr.setEffIn(effIn);
             }
-            if(Objects.nonNull(effOut)) {
+            if (Objects.nonNull(effOut)) {
                 ruleAggr.setEffOut(effOut);
             }
             ruleAggr.setUpdateTime(date);

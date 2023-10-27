@@ -46,6 +46,7 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
         Map<String, List<ConfigurationRuleOptionDo>> ruleOptionDoListGroup = LambdaUtil.groupBy(ruleOptionDoList, ConfigurationRuleOptionDo::getDrivingOptionCode);
         EditConfigurationRuleContext context = new EditConfigurationRuleContext();
         context.setRuleGroup(ruleGroupAggr);
+        context.setGroupRuleList(ruleAggrList);
         context.setEditRuleList(LambdaUtil.map(drivingOptionCodeSet, drivingOptionCode -> {
             EditConfigurationRuleContext.EditConfigurationRule editConfigurationRule = new EditConfigurationRuleContext.EditConfigurationRule();
             editConfigurationRule.setDrivingOptionCode(drivingOptionCode);
@@ -55,6 +56,10 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
             // 按版本倒排
             List<ConfigurationRuleAggr> ruleList = ruleAggrListMap.getOrDefault(drivingOptionCode, Lists.newArrayList())
                     .stream().sorted(Comparator.comparing(ConfigurationRuleAggr::getRuleVersion).reversed()).toList();
+            // 排除存在不可见Rule的场景，不可见Rule不参与编辑
+            if (ruleList.stream().anyMatch(ConfigurationRuleAggr::isInvisible)) {
+                return null;
+            }
             editConfigurationRule.setReleasedRuleList(ruleList.stream().filter(ConfigurationRuleAggr::isStatusReleased).toList());
             List<ConfigurationRuleAggr> inWorkRuleList = ruleList.stream().filter(ConfigurationRuleAggr::isStatusInWork).toList();
             if (inWorkRuleList.size() > 1) {
@@ -108,6 +113,16 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
         ConfigurationRuleAggr updateRule = editRule.getInWorkRule();
         if (updateRule.updateOption(editRule.getRuleOptionList())) {
             context.getUpdateRuleList().add(updateRule);
+            // 处理双向Rule编辑
+            if (updateRule.isBothWayRule()) {
+                ConfigurationRuleAggr anotherUpdateRule = configurationRuleDomainService.findAnotherBothWayRule(updateRule, context.getGroupRuleList());
+                boolean ret = anotherUpdateRule.updateOption(updateRule.getOptionList().stream().filter(ConfigurationRuleOptionDo::isNotDeleted)
+                        .map(ConfigurationRuleOptionDo::copyBothWayRuleOption).toList());
+                if (!ret) {
+                    throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_BOTH_WAY_RULE_UPDATE_ERROR);
+                }
+                context.getUpdateRuleList().add(anotherUpdateRule);
+            }
         }
     }
 
@@ -174,32 +189,53 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
 
     @Override
     public void checkDrivingAndConstrainedFeature(ConfigurationRuleGroupAggr ruleGroupAggr, List<ConfigurationRuleAggr> ruleAggrList) {
-        Set<String> featureCodeSet = Sets.newHashSet();
         // Group选择的Driving Feature和Constrained Feature
-        Optional.ofNullable(ruleGroupAggr.getDrivingFeature()).ifPresent(featureCodeSet::add);
-        Optional.ofNullable(ruleGroupAggr.getConstrainedFeatureList()).ifPresent(featureCodeSet::addAll);
-        // 矩阵打点的Driving Feature和Constrained Feature
-        List<ConfigurationRuleOptionDo> optionList = ruleAggrList.stream().flatMap(ruleAggr -> ruleAggr.getOptionList().stream())
+        String groupDrivingFeature = ruleGroupAggr.getDrivingFeature();
+        List<String> groupConstrainedFeatureList = ruleGroupAggr.getConstrainedFeatureList();
+        // 矩阵打点的Driving Feature和Constrained Feature（只校验可见的Rule）
+        List<ConfigurationRuleOptionDo> optionList = ruleAggrList.stream().filter(ConfigurationRuleAggr::isVisible).flatMap(ruleAggr -> ruleAggr.getOptionList().stream())
                 .filter(ConfigurationRuleOptionDo::isNotDeleted).toList();
         List<String> drivingFeatureCodeList = LambdaUtil.map(optionList, ConfigurationRuleOptionDo::getDrivingFeatureCode, true);
-        List<String> constrainedFeatureCodeCodeList = LambdaUtil.map(optionList, ConfigurationRuleOptionDo::getConstrainedFeatureCode, true);
+        List<String> constrainedFeatureCodeList = LambdaUtil.map(optionList, ConfigurationRuleOptionDo::getConstrainedFeatureCode, true);
         if (drivingFeatureCodeList.size() > 1) {
             throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_BOTH_WAY_DRIVING_FEATURE_ONLY_SELECT_ONE);
         }
+        String drivingFeatureCode = drivingFeatureCodeList.size() > 0 ? drivingFeatureCodeList.get(0) : null;
         // 校验Group选择的Driving Feature和矩阵打点的Driving Feature必须一致
-        if (StringUtils.isNotBlank(ruleGroupAggr.getDrivingFeature()) && drivingFeatureCodeList.size() > 0 &&
-                !Objects.equals(ruleGroupAggr.getDrivingFeature(), drivingFeatureCodeList.get(0))) {
-            throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_DRIVING_FEATURE_NOT_THE_SAME);
+        if (StringUtils.isBlank(groupDrivingFeature)) {
+            if (StringUtils.isNotBlank(drivingFeatureCode)) {
+                throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_DRIVING_FEATURE_NOT_THE_SAME);
+            }
+        } else {
+            if (StringUtils.isNotBlank(drivingFeatureCode) && !Objects.equals(groupDrivingFeature, drivingFeatureCode)) {
+                throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_DRIVING_FEATURE_NOT_THE_SAME);
+            }
+            // 校验Constrained Feature和Constrained Feature不能重复
+            if (groupConstrainedFeatureList.contains(groupDrivingFeature)) {
+                throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_DRIVING_AND_CONSTRAINED_FEATURE_IS_REPEAT);
+            }
         }
-        featureCodeSet.addAll(drivingFeatureCodeList);
-        featureCodeSet.addAll(constrainedFeatureCodeCodeList);
+        // 校验Group选择的Constrained Feature和矩阵打点的Constrained Feature必须一致
+        if (CollectionUtils.isEmpty(groupConstrainedFeatureList)) {
+            if (CollectionUtils.isNotEmpty(constrainedFeatureCodeList)) {
+                throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_CONSTRAINED_FEATURE_NOT_THE_SAME);
+            }
+        } else {
+            if (!new HashSet<>(groupConstrainedFeatureList).containsAll(constrainedFeatureCodeList)) {
+                throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_CONSTRAINED_FEATURE_NOT_THE_SAME);
+            }
+        }
+        Set<String> featureCodeSet = Sets.newHashSet();
+        Optional.ofNullable(groupDrivingFeature).ifPresent(featureCodeSet::add);
+        featureCodeSet.addAll(groupConstrainedFeatureList);
+        Optional.ofNullable(drivingFeatureCode).ifPresent(featureCodeSet::add);
+        featureCodeSet.addAll(constrainedFeatureCodeList);
         if (CollectionUtils.isEmpty(featureCodeSet)) {
             return;
         }
         List<FeatureAggr> featureAggrList = featureRepository.queryByFeatureOptionCodeList(Lists.newArrayList(featureCodeSet));
-        checkDrivingAndConstrainedFeature2(ruleGroupAggr.getRulePurposeEnum(), ruleGroupAggr.getDrivingFeature(), ruleGroupAggr.getConstrainedFeatureList(), featureAggrList);
-        checkDrivingAndConstrainedFeature2(ruleGroupAggr.getRulePurposeEnum(), drivingFeatureCodeList.size() > 0 ? drivingFeatureCodeList.get(0) : null,
-                constrainedFeatureCodeCodeList, featureAggrList);
+        checkDrivingAndConstrainedFeature2(ruleGroupAggr.getRulePurposeEnum(), groupDrivingFeature, groupConstrainedFeatureList, featureAggrList);
+        checkDrivingAndConstrainedFeature2(ruleGroupAggr.getRulePurposeEnum(), drivingFeatureCode, constrainedFeatureCodeList, featureAggrList);
     }
 
     private void checkDrivingAndConstrainedFeature2(ConfigurationRulePurposeEnum purposeEnum, String drivingFeatureCode, List<String> constrainedFeatureCodeCodeList, List<FeatureAggr> featureAggrList) {

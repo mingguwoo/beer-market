@@ -78,6 +78,11 @@ public class BomsConfigurationRuleEntity extends BaseEntity {
      */
     private Long rulePairId;
 
+    /**
+     * 是否不可见的Rule（针对双向Rule），0-否，1-是
+     */
+    private Integer invisible;
+
     @Override
     public String toString() {
         return "BomsConfigurationRule{" +
@@ -93,6 +98,7 @@ public class BomsConfigurationRuleEntity extends BaseEntity {
                 ", effOut = " + effOut +
                 ", releaseDate = " + releaseDate +
                 ", rulePairId = " + rulePairId +
+                ", invisible = " + invisible +
                 ", createUser = " + getCreateUser() +
                 ", updateUser = " + getUpdateUser() +
                 ", createTime = " + getCreateTime() +

@@ -16,7 +16,6 @@ import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -116,13 +115,6 @@ public class ConfigurationRuleGroupAggr extends AbstractDo implements AggrRoot<L
      */
     public ConfigurationRulePurposeEnum getRulePurposeEnum() {
         return ConfigurationRulePurposeEnum.getByCode(purpose);
-    }
-
-    /**
-     * 是否指定的Purpose
-     */
-    public boolean isPurpose(ConfigurationRulePurposeEnum purposeEnum) {
-        return Objects.equals(purpose, purposeEnum.getCode());
     }
 
     public List<String> getConstrainedFeatureList() {

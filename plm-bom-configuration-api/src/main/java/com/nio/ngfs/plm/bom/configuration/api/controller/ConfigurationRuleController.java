@@ -3,10 +3,7 @@ package com.nio.ngfs.plm.bom.configuration.api.controller;
 import com.nio.bom.share.annotation.NotLogResult;
 import com.nio.bom.share.result.ResultInfo;
 import com.nio.ngfs.plm.bom.configuration.application.command.configurationrule.*;
-import com.nio.ngfs.plm.bom.configuration.application.query.configurationrule.ExportConfigurationRuleQuery;
-import com.nio.ngfs.plm.bom.configuration.application.query.configurationrule.GetPurposeOptionListQuery;
-import com.nio.ngfs.plm.bom.configuration.application.query.configurationrule.QueryConfigurationRuleQuery;
-import com.nio.ngfs.plm.bom.configuration.application.query.configurationrule.QueryConfigurationRuleViewQuery;
+import com.nio.ngfs.plm.bom.configuration.application.query.configurationrule.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.PlmConfigurationRuleClient;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.response.*;
@@ -32,6 +29,7 @@ public class ConfigurationRuleController implements PlmConfigurationRuleClient {
     private final DeleteGroupCommand deleteGroupCommand;
     private final DeleteRuleCommand deleteRuleCommand;
     private final ReleaseRuleCommand releaseRuleCommand;
+    private final GetGroupAndRuleQuery getGroupAndRuleQuery;
     private final GetPurposeOptionListQuery getPurposeOptionListQuery;
     private final QueryConfigurationRuleQuery queryConfigurationRuleQuery;
     private final QueryConfigurationRuleViewQuery queryConfigurationRuleViewQuery;
@@ -68,6 +66,12 @@ public class ConfigurationRuleController implements PlmConfigurationRuleClient {
     @NotLogResult
     public ResultInfo<ReleaseRuleRespDto> releaseRule(@Valid @RequestBody ReleaseRuleCmd cmd) {
         return ResultInfo.success(releaseRuleCommand.execute(cmd));
+    }
+
+    @Override
+    @NotLogResult
+    public ResultInfo<GetGroupAndRuleRespDto> getGroupAndRule(@Valid @RequestBody GetGroupAndRuleQry qry) {
+        return ResultInfo.success(getGroupAndRuleQuery.execute(qry));
     }
 
     @Override

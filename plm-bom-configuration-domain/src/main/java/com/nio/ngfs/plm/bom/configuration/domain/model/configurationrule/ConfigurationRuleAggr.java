@@ -90,6 +90,11 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
      */
     private Long rulePairId;
 
+    /**
+     * 是否不可见的Rule（针对双向Rule），0-否，1-是
+     */
+    private Integer invisible;
+
     private transient List<ConfigurationRuleOptionDo> optionList = Lists.newArrayList();
 
     private transient boolean bothWayPairMatch = false;
@@ -327,6 +332,7 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
                 ", effOut=" + effOut +
                 ", releaseDate=" + releaseDate +
                 ", rulePairId=" + rulePairId +
+                ", invisible=" + invisible +
                 ", createUser='" + createUser + '\'' +
                 ", updateUser='" + updateUser + '\'' +
                 ", createTime=" + createTime +

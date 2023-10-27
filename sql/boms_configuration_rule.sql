@@ -12,6 +12,7 @@ CREATE TABLE `boms_configuration_rule`
     `eff_out`      datetime        NOT NULL DEFAULT '9999-12-31 00:00:00' COMMENT 'Rule的制造失效时间',
     `release_date` datetime        NOT NULL DEFAULT '1970-01-01 00:00:00' COMMENT 'Rule的发布时间',
     `rule_pair_id` bigint          NOT NULL DEFAULT 0 COMMENT '双向Rule对的id',
+    `invisible`    tinyint(4)      NOT NULL DEFAULT 0 COMMENT '是否不可见的Rule（针对双向Rule），0-否，1-是',
     `create_user`  varchar(32)     NOT NULL DEFAULT '' COMMENT '创建人',
     `update_user`  varchar(32)     NOT NULL DEFAULT '' COMMENT '更新人',
     `create_time`  timestamp       NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',

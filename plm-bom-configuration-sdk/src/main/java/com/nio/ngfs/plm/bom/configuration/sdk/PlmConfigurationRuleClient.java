@@ -62,6 +62,15 @@ public interface PlmConfigurationRuleClient {
     ResultInfo<ReleaseRuleRespDto> releaseRule(ReleaseRuleCmd cmd);
 
     /**
+     * 获取Group和Rule详情
+     *
+     * @param qry 查询
+     * @return 响应
+     */
+    @PostMapping("/configurationRule/getGroupAndRule")
+    ResultInfo<GetGroupAndRuleRespDto> getGroupAndRule(GetGroupAndRuleQry qry);
+
+    /**
      * 查询Purpose选项列表
      */
     @PostMapping("/configurationRule/getPurposeOptionList")

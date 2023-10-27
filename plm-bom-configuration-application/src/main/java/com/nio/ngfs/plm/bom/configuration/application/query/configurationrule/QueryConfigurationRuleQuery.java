@@ -63,7 +63,7 @@ public class QueryConfigurationRuleQuery extends AbstractQuery<QueryConfiguratio
 
         //根据groupId获取这些group下的全部rule
         List<Long> groupId = groupEntityList.stream().map(entity->entity.getId()).collect(Collectors.toList());
-        List<BomsConfigurationRuleEntity> ruleEntityList = bomsConfigurationRuleDao.queryByGroupId(groupId);
+        List<BomsConfigurationRuleEntity> ruleEntityList = bomsConfigurationRuleDao.queryByGroupIdList(groupId);
 
         //遍历group，将id和Entity对应上，方便后面进行rule的筛选时选中Group。同时，根据displayName和chineseName来进行一遍搜索并记录下符合的group。
         groupEntityList.forEach(entity->{

@@ -42,10 +42,4 @@ public interface BomsConfigurationRuleDao extends IService<BomsConfigurationRule
      */
     List<BomsConfigurationRuleEntity> queryByRuleNumbers(List<String> ruleNumbers);
 
-    /**
-     * 根据groupId的List来查询Configuration Rule
-     * @param groupId
-     * @return
-     */
-    List<BomsConfigurationRuleEntity> queryByGroupId(List<Long> groupId);
 }

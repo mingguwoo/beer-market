@@ -80,4 +80,29 @@ public interface ConfigurationRuleDomainService {
      */
     void releaseBothWayRule(List<ConfigurationRuleAggr> ruleAggrList);
 
+
+    /**
+     * Eff-in值校验
+     * @param ruleAggrList
+     * @return
+     */
+    void  checkNextRevConfigurationRule(List<ConfigurationRuleAggr> ruleAggrList);
+
+    /**
+     * 更新生效 失效时间
+     * @param ruleIds
+     * @param updateInfo
+     */
+    void updateEffInOrEffOut(List<Long> ruleIds, ConfigurationRuleAggr updateInfo);
+
+
+    /**
+     * remove之前 校验
+     * @param ruleAggrList
+     */
+    void checkConfigurationRuleRemove(List<ConfigurationRuleAggr> ruleAggrList);
+
+
+
+
 }

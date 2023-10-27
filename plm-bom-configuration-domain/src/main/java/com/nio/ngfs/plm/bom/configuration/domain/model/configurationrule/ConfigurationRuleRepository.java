@@ -26,7 +26,7 @@ public interface ConfigurationRuleRepository extends Repository<ConfigurationRul
 
 
     /**
-     *
+     * 批量更新
      * @param aggrList
      */
     void batchUpdate(List<ConfigurationRuleAggr> aggrList);

@@ -6,6 +6,7 @@ import com.nio.ngfs.common.utils.BeanConvertUtils;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.domainobject.ConfigurationRuleOptionDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.ConfigurationRulePurposeEnum;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.RuleOptionDto;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.SetBreakPointCmd;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
@@ -67,34 +68,33 @@ public class ConfigurationRuleFactory {
 
     /**
      * @param ruleAggrList       根据ruleId查询的
-     * @param configurationRules 根据ruleId查询的
+     * @param anotherBothWayRuleAggrList 双向ruleId
      * @param userName
      * @return
      */
     public static List<ConfigurationRuleAggr> buildRemoveRuleAggr(List<ConfigurationRuleAggr> ruleAggrList,
-                                                                  List<ConfigurationRuleAggr> configurationRules,
+                                                                  List<ConfigurationRuleAggr> anotherBothWayRuleAggrList,
                                                                   String userName) {
-        List<ConfigurationRuleAggr> configurationRuleAggrs = Lists.newArrayList();
+
+        List<Long> ids = Lists.newArrayList();
+        ids.addAll(ruleAggrList.stream().map(ConfigurationRuleAggr::getId).distinct().toList());
+        ids.addAll(anotherBothWayRuleAggrList.stream().map(ConfigurationRuleAggr::getId).distinct().toList());
+
         Date updateTime = new Date();
-        ruleAggrList.forEach(rule -> {
+        return  ids.stream().distinct().toList().stream().map(rule -> {
             ConfigurationRuleAggr ruleAggr = new ConfigurationRuleAggr();
             ruleAggr.setId(ruleAggr.getId());
             ruleAggr.setCreateUser(userName);
             ruleAggr.setUpdateTime(updateTime);
-            configurationRuleAggrs.add(ruleAggr);
-            if (ConfigurationRulePurposeEnum.SALES_INCLUSIVE_SALES.getCode().equals(rule.getPurpose()) ||
-                    ConfigurationRulePurposeEnum.SALES_EXCLUSIVE_SALES.getCode().equals(rule.getPurpose())) {
-                List<Long> ids = configurationRules.stream().filter(x -> StringUtils.equals(rule.getRuleNumber(), x.getRuleNumber()) &&
-                        StringUtils.equals(rule.getRuleVersion(), x.getRuleVersion()) && !Objects.equals(x.getId(), rule.getId())
-                        && !Objects.equals(x.getPurpose(), rule.getPurpose())).map(ConfigurationRuleAggr::getId).distinct().toList();
-                ids.forEach(id -> {
-                    ConfigurationRuleAggr copyRuleAggr = BeanConvertUtils.convertTo(ruleAggr, ConfigurationRuleAggr::new);
-                    copyRuleAggr.setId(id);
-                    configurationRuleAggrs.add(copyRuleAggr);
-                });
-            }
-        });
-        return configurationRuleAggrs;
+            return ruleAggr;
+        }).toList();
+    }
+
+
+    public  static ConfigurationRuleAggr createUpdateInfo(SetBreakPointCmd setBreakPointCmd){
+        return ConfigurationRuleAggr.builder().effIn(setBreakPointCmd.getEffIn())
+                .effOut(setBreakPointCmd.getEffOut())
+                .createUser(setBreakPointCmd.getUserName()).build();
     }
 
 }

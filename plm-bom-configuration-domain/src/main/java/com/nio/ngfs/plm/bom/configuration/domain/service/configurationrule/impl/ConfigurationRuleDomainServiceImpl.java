@@ -5,11 +5,15 @@ import com.google.common.collect.Sets;
 import com.nio.bom.share.constants.CommonConstants;
 import com.nio.bom.share.exception.BusinessException;
 import com.nio.bom.share.utils.LambdaUtil;
+import com.nio.bom.share.utils.VersionUtils;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.domainobject.ConfigurationRuleOptionDo;
+import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.ConfigurationRuleChangeTypeEnum;
+import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.ConfigurationRulePurposeEnum;
+import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.ConfigurationRuleStatusEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.RuleOptionMatrixValueEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.service.configurationrule.ConfigurationRuleDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.AddRuleCmd;
@@ -20,6 +24,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -33,6 +38,12 @@ import java.util.stream.Collectors;
 public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDomainService {
 
     private final ConfigurationRuleRepository configurationRuleRepository;
+
+    private final List<Integer> purposeLists = Lists.newArrayList(
+            ConfigurationRulePurposeEnum.SALES_TO_ENG.getCode(),
+            ConfigurationRulePurposeEnum.SALES_TO_SALES.getCode(),
+            ConfigurationRulePurposeEnum.SALES_INCLUSIVE_SALES.getCode(),
+            ConfigurationRulePurposeEnum.SALES_EXCLUSIVE_SALES.getCode());
 
     @Override
     public ConfigurationRuleAggr getAndCheckAggr(Long id) {
@@ -177,6 +188,83 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
             }
         });
     }
+
+
+    /**
+     * Eff-in值校验
+     *
+     * @param ruleAggrList
+     * @return
+     */
+    @Override
+    public void checkNextRevConfigurationRule(List<ConfigurationRuleAggr> ruleAggrList) {
+        if (CollectionUtils.isEmpty(ruleAggrList)) {
+            return;
+        }
+        List<String> ruleNumbers = ruleAggrList.stream().map(ConfigurationRuleAggr::getRuleNumber).distinct().toList();
+
+        List<ConfigurationRuleAggr> ruleAggrs = configurationRuleRepository.queryByRuleNumbers(ruleNumbers);
+
+        ruleAggrList.forEach(x -> {
+            String nextRev = VersionUtils.findNextRev(x.getRuleNumber());
+            //当勾选Rule条目的Change Type为Add或Modify时，系统判断是否存在相邻的下一个Rev条目
+            if (ruleAggrs.stream().noneMatch(y -> StringUtils.equals(y.getRuleNumber(), x.getRuleNumber()) &&
+                    StringUtils.equals(y.getRuleVersion(), nextRev))) {
+               throw new BusinessException(ConfigErrorCode.RULE_ID_ERROR.getCode(),
+                       MessageFormat.format(ConfigErrorCode.RULE_ID_ERROR.getMessage(),x.getRuleNumber(),x.getRuleVersion()));
+            }
+        });
+    }
+
+    @Override
+    public void updateEffInOrEffOut(List<Long> ruleIds, ConfigurationRuleAggr updateInfo) {
+        Date date=new Date();
+        Date  effIn = updateInfo.getEffIn();
+        Date  effOut= updateInfo.getEffOut();
+        String userName =  updateInfo.getUpdateUser();
+
+        configurationRuleRepository.batchUpdate(ruleIds.stream().map(x->{
+            ConfigurationRuleAggr ruleAggr=new ConfigurationRuleAggr();
+            ruleAggr.setId(x);
+            if(Objects.nonNull(effIn)) {
+                ruleAggr.setEffIn(effIn);
+            }
+            if(Objects.nonNull(effOut)) {
+                ruleAggr.setEffOut(effOut);
+            }
+            ruleAggr.setUpdateTime(date);
+            ruleAggr.setUpdateUser(userName);
+            return ruleAggr;
+        }).toList());
+    }
+
+    @Override
+    public void checkConfigurationRuleRemove(List<ConfigurationRuleAggr> ruleAggrList) {
+        //校验数据是否不为remove
+        ruleAggrList.forEach(ruleInfo -> {
+            if (StringUtils.equals(ConfigurationRuleChangeTypeEnum.REMOVE.getChangeType(), ruleInfo.getChangeType())) {
+                throw new BusinessException(MessageFormat.format(ConfigErrorCode.RULE_CHANGE_TYPE_ERROR.getMessage(), ruleInfo.getRuleNumber(), ruleInfo.getRuleVersion()));
+            }
+            if (!purposeLists.contains(ruleInfo.getPurpose())) {
+                throw new BusinessException(MessageFormat.format(ConfigErrorCode.PURPOSE_ERROR.getMessage(), ruleInfo.getRuleNumber(), ruleInfo.getRuleVersion()));
+            }
+        });
+        //根据rule_number批量查询
+        List<ConfigurationRuleAggr> configurationRules =
+                configurationRuleRepository.queryByRuleNumbers(ruleAggrList.stream().map(ConfigurationRuleAggr::getRuleNumber).distinct().toList());
+        //Rule最新Rev条目 且 Status为Released（Change Type不为Remove）
+        Map<String, List<ConfigurationRuleAggr>> configurationRuleByRuleNumberMap = configurationRules.stream().collect(Collectors.groupingBy(ConfigurationRuleAggr::getRuleNumber));
+        configurationRuleByRuleNumberMap.forEach((ruleNumber, configurationRuleAggrs) -> {
+            //Rule最新Rev条目 且 Status为Released（Change Type不为Remove）
+            ConfigurationRuleAggr configurationRuleAggr =
+                    configurationRuleAggrs.stream().max(Comparator.comparing(ConfigurationRuleAggr::getRuleVersion)).orElse(new ConfigurationRuleAggr());
+            if (StringUtils.equals(configurationRuleAggr.getStatus(), ConfigurationRuleStatusEnum.RELEASED.getStatus()) &&
+                    !StringUtils.equals(configurationRuleAggr.getChangeType(), ConfigurationRuleChangeTypeEnum.REMOVE.getChangeType())) {
+                throw new BusinessException(MessageFormat.format(ConfigErrorCode.RULE_CHANGE_TYPE_ERROR.getMessage(), ruleNumber, configurationRuleAggr.getRuleVersion()));
+            }
+        });
+    }
+
 
     @Data
     private static class RuleConstrainedOptionCompare {

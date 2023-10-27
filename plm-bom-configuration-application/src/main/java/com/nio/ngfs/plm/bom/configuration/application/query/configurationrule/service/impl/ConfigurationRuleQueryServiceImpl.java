@@ -8,7 +8,6 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.Configu
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.domainobject.ConfigurationRuleOptionDo;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.RuleOptionMatrixValueEnum;
-import com.nio.ngfs.plm.bom.configuration.domain.model.oxofeatureoption.OxoFeatureOptionAggr;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsConfigurationRuleGroupDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsFeatureLibraryDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsConfigurationRuleGroupEntity;
@@ -115,7 +114,7 @@ public class ConfigurationRuleQueryServiceImpl implements ConfigurationRuleQuery
             configurationRuleOptionDos.addAll(rule.getOptionList());
         });
 
-        List<String> constrainFeatureCodes = configurationRuleOptionDos.stream().map(ConfigurationRuleOptionDo::getConstrainedFeatureCode).distinct().toList();
+        List<String> constrainFeatureCodes = configurationRuleOptionDos.stream().map(ConfigurationRuleOptionDo::getConstrainedFeatureCode).distinct().sorted().toList();
 
         constrainFeatureCodes.forEach(constrainFeatureCode -> {
             RuleViewConstrainedRespDto ruleViewConstrainedRespDto = new RuleViewConstrainedRespDto();
@@ -125,7 +124,7 @@ public class ConfigurationRuleQueryServiceImpl implements ConfigurationRuleQuery
             List<RuleViewConstrainedRespDto.RuleViewConstrainedOption> constrainedOptionList = Lists.newArrayList();
 
             configurationRuleOptionDos.stream().filter(x -> StringUtils.equals(x.getConstrainedFeatureCode(), constrainFeatureCode))
-                    .map(ConfigurationRuleOptionDo::getConstrainedOptionCode).distinct().toList().forEach(constrainOptionCode -> {
+                    .map(ConfigurationRuleOptionDo::getConstrainedOptionCode).distinct().sorted().toList().forEach(constrainOptionCode -> {
                         RuleViewConstrainedRespDto.RuleViewConstrainedOption constrainOption = new RuleViewConstrainedRespDto.RuleViewConstrainedOption();
                         constrainOption.setConstrainedOptionCode(constrainOptionCode);
                         constrainOption.setConstrainedOptionName(optionNameMaps.get(constrainOptionCode));
@@ -153,9 +152,7 @@ public class ConfigurationRuleQueryServiceImpl implements ConfigurationRuleQuery
 
             ruleViewConstrainedRespDto.setConstrainedOptionList(constrainedOptionList);
             ruleViewConstrained.add(ruleViewConstrainedRespDto);
-
         });
-
         return ruleViewConstrained;
     }
 

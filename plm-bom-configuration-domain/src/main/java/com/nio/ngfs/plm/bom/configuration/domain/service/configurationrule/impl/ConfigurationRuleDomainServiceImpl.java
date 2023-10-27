@@ -168,12 +168,14 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
 
     @Override
     public void releaseBothWayRule(List<ConfigurationRuleAggr> ruleAggrList) {
-//        if (anotherAggr.canRelease()) {
-//            // 添加另一个双向Rule
-//            ruleAggrList.add(anotherAggr);
-//        } else {
-//            throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_BOTH_WAY_RULE_ALREADY_RELEASED);
-//        }
+        List<ConfigurationRuleAggr> anotherBothWayRuleAggrList = batchFindAnotherBothWayRule(ruleAggrList);
+        anotherBothWayRuleAggrList.forEach(anotherBothWayRule -> {
+            if (anotherBothWayRule.canRelease()) {
+                ruleAggrList.add(anotherBothWayRule);
+            } else {
+                throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_BOTH_WAY_RULE_ALREADY_RELEASED);
+            }
+        });
     }
 
     @Data

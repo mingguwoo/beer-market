@@ -11,6 +11,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.Configu
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.ConfigurationRuleChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.ConfigurationRulePurposeEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.ConfigurationRuleStatusEnum;
+import com.nio.ngfs.plm.bom.configuration.domain.service.configurationrule.ConfigurationRuleDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.RemoveRuleCmd;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -32,12 +33,8 @@ public class RemoveRuleCommand extends AbstractLockCommand<RemoveRuleCmd, Boolea
 
     private final ConfigurationRuleRepository configurationRuleRepository;
 
+    private final ConfigurationRuleDomainService configurationRuleDomainService;
 
-    private final List<Integer> purposeLists = Lists.newArrayList(
-            ConfigurationRulePurposeEnum.SALES_TO_ENG.getCode(),
-            ConfigurationRulePurposeEnum.SALES_TO_SALES.getCode(),
-            ConfigurationRulePurposeEnum.SALES_INCLUSIVE_SALES.getCode(),
-            ConfigurationRulePurposeEnum.SALES_EXCLUSIVE_SALES.getCode());
 
     @Override
     protected String getLockKey(RemoveRuleCmd removeRuleCmd) {
@@ -54,34 +51,17 @@ public class RemoveRuleCommand extends AbstractLockCommand<RemoveRuleCmd, Boolea
         if (CollectionUtils.isEmpty(ruleAggrList)) {
             throw new BusinessException(ConfigErrorCode.RULE_ID_ERROR);
         }
-        //校验数据是否不为remove
-        ruleAggrList.forEach(ruleInfo -> {
-            if (StringUtils.equals(ConfigurationRuleChangeTypeEnum.REMOVE.getChangeType(), ruleInfo.getChangeType())) {
-                throw new BusinessException(MessageFormat.format(ConfigErrorCode.RULE_CHANGE_TYPE_ERROR.getMessage(), ruleInfo.getRuleNumber(), ruleInfo.getRuleVersion()));
-            }
-            if (!purposeLists.contains(ruleInfo.getPurpose())) {
-                throw new BusinessException(MessageFormat.format(ConfigErrorCode.PURPOSE_ERROR.getMessage(), ruleInfo.getRuleNumber(), ruleInfo.getRuleVersion()));
-            }
-        });
-        //根据rule_number批量查询
-        List<ConfigurationRuleAggr> configurationRules =
-                configurationRuleRepository.queryByRuleNumbers(ruleAggrList.stream().map(ConfigurationRuleAggr::getRuleNumber).distinct().toList());
-        //Rule最新Rev条目 且 Status为Released（Change Type不为Remove）
-        Map<String, List<ConfigurationRuleAggr>> configurationRuleByRuleNumberMap = configurationRules.stream().collect(Collectors.groupingBy(ConfigurationRuleAggr::getRuleNumber));
-        configurationRuleByRuleNumberMap.forEach((ruleNumber, configurationRuleAggrs) -> {
-            ConfigurationRuleAggr configurationRuleAggr =
-                    configurationRuleAggrs.stream().sorted(Comparator.comparing(ConfigurationRuleAggr::getRuleVersion).reversed()).findFirst().get();
-            if (StringUtils.equals(configurationRuleAggr.getStatus(), ConfigurationRuleStatusEnum.RELEASED.getStatus()) &&
-                    !StringUtils.equals(configurationRuleAggr.getChangeType(), ConfigurationRuleChangeTypeEnum.REMOVE.getChangeType())) {
-                throw new BusinessException(MessageFormat.format(ConfigErrorCode.RULE_CHANGE_TYPE_ERROR.getMessage(), ruleNumber, configurationRuleAggr.getRuleVersion()));
-            }
-        });
+        // remove校验
+        configurationRuleDomainService.checkConfigurationRuleRemove(ruleAggrList);
         /**
          * 由于是成对的Rule，因此在Remove其中一条版本的Rule时，
          * 系统需自动Remove另一条相应版本的Rule
          * 确保同时Remove成对Rule的相同版本条目
          */
-        configurationRuleRepository.batchUpdate(ConfigurationRuleFactory.buildRemoveRuleAggr(ruleAggrList,configurationRules,userName));
+        List<ConfigurationRuleAggr> anotherBothWayRuleAggrList = configurationRuleDomainService.batchFindAnotherBothWayRule(ruleAggrList);
+
+        //更新
+        configurationRuleRepository.batchUpdate(ConfigurationRuleFactory.buildRemoveRuleAggr(ruleAggrList,anotherBothWayRuleAggrList,userName));
         return true;
     }
 }

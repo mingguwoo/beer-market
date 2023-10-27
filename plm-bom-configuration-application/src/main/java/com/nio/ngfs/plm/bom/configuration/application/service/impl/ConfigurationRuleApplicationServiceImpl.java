@@ -116,11 +116,9 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
             // 处理双向Rule编辑
             if (updateRule.isBothWayRule()) {
                 ConfigurationRuleAggr anotherUpdateRule = configurationRuleDomainService.findAnotherBothWayRule(updateRule, context.getGroupRuleList());
-                boolean ret = anotherUpdateRule.updateOption(updateRule.getOptionList().stream().filter(ConfigurationRuleOptionDo::isNotDeleted)
+                anotherUpdateRule.updateBothWayRuleOption(updateRule.getOptionList().stream().filter(ConfigurationRuleOptionDo::isNotDeleted)
+                        .filter(i -> !i.isMatrixValueUnavailable())
                         .map(ConfigurationRuleOptionDo::copyBothWayRuleOption).toList());
-                if (!ret) {
-                    throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_BOTH_WAY_RULE_UPDATE_ERROR);
-                }
                 context.getUpdateRuleList().add(anotherUpdateRule);
             }
         }
@@ -161,6 +159,9 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
      */
     private void checkAndProcessAddRule(EditConfigurationRuleContext context) {
         List<ConfigurationRuleAggr> addRuleList = context.getAddRuleList();
+        if (CollectionUtils.isEmpty(addRuleList)) {
+            return;
+        }
         // 处理双向Rule
         addRuleList = configurationRuleDomainService.handleBothWayRule(addRuleList);
         // 分配Rule Number

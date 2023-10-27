@@ -19,6 +19,8 @@ public class QueryPcRespDto implements Dto {
 
     private String name;
 
+    private Integer completeInitSelect;
+
     private BasedOnBaseVehicleDto basedOnBaseVehicle;
 
     private String basedOnPcId;

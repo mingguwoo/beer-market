@@ -146,6 +146,10 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
                 }
                 // 打点变更
                 option.update(newOption.getMatrixValue(), newOption.getUpdateUser());
+                if (option.isMatrixValueUnavailable()) {
+                    // 打点变更为Unavailable，删除打点
+                    option.delete();
+                }
                 changed.set(true);
             } else {
                 // 删除打点
@@ -162,6 +166,25 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
             changed.set(true);
         });
         return changed.get();
+    }
+
+    /**
+     * 更新双向Rule的打点
+     */
+    public void updateBothWayRuleOption(List<ConfigurationRuleOptionDo> ruleOptionList) {
+        if (CollectionUtils.isEmpty(ruleOptionList)) {
+            throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_RULE_OPTION_LIST_IS_EMPTY);
+        }
+        if (ruleOptionList.size() > 1) {
+            throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_BOTH_WAY_RULE_SELECT_ONE_CONSTRAINED);
+        }
+        // 删除老的打点
+        optionList.forEach(ConfigurationRuleOptionDo::delete);
+        // 新增新的打点
+        ConfigurationRuleOptionDo newRuleOption = ruleOptionList.get(0);
+        newRuleOption.setRule(this);
+        newRuleOption.add();
+        optionList.add(newRuleOption);
     }
 
     /**

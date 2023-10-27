@@ -88,7 +88,10 @@ public class ConfigurationRuleGroupAggr extends AbstractDo implements AggrRoot<L
         setChineseName(cmd.getChineseName());
         setDisplayName(cmd.getDisplayName());
         setDescription(cmd.getDescription());
-        setDrivingFeature(cmd.getDrivingFeature());
+        // Driving Feature有值，则保持不变
+        if (StringUtils.isBlank(this.getDrivingFeature())) {
+            setDrivingFeature(cmd.getDrivingFeature());
+        }
         setConstrainedFeature(Joiner.on(",").skipNulls().join(Optional.ofNullable(cmd.getConstrainedFeatureList()).orElse(Lists.newArrayList())));
         setUpdateUser(cmd.getUpdateUser());
     }

@@ -94,6 +94,41 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
     }
 
     @Override
+    public List<ConfigurationRuleAggr> batchFindAnotherBothWayRule(List<ConfigurationRuleAggr> ruleAggrList) {
+        // 过滤双向Rule
+        List<ConfigurationRuleAggr> bothWayRuleAggrList = ruleAggrList.stream().filter(ConfigurationRuleAggr::isBothWayRule).toList();
+        if (CollectionUtils.isEmpty(bothWayRuleAggrList)) {
+            return Lists.newArrayList();
+        }
+        // 已经匹配的双向Rule打标记
+        for (ConfigurationRuleAggr aggr : bothWayRuleAggrList) {
+            if (aggr.isBothWayPairMatch()) {
+                continue;
+            }
+            for (ConfigurationRuleAggr anotherAggr : bothWayRuleAggrList) {
+                if (aggr == anotherAggr || anotherAggr.isBothWayPairMatch()) {
+                    continue;
+                }
+                if (aggr.isBothWayRule(anotherAggr)) {
+                    aggr.setBothWayPairMatch(true);
+                    anotherAggr.setBothWayPairMatch(true);
+                }
+            }
+        }
+        List<ConfigurationRuleAggr> anotherBothWayRuleAggrList = Lists.newArrayList();
+        List<ConfigurationRuleAggr> lackBothWayRuleAggrList = bothWayRuleAggrList.stream().filter(i -> !i.isBothWayPairMatch()).toList();
+        List<ConfigurationRuleAggr> groupRuleAggrList = configurationRuleRepository.queryByGroupIdList(LambdaUtil.map(lackBothWayRuleAggrList, ConfigurationRuleAggr::getGroupId));
+        Map<Long, List<ConfigurationRuleAggr>> groupRuleAggrListGroup = LambdaUtil.groupBy(groupRuleAggrList, ConfigurationRuleAggr::getGroupId);
+        lackBothWayRuleAggrList.forEach(aggr -> {
+            List<ConfigurationRuleAggr> allGroupRuleAggrList = groupRuleAggrListGroup.getOrDefault(aggr.getGroupId(), Lists.newArrayList());
+            ConfigurationRuleAggr anotherAggr = findAnotherBothWayRule(aggr, allGroupRuleAggrList);
+            // 添加另一个双向Rule
+            anotherBothWayRuleAggrList.add(anotherAggr);
+        });
+        return anotherBothWayRuleAggrList;
+    }
+
+    @Override
     public String checkRuleDrivingConstrainedRepeat(List<ConfigurationRuleAggr> ruleAggrList) {
         List<RuleConstrainedOptionCompare> optionCompareList = ruleAggrList.stream().map(ruleAggr -> {
             Set<String> constrainedOptionCodeSet = ruleAggr.getOptionList().stream()
@@ -132,46 +167,13 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
     }
 
     @Override
-    public List<ConfigurationRuleAggr> deleteRule(List<ConfigurationRuleAggr> ruleAggrList) {
-        ruleAggrList.forEach(ConfigurationRuleAggr::delete);
-        return null;
-    }
-
-    @Override
     public void releaseBothWayRule(List<ConfigurationRuleAggr> ruleAggrList) {
-        // 过滤双向Rule
-        List<ConfigurationRuleAggr> bothWayRuleAggrList = ruleAggrList.stream().filter(ConfigurationRuleAggr::isBothWayRule).toList();
-        if (CollectionUtils.isEmpty(bothWayRuleAggrList)) {
-            return;
-        }
-        // 已经匹配的双向Rule打标记
-        for (ConfigurationRuleAggr aggr : bothWayRuleAggrList) {
-            if (aggr.isBothWayPairMatch()) {
-                continue;
-            }
-            for (ConfigurationRuleAggr anotherAggr : bothWayRuleAggrList) {
-                if (aggr == anotherAggr || anotherAggr.isBothWayPairMatch()) {
-                    continue;
-                }
-                if (aggr.isBothWayRule(anotherAggr)) {
-                    aggr.setBothWayPairMatch(true);
-                    anotherAggr.setBothWayPairMatch(true);
-                }
-            }
-        }
-        List<ConfigurationRuleAggr> lackBothWayRuleAggrList = bothWayRuleAggrList.stream().filter(i -> !i.isBothWayPairMatch()).toList();
-        List<ConfigurationRuleAggr> groupRuleAggrList = configurationRuleRepository.queryByGroupIdList(LambdaUtil.map(lackBothWayRuleAggrList, ConfigurationRuleAggr::getGroupId));
-        Map<Long, List<ConfigurationRuleAggr>> groupRuleAggrListGroup = LambdaUtil.groupBy(groupRuleAggrList, ConfigurationRuleAggr::getGroupId);
-        lackBothWayRuleAggrList.forEach(aggr -> {
-            List<ConfigurationRuleAggr> allGroupRuleAggrList = groupRuleAggrListGroup.getOrDefault(aggr.getGroupId(), Lists.newArrayList());
-            ConfigurationRuleAggr anotherAggr = findAnotherBothWayRule(aggr, allGroupRuleAggrList);
-            if (anotherAggr.canRelease()) {
-                // 添加另一个双向Rule
-                ruleAggrList.add(anotherAggr);
-            } else {
-                throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_BOTH_WAY_RULE_ALREADY_RELEASED);
-            }
-        });
+//        if (anotherAggr.canRelease()) {
+//            // 添加另一个双向Rule
+//            ruleAggrList.add(anotherAggr);
+//        } else {
+//            throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_BOTH_WAY_RULE_ALREADY_RELEASED);
+//        }
     }
 
     @Data

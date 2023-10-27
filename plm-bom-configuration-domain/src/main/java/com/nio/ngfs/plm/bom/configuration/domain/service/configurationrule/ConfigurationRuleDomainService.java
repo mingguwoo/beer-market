@@ -60,20 +60,20 @@ public interface ConfigurationRuleDomainService {
     ConfigurationRuleAggr findAnotherBothWayRule(ConfigurationRuleAggr ruleAggr, List<ConfigurationRuleAggr> groupRuleAggrList);
 
     /**
+     * 批量查找双向Rule
+     *
+     * @param ruleAggrList 聚合根列表
+     * @return 另一个双向Rule的聚合根列表
+     */
+    List<ConfigurationRuleAggr> batchFindAnotherBothWayRule(List<ConfigurationRuleAggr> ruleAggrList);
+
+    /**
      * 校验Rule Driving下的Constrained打点不重复
      *
      * @param ruleAggrList 聚合根列表
      * @return 错误提示信息
      */
     String checkRuleDrivingConstrainedRepeat(List<ConfigurationRuleAggr> ruleAggrList);
-
-    /**
-     * 删除Rule
-     *
-     * @param ruleAggrList 聚合根列表
-     * @return 聚合根列表
-     */
-    List<ConfigurationRuleAggr> deleteRule(List<ConfigurationRuleAggr> ruleAggrList);
 
     /**
      * 处理双向Rule Release

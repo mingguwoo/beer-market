@@ -26,7 +26,7 @@ public class DeleteRuleCommand extends AbstractLockCommand<DeleteRuleCmd, Delete
 
     @Override
     protected String getLockKey(DeleteRuleCmd cmd) {
-        return RedisKeyConstant.CONFIGURATION_RULE_RULE_DELETE_LOCK + cmd.getRuleId();
+        return RedisKeyConstant.CONFIGURATION_RULE_GROUP_LOCK + cmd.getGroupId();
     }
 
     @Override

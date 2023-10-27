@@ -134,6 +134,9 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
         if (StringUtils.isNotBlank(message)) {
             context.getErrorMessageList().add(0, message);
         }
+        if (CollectionUtils.isNotEmpty(context.getErrorMessageList())) {
+            return;
+        }
         // 校验并处理新增的Rule
         checkAndProcessAddRule(context);
     }

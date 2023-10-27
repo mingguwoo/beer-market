@@ -13,6 +13,9 @@ import javax.validation.constraints.NotNull;
 @Data
 public class DeleteRuleCmd implements Cmd {
 
+    @NotNull(message = "Group Id is null")
+    private Long groupId;
+
     @NotNull(message = "Rule Id is null")
     private Long ruleId;
 

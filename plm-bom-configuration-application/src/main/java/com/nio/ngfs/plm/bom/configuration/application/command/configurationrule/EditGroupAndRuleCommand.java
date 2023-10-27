@@ -15,6 +15,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.service.configurationrule.Confi
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.EditGroupAndRuleCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.response.EditGroupAndRuleRespDto;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,6 +58,9 @@ public class EditGroupAndRuleCommand extends AbstractLockCommand<EditGroupAndRul
         configurationRuleApplicationService.preHandleEditRule(context);
         // 校验并处理Rule编辑
         configurationRuleApplicationService.checkAndProcessEditRule(context);
+        if (CollectionUtils.isNotEmpty(context.getErrorMessageList())) {
+            return new EditGroupAndRuleRespDto(context.getErrorMessageList());
+        }
         // 保存到数据库
         ((EditGroupAndRuleCommand) AopContext.currentProxy()).saveRuleAndGroup(ruleGroupAggr, context);
         return new EditGroupAndRuleRespDto();

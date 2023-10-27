@@ -3,6 +3,7 @@ package com.nio.ngfs.plm.bom.configuration.domain.service.configurationrule;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleAggr;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.AddRuleCmd;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -83,10 +84,12 @@ public interface ConfigurationRuleDomainService {
 
     /**
      * Eff-in值校验
-     * @param ruleAggrList
+     * @param ruleIds
+     * @param effIn
+     * @param effOut
      * @return
      */
-    void  checkNextRevConfigurationRule(List<ConfigurationRuleAggr> ruleAggrList);
+    void  checkNextRevConfigurationRule(List<Long> ruleIds, Date effIn, Date effOut);
 
     /**
      * 更新生效 失效时间
@@ -103,6 +106,9 @@ public interface ConfigurationRuleDomainService {
     void checkConfigurationRuleRemove(List<ConfigurationRuleAggr> ruleAggrList);
 
 
-
-
+    /**
+     * ying
+     * @param configurationRuleAggrs
+     */
+    void checkHardRule(List<ConfigurationRuleAggr> configurationRuleAggrs);
 }

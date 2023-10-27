@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
@@ -36,7 +37,9 @@ public class ConfigurationRuleController implements PlmConfigurationRuleClient {
     private final ReviseRuleCommand reviseRuleCommand;
     private final RemoveRuleCommand removeRuleCommand;
     private final SetBreakPointCommand setBreakPointCommand;
+    private final BreakPointCheckCommand breakPointCheckCommand;
     private final ExportConfigurationRuleQuery exportConfigurationRuleQuery;
+    private final ExportConfigurationRuleViewQuery exportConfigurationRuleViewQuery;
 
     @Override
     @NotLogResult
@@ -101,7 +104,7 @@ public class ConfigurationRuleController implements PlmConfigurationRuleClient {
     @NotLogResult
     @PostMapping("/configurationRule/exportConfigurationRule")
     public void exportConfigurationRule(@Valid @RequestBody ExportConfigurationRuleQry qry, HttpServletResponse response) {
-            exportConfigurationRuleQuery.execute(qry,response);
+        exportConfigurationRuleQuery.execute(qry, response);
     }
 
     @Override
@@ -116,4 +119,16 @@ public class ConfigurationRuleController implements PlmConfigurationRuleClient {
         return ResultInfo.success(setBreakPointCommand.execute(setBreakPointCmd));
     }
 
+    @Override
+    @NotLogResult
+    public ResultInfo<Boolean> breakPointCheck() {
+        return ResultInfo.success(breakPointCheckCommand.execute(new SetBreakPointCmd()));
+    }
+
+
+    @PostMapping("/exportView")
+    @NotLogResult
+    public void exportView(QueryViewQry qry, HttpServletResponse response, HttpServletRequest request) {
+        exportConfigurationRuleViewQuery.execute(qry, response, request);
+    }
 }

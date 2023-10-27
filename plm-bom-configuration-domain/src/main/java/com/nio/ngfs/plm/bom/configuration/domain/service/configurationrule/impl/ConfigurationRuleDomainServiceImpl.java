@@ -193,18 +193,37 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
     /**
      * Eff-in值校验
      *
-     * @param ruleAggrList
+     * @param ruleIds
+     * @param effIn
+     * @param effOut
      * @return
      */
     @Override
-    public void checkNextRevConfigurationRule(List<ConfigurationRuleAggr> ruleAggrList) {
+    public void checkNextRevConfigurationRule(List<Long> ruleIds, Date effIn, Date effOut) {
+
+        List<ConfigurationRuleAggr> ruleAggrList =
+                configurationRuleRepository.queryByRuleIdList(ruleIds, false);
         if (CollectionUtils.isEmpty(ruleAggrList)) {
+            throw new BusinessException(ConfigErrorCode.RULE_ID_ERROR);
+        }
+        ruleAggrList.forEach(ruleAggr -> {
+            //所选日期是否早于/等于Rule条目的Eff-out值
+            if (Objects.nonNull(effIn) && effIn.compareTo(ruleAggr.getEffOut()) > 0) {
+                throw new BusinessException(MessageFormat.format(ConfigErrorCode.EFF_OUT_TIME_ERROR.getMessage(), ruleAggr.getRuleNumber(), ruleAggr.getRuleVersion()));
+            }
+            if (Objects.nonNull(effOut) && ruleAggr.getEffIn().compareTo(effOut) > 0) {
+                throw new BusinessException(MessageFormat.format(ConfigErrorCode.EFF_IN_TIME_ERROR.getMessage(), ruleAggr.getRuleNumber(), ruleAggr.getRuleVersion()));
+            }
+        });
+        if (Objects.isNull(effOut)) {
             return;
         }
-        List<String> ruleNumbers = ruleAggrList.stream().map(ConfigurationRuleAggr::getRuleNumber).distinct().toList();
-
+        List<String> ruleNumbers = ruleAggrList.stream().filter(x -> StringUtils.equalsAny(x.getChangeType()
+                , ConfigurationRuleChangeTypeEnum.ADD.getChangeType(), ConfigurationRuleChangeTypeEnum.MODIFY.getChangeType())).map(ConfigurationRuleAggr::getRuleNumber).distinct().toList();
+        if (CollectionUtils.isEmpty(ruleNumbers)) {
+            return;
+        }
         List<ConfigurationRuleAggr> ruleAggrs = configurationRuleRepository.queryByRuleNumbers(ruleNumbers);
-
         ruleAggrList.forEach(x -> {
             String nextRev = VersionUtils.findNextRev(x.getRuleNumber());
             //当勾选Rule条目的Change Type为Add或Modify时，系统判断是否存在相邻的下一个Rev条目
@@ -263,6 +282,25 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
                 throw new BusinessException(MessageFormat.format(ConfigErrorCode.RULE_CHANGE_TYPE_ERROR.getMessage(), ruleNumber, configurationRuleAggr.getRuleVersion()));
             }
         });
+    }
+
+    @Override
+    public void checkHardRule(List<ConfigurationRuleAggr> configurationRuleAggrs) {
+
+        //基于相同的Rule ID，高版本的Eff-in必须等于相邻低版本的Eff-out
+        Map<String, List<ConfigurationRuleAggr>> ruleNumberMaps =
+                configurationRuleAggrs.stream().collect(Collectors.groupingBy(ConfigurationRuleAggr::getRuleNumber));
+
+        ruleNumberMaps.forEach((ruleNumber, ruleAggrs) -> {
+
+            List<ConfigurationRuleAggr> sortRuleAggrs =
+                    ruleAggrs.stream().sorted(Comparator.comparing(ConfigurationRuleAggr::getRuleVersion)).toList();
+
+            for (int i = 0; i < sortRuleAggrs.size() - 1; i++) {
+
+            }
+        });
+
     }
 
 

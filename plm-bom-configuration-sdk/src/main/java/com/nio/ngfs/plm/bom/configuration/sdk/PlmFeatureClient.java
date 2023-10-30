@@ -97,6 +97,15 @@ public interface PlmFeatureClient {
     ResultInfo<ChangeOptionStatusRespDto> changeOptionStatus(ChangeOptionStatusCmd cmd);
 
     /**
+     * 全量同步到3DE
+     *
+     * @param cmd 命令
+     * @return 响应
+     */
+    @PostMapping("/feature/fullSyncToEnovia")
+    ResultInfo<FullSyncToEnoviaRespDto> fullSyncToEnovia(FullSyncToEnoviaCmd cmd);
+
+    /**
      * 查询Logs记录
      *
      * @param qry 查询

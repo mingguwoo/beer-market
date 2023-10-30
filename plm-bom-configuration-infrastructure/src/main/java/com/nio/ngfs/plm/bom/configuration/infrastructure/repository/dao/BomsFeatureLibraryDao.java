@@ -62,14 +62,10 @@ public interface BomsFeatureLibraryDao extends IService<BomsFeatureLibraryEntity
      */
     List<BomsFeatureLibraryEntity> queryByFeatureCode(String featureCode);
 
-
     /**
      * 根据FeatureCodes查询
-     * @param featureCodes
-     * @return
      */
     List<BomsFeatureLibraryEntity> queryByFeatureCodes(List<String> featureCodes);
-
 
     /**
      * 根据Display Name、Catalog、Type查询
@@ -88,14 +84,7 @@ public interface BomsFeatureLibraryDao extends IService<BomsFeatureLibraryEntity
      */
     List<BomsFeatureLibraryEntity> getGroupList();
 
-
-    /**
-     *
-     * @param featureCodes
-     * @return
-     */
     List<BomsFeatureLibraryEntity> findFeatureLibraryNotFeatureCodes(List<String> featureCodes);
-
 
     /**
      * 根据Feature/Option Code列表批量查询
@@ -104,8 +93,6 @@ public interface BomsFeatureLibraryDao extends IService<BomsFeatureLibraryEntity
      * @return BomsFeatureLibraryEntity列表
      */
     List<BomsFeatureLibraryEntity> queryByFeatureOptionCodeList(List<String> featureOptionCodeList);
-
-
 
     /**
      * 根据Feature/Option Code列表批量查询，Active状态
@@ -125,8 +112,6 @@ public interface BomsFeatureLibraryDao extends IService<BomsFeatureLibraryEntity
 
     /**
      * 根据类型查找
-     * @param catalog
-     * @return
      */
     List<BomsFeatureLibraryEntity> queryFeatureByCatalog(String catalog);
 

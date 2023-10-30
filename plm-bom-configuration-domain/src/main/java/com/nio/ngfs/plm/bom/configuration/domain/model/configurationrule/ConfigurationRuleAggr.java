@@ -127,7 +127,7 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
             }
             setRulePairId(IdWorker.getId());
         }
-        optionList.forEach(ConfigurationRuleOptionDo::add);
+        optionList.forEach(option -> option.add(this));
     }
 
     /**
@@ -160,8 +160,7 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
         // 新增打点
         Set<String> oldConstrainedOptionCodeSet = optionList.stream().map(ConfigurationRuleOptionDo::getConstrainedOptionCode).collect(Collectors.toSet());
         ruleOptionList.stream().filter(i -> !oldConstrainedOptionCodeSet.contains(i.getConstrainedOptionCode())).forEach(option -> {
-            option.setRule(this);
-            option.add();
+            option.add(this);
             optionList.add(option);
             changed.set(true);
         });
@@ -182,8 +181,7 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
         optionList.forEach(ConfigurationRuleOptionDo::delete);
         // 新增新的打点
         ConfigurationRuleOptionDo newRuleOption = ruleOptionList.get(0);
-        newRuleOption.setRule(this);
-        newRuleOption.add();
+        newRuleOption.add(this);
         optionList.add(newRuleOption);
     }
 

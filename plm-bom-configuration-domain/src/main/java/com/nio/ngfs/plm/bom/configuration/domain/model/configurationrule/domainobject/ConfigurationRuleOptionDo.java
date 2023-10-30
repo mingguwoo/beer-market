@@ -11,7 +11,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.springframework.beans.BeanUtils;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -68,7 +67,13 @@ public class ConfigurationRuleOptionDo extends AbstractDo implements Entity<Long
     /**
      * 新增打点
      */
-    public void add() {
+    public void add(ConfigurationRuleAggr ruleAggr) {
+        if (Objects.isNull(rule)) {
+            setRule(ruleAggr);
+        }
+        if (Objects.isNull(ruleId)) {
+            setRuleId(rule.getId());
+        }
         checkMatrixValue();
     }
 

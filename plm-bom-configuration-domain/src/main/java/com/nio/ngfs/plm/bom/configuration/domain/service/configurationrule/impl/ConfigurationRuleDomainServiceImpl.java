@@ -192,11 +192,6 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
 
     /**
      * Eff-in值校验
-     *
-     * @param ruleIds
-     * @param effIn
-     * @param effOut
-     * @return
      */
     @Override
     public void checkNextRevConfigurationRule(List<Long> ruleIds, Date effIn, Date effOut) {

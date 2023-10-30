@@ -105,6 +105,11 @@ public class FeatureRepositoryImpl implements FeatureRepository {
     }
 
     @Override
+    public List<FeatureAggr> getGroupList() {
+        return featureConverter.convertEntityListToDoList(bomsFeatureLibraryDao.getGroupList());
+    }
+
+    @Override
     public List<FeatureAggr> queryByDisplayNameCatalogAndType(String displayName, String catalog, String type) {
         return featureConverter.convertEntityListToDoList(bomsFeatureLibraryDao.queryByDisplayNameCatalogAndType(displayName, catalog, type));
     }
@@ -124,12 +129,8 @@ public class FeatureRepositoryImpl implements FeatureRepository {
         return featureConverter.convertEntityToDo(bomsFeatureLibraryDao.getByFeatureOrOptionCode(featureOptionCode));
     }
 
-
     /**
      * 过滤 featureCodes
-     *
-     * @param featureCodes
-     * @return
      */
     @Override
     public List<FeatureAggr> findFeatureLibraryNotFeatureCodes(List<String> featureCodes) {
@@ -140,6 +141,5 @@ public class FeatureRepositoryImpl implements FeatureRepository {
     public List<FeatureAggr> queryFeatureByCatalog(String catalog) {
         return featureConverter.convertEntityListToDoList(bomsFeatureLibraryDao.queryFeatureByCatalog(catalog));
     }
-
 
 }

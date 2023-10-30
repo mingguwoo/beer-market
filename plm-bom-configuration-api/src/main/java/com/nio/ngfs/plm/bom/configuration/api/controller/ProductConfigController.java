@@ -40,6 +40,7 @@ public class ProductConfigController implements PlmProductConfigClient {
     private final GetPcOptionListQuery getPcOptionListQuery;
     private final EditProductConfigCommand editProductConfigCommand;
     private final SyncProductConfigModelOptionCommand syncProductConfigModelOptionCommand;
+    private final SyncPcToEnoviaCommand syncPcToEnoviaCommand;
     private final ExportProductConfigQuery exportProductConfigQuery;
     private final ImportPcTask importPcTask;
     private final ImportProductConfigOptionTask importProductConfigOptionTask;
@@ -108,6 +109,12 @@ public class ProductConfigController implements PlmProductConfigClient {
     @NotLogResult
     public ResultInfo<SyncProductConfigModelOptionRespDto> syncProductConfigModelOption(@Valid @RequestBody SyncProductConfigModelOptionCmd cmd) {
         return ResultInfo.success(syncProductConfigModelOptionCommand.execute(cmd));
+    }
+
+    @Override
+    @NotLogResult
+    public ResultInfo<SyncPcToEnoviaRespDto> syncPcToEnovia(@Valid @RequestBody SyncPcToEnoviaCmd cmd) {
+        return ResultInfo.success(syncPcToEnoviaCommand.execute(cmd));
     }
 
     @NotLogResult

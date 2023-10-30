@@ -33,18 +33,26 @@ public class FullSyncToEnoviaCommand extends AbstractFeatureCommand<FullSyncToEn
     }
 
     @Override
+    protected Long getLockTime(FullSyncToEnoviaCmd cmd) {
+        return 60L;
+    }
+
+    @Override
     protected FullSyncToEnoviaRespDto executeWithLock(FullSyncToEnoviaCmd cmd) {
         List<FeatureAggr> groupList = featureRepository.getGroupList();
         groupList.forEach(groupAggr -> {
             List<FeatureAggr> featureAggrList = featureRepository.queryByParentFeatureCodeAndType(groupAggr.getFeatureCode(), FeatureTypeEnum.FEATURE.getType());
+            // 先同步Feature
             featureAggrList.forEach(featureAggr -> {
-                // 先同步Feature
                 eventPublisher.publish(new FeatureChangeEvent(featureAggr));
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    // ignore
-                }
+            });
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                // ignore
+            }
+            // 再同步Option
+            featureAggrList.forEach(featureAggr -> {
                 List<FeatureAggr> optionAggrList = featureRepository.queryByParentFeatureCodeAndType(featureAggr.getFeatureCode(), FeatureTypeEnum.OPTION.getType());
                 optionAggrList.forEach(optionAggr -> {
                     optionAggr.setParent(featureAggr);

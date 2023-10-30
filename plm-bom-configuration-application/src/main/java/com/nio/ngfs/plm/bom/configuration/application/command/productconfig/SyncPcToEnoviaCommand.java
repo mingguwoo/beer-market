@@ -10,6 +10,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.Produ
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.ProductConfigOptionRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.productconfigoption.event.ProductConfigOptionChangeEvent;
 import com.nio.ngfs.plm.bom.configuration.domain.service.productconfig.ProductConfigDomainService;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.feature.request.FullSyncToEnoviaCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.request.SyncPcToEnoviaCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.SyncPcToEnoviaRespDto;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,11 @@ public class SyncPcToEnoviaCommand extends AbstractLockCommand<SyncPcToEnoviaCmd
     @Override
     protected String getLockKey(SyncPcToEnoviaCmd cmd) {
         return RedisKeyConstant.PRODUCT_CONFIG_SYNC_TO_ENOVIA_LOCK_KEY_PREFIX + cmd.getPcId();
+    }
+
+    @Override
+    protected Long getLockTime(SyncPcToEnoviaCmd cmd) {
+        return 30L;
     }
 
     @Override

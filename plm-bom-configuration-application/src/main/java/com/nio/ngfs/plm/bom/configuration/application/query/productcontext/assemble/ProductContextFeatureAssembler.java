@@ -14,6 +14,7 @@ public class ProductContextFeatureAssembler {
         respDto.setFeatureCode(featureLibraryEntity.getFeatureCode());
         respDto.setChineseName(featureLibraryEntity.getChineseName());
         respDto.setDisplayName(featureLibraryEntity.getDisplayName());
+        respDto.setCatalog(featureLibraryEntity.getCatalog());
         return respDto;
     }
 

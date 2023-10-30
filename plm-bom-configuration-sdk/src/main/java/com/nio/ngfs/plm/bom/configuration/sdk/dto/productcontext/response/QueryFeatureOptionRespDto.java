@@ -18,6 +18,8 @@ public class QueryFeatureOptionRespDto implements Dto {
 
     private String displayName;
 
+    private String catalog;
+
     private List<OptionItemDto> optionList;
 
     @Data

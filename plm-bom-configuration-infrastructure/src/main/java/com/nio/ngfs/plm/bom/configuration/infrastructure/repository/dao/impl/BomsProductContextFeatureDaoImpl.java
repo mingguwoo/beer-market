@@ -28,4 +28,9 @@ public class BomsProductContextFeatureDaoImpl extends AbstractDao<BomsProductCon
         lambdaQueryWrapper.eq(BomsProductContextFeatureEntity::getModelCode,modelCode);
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }
+
+    @Override
+    public List<BomsProductContextFeatureEntity> queryAll() {
+        return getBaseMapper().selectList(new LambdaQueryWrapper<>());
+    }
 }

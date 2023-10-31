@@ -39,4 +39,10 @@ public interface BomsProductContextDao extends IService<BomsProductContextEntity
      */
     List<BomsProductContextEntity> queryAllIncludeDelete();
 
+    /**
+     * 获取下发用全量数据
+     * @return
+     */
+    List<BomsProductContextEntity> queryAll();
+
 }

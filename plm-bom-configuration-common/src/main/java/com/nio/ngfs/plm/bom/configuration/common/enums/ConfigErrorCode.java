@@ -137,6 +137,12 @@ public enum ConfigErrorCode implements ErrorCode {
     CONFIGURATION_RULE_BOTH_WAY_RULE_UPDATE_ERROR(85025, "Both Way Rule Update Error!"),
 
     /**
+     * Product Context
+     */
+    PRODUCT_CONTEXT_SYNC_FULL_LOCK_ERROR(87000, "Sync In Progress... Please Do Not Click The Button Again"),
+
+
+    /**
      * Other
      */
     BOM_MIDDLE_PLATFORM_MODEL_NOT_EXIST(89000, "Model Not Exist In Bom Middle Platform!"),

@@ -15,4 +15,10 @@ public interface BomsProductContextFeatureDao extends IService<BomsProductContex
      * 根据modelCode获取Product Context Feature数据
      */
     List<BomsProductContextFeatureEntity> queryByModelCode(String modelCode);
+
+    /**
+     * 获取下发用全量数据
+     * @return
+     */
+    List<BomsProductContextFeatureEntity> queryAll();
 }

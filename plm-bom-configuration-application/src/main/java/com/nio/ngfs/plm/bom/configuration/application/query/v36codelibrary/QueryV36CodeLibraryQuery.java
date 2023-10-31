@@ -116,7 +116,7 @@ public class QueryV36CodeLibraryQuery {
     }
     private boolean matchSearch(String content, String search){
         if (Objects.nonNull(search)){
-            return content != null && content.contains(search);
+            return content != null && content.toUpperCase().contains(search.toUpperCase());
         }
         return true;
     }

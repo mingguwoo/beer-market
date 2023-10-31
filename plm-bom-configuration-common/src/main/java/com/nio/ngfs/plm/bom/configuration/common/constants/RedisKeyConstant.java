@@ -47,4 +47,8 @@ public interface RedisKeyConstant {
     String CONFIGURATION_RULE_GROUP_LOCK = CONFIGURATION_PREFIX + "configurationRule:group:lock:";
     String CONFIGURATION_RULE_RULE_RELEASE_LOCK = CONFIGURATION_PREFIX + "configurationRule:rule:release:lock";
 
+    /**
+     * Product Context
+     */
+    String PRODUCT_CONTEXT_FULL_SYNC_TO_ENOVIA = CONFIGURATION_PREFIX + "productContext:full:sync:lock:";
 }

@@ -44,9 +44,16 @@ public class ProductContextRepositoryImpl implements ProductContextRepository {
     }
 
     @Override
+    public List<ProductContextAggr> queryAll() {
+        return productContextConverter.convertEntityListToDoList(bomsProductContextDao.queryAll());
+    }
+
+    @Override
     public void save(ProductContextAggr productContextAggr) {
         DaoSupport.saveOrUpdate(bomsProductContextDao,productContextConverter.convertDoToEntity(productContextAggr));
     }
+
+
 
     @Override
     public ProductContextAggr find(Long aLong) {

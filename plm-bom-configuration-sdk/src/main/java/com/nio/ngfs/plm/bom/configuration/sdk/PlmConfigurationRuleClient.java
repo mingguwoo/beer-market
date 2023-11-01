@@ -94,7 +94,7 @@ public interface PlmConfigurationRuleClient {
      * @param removeRuleCmd
      * @return
      */
-    @PostMapping("/remove")
+    @PostMapping("/configurationRule/remove")
     ResultInfo<Boolean> remove(RemoveRuleCmd removeRuleCmd);
 
 
@@ -103,7 +103,7 @@ public interface PlmConfigurationRuleClient {
      * @param qry
      * @return
      */
-    @GetMapping("/view")
+    @GetMapping("/configurationRule/view")
     ResultInfo<RuleViewInfoRespDto> view(QueryViewQry qry);
 
     /**
@@ -111,10 +111,10 @@ public interface PlmConfigurationRuleClient {
      * @param setBreakPointCmd
      * @return
      */
-    @PostMapping("/setBreakPoint")
+    @PostMapping("/configurationRule/setBreakPoint")
     ResultInfo<Boolean> setBreakPoint(SetBreakPointCmd setBreakPointCmd);
 
 
-    @PostMapping("/breakPointCheck")
-    ResultInfo<Boolean> breakPointCheck();
+    @PostMapping("/configurationRule/breakPointCheck")
+    ResultInfo<RuleViewCheckRespDto> breakPointCheck();
 }

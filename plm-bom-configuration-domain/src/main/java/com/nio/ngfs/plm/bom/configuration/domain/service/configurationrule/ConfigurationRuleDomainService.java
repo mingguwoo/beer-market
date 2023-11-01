@@ -107,8 +107,16 @@ public interface ConfigurationRuleDomainService {
 
 
     /**
-     * ying
+     * 硬校验 rule
      * @param configurationRuleAggrs
      */
-    void checkHardRule(List<ConfigurationRuleAggr> configurationRuleAggrs);
+    List<Long> checkHardRule(List<ConfigurationRuleAggr> configurationRuleAggrs);
+
+
+    /**
+     * 软校验 rule
+     * @param configurationRuleAggrs
+     * @return
+     */
+    List<Long> checkSoftRule(List<ConfigurationRuleAggr> configurationRuleAggrs);
 }

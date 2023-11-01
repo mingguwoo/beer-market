@@ -121,7 +121,7 @@ public class ConfigurationRuleController implements PlmConfigurationRuleClient {
 
     @Override
     @NotLogResult
-    public ResultInfo<Boolean> breakPointCheck() {
+    public ResultInfo<RuleViewCheckRespDto> breakPointCheck() {
         return ResultInfo.success(breakPointCheckCommand.execute(new SetBreakPointCmd()));
     }
 

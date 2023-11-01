@@ -2,17 +2,11 @@ package com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule;
 
 import com.google.common.collect.Lists;
 import com.nio.bom.share.utils.LambdaUtil;
-import com.nio.ngfs.common.utils.BeanConvertUtils;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.domainobject.ConfigurationRuleOptionDo;
-import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.ConfigurationRulePurposeEnum;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.RuleOptionDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.SetBreakPointCmd;
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
-
 /**
  * @author xiaozhou.tu
  * @date 2023/10/17

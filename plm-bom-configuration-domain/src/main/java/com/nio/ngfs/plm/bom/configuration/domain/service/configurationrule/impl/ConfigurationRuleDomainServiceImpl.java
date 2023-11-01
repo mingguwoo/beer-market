@@ -4,9 +4,11 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.nio.bom.share.constants.CommonConstants;
 import com.nio.bom.share.exception.BusinessException;
+import com.nio.bom.share.utils.DateUtils;
 import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.bom.share.utils.VersionUtils;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
+import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleRepository;
@@ -18,6 +20,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.R
 import com.nio.ngfs.plm.bom.configuration.domain.service.configurationrule.ConfigurationRuleDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.AddRuleCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.RuleOptionDto;
+import io.netty.handler.codec.serialization.ObjectEncoder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -280,22 +283,121 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
     }
 
     @Override
-    public void checkHardRule(List<ConfigurationRuleAggr> configurationRuleAggrs) {
-
+    public List<Long> checkHardRule(List<ConfigurationRuleAggr> configurationRuleAggrs) {
         //基于相同的Rule ID，高版本的Eff-in必须等于相邻低版本的Eff-out
         Map<String, List<ConfigurationRuleAggr>> ruleNumberMaps =
                 configurationRuleAggrs.stream().collect(Collectors.groupingBy(ConfigurationRuleAggr::getRuleNumber));
-
+        List<Long> redRuleIds = Lists.newArrayList();
         ruleNumberMaps.forEach((ruleNumber, ruleAggrs) -> {
-
-            List<ConfigurationRuleAggr> sortRuleAggrs =
-                    ruleAggrs.stream().sorted(Comparator.comparing(ConfigurationRuleAggr::getRuleVersion)).toList();
-
-            for (int i = 0; i < sortRuleAggrs.size() - 1; i++) {
-
+            if (ruleAggrs.size() > 1) {
+                List<ConfigurationRuleAggr> sortRuleAggrs =
+                        ruleAggrs.stream().sorted(Comparator.comparing(ConfigurationRuleAggr::getRuleVersion)).toList();
+                for (int i = 0; i < sortRuleAggrs.size() - 1; i++) {
+                    //高版本的Eff-in必须等于相邻低版本的Eff-out
+                    if (sortRuleAggrs.get(i).getEffOut().compareTo(sortRuleAggrs.get(i + 1).getEffIn()) != 0) {
+                        redRuleIds.add(sortRuleAggrs.get(i).getId());
+                        redRuleIds.add(sortRuleAggrs.get(i + 1).getId());
+                    }
+                }
             }
         });
+        /**
+         * 2.针对Sales <—> Sales、Sales X Sales的Purpose
+         * 由于系统会生成成对的Rule，因此基于相同版本的成对Rule，需满足如下校验：
+         * 两条Rule的Eff-in值必须一致，两条Rule的Eff-out值必须一致
+         */
+        configurationRuleAggrs.stream().filter(x ->
+                Objects.equals(x.getPurpose(), ConfigurationRulePurposeEnum.SALES_INCLUSIVE_SALES.getCode()) || Objects.equals(x.getPurpose(), ConfigurationRulePurposeEnum.SALES_EXCLUSIVE_SALES.getCode())).toList().forEach(
+                configurationRuleAggr -> {
+                    ConfigurationRuleAggr compareConfigurationRuleAggr = findAnotherBothWayRule(configurationRuleAggr, configurationRuleAggrs.stream().filter(y -> Objects.equals(y.getGroupId(), configurationRuleAggr.getGroupId())).toList());
+                    if (Objects.nonNull(compareConfigurationRuleAggr) && (configurationRuleAggr.getEffIn().compareTo(compareConfigurationRuleAggr.getEffIn()) != 0 || configurationRuleAggr.getEffOut().compareTo(compareConfigurationRuleAggr.getEffOut()) != 0)) {
+                        redRuleIds.add(compareConfigurationRuleAggr.getId());
+                        redRuleIds.add(configurationRuleAggr.getId());
+                    }
+                });
 
+        return redRuleIds.stream().distinct().toList();
+
+    }
+
+    /**
+     * 软校验
+     *
+     * @param configurationRuleAggrs
+     * @return
+     */
+    @Override
+    public List<Long> checkSoftRule(List<ConfigurationRuleAggr> configurationRuleAggrs) {
+        List<Long> sortList = Lists.newArrayList();
+        //当Change Type为Remove时，Eff-out时间不能为9999/12/31（即未设置Eff-out时间，则提示）
+        List<Long> ids = configurationRuleAggrs.stream().filter(x -> StringUtils.equals(x.getChangeType()
+                , ConfigurationRuleChangeTypeEnum.REMOVE.getChangeType()) && (Objects.isNull(x.getEffOut()) ||
+                StringUtils.equals("9999-12-31", DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD, x.getEffOut())))).map(ConfigurationRuleAggr::getId).toList();
+        if (CollectionUtils.isNotEmpty(ids)) {
+            sortList.addAll(ids);
+        }
+
+
+        Map<String, List<ConfigurationRuleAggr>> configurationRuleMaps =
+                configurationRuleAggrs.stream().filter(x -> purposeLists.contains(x.getPurpose()) && CollectionUtils.isNotEmpty(x.getOptionList())).collect(Collectors.groupingBy(x -> x.getPurpose() + "#" + x.getRuleType()));
+
+        configurationRuleMaps.forEach((configurationRule, ruleAggrs) -> {
+            ruleAggrs.forEach(ruleAggr -> {
+                ruleAggr.setDrivingOptionCode(ruleAggr.getOptionList().stream().map(ConfigurationRuleOptionDo::getDrivingOptionCode).distinct().toList().get(0));
+            });
+            Map<String, List<ConfigurationRuleAggr>> drivingOptionCodes =
+                    ruleAggrs.stream().collect(Collectors.groupingBy(ConfigurationRuleAggr::getDrivingOptionCode));
+            drivingOptionCodes.forEach((drivingCode, rules) -> {
+                List<ConfigurationRuleAggr> configurationRules = Lists.newArrayList();
+
+                Map<String, List<ConfigurationRuleAggr>>
+                        ruleAggrMaps = rules.stream().filter(x -> StringUtils.equalsAny(x.getChangeType()
+                                , ConfigurationRuleChangeTypeEnum.ADD.getChangeType(), ConfigurationRuleChangeTypeEnum.REMOVE.getChangeType())).
+                        sorted(Comparator.comparing(ConfigurationRuleAggr::getCreateTime)).
+                        collect(Collectors.groupingBy(ConfigurationRuleAggr::getRuleNumber, LinkedHashMap::new, Collectors.toList()));
+
+                ruleAggrMaps.forEach((k, v) -> {
+                    ConfigurationRuleAggr addRule = queryConfigurationRuleAggr(ConfigurationRuleChangeTypeEnum.ADD.getChangeType(), v);
+                    if (Objects.isNull(addRule)) {
+                        return;
+                    }
+                    ConfigurationRuleAggr removeRule = queryConfigurationRuleAggr(ConfigurationRuleChangeTypeEnum.REMOVE.getChangeType(), v);
+                    configurationRules.add(addRule);
+                    configurationRules.add(removeRule);
+                });
+
+                List<ConfigurationRuleAggr> finalConfigurationRules =
+                        configurationRules.stream().distinct().sorted(Comparator.comparing(ConfigurationRuleAggr::getCreateTime)).toList();
+
+                ConfigurationRuleAggr configurationRuleAggr = null;
+                ConfigurationRuleAggr nextConfigurationRuleAggr= null;
+                for (int i = 1; i < finalConfigurationRules.size() - 2; i++) {
+                    if(Objects.isNull(configurationRuleAggr)) {
+                        configurationRuleAggr = finalConfigurationRules.get(i);
+                    }
+                    if(Objects.isNull(nextConfigurationRuleAggr)) {
+                        nextConfigurationRuleAggr= finalConfigurationRules.get(i+1);
+                    }
+
+                    if(nextConfigurationRuleAggr.getEffIn().compareTo(configurationRuleAggr.getEffOut())>0){
+                        sortList.add(nextConfigurationRuleAggr.getId());
+                        sortList.add(configurationRuleAggr.getId());
+                    }
+                    configurationRuleAggr= nextConfigurationRuleAggr;
+                    nextConfigurationRuleAggr=finalConfigurationRules.get(i+2);
+                }
+
+            });
+        });
+
+
+        return sortList.stream().distinct().toList();
+    }
+
+
+    public ConfigurationRuleAggr queryConfigurationRuleAggr(String changeType, List<ConfigurationRuleAggr> configurationRuleAggrs) {
+        return configurationRuleAggrs.stream().filter(x -> StringUtils.equals(x.getChangeType(), changeType))
+                .max(Comparator.comparing(ConfigurationRuleAggr::getId)).orElse(null);
     }
 
 

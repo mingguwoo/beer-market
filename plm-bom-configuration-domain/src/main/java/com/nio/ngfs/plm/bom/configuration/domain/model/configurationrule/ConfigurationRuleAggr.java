@@ -100,6 +100,8 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
 
     private transient boolean bothWayPairMatch = false;
 
+    private String drivingOptionCode;
+
     @Override
     public Long getUniqId() {
         return id;

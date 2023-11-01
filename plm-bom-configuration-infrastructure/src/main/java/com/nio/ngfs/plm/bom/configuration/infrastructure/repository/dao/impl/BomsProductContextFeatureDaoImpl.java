@@ -1,11 +1,13 @@
 package com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.google.common.collect.Lists;
 import com.nio.ngfs.common.model.page.WherePageRequest;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.BomsProductContextFeatureDao;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.BomsProductContextFeatureEntity;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.mapper.BomsProductContextFeatureMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,6 +28,17 @@ public class BomsProductContextFeatureDaoImpl extends AbstractDao<BomsProductCon
     public List<BomsProductContextFeatureEntity> queryByModelCode(String modelCode) {
         LambdaQueryWrapper<BomsProductContextFeatureEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(BomsProductContextFeatureEntity::getModelCode,modelCode);
+        return getBaseMapper().selectList(lambdaQueryWrapper);
+    }
+
+    @Override
+    public List<BomsProductContextFeatureEntity> queryByModelCodeAndFeatureCode(String modelCode, List<String> featureCodeList) {
+        if (CollectionUtils.isEmpty(featureCodeList)) {
+            return Lists.newArrayList();
+        }
+        LambdaQueryWrapper<BomsProductContextFeatureEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(BomsProductContextFeatureEntity::getModelCode, modelCode);
+        lambdaQueryWrapper.in(BomsProductContextFeatureEntity::getFeatureCode, featureCodeList);
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 

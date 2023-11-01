@@ -15,6 +15,7 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.*;
 import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.entity.*;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.GetGroupAndRuleQry;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.response.GetGroupAndRuleRespDto;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.response.GetGroupAndRuleRespDto.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -76,8 +77,8 @@ public class GetGroupAndRuleQuery extends AbstractQuery<GetGroupAndRuleQry, GetG
         }).toList();
     }
 
-    private List<GetGroupAndRuleRespDto.RuleDrivingFeature> buildDrivingFeatureOption(String model, List<RuleGroupDto> ruleGroupDtoList,
-                                                                                      BomsConfigurationRuleGroupEntity ruleGroupEntity) {
+    private List<RuleDrivingFeature> buildDrivingFeatureOption(String model, List<RuleGroupDto> ruleGroupDtoList,
+                                                               BomsConfigurationRuleGroupEntity ruleGroupEntity) {
         // 选取最后一个版本的Rule列表
         List<BomsConfigurationRuleEntity> latestRuleList = ruleGroupDtoList.stream().map(i -> i.getRuleList().get(i.getRuleList().size() - 1)).toList();
         List<String> drivingFeatureCodeList = latestRuleList.stream().flatMap(i -> i.getRuleOptionList().stream()).map(BomsConfigurationRuleOptionEntity::getDrivingFeatureCode).distinct().toList();
@@ -98,10 +99,10 @@ public class GetGroupAndRuleQuery extends AbstractQuery<GetGroupAndRuleQry, GetG
                 .filter(i -> CollectionUtils.isNotEmpty(i.getRuleOptionList())).map(i -> i.getRuleOptionList().get(0).getDrivingOptionCode()).collect(Collectors.toSet());
         return featureEntityList.stream().map(featureEntity -> {
             // 构建Driving Feature
-            GetGroupAndRuleRespDto.RuleDrivingFeature ruleDrivingFeature = GetGroupAndRuleAssembler.assembleDrivingFeature(featureEntity);
+            RuleDrivingFeature ruleDrivingFeature = GetGroupAndRuleAssembler.assembleDrivingFeature(featureEntity);
             // 构建Driving Option
             ruleDrivingFeature.setOptionList(featureEntity.getChildren().stream().sorted(Comparator.comparing(BomsFeatureLibraryEntity::getFeatureCode)).map(optionEntity -> {
-                GetGroupAndRuleRespDto.RuleDrivingOption ruleDrivingOption = GetGroupAndRuleAssembler.assembleDrivingOption(optionEntity);
+                RuleDrivingOption ruleDrivingOption = GetGroupAndRuleAssembler.assembleDrivingOption(optionEntity);
                 ruleDrivingOption.setReleased(currentReleasedDrivingOptionCodeSet.contains(ruleDrivingOption.getOptionCode()));
                 return ruleDrivingOption;
             }).toList());
@@ -109,7 +110,7 @@ public class GetGroupAndRuleQuery extends AbstractQuery<GetGroupAndRuleQry, GetG
         }).filter(i -> CollectionUtils.isNotEmpty(i.getOptionList())).toList();
     }
 
-    private List<GetGroupAndRuleRespDto.RuleConstrainedFeature> buildConstrainedFeatureOption(String model, List<RuleGroupDto> ruleGroupDtoList, GetGroupAndRuleRespDto respDto) {
+    private List<RuleConstrainedFeature> buildConstrainedFeatureOption(String model, List<RuleGroupDto> ruleGroupDtoList, GetGroupAndRuleRespDto respDto) {
         // 计算已发布的Constrained Option行
         Set<String> releasedConstrainedOptionCodeSet = ruleGroupDtoList.stream().flatMap(i -> i.getRuleList().stream())
                 .filter(i -> Objects.equals(i.getStatus(), ConfigurationRuleStatusEnum.RELEASED.getStatus()))
@@ -127,14 +128,14 @@ public class GetGroupAndRuleQuery extends AbstractQuery<GetGroupAndRuleQry, GetG
                 .flatMap(i -> i.getRuleOptionList().stream()).map(BomsConfigurationRuleOptionEntity::getConstrainedFeatureCode).distinct().toList();
         // 查询Feature/Option信息
         List<BomsFeatureLibraryEntity> featureEntityList = queryFeatureOptionByProductContext(model, constrainedFeatureCodeList);
-        List<GetGroupAndRuleRespDto.RuleDrivingOption> drivingOptionList = Lists.newArrayList();
+        List<RuleDrivingOption> drivingOptionList = Lists.newArrayList();
         if (CollectionUtils.isNotEmpty(respDto.getRuleDrivingFeatureList())) {
             drivingOptionList.addAll(respDto.getRuleDrivingFeatureList().get(0).getOptionList());
         }
         return featureEntityList.stream().sorted(Comparator.comparing(BomsFeatureLibraryEntity::getFeatureCode)).map(featureEntity -> {
-            GetGroupAndRuleRespDto.RuleConstrainedFeature ruleConstrainedFeature = GetGroupAndRuleAssembler.assembleConstrainedFeature(featureEntity);
+            RuleConstrainedFeature ruleConstrainedFeature = GetGroupAndRuleAssembler.assembleConstrainedFeature(featureEntity);
             ruleConstrainedFeature.setOptionList(featureEntity.getChildren().stream().sorted(Comparator.comparing(BomsFeatureLibraryEntity::getFeatureCode)).map(option -> {
-                GetGroupAndRuleRespDto.RuleConstrainedOption ruleConstrainedOption = GetGroupAndRuleAssembler.assembleConstrainedOption(option);
+                RuleConstrainedOption ruleConstrainedOption = GetGroupAndRuleAssembler.assembleConstrainedOption(option);
                 ruleConstrainedOption.setCanDelete(!releasedConstrainedOptionCodeSet.contains(ruleConstrainedOption.getOptionCode()));
                 ruleConstrainedOption.setConfigList(buildRuleRowColumnConfig(drivingOptionList, ruleConstrainedOptionGroup.get(ruleConstrainedOption.getOptionCode())));
                 return ruleConstrainedOption;
@@ -143,11 +144,11 @@ public class GetGroupAndRuleQuery extends AbstractQuery<GetGroupAndRuleQry, GetG
         }).filter(i -> CollectionUtils.isNotEmpty(i.getOptionList())).toList();
     }
 
-    private List<GetGroupAndRuleRespDto.RuleRowColumnConfig> buildRuleRowColumnConfig(List<GetGroupAndRuleRespDto.RuleDrivingOption> drivingOptionList,
-                                                                                      List<BomsConfigurationRuleOptionEntity> ruleOptionList) {
+    private List<RuleRowColumnConfig> buildRuleRowColumnConfig(List<RuleDrivingOption> drivingOptionList,
+                                                               List<BomsConfigurationRuleOptionEntity> ruleOptionList) {
         Map<String, BomsConfigurationRuleOptionEntity> ruleOptionMap = LambdaUtil.toKeyMap(ruleOptionList, BomsConfigurationRuleOptionEntity::getDrivingOptionCode);
         return drivingOptionList.stream().filter(i -> !i.isReleased()).map(drivingOption -> {
-            GetGroupAndRuleRespDto.RuleRowColumnConfig ruleRowColumnConfig = new GetGroupAndRuleRespDto.RuleRowColumnConfig();
+            RuleRowColumnConfig ruleRowColumnConfig = new RuleRowColumnConfig();
             ruleRowColumnConfig.setUniqueId(drivingOption.getUniqueId());
             ruleRowColumnConfig.setDrivingOptionCode(drivingOption.getOptionCode());
             ruleRowColumnConfig.setDrivingFeatureCode(drivingOption.getFeatureCode());

@@ -92,9 +92,9 @@ public class GetGroupAndRuleRespDto implements Dto {
         private String chineseName;
 
         /**
-         * 是否隐藏
+         * 是否已发布
          */
-        private boolean hide;
+        private boolean released;
 
     }
 

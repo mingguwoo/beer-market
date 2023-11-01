@@ -23,4 +23,10 @@ public interface ProductContextFeatureRepository extends Repository<ProductConte
      * @return
      */
     List<ProductContextFeatureAggr> queryByModelCode(String modelCode);
+
+    /**
+     * 获取下发用全量数据
+     * @return
+     */
+    List<ProductContextFeatureAggr> queryAll();
 }

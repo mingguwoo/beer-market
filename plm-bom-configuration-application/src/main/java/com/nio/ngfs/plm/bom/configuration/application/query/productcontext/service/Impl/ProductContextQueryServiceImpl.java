@@ -96,7 +96,7 @@ public class ProductContextQueryServiceImpl implements ProductContextQueryServic
     }
 
     private boolean matchSearch(String content, String search){
-        return content != null && content.contains(search);
+        return content != null && content.toUpperCase().contains(search.toUpperCase());
     }
 
     /**

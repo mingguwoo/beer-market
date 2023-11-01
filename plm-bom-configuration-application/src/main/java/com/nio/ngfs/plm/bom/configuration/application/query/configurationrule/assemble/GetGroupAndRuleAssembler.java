@@ -36,6 +36,7 @@ public class GetGroupAndRuleAssembler {
         ruleDrivingOption.setUniqueId(entity.getId());
         ruleDrivingOption.setOptionCode(entity.getFeatureCode());
         ruleDrivingOption.setChineseName(entity.getChineseName());
+        ruleDrivingOption.setFeatureCode(entity.getParentFeatureCode());
         return ruleDrivingOption;
     }
 

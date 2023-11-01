@@ -67,6 +67,8 @@ public class GetGroupAndRuleRespDto implements Dto {
 
         private String drivingOptionCode;
 
+        private String drivingFeatureCode;
+
         private Integer matrixValue;
 
     }
@@ -90,6 +92,8 @@ public class GetGroupAndRuleRespDto implements Dto {
         private String optionCode;
 
         private String chineseName;
+
+        private String featureCode;
 
         /**
          * 是否已发布

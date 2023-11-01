@@ -150,6 +150,7 @@ public class GetGroupAndRuleQuery extends AbstractQuery<GetGroupAndRuleQry, GetG
             GetGroupAndRuleRespDto.RuleRowColumnConfig ruleRowColumnConfig = new GetGroupAndRuleRespDto.RuleRowColumnConfig();
             ruleRowColumnConfig.setUniqueId(drivingOption.getUniqueId());
             ruleRowColumnConfig.setDrivingOptionCode(drivingOption.getOptionCode());
+            ruleRowColumnConfig.setDrivingFeatureCode(drivingOption.getFeatureCode());
             ruleRowColumnConfig.setMatrixValue(Optional.ofNullable(ruleOptionMap.get(drivingOption.getOptionCode()))
                     .map(BomsConfigurationRuleOptionEntity::getMatrixValue).orElse(RuleOptionMatrixValueEnum.UNAVAILABLE.getCode()));
             return ruleRowColumnConfig;

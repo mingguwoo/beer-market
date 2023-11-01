@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -82,6 +83,8 @@ public class BomsConfigurationRuleEntity extends BaseEntity {
      * 是否不可见的Rule（针对双向Rule），0-否，1-是
      */
     private Integer invisible;
+
+    private transient List<BomsConfigurationRuleOptionEntity> ruleOptionList;
 
     @Override
     public String toString() {

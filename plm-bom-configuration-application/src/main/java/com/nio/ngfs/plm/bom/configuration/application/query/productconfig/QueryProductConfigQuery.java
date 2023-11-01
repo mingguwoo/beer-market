@@ -15,6 +15,7 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.request.QueryPro
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.productconfig.response.QueryProductConfigRespDto;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -42,6 +43,9 @@ public class QueryProductConfigQuery extends AbstractQuery<QueryProductConfigQry
         if (qry.isEdit()) {
             // 编辑模式下，不支持Show Diff
             qry.setShowDiff(false);
+        }
+        if (StringUtils.isNotBlank(qry.getSearch())) {
+            qry.setSearch(qry.getSearch().trim().toLowerCase());
         }
     }
 

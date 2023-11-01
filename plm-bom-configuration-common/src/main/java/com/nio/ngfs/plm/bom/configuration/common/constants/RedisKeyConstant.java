@@ -32,7 +32,7 @@ public interface RedisKeyConstant {
     String PRODUCT_CONFIG_EDIT_PC_LOCK_KEY_PREFIX = CONFIGURATION_PREFIX + "productConfig:pc:edit:lock:";
     String PRODUCT_CONFIG_DELETE_PC_LOCK_KEY_PREFIX = CONFIGURATION_PREFIX + "productConfig:pc:delete:lock:";
     String PRODUCT_CONFIG_EDIT_PRODUCT_CONFIG_LOCK_KEY_PREFIX = CONFIGURATION_PREFIX + "productConfig:productConfig:edit:lock:";
-    String PRODUCT_CONFIG_SYNC_TO_ENOVIA_LOCK_KEY_PREFIX = CONFIGURATION_PREFIX + "syncPcToEnovia:lock:";
+    String PRODUCT_CONFIG_SYNC_TO_ENOVIA_LOCK_KEY = CONFIGURATION_PREFIX + "syncPcToEnovia:lock";
 
     /**
      * V36 Code

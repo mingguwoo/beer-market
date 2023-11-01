@@ -51,6 +51,9 @@ public class GetGroupAndRuleRespDto implements Dto {
 
         private String chineseName;
 
+        /**
+         * 是否可删除
+         */
         private boolean canDelete;
 
         private List<RuleRowColumnConfig> configList;
@@ -60,7 +63,7 @@ public class GetGroupAndRuleRespDto implements Dto {
     @Data
     public static class RuleRowColumnConfig {
 
-        private Integer uniqueId;
+        private Long uniqueId;
 
         private String drivingOptionCode;
 
@@ -82,11 +85,16 @@ public class GetGroupAndRuleRespDto implements Dto {
     @Data
     public static class RuleDrivingOption {
 
-        private Integer uniqueId;
+        private Long uniqueId;
 
         private String optionCode;
 
         private String chineseName;
+
+        /**
+         * 是否隐藏
+         */
+        private boolean hide;
 
     }
 

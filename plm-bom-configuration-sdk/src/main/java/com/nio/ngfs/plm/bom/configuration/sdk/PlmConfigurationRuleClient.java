@@ -85,6 +85,11 @@ public interface PlmConfigurationRuleClient {
     @PostMapping("/configurationRule/queryConfigurationRule")
     ResultInfo<QueryConfigurationRuleRespDto> queryConfigurationRule(QueryConfigurationRuleQry qry);
 
+    /**
+     * rule升版
+     * @param cmd
+     * @return
+     */
     @PostMapping("/configurationRule/reviseRule")
     ResultInfo<ReviseRuleRespDto> reviseRule(ReviseRuleCmd cmd);
 

@@ -21,9 +21,19 @@ import java.util.List;
 @FeignClient(name = "plm-bom-configuration")
 public interface PlmProductContextClient {
 
+    /**
+     * 查询Product Context
+     * @param qry
+     * @return
+     */
     @PostMapping("/productContext/getProductContext")
     ResultInfo<GetProductContextRespDto> getProductContext(GetProductContextQry qry);
 
+    /**
+     * 查询product context可以选择的model和group
+     * @param qry
+     * @return
+     */
     @PostMapping("/productContext/queryProductContextOptions")
     ResultInfo<ProductContextOptionsRespDto> queryProductContextOptions(QueryProductContextOptionsQry qry);
 

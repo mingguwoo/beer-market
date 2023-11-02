@@ -80,6 +80,11 @@ public class V36CodeLibraryController implements PlmV36CodeLibraryClient {
         return ResultInfo.success(editV36OptionCommand.execute(cmd));
     }
 
+    /**
+     * 导出excel
+     * @param qry
+     * @param response
+     */
     @NotLogResult
     @PostMapping("/v36code/exportV36CodeLibrary")
     public void exportV36CodeLibrary(@Valid @RequestBody ExportV36CodeLibraryQry qry, HttpServletResponse response) {

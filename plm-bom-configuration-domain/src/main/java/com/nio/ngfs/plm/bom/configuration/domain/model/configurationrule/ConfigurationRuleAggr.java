@@ -119,7 +119,7 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
         setStatus(ConfigurationRuleStatusEnum.IN_WORK.getStatus());
         setInvisible(YesOrNoEnum.NO.getCode());
         // 校验option打点不为空
-        if (CollectionUtils.isEmpty(optionList)) {
+        if (CollectionUtils.isEmpty(optionList) || optionList.stream().allMatch(ConfigurationRuleOptionDo::isMatrixValueUnavailable)) {
             throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_RULE_OPTION_LIST_IS_EMPTY);
         }
         if (isBothWayRule()) {
@@ -127,6 +127,7 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
             if (optionList.size() > 1) {
                 throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_BOTH_WAY_RULE_SELECT_ONE_CONSTRAINED);
             }
+            // 分配rulePairId
             setRulePairId(IdWorker.getId());
         }
         optionList.forEach(option -> option.add(this));
@@ -239,6 +240,7 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
     public boolean release() {
         if (isStatus(ConfigurationRuleStatusEnum.IN_WORK)) {
             setStatus(ConfigurationRuleStatusEnum.RELEASED.getStatus());
+            setReleaseDate(new Date());
             return true;
         }
         return false;

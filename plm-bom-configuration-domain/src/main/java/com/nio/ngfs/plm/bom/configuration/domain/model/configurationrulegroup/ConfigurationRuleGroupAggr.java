@@ -127,4 +127,8 @@ public class ConfigurationRuleGroupAggr extends AbstractDo implements AggrRoot<L
         return Splitter.on(",").trimResults().omitEmptyStrings().splitToList(constrainedFeature);
     }
 
+    public String getModel() {
+        return definedBy.split(" ")[0];
+    }
+
 }

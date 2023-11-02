@@ -147,7 +147,7 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
         List<RuleConstrainedOptionCompare> optionCompareList = ruleAggrList.stream().filter(ConfigurationRuleAggr::isVisible).map(ruleAggr -> {
             Set<String> constrainedOptionCodeSet = ruleAggr.getOptionList().stream()
                     .filter(ConfigurationRuleOptionDo::isNotDeleted)
-                    .filter(i -> !i.isMatrixValue(RuleOptionMatrixValueEnum.UNAVAILABLE))
+                    .filter(i -> !i.isMatrixValueUnavailable())
                     .map(ConfigurationRuleOptionDo::getConstrainedOptionCode).collect(Collectors.toSet());
             if (CollectionUtils.isEmpty(constrainedOptionCodeSet)) {
                 return null;

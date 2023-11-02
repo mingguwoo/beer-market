@@ -81,8 +81,8 @@ public class ConfigurationRuleOptionDo extends AbstractDo implements Entity<Long
      * 更新打点
      */
     public void update(Integer matrixValue, String updateUser) {
-        checkMatrixValue();
         setMatrixValue(matrixValue);
+        checkMatrixValue();
         setUpdateUser(updateUser);
     }
 

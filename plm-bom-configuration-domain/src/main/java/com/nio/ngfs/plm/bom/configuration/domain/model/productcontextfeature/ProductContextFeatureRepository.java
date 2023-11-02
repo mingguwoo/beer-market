@@ -25,6 +25,15 @@ public interface ProductContextFeatureRepository extends Repository<ProductConte
     List<ProductContextFeatureAggr> queryByModelCode(String modelCode);
 
     /**
+     * 根据modelCode和Feature Code列表获取Product Context Feature数据
+     *
+     * @param modelCode modelCode
+     * @param featureCodeList featureCodeList
+     * @return ProductContextFeatureAggr列表
+     */
+    List<ProductContextFeatureAggr> queryByModelCodeAndFeatureCode(String modelCode, List<String> featureCodeList);
+
+    /**
      * 获取下发用全量数据
      * @return
      */

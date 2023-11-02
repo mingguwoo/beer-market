@@ -16,6 +16,8 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrulegroup.Co
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.enums.FeatureCatalogEnum;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature.ProductContextFeatureAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.productcontextfeature.ProductContextFeatureRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.service.configurationrule.ConfigurationRuleDomainService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -35,6 +37,7 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
     private final FeatureRepository featureRepository;
     private final ConfigurationRuleRepository configurationRuleRepository;
     private final ConfigurationRuleDomainService configurationRuleDomainService;
+    private final ProductContextFeatureRepository productContextFeatureRepository;
 
     @Override
     public EditConfigurationRuleContext buildEditConfigurationRuleContext(ConfigurationRuleGroupAggr ruleGroupAggr, List<ConfigurationRuleAggr> ruleAggrList,
@@ -234,7 +237,17 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
         if (CollectionUtils.isEmpty(featureCodeSet)) {
             return;
         }
+        // 校验Feature Code
         List<FeatureAggr> featureAggrList = featureRepository.queryByFeatureOptionCodeList(Lists.newArrayList(featureCodeSet));
+        if (featureAggrList.size() != featureCodeSet.size()) {
+            throw new BusinessException(ConfigErrorCode.FEATURE_FEATURE_NOT_EXISTS);
+        }
+        // 校验Product Context中的Feature行
+        List<ProductContextFeatureAggr> productContextFeatureList = productContextFeatureRepository.queryByModelCodeAndFeatureCode(ruleGroupAggr.getModel(),
+                Lists.newArrayList(featureCodeSet));
+        if (productContextFeatureList.size() != featureCodeSet.size() || !productContextFeatureList.stream().allMatch(ProductContextFeatureAggr::isTypeFeature)) {
+            throw new BusinessException(ConfigErrorCode.PRODUCT_CONTEXT_FEATURE_NOT_EXIST);
+        }
         checkDrivingAndConstrainedFeature2(ruleGroupAggr.getRulePurposeEnum(), groupDrivingFeature, groupConstrainedFeatureList, featureAggrList);
         checkDrivingAndConstrainedFeature2(ruleGroupAggr.getRulePurposeEnum(), drivingFeatureCode, constrainedFeatureCodeList, featureAggrList);
     }

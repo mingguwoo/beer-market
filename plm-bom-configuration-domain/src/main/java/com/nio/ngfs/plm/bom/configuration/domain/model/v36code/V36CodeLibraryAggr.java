@@ -30,7 +30,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class V36CodeLibraryAggr extends AbstractDo implements AggrRoot<Long> {
 
-    private static final int MAX_DIGIT_NUMBER = 32;
+    private static final int MAX_DIGIT_NUMBER = 36;
 
     /**
      * Code

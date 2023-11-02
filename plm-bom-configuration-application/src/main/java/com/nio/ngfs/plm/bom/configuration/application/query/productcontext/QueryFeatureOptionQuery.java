@@ -55,7 +55,7 @@ public class QueryFeatureOptionQuery extends AbstractQuery<QueryFeatureOptionQry
             }
             optionListMap.computeIfAbsent(featureLibraryEntity.getParentFeatureCode(), k -> Lists.newArrayList()).add(featureLibraryEntity);
         });
-        List<QueryFeatureOptionRespDto> respDtoList = featureEntityList.stream().filter(i -> Objects.equals(i.getType(), ProductContextFeatureEnum.FEATURE.getType())).map(i -> {
+        return featureEntityList.stream().filter(i -> Objects.equals(i.getType(), ProductContextFeatureEnum.FEATURE.getType())).map(i -> {
                     BomsFeatureLibraryEntity featureLibraryEntity = featureLibraryEntityMap.get(i.getFeatureCode());
                     if (featureLibraryEntity == null || !Objects.equals(featureLibraryEntity.getType(), FeatureTypeEnum.FEATURE.getType())) {
                         throw new BusinessException(ConfigErrorCode.FEATURE_FEATURE_NOT_EXISTS);
@@ -66,7 +66,9 @@ public class QueryFeatureOptionQuery extends AbstractQuery<QueryFeatureOptionQry
                     }
                     QueryFeatureOptionRespDto respDto = ProductContextFeatureAssembler.assemble(featureLibraryEntity);
                     respDto.setOptionList(optionListMap.getOrDefault(i.getFeatureCode(), Lists.newArrayList()).stream()
-                            .map(ProductContextFeatureAssembler::assembleOption).toList());
+                            .map(ProductContextFeatureAssembler::assembleOption)
+                            .sorted(Comparator.comparing(QueryFeatureOptionRespDto.OptionItemDto::getOptionCode))
+                            .toList());
                     if (CollectionUtils.isEmpty(respDto.getOptionList())) {
                         return null;
                     }
@@ -74,10 +76,6 @@ public class QueryFeatureOptionQuery extends AbstractQuery<QueryFeatureOptionQry
                 }).filter(Objects::nonNull)
                 .sorted(Comparator.comparing(QueryFeatureOptionRespDto::getFeatureCode))
                 .toList();
-        // optionList排序
-        respDtoList.forEach(feature -> feature.setOptionList(feature.getOptionList().stream()
-                .sorted(Comparator.comparing(QueryFeatureOptionRespDto.OptionItemDto::getOptionCode)).toList()));
-        return respDtoList;
     }
 
 }

@@ -1,6 +1,7 @@
 package com.nio.ngfs.plm.bom.configuration.application.query.configurationrule;
 
 import cn.hutool.core.lang.Pair;
+import com.nio.bom.share.constants.CommonConstants;
 import com.nio.bom.share.utils.DateUtils;
 import com.nio.ngfs.plm.bom.configuration.application.query.AbstractQuery;
 import com.nio.ngfs.plm.bom.configuration.application.query.configurationrule.service.ConfigurationRuleQueryService;
@@ -153,14 +154,34 @@ public class QueryConfigurationRuleQuery extends AbstractQuery<QueryConfiguratio
                     rule.setReviseAvailable(true);
                     rule.setRemoveAvailable(true);
                 }
-                ruleOptionMap.get(rule.getId()).forEach(optionEntity->{
-                    Pair<CriteriaDto,CriteriaDto> criteriaPair = buildCriteria(optionEntity,featureOptionMap);
-                    rule.getDrivingCriteria().add(criteriaPair.getKey());
-                    rule.getConstrainedCriteria().add(criteriaPair.getValue());
-                });
-
+                if (ruleOptionMap.containsKey(rule.getId())){
+                    ruleOptionMap.get(rule.getId()).forEach(optionEntity->{
+                        Pair<CriteriaDto,CriteriaDto> criteriaPair = buildCriteria(optionEntity,featureOptionMap);
+                        rule.getDrivingCriteria().add(criteriaPair.getKey());
+                        rule.getConstrainedCriteria().add(criteriaPair.getValue());
+                    });
+                }
             });
         });
+
+        respDto.setGroup(respDto.getGroup().stream().filter(group->!group.getRule().isEmpty()).collect(Collectors.toList()));
+
+        if (Objects.equals(qry.getViewMode(), CommonConstants.INT_ONE)){
+            respDto.getGroup().forEach(group->{
+                group.setRule(group.getRule().stream().filter(rule->{
+                    return Objects.equals(rule.getRuleRevision(),ruleRevisionMap.get(rule.getRuleNumber()));
+                }).toList());
+            });
+        }
+
+        if (Objects.equals(qry.getViewMode(), CommonConstants.INT_TWO)){
+            respDto.getGroup().forEach(group->{
+                group.setRule(group.getRule().stream().filter(rule->{
+                    return Objects.equals(rule.getRuleRevision(),ruleRevisionMap.get(rule.getRuleNumber())) && Objects.equals(rule.getStatus(),ConfigurationRuleStatusEnum.RELEASED.getStatus());
+                }).collect(Collectors.toList()));
+            });
+        }
+
         respDto.setGroup(respDto.getGroup().stream().filter(group->!group.getRule().isEmpty())
                 .sorted(Comparator.comparing(ConfigurationGroupDto::getPurpose)
                 .thenComparing(ConfigurationGroupDto::getCreateTimeForSorted)).map(group->{

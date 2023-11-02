@@ -16,6 +16,11 @@ public class QueryConfigurationRuleQry implements Qry {
 
     private String searchContent;
 
+    /**
+     * 0为all，1为latest version，2为latest Released
+     */
+    private int viewMode;
+
     private String beginDate;
 
     private String endDate;

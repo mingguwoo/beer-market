@@ -103,7 +103,7 @@ public interface PlmConfigurationRuleClient {
      * @param qry
      * @return
      */
-    @GetMapping("/configurationRule/view")
+    @PostMapping("/configurationRule/view")
     ResultInfo<RuleViewInfoRespDto> view(QueryViewQry qry);
 
     /**

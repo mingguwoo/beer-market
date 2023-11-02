@@ -19,10 +19,10 @@ public class SetBreakPointCmd implements Cmd {
       private List<Long> ruleIds;
 
       @DateTimeFormat(pattern = "yyyy-MM-dd")
-      private Date effIn;
+      private String effIn;
 
       @DateTimeFormat(pattern = "yyyy-MM-dd")
-      private Date effOut;
+      private String effOut;
 
 
 

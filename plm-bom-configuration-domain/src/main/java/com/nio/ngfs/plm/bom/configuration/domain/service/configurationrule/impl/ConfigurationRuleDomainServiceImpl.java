@@ -224,6 +224,7 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
             if (Objects.nonNull(effIn) && effIn.compareTo(ruleAggr.getEffOut()) > 0) {
                 throw new BusinessException(MessageFormat.format(ConfigErrorCode.EFF_OUT_TIME_ERROR.getMessage(), ruleAggr.getRuleNumber(), ruleAggr.getRuleVersion()));
             }
+            //所选日期是否晚于/等于Rule条目的Eff-in值
             if (Objects.nonNull(effOut) && ruleAggr.getEffIn().compareTo(effOut) > 0) {
                 throw new BusinessException(MessageFormat.format(ConfigErrorCode.EFF_IN_TIME_ERROR.getMessage(), ruleAggr.getRuleNumber(), ruleAggr.getRuleVersion()));
             }
@@ -238,19 +239,18 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
         }
         List<ConfigurationRuleAggr> ruleAggrs = configurationRuleRepository.queryByRuleNumbers(ruleNumbers);
         ruleAggrList.forEach(x -> {
-            String nextRev = VersionUtils.findNextRev(x.getRuleNumber());
+            String nextRev = VersionUtils.findNextRev(x.getRuleVersion());
             //当勾选Rule条目的Change Type为Add或Modify时，系统判断是否存在相邻的下一个Rev条目
             if (ruleAggrs.stream().noneMatch(y -> StringUtils.equals(y.getRuleNumber(), x.getRuleNumber()) &&
                     StringUtils.equals(y.getRuleVersion(), nextRev))) {
-                throw new BusinessException(ConfigErrorCode.RULE_ID_ERROR.getCode(),
-                        MessageFormat.format(ConfigErrorCode.RULE_ID_ERROR.getMessage(), x.getRuleNumber(), x.getRuleVersion()));
+                throw new BusinessException(ConfigErrorCode.EFF_OUT_ERROR.getCode(),
+                        MessageFormat.format(ConfigErrorCode.EFF_OUT_ERROR.getMessage(), x.getRuleNumber(), x.getRuleVersion()));
             }
         });
     }
 
     @Override
     public void updateEffInOrEffOut(List<Long> ruleIds, ConfigurationRuleAggr updateInfo) {
-        Date date = new Date();
         Date effIn = updateInfo.getEffIn();
         Date effOut = updateInfo.getEffOut();
         String userName = updateInfo.getUpdateUser();
@@ -264,7 +264,6 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
             if (Objects.nonNull(effOut)) {
                 ruleAggr.setEffOut(effOut);
             }
-            ruleAggr.setUpdateTime(date);
             ruleAggr.setUpdateUser(userName);
             return ruleAggr;
         }).toList());
@@ -352,7 +351,6 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
             sortList.addAll(ids);
         }
 
-
         Map<String, List<ConfigurationRuleAggr>> configurationRuleMaps =
                 configurationRuleAggrs.stream().filter(x -> purposeLists.contains(x.getPurpose()) && CollectionUtils.isNotEmpty(x.getOptionList())).collect(Collectors.groupingBy(x -> x.getPurpose() + "#" + x.getRuleType()));
 
@@ -360,53 +358,78 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
             ruleAggrs.forEach(ruleAggr -> {
                 ruleAggr.setDrivingOptionCode(ruleAggr.getOptionList().stream().map(ConfigurationRuleOptionDo::getDrivingOptionCode).distinct().toList().get(0));
             });
-            Map<String, List<ConfigurationRuleAggr>> drivingOptionCodes =
-                    ruleAggrs.stream().collect(Collectors.groupingBy(ConfigurationRuleAggr::getDrivingOptionCode));
-            drivingOptionCodes.forEach((drivingCode, rules) -> {
-                List<ConfigurationRuleAggr> configurationRules = Lists.newArrayList();
-
-                Map<String, List<ConfigurationRuleAggr>>
-                        ruleAggrMaps = rules.stream().filter(x -> StringUtils.equalsAny(x.getChangeType()
-                                , ConfigurationRuleChangeTypeEnum.ADD.getChangeType(), ConfigurationRuleChangeTypeEnum.REMOVE.getChangeType())).
-                        sorted(Comparator.comparing(ConfigurationRuleAggr::getCreateTime)).
-                        collect(Collectors.groupingBy(ConfigurationRuleAggr::getRuleNumber, LinkedHashMap::new, Collectors.toList()));
-
-                ruleAggrMaps.forEach((k, v) -> {
-                    ConfigurationRuleAggr addRule = queryConfigurationRuleAggr(ConfigurationRuleChangeTypeEnum.ADD.getChangeType(), v);
-                    if (Objects.isNull(addRule)) {
-                        return;
-                    }
-                    ConfigurationRuleAggr removeRule = queryConfigurationRuleAggr(ConfigurationRuleChangeTypeEnum.REMOVE.getChangeType(), v);
-                    configurationRules.add(addRule);
-                    configurationRules.add(removeRule);
-                });
-
-                List<ConfigurationRuleAggr> finalConfigurationRules =
-                        configurationRules.stream().distinct().sorted(Comparator.comparing(ConfigurationRuleAggr::getCreateTime)).toList();
-
-                ConfigurationRuleAggr configurationRuleAggr = null;
-                ConfigurationRuleAggr nextConfigurationRuleAggr= null;
-                for (int i = 1; i < finalConfigurationRules.size() - 2; i++) {
-                    if(Objects.isNull(configurationRuleAggr)) {
-                        configurationRuleAggr = finalConfigurationRules.get(i);
-                    }
-                    if(Objects.isNull(nextConfigurationRuleAggr)) {
-                        nextConfigurationRuleAggr= finalConfigurationRules.get(i+1);
-                    }
-
-                    if(nextConfigurationRuleAggr.getEffIn().compareTo(configurationRuleAggr.getEffOut())>0){
-                        sortList.add(nextConfigurationRuleAggr.getId());
-                        sortList.add(configurationRuleAggr.getId());
-                    }
-                    configurationRuleAggr= nextConfigurationRuleAggr;
-                    nextConfigurationRuleAggr=finalConfigurationRules.get(i+2);
-                }
-
-            });
+            sortAndCompare(ruleAggrs.stream().collect(Collectors.groupingBy(ConfigurationRuleAggr::getDrivingOptionCode)), sortList);
         });
 
+        Map<String, List<ConfigurationRuleAggr>> baseVehicleRuleMaps =
+                configurationRuleAggrs.stream().filter(x ->
+                                Objects.equals(ConfigurationRulePurposeEnum.BASE_VEHICLE_TO_SALES.getCode(), x.getPurpose())
+                                        && CollectionUtils.isNotEmpty(x.getOptionList()))
+                        .collect(Collectors.groupingBy(x -> x.getPurpose() + "#" + x.getRuleType()));
+
+        baseVehicleRuleMaps.forEach((configurationRule, ruleAggrs) -> {
+            ruleAggrs.forEach(ruleAggr -> {
+                ruleAggr.setDrivingOptionCode(ruleAggr.getOptionList().stream().map(ConfigurationRuleOptionDo::getDrivingOptionCode).distinct().toList().get(0));
+                ruleAggr.setConstrainedOptionCode(ruleAggr.getOptionList().stream().map(ConfigurationRuleOptionDo::getConstrainedOptionCode).distinct().toList().get(0));
+            });
+            sortAndCompare(ruleAggrs.stream().collect(Collectors.groupingBy(x -> x.getDrivingOptionCode() + "#" + x.getConstrainedOptionCode())), sortList);
+        });
 
         return sortList.stream().distinct().toList();
+    }
+
+    /**
+     * 排序 进行时间比对
+     *
+     * @param optionCodes
+     * @param sortList
+     */
+    public void sortAndCompare(Map<String, List<ConfigurationRuleAggr>> optionCodes, List<Long> sortList) {
+        optionCodes.forEach((drivingCode, rules) -> {
+            List<ConfigurationRuleAggr> configurationRules = Lists.newArrayList();
+            Map<String, List<ConfigurationRuleAggr>>
+                    ruleAggrMaps = rules.stream().filter(x -> StringUtils.equalsAny(x.getChangeType()
+                            , ConfigurationRuleChangeTypeEnum.ADD.getChangeType(), ConfigurationRuleChangeTypeEnum.REMOVE.getChangeType())).
+                    sorted(Comparator.comparing(ConfigurationRuleAggr::getCreateTime)).
+                    collect(Collectors.groupingBy(ConfigurationRuleAggr::getRuleNumber, LinkedHashMap::new, Collectors.toList()));
+
+            ruleAggrMaps.forEach((k, v) -> {
+                ConfigurationRuleAggr addRule = queryConfigurationRuleAggr(ConfigurationRuleChangeTypeEnum.ADD.getChangeType(), v);
+                if (Objects.isNull(addRule)) {
+                    return;
+                }
+                ConfigurationRuleAggr removeRule = queryConfigurationRuleAggr(ConfigurationRuleChangeTypeEnum.REMOVE.getChangeType(), v);
+                configurationRules.add(addRule);
+                if (Objects.nonNull(removeRule)) {
+                    configurationRules.add(removeRule);
+                }
+            });
+
+            if (CollectionUtils.isEmpty(configurationRules) || configurationRules.size() <= 2) {
+                return;
+            }
+
+            List<ConfigurationRuleAggr> finalConfigurationRules =
+                    configurationRules.stream().distinct().sorted(Comparator.comparing(ConfigurationRuleAggr::getCreateTime)).toList();
+
+            ConfigurationRuleAggr configurationRuleAggr = null;
+            ConfigurationRuleAggr nextConfigurationRuleAggr = null;
+            for (int i = 1; i < finalConfigurationRules.size() - 2; i++) {
+                if (Objects.isNull(configurationRuleAggr)) {
+                    configurationRuleAggr = finalConfigurationRules.get(i);
+                }
+                if (Objects.isNull(nextConfigurationRuleAggr)) {
+                    nextConfigurationRuleAggr = finalConfigurationRules.get(i + 1);
+                }
+
+                if (nextConfigurationRuleAggr.getEffIn().compareTo(configurationRuleAggr.getEffOut()) >= 0) {
+                    sortList.add(nextConfigurationRuleAggr.getId());
+                    sortList.add(configurationRuleAggr.getId());
+                }
+                configurationRuleAggr = nextConfigurationRuleAggr;
+                nextConfigurationRuleAggr = finalConfigurationRules.get(i + 2);
+            }
+        });
     }
 
 

@@ -40,7 +40,6 @@ public class RemoveRuleCommand extends AbstractCommand<RemoveRuleCmd, Boolean> {
          * 确保同时Remove成对Rule的相同版本条目
          */
         List<ConfigurationRuleAggr> anotherBothWayRuleAggrList = configurationRuleDomainService.batchFindAnotherBothWayRule(ruleAggrList);
-
         //更新
         configurationRuleRepository.batchUpdate(ConfigurationRuleFactory.buildRemoveRuleAggr(ruleAggrList,anotherBothWayRuleAggrList,userName));
         return true;

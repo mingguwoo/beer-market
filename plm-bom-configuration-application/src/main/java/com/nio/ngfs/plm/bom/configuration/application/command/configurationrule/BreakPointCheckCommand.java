@@ -31,8 +31,6 @@ public class BreakPointCheckCommand extends AbstractCommand<SetBreakPointCmd, Ru
 
     @Override
     protected RuleViewCheckRespDto executeCommand(SetBreakPointCmd setBreakPointCmd) {
-
-
         RuleViewCheckRespDto ruleViewCheckRespDto=new RuleViewCheckRespDto();
         //对Status为Released的Rule条目进行Eff-in和Eff-out设置合理性检查
         List<ConfigurationRuleAggr> configurationRuleAggrs =

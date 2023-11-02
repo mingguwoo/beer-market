@@ -102,6 +102,8 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
 
     private String drivingOptionCode;
 
+    private String constrainedOptionCode;
+
     @Override
     public Long getUniqId() {
         return id;

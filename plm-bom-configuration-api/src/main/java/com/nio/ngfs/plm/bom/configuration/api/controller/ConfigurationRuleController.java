@@ -97,7 +97,7 @@ public class ConfigurationRuleController implements PlmConfigurationRuleClient {
 
     @Override
     @NotLogResult
-    public ResultInfo<Boolean> remove(RemoveRuleCmd removeRuleCmd) {
+    public ResultInfo<Boolean> remove(@Valid @RequestBody RemoveRuleCmd removeRuleCmd) {
         return ResultInfo.success(removeRuleCommand.execute(removeRuleCmd));
     }
 
@@ -109,13 +109,13 @@ public class ConfigurationRuleController implements PlmConfigurationRuleClient {
 
     @Override
     @NotLogResult
-    public ResultInfo<RuleViewInfoRespDto> view(QueryViewQry qry) {
+    public ResultInfo<RuleViewInfoRespDto> view(@Valid @RequestBody QueryViewQry qry) {
         return ResultInfo.success(queryConfigurationRuleViewQuery.execute(qry));
     }
 
     @Override
     @NotLogResult
-    public ResultInfo<Boolean> setBreakPoint(SetBreakPointCmd setBreakPointCmd) {
+    public ResultInfo<Boolean> setBreakPoint(@Valid @RequestBody SetBreakPointCmd setBreakPointCmd) {
         return ResultInfo.success(setBreakPointCommand.execute(setBreakPointCmd));
     }
 
@@ -128,7 +128,7 @@ public class ConfigurationRuleController implements PlmConfigurationRuleClient {
 
     @PostMapping("/exportView")
     @NotLogResult
-    public void exportView(QueryViewQry qry, HttpServletResponse response, HttpServletRequest request) {
+    public void exportView(@Valid @RequestBody QueryViewQry qry, HttpServletResponse response, HttpServletRequest request) {
         exportConfigurationRuleViewQuery.execute(qry, response, request);
     }
 }

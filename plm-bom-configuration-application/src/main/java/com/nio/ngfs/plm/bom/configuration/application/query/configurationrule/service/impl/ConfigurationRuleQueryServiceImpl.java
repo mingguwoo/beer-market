@@ -73,7 +73,8 @@ public class ConfigurationRuleQueryServiceImpl implements ConfigurationRuleQuery
         headInfoRespDto.setDriveFeatureCode(driveFeatureCode);
         headInfoRespDto.setDriveFeatureName(optionNameMaps.get(driveFeatureCode));
         List<RuleViewHeadInfoRespDto.DriveOptionInfo> optionHeadList = Lists.newArrayList();
-        
+
+        List<String> driveOptionCodes = Lists.newArrayList();
         ruleMap.forEach((ruleNumber, ruleAggrs) -> {
             List<ConfigurationRuleAggr> configurationRuleSorts =
                     ruleAggrs.stream().sorted(Comparator.comparing(ConfigurationRuleAggr::getRuleVersion).reversed()).toList();
@@ -81,7 +82,6 @@ public class ConfigurationRuleQueryServiceImpl implements ConfigurationRuleQuery
                 // 横轴排序
                 List<String> drivingOptionCodes = ruleSort.getOptionList().stream().map(ConfigurationRuleOptionDo::getDrivingOptionCode).distinct()
                         .sorted(Comparator.reverseOrder()).toList();
-
                 drivingOptionCodes.forEach(drivingOptionCode -> {
                     RuleViewHeadInfoRespDto.DriveOptionInfo driveOptionInfo = new RuleViewHeadInfoRespDto.DriveOptionInfo();
                     driveOptionInfo.setDriveOptionCode(drivingOptionCode);
@@ -92,9 +92,11 @@ public class ConfigurationRuleQueryServiceImpl implements ConfigurationRuleQuery
                     driveOptionInfo.setChangeType(ruleSort.getChangeType());
                     driveOptionInfo.setRuleId(ruleSort.getId());
                     optionHeadList.add(driveOptionInfo);
+                    driveOptionCodes.add(drivingOptionCode);
                 });
             });
         });
+        ruleViewInfoRespDto.getRuleViewBasicInformationRespDto().setDrivingCriterias(driveOptionCodes.stream().distinct().toList());
         headInfoRespDto.setOptionHeadList(optionHeadList);
         ruleViewInfoRespDto.setHeadInfoRespDto(headInfoRespDto);
         ruleViewInfoRespDto.setRuleViewConstrainedLists(buildRuleViewConstrained(ruleEntities,optionHeadList,optionNameMaps));

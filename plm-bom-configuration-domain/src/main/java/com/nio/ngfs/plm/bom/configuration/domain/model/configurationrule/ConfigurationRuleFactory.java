@@ -1,12 +1,17 @@
 package com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule;
 
 import com.google.common.collect.Lists;
+import com.nio.bom.share.utils.DateUtils;
 import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.domainobject.ConfigurationRuleOptionDo;
+import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.ConfigurationRuleChangeTypeEnum;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.RuleOptionDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.SetBreakPointCmd;
+
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+
 /**
  * @author xiaozhou.tu
  * @date 2023/10/17
@@ -61,7 +66,7 @@ public class ConfigurationRuleFactory {
 
 
     /**
-     * @param ruleAggrList       根据ruleId查询的
+     * @param ruleAggrList               根据ruleId查询的
      * @param anotherBothWayRuleAggrList 双向ruleId
      * @param userName
      * @return
@@ -73,22 +78,31 @@ public class ConfigurationRuleFactory {
         List<Long> ids = Lists.newArrayList();
         ids.addAll(ruleAggrList.stream().map(ConfigurationRuleAggr::getId).distinct().toList());
         ids.addAll(anotherBothWayRuleAggrList.stream().map(ConfigurationRuleAggr::getId).distinct().toList());
-
         Date updateTime = new Date();
-        return  ids.stream().distinct().toList().stream().map(rule -> {
-            ConfigurationRuleAggr ruleAggr = new ConfigurationRuleAggr();
-            ruleAggr.setId(ruleAggr.getId());
-            ruleAggr.setCreateUser(userName);
-            ruleAggr.setUpdateTime(updateTime);
-            return ruleAggr;
-        }).toList();
+        List<ConfigurationRuleAggr> ruleAggrs = Lists.newArrayList();
+        ids.stream().distinct().toList().forEach(id -> {
+            ConfigurationRuleAggr configurationRuleAggr = new ConfigurationRuleAggr();
+            configurationRuleAggr.setId(id);
+            configurationRuleAggr.setChangeType(ConfigurationRuleChangeTypeEnum.REMOVE.getChangeType());
+            configurationRuleAggr.setUpdateUser(userName);
+            configurationRuleAggr.setUpdateTime(updateTime);
+            ruleAggrs.add(configurationRuleAggr);
+        });
+        return ruleAggrs;
     }
 
 
-    public  static ConfigurationRuleAggr createUpdateInfo(SetBreakPointCmd setBreakPointCmd){
-        return ConfigurationRuleAggr.builder().effIn(setBreakPointCmd.getEffIn())
-                .effOut(setBreakPointCmd.getEffOut())
-                .createUser(setBreakPointCmd.getUserName()).build();
+    public static ConfigurationRuleAggr createUpdateInfo(Date effIn, Date effOut, String userName) {
+        ConfigurationRuleAggr configurationRuleAggr=new ConfigurationRuleAggr();
+        configurationRuleAggr.setUpdateUser(userName);
+        if(Objects.nonNull(effIn)) {
+            configurationRuleAggr.setEffIn(effIn);
+        }
+        if(Objects.nonNull(effOut)){
+            configurationRuleAggr.setEffOut(effOut);
+        }
+        configurationRuleAggr.setUpdateUser(userName);
+        return configurationRuleAggr;
     }
 
 }

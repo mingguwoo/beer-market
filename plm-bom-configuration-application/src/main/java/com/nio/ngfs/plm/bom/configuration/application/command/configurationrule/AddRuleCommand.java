@@ -50,6 +50,8 @@ public class AddRuleCommand extends AbstractCommand<AddRuleCmd, AddRuleRespDto> 
         configurationRuleApplicationService.checkDrivingAndConstrainedFeature(ruleGroupAggr, ruleAggrList);
         // 处理双向Rule
         ruleAggrList = configurationRuleDomainService.handleBothWayRule(ruleAggrList);
+        // 针对每一个Driving列，校验Constrained Feature下只能有一个Option为实心圆或-
+        configurationRuleDomainService.checkOptionMatrixByConstrainedFeature(ruleAggrList);
         // 校验Rule Driving下的Constrained打点不重复
         String message = configurationRuleDomainService.checkRuleDrivingConstrainedRepeat(ruleAggrList);
         if (StringUtils.isNotBlank(message)) {

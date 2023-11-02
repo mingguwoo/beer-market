@@ -181,6 +181,21 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
     }
 
     @Override
+    public void checkOptionMatrixByConstrainedFeature(List<ConfigurationRuleAggr> ruleAggrList) {
+        ruleAggrList.stream().filter(ConfigurationRuleAggr::isVisible).forEach(ruleAggr -> {
+            ruleAggr.getOptionList().stream().filter(i -> !i.isMatrixValueUnavailable())
+                    .collect(Collectors.groupingBy(ConfigurationRuleOptionDo::getConstrainedFeatureCode))
+                    .forEach((constrainedFeatureCode, optionList) -> {
+                        if (optionList.size() > 1) {
+                            throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_ONLY_ONE_OPTION_PER_CONSTRAINED_BY_DRIVING,
+                                    String.format("It Can Only Has One Option Be Inclusive/Exclusive In Constrained Feature %s By Driving Feature %s",
+                                            constrainedFeatureCode, optionList.get(0).getDrivingFeatureCode()));
+                        }
+                    });
+        });
+    }
+
+    @Override
     public void releaseBothWayRule(List<ConfigurationRuleAggr> ruleAggrList) {
         List<ConfigurationRuleAggr> anotherBothWayRuleAggrList = batchFindAnotherBothWayRule(ruleAggrList);
         anotherBothWayRuleAggrList.forEach(anotherBothWayRule -> {

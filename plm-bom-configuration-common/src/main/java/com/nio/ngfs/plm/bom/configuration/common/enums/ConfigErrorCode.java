@@ -135,6 +135,7 @@ public enum ConfigErrorCode implements ErrorCode {
     CONFIGURATION_RULE_CONSTRAINED_FEATURE_NOT_THE_SAME(85023, "Constrained Criteria Feature Not The Same!"),
     CONFIGURATION_RULE_DRIVING_AND_CONSTRAINED_FEATURE_IS_REPEAT(85024, "Driving Criteria Feature And Constrained Criteria Feature Is Repeat!"),
     CONFIGURATION_RULE_BOTH_WAY_RULE_UPDATE_ERROR(85025, "Both Way Rule Update Error!"),
+    CONFIGURATION_RULE_ONLY_ONE_OPTION_PER_CONSTRAINED_BY_DRIVING(85026, ""),
 
     /**
      * Product Context

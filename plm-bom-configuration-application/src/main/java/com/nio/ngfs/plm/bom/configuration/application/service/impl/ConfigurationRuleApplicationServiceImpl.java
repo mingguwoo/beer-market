@@ -143,10 +143,13 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
     public void checkAndProcessEditRule(EditConfigurationRuleContext context) {
         // 校验并处理删除的Rule
         checkAndProcessDeleteRule(context);
+        List<ConfigurationRuleAggr> addOrUpdateRuleList = context.getAddOrUpdateRuleList();
         // 校验Driving Feature和Constrained Feature
-        checkDrivingAndConstrainedFeature(context.getRuleGroup(), context.getAddOrUpdateRuleList());
+        checkDrivingAndConstrainedFeature(context.getRuleGroup(), addOrUpdateRuleList);
+        // 针对每一个Driving列，校验Constrained Feature下只能有一个Option为实心圆或-
+        configurationRuleDomainService.checkOptionMatrixByConstrainedFeature(addOrUpdateRuleList);
         // 校验Rule Driving下的Constrained打点不重复
-        String message = configurationRuleDomainService.checkRuleDrivingConstrainedRepeat(context.getAddOrUpdateRuleList());
+        String message = configurationRuleDomainService.checkRuleDrivingConstrainedRepeat(addOrUpdateRuleList);
         if (StringUtils.isNotBlank(message)) {
             context.getErrorMessageList().add(0, message);
         }

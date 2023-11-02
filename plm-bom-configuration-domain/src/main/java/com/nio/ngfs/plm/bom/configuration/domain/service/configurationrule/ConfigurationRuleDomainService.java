@@ -77,6 +77,13 @@ public interface ConfigurationRuleDomainService {
     String checkRuleDrivingConstrainedRepeat(List<ConfigurationRuleAggr> ruleAggrList);
 
     /**
+     * 针对每一个Driving列，校验Constrained Feature下只能有一个Option为实心圆或-
+     *
+     * @param ruleAggrList 聚合根列表
+     */
+    void checkOptionMatrixByConstrainedFeature(List<ConfigurationRuleAggr> ruleAggrList);
+
+    /**
      * 处理双向Rule Release
      */
     void releaseBothWayRule(List<ConfigurationRuleAggr> ruleAggrList);

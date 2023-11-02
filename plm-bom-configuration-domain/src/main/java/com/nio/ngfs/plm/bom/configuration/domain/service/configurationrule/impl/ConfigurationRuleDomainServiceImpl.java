@@ -156,7 +156,7 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
             optionCompare.setDrivingOptionCode(ruleAggr.getOptionList().get(0).getDrivingOptionCode());
             optionCompare.setConstrainedOptionCodeSet(constrainedOptionCodeSet);
             return optionCompare;
-        }).filter(Objects::nonNull).toList();
+        }).filter(Objects::nonNull).sorted(Comparator.comparing(RuleConstrainedOptionCompare::getDrivingOptionCode)).toList();
         for (int i = 0; i < optionCompareList.size(); i++) {
             RuleConstrainedOptionCompare current = optionCompareList.get(i);
             if (current.isCompared()) {

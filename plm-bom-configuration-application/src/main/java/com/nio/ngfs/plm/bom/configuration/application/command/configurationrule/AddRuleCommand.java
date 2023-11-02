@@ -48,8 +48,6 @@ public class AddRuleCommand extends AbstractCommand<AddRuleCmd, AddRuleRespDto> 
         ruleAggrList.forEach(ConfigurationRuleAggr::add);
         // 校验Driving Feature和Constrained Feature
         configurationRuleApplicationService.checkDrivingAndConstrainedFeature(ruleGroupAggr, ruleAggrList);
-        // 处理双向Rule
-        ruleAggrList = configurationRuleDomainService.handleBothWayRule(ruleAggrList);
         // 针对每一个Driving列，校验Constrained Feature下只能有一个Option为实心圆或-
         configurationRuleDomainService.checkOptionMatrixByConstrainedFeature(ruleAggrList);
         // 校验Rule Driving下的Constrained打点不重复
@@ -57,6 +55,8 @@ public class AddRuleCommand extends AbstractCommand<AddRuleCmd, AddRuleRespDto> 
         if (StringUtils.isNotBlank(message)) {
             return new AddRuleRespDto(message);
         }
+        // 处理双向Rule
+        ruleAggrList = configurationRuleDomainService.handleBothWayRule(ruleAggrList);
         // Rule分配Rule Number
         configurationRuleDomainService.generateRuleNumber(ruleAggrList);
         // 保存到数据库

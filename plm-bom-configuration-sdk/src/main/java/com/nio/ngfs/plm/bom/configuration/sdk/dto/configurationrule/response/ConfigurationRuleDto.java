@@ -50,5 +50,7 @@ public class ConfigurationRuleDto implements Dto {
 
     private boolean reviseAvailable = false;
 
+    private boolean removeAvailable = false;
+
     private Date createTimeForSorted;
 }

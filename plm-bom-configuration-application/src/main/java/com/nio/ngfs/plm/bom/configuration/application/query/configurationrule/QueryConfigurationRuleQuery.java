@@ -151,6 +151,7 @@ public class QueryConfigurationRuleQuery extends AbstractQuery<QueryConfiguratio
                 if (reviseSet.contains(rule.getPurpose()) && Objects.equals(ruleRevisionMap.get(rule.getRuleNumber()),rule.getRuleRevision())
                         && Objects.equals(rule.getStatus(), ConfigurationRuleStatusEnum.RELEASED.getStatus()) && !Objects.equals(rule.getChangeType(), ConfigurationRuleChangeTypeEnum.REMOVE.getChangeType())){
                     rule.setReviseAvailable(true);
+                    rule.setRemoveAvailable(true);
                 }
                 ruleOptionMap.get(rule.getId()).forEach(optionEntity->{
                     Pair<CriteriaDto,CriteriaDto> criteriaPair = buildCriteria(optionEntity,featureOptionMap);

@@ -43,45 +43,10 @@ public class SyncFullProductContextCommand extends AbstractLockCommand<SyncFullP
 
     @Override
     protected SyncFullProductContextRespDto executeWithLock(SyncFullProductContextCmd cmd) {
-        try {
-            List<ProductContextFeatureAggr> featureList = productContextFeatureRepository.queryAll();
-            List<ProductContextAggr> optionList = productContextRepository.queryAll();
-            Map<String,List<ProductContextAggr>> contextListMap = new HashMap<>();
-            Map<String, List<ProductContextFeatureAggr>> contextFeatureListMap = new HashMap<>();
-            Set<List<ProductContextAggr>> contextListSet = new HashSet<>();
-            Set<List<ProductContextFeatureAggr>> contextFeatureListSet = new HashSet<>();
-            optionList.forEach(option->{
-                //不存在这个model的list，就新建
-                if (!contextListSet.contains(option.getModelCode())){
-                    List<ProductContextAggr> aggrList = new ArrayList<>();
-                    aggrList.add(option);
-                    contextListSet.add(aggrList);
-                    contextListMap.put(option.getModelCode(),aggrList);
-                }
-                else {
-                    contextListMap.get(option.getModelCode()).add(option);
-                }
-            });
-            featureList.forEach(feature->{
-                if (!contextFeatureListSet.contains(feature.getModelCode())){
-                    List<ProductContextFeatureAggr> aggrList = new ArrayList<>();
-                    aggrList.add(feature);
-                    contextFeatureListSet.add(aggrList);
-                    contextFeatureListMap.put(feature.getModelCode(),aggrList);
-                }
-                else {
-                    contextFeatureListMap.get(feature.getModelCode()).add(feature);
-                }
-            });
+            List<ProductContextFeatureAggr> featureList = productContextFeatureRepository.queryByModelCode(cmd.getModelCode());
+            List<ProductContextAggr> optionList = productContextRepository.queryByModelCode(cmd.getModelCode());
             //发布事件
-            contextListSet.forEach(model->{
-                eventPublisher.publish(new SyncProductContextEvent(contextListMap.get(model),contextFeatureListMap.get(model)));
-            });
-        } catch(BusinessException e) {
-            if (Objects.equals(e.getCode(), ConfigErrorCode.LOCK_FAILED)){
-                throw new BusinessException(ConfigErrorCode.PRODUCT_CONTEXT_SYNC_FULL_LOCK_ERROR);
-            }
-        }
+            eventPublisher.publish(new SyncProductContextEvent(optionList,featureList));
         return new SyncFullProductContextRespDto();
     }
 }

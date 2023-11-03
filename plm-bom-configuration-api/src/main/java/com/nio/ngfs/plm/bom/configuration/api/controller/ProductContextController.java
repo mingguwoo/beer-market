@@ -60,9 +60,9 @@ public class ProductContextController implements PlmProductContextClient {
     }
 
     @Override
-    @NeedAuthorization
+    //@NeedAuthorization
     @NotLogResult
-    public ResultInfo<SyncFullProductContextRespDto> syncFullProductContext(SyncFullProductContextCmd cmd) {
+    public ResultInfo<SyncFullProductContextRespDto> syncFullProductContext(@Valid @RequestBody SyncFullProductContextCmd cmd) {
         return ResultInfo.success(syncFullProductContextCommand.execute(cmd));
     }
 

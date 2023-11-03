@@ -31,15 +31,19 @@ public class DeleteRuleCommand extends AbstractLockCommand<DeleteRuleCmd, Delete
 
     @Override
     protected DeleteRuleRespDto executeWithLock(DeleteRuleCmd cmd) {
+        // 查询Rule聚合根
         ConfigurationRuleAggr ruleAggr = configurationRuleDomainService.getAndCheckAggr(cmd.getRuleId());
-        // 删除Rule
+        // Rule删除
         ruleAggr.delete();
         if (ruleAggr.isBothWayRule()) {
-            // 处理双向Rule删除
+            // 查找双向Rule
             ConfigurationRuleAggr anotherRuleAggr = configurationRuleDomainService.findAnotherBothWayRule(ruleAggr);
+            // 双向Rule删除
             anotherRuleAggr.delete();
+            // 保存到数据库
             configurationRuleRepository.batchRemove(Lists.newArrayList(ruleAggr, anotherRuleAggr));
         } else {
+            // 保存到数据库
             configurationRuleRepository.batchRemove(Lists.newArrayList(ruleAggr));
         }
         return new DeleteRuleRespDto();

@@ -39,15 +39,17 @@ public class DeleteGroupCommand extends AbstractLockCommand<DeleteGroupCmd, Dele
 
     @Override
     protected DeleteGroupRespDto executeWithLock(DeleteGroupCmd cmd) {
+        // 查找Group聚合根
         ConfigurationRuleGroupAggr ruleGroupAggr = configurationRuleGroupDomainService.getAndCheckAggr(cmd.getGroupId());
-        // 删除Group
+        // Group删除
         ruleGroupAggr.delete();
         // 查询Group下的Rule列表
         List<ConfigurationRuleAggr> ruleAggrList = configurationRuleRepository.queryByGroupId(ruleGroupAggr.getId());
         // 校验删除Group
         configurationRuleGroupApplicationService.checkDeleteGroup(ruleAggrList);
-        // 删除Rule
+        // Group下的Rule删除
         ruleAggrList.forEach(ConfigurationRuleAggr::delete);
+        // 数据库删除Group、Group下的Rule及Rule打点
         ((DeleteGroupCommand) AopContext.currentProxy()).deleteRuleAndGroup(ruleGroupAggr, ruleAggrList);
         return new DeleteGroupRespDto();
     }

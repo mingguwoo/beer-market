@@ -1,4 +1,4 @@
-package com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.context;
+package com.nio.ngfs.plm.bom.configuration.application.command.configurationrule.context;
 
 import com.google.common.collect.Lists;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleAggr;

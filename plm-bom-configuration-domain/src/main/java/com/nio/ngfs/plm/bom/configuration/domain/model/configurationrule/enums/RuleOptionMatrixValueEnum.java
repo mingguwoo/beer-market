@@ -4,6 +4,8 @@ import com.nio.bom.share.utils.EnumUtils;
 import lombok.Getter;
 
 /**
+ * Rule矩阵打点类型
+ *
  * @author xiaozhou.tu
  * @date 2023/10/17
  */

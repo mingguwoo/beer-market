@@ -3,6 +3,8 @@ package com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums;
 import lombok.Getter;
 
 /**
+ * Rule的变更类型
+ *
  * @author xiaozhou.tu
  * @date 2023/10/17
  */

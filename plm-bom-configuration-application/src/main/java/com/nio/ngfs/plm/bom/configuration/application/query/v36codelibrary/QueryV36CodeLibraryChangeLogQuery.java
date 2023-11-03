@@ -9,7 +9,10 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.response.QueryV36CodeL
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author bill.wang
@@ -22,7 +25,8 @@ public class QueryV36CodeLibraryChangeLogQuery {
     private final BomsV36CodeLibraryChangeLogDao bomsV36CodeLibraryChangeLogDao;
 
     public List<QueryV36CodeLibraryChangeLogRespDto> execute(QueryV36CodeLibraryChangeLogQry qry){
-        List<BomsV36CodeLibraryChangeLogEntity> changeLogEntityList = bomsV36CodeLibraryChangeLogDao.queryByCodeId(qry.getCodeId());
+        List<BomsV36CodeLibraryChangeLogEntity> changeLogEntityList = bomsV36CodeLibraryChangeLogDao.queryByCodeId(qry.getCodeId()).stream().sorted(Comparator.comparing(BomsV36CodeLibraryChangeLogEntity::getUpdateTime)).collect(Collectors.toList());
+        Collections.reverse(changeLogEntityList);
         return LambdaUtil.map(changeLogEntityList, V36CodeLibraryChangeLogAssembler::assemble);
     }
 }

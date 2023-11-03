@@ -117,7 +117,7 @@ public class QueryProductConfigRespDto implements Dto {
     }
 
     private static boolean matchSearch(String content, String search) {
-        return content != null && content.contains(search);
+        return content != null && content.toLowerCase().contains(search);
     }
 
 }

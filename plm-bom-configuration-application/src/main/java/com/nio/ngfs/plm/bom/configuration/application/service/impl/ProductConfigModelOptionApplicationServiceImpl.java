@@ -35,6 +35,9 @@ public class ProductConfigModelOptionApplicationServiceImpl implements ProductCo
 
     @Override
     public void syncFeatureOptionFromOxoRelease(OxoVersionSnapshotAggr oxoVersionSnapshotAggr) {
+        if (oxoVersionSnapshotAggr == null) {
+            return;
+        }
         // 查询Model下所有的Option行
         List<ProductConfigModelOptionAggr> modelOptionAggrList = productConfigModelOptionRepository.queryByModel(oxoVersionSnapshotAggr.getModelCode());
         OxoListRespDto oxoListRespDto = oxoVersionSnapshotDomainService.resolveSnapShot(oxoVersionSnapshotAggr.getOxoSnapshot());

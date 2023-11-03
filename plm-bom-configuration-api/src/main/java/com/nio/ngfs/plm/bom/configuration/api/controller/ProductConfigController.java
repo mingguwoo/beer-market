@@ -2,10 +2,7 @@ package com.nio.ngfs.plm.bom.configuration.api.controller;
 
 import com.nio.bom.share.annotation.NotLogResult;
 import com.nio.bom.share.result.ResultInfo;
-import com.nio.ngfs.plm.bom.configuration.application.command.productconfig.AddPcCommand;
-import com.nio.ngfs.plm.bom.configuration.application.command.productconfig.DeletePcCommand;
-import com.nio.ngfs.plm.bom.configuration.application.command.productconfig.EditPcCommand;
-import com.nio.ngfs.plm.bom.configuration.application.command.productconfig.EditProductConfigCommand;
+import com.nio.ngfs.plm.bom.configuration.application.command.productconfig.*;
 import com.nio.ngfs.plm.bom.configuration.application.query.productconfig.*;
 import com.nio.ngfs.plm.bom.configuration.application.task.productconfig.ImportPcTask;
 import com.nio.ngfs.plm.bom.configuration.application.task.productconfig.ImportProductConfigOptionTask;
@@ -42,6 +39,8 @@ public class ProductConfigController implements PlmProductConfigClient {
     private final QueryProductConfigQuery queryProductConfigQuery;
     private final GetPcOptionListQuery getPcOptionListQuery;
     private final EditProductConfigCommand editProductConfigCommand;
+    private final SyncProductConfigModelOptionCommand syncProductConfigModelOptionCommand;
+    private final SyncPcToEnoviaCommand syncPcToEnoviaCommand;
     private final ExportProductConfigQuery exportProductConfigQuery;
     private final ImportPcTask importPcTask;
     private final ImportProductConfigOptionTask importProductConfigOptionTask;
@@ -104,6 +103,18 @@ public class ProductConfigController implements PlmProductConfigClient {
     @NotLogResult
     public ResultInfo<EditProductConfigRespDto> editProductConfig(@Valid @RequestBody EditProductConfigCmd cmd) {
         return ResultInfo.success(editProductConfigCommand.execute(cmd));
+    }
+
+    @Override
+    @NotLogResult
+    public ResultInfo<SyncProductConfigModelOptionRespDto> syncProductConfigModelOption(@Valid @RequestBody SyncProductConfigModelOptionCmd cmd) {
+        return ResultInfo.success(syncProductConfigModelOptionCommand.execute(cmd));
+    }
+
+    @Override
+    @NotLogResult
+    public ResultInfo<SyncPcToEnoviaRespDto> syncPcToEnovia(@Valid @RequestBody SyncPcToEnoviaCmd cmd) {
+        return ResultInfo.success(syncPcToEnoviaCommand.execute(cmd));
     }
 
     @NotLogResult

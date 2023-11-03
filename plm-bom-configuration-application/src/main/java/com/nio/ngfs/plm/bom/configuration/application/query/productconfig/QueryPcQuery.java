@@ -44,6 +44,9 @@ public class QueryPcQuery extends AbstractQuery<QueryPcQry, List<QueryPcRespDto>
         if (qry.getSearch() != null) {
             qry.setSearch(qry.getSearch().trim());
         }
+        if (StringUtils.isNotBlank(qry.getSearch())) {
+            qry.setSearch(qry.getSearch().trim().toLowerCase());
+        }
     }
 
     @Override
@@ -75,15 +78,22 @@ public class QueryPcQuery extends AbstractQuery<QueryPcQry, List<QueryPcRespDto>
         return pcList.stream()
                 // 模糊搜索
                 .filter(i -> StringUtils.isBlank(qry.getSearch()) || (
-                        i.getPcId().contains(qry.getSearch()) ||
-                                i.getModelCode().contains(qry.getSearch()) ||
-                                i.getModelYear().contains(qry.getSearch()) ||
-                                i.getName().contains(qry.getSearch())
+                        matchSearch(i.getPcId(), qry.getSearch()) ||
+                                matchSearch(i.getModelCode(), qry.getSearch()) ||
+                                matchSearch(i.getModelYear(), qry.getSearch()) ||
+                                matchSearch(i.getName(), qry.getSearch())
                 ))
                 // 按Model Year、创建时间（倒排）排序
                 .sorted(Comparator.comparing(BomsProductConfigEntity::getModelYear, ModelYearComparator.INSTANCE)
                         .thenComparing(Comparator.comparing(BomsProductConfigEntity::getCreateTime).reversed()))
                 .toList();
+    }
+
+    /**
+     * 搜索不区分大小写
+     */
+    private boolean matchSearch(String content, String search) {
+        return content != null && content.toLowerCase().contains(search);
     }
 
     /**

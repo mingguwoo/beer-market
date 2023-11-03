@@ -46,6 +46,9 @@ public class QueryFeatureLibraryQuery extends AbstractQuery<QueryFeatureLibraryQ
         if (qry.getStatus() != null && StatusEnum.getByStatus(qry.getStatus()) == null) {
             throw new BusinessException(ConfigErrorCode.FEATURE_STATUS_INVALID);
         }
+        if (StringUtils.isNotBlank(qry.getSearch())) {
+            qry.setSearch(qry.getSearch().trim().toLowerCase());
+        }
     }
 
     @Override
@@ -90,7 +93,7 @@ public class QueryFeatureLibraryQuery extends AbstractQuery<QueryFeatureLibraryQ
         }
         // 模糊搜索，Feature Code、Display Name、Chinese Name
         if (StringUtils.isNotBlank(qry.getSearch())) {
-            featureLibraryDtoTree.forEach(group -> group.selectSearchMatch(qry.getSearch().trim(), false));
+            featureLibraryDtoTree.forEach(group -> group.selectSearchMatch(qry.getSearch(), false));
         }
         // 结果筛选
         if (StringUtils.isNotBlank(qry.getCatalog()) || StringUtils.isNotBlank(qry.getStatus()) || StringUtils.isNotBlank(qry.getSearch())) {

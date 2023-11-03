@@ -2,6 +2,8 @@ package com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.response;
 
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * @author bill.wang
  * @date 2023/9/18
@@ -28,4 +30,7 @@ public class V36CodeLibraryOptionDto {
     private String updateUser;
 
     private String updateTime;
+
+    //排序用
+    private Date createTimeInDate;
 }

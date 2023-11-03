@@ -54,6 +54,13 @@ public interface FeatureRepository extends Repository<FeatureAggr, FeatureId> {
     List<FeatureAggr> queryByFeatureCode(String featureCode);
 
     /**
+     * 获取Group列表
+     *
+     * @return FeatureAggr列表
+     */
+    List<FeatureAggr> getGroupList();
+
+    /**
      * 根据Display Name、Catalog、Type查询
      *
      * @param displayName Display Name
@@ -71,7 +78,6 @@ public interface FeatureRepository extends Repository<FeatureAggr, FeatureId> {
      */
     List<FeatureAggr> queryByFeatureOptionCodeList(List<String> featureOptionCodeList);
 
-
     /**
      * 根据Feature/Option Code列表批量聚合根，Active状态
      *
@@ -88,18 +94,13 @@ public interface FeatureRepository extends Repository<FeatureAggr, FeatureId> {
      */
     FeatureAggr getByFeatureOrOptionCode(String featureOptionCode);
 
-
     /**
      * 根据 featureCodes not in  Feature库中
-     * @param featureCodes
-     * @return
      */
     List<FeatureAggr> findFeatureLibraryNotFeatureCodes(List<String> featureCodes);
 
     /**
      * 根据catalog查找feature
-     * @param catalog
-     * @return
      */
     List<FeatureAggr> queryFeatureByCatalog(String catalog);
 }

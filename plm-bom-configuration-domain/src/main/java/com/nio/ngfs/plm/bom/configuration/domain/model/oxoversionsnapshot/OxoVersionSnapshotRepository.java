@@ -33,4 +33,11 @@ public interface OxoVersionSnapshotRepository extends Repository<OxoVersionSnaps
        */
       List<OxoVersionSnapshotAggr> queryBomsOxoVersionSnapshotsByModel(String modelCode);
 
+      /**
+       * 查询Release OXO的全部车型列表
+       *
+       * @return 车型列表
+       */
+      List<String> getAllModelList();
+
 }

@@ -19,14 +19,14 @@ import java.util.function.Supplier;
 @RequiredArgsConstructor
 public class RedissonLocker {
 
-    private static final long MAX_LOCK_WAIT_SECOND = 5;
+    private static final long DEFAULT_MAX_LOCK_WAIT_SECOND = 5;
 
     private final RedisClient redisClient;
 
-    public <T> T executeWithLock(String key, Supplier<T> task) {
+    public <T> T executeWithLock(String key, Long maxLockTime, Supplier<T> task) {
         RLock lock = redisClient.getRLock(key);
         try {
-            if (lock.tryLock(MAX_LOCK_WAIT_SECOND, TimeUnit.SECONDS)) {
+            if (lock.tryLock(maxLockTime != null ? maxLockTime : DEFAULT_MAX_LOCK_WAIT_SECOND, TimeUnit.SECONDS)) {
                 return task.get();
             } else {
                 throw new BusinessException(ConfigErrorCode.LOCK_FAILED);

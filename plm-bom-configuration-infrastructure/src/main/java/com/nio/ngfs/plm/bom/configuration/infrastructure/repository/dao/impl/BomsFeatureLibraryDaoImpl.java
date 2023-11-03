@@ -124,7 +124,6 @@ public class BomsFeatureLibraryDaoImpl extends AbstractDao<BomsFeatureLibraryMap
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 
-
     @Override
     public List<BomsFeatureLibraryEntity> queryByFeatureOptionCodeList(List<String> featureOptionCodeList) {
         if (CollectionUtils.isEmpty(featureOptionCodeList)) {
@@ -135,7 +134,6 @@ public class BomsFeatureLibraryDaoImpl extends AbstractDao<BomsFeatureLibraryMap
         lambdaQueryWrapper.in(BomsFeatureLibraryEntity::getType, FEATURE_OPTION_TYPE_LIST);
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }
-
 
     @Override
     public List<BomsFeatureLibraryEntity> queryByFeatureOptionCodeListActive(List<String> featureOptionCodeList) {

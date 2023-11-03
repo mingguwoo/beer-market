@@ -85,4 +85,15 @@ public class ModelFacadeImpl implements ModelFacade {
         });
     }
 
+    @Override
+    public ModelRespDto getModel(String model) {
+        ModelDto modelDto = FeignInvokeUtils.invoke(bomMiddlePlatformClient::getModel, model, "bomMiddlePlatformClient.getModel");
+        if (modelDto == null) {
+            return null;
+        }
+        ModelRespDto respDto = new ModelRespDto();
+        BeanUtils.copyProperties(modelDto, respDto);
+        return respDto;
+    }
+
 }

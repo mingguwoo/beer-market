@@ -100,8 +100,11 @@ public class QueryFeatureLibraryDto implements Dto {
                 matchSearch(this.chineseName, search);
     }
 
+    /**
+     * 搜索不区分大小写
+     */
     private boolean matchSearch(String content, String search) {
-        return content != null && content.contains(search);
+        return content != null && content.toLowerCase().contains(search);
     }
 
 }

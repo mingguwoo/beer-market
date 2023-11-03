@@ -39,6 +39,7 @@ public class FeatureController implements PlmFeatureClient {
     private final AddOptionCommand addOptionCommand;
     private final EditOptionCommand editOptionCommand;
     private final ChangeOptionStatusCommand changeOptionStatusCommand;
+    private final FullSyncToEnoviaCommand fullSyncToEnoviaCommand;
     private final GetChangeLogListQuery getChangeLogListQuery;
     private final GetGroupCodeListQuery getGroupCodeListQuery;
     private final QueryFeatureLibraryQuery queryFeatureLibraryQuery;
@@ -107,6 +108,12 @@ public class FeatureController implements PlmFeatureClient {
     @NotLogResult
     public ResultInfo<ChangeOptionStatusRespDto> changeOptionStatus(@Valid @RequestBody ChangeOptionStatusCmd cmd) {
         return ResultInfo.success(changeOptionStatusCommand.execute(cmd));
+    }
+
+    @Override
+    @NotLogResult
+    public ResultInfo<FullSyncToEnoviaRespDto> fullSyncToEnovia(@Valid @RequestBody FullSyncToEnoviaCmd cmd) {
+        return ResultInfo.success(fullSyncToEnoviaCommand.execute(cmd));
     }
 
     @Override

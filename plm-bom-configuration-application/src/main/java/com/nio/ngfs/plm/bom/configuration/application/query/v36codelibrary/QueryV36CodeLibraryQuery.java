@@ -1,6 +1,5 @@
 package com.nio.ngfs.plm.bom.configuration.application.query.v36codelibrary;
 
-import com.alibaba.excel.util.StringUtils;
 import com.nio.ngfs.plm.bom.configuration.application.service.V36CodeLibraryApplicationService;
 import com.nio.ngfs.plm.bom.configuration.domain.model.feature.FeatureAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.v36code.enums.V36CodeLibraryTypeEnum;
@@ -12,9 +11,11 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.response.SalesFeatureD
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.response.V36CodeLibraryDigitDto;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.v36code.response.V36CodeLibraryOptionDto;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author bill.wang
@@ -44,7 +45,7 @@ public class QueryV36CodeLibraryQuery {
         List<BomsV36CodeLibraryEntity> matchEntityList = v36CodeLibraryEntityList.stream().map(entity->{
             entityMap.put(entity.getId(),entity);
             return entity;
-        }).filter(entity-> matchSearch(entity.getSalesFeatureList(),qry.getSalesFeature()) && ( matchSearch(entity.getChineseName(),qry.getName()) || matchSearch(entity.getDisplayName(),qry.getName()) ))
+        }).filter(entity-> matchSearch(entity.getSalesFeatureList(),qry.getSalesFeature()) && ( matchDigitSalesFeature(entity,featureMap,qry.getName()) || matchSearch(entity.getCode(),qry.getName()) || matchSearch(entity.getChineseName(),qry.getName()) || matchSearch(entity.getDisplayName(),qry.getName()) ))
                 .map(entity->{
                     //先记录下被搜到的digit，到时候直接添加他所有的option
                     if (Objects.equals(entity.getType(),V36CodeLibraryTypeEnum.DIGIT.getType())){
@@ -100,17 +101,22 @@ public class QueryV36CodeLibraryQuery {
             }
         });
         //排序
-        queryV36CodeLibraryRespDto.setDigitList(queryV36CodeLibraryRespDto.getDigitList().stream().sorted(Comparator.comparing(V36CodeLibraryDigitDto::getCode).thenComparing(V36CodeLibraryDigitDto::getCreateTime)).toList());
-        queryV36CodeLibraryRespDto.getDigitList().stream().map(digit->{
-            digit.setOptionList(digit.getOptionList().stream().sorted(Comparator.comparing(V36CodeLibraryOptionDto::getCode).thenComparing(V36CodeLibraryOptionDto::getCreateTime)).toList());
+        queryV36CodeLibraryRespDto.setDigitList(queryV36CodeLibraryRespDto.getDigitList().stream().sorted(Comparator.comparingInt((V36CodeLibraryDigitDto digit)->Integer.parseInt(StringUtils.substringBefore(digit.getCode(),"-"))).thenComparing((V36CodeLibraryDigitDto o1, V36CodeLibraryDigitDto o2)->{
+            return o1.getCreateTimeInDate().compareTo(o2.getCreateTimeInDate());
+        })).toList());
+        queryV36CodeLibraryRespDto.setDigitList(queryV36CodeLibraryRespDto.getDigitList().stream().map(digit->{
+            if (Objects.nonNull(digit.getOptionList())){
+                digit.setOptionList(digit.getOptionList().stream().sorted(Comparator.comparing((V36CodeLibraryOptionDto dto)->dto.getCode()).thenComparing((V36CodeLibraryOptionDto o1, V36CodeLibraryOptionDto o2)->{
+                    return o1.getCreateTimeInDate().compareTo(o2.getCreateTimeInDate());
+                })).toList());
+            }
             return digit;
-        });
+        }).toList());
         return queryV36CodeLibraryRespDto;
     }
-
     private boolean matchSearch(String content, String search){
         if (Objects.nonNull(search)){
-            return content != null && content.contains(search);
+            return content != null && content.toUpperCase().contains(search.toUpperCase());
         }
         return true;
     }
@@ -126,6 +132,7 @@ public class QueryV36CodeLibraryQuery {
         dto.setCreateTime(String.valueOf(entity.getCreateTime()));
         dto.setUpdateUser(entity.getUpdateUser());
         dto.setUpdateTime(String.valueOf(entity.getUpdateTime()));
+        dto.setCreateTimeInDate(entity.getCreateTime());
         List<String> v36SalesFeatureCodeList = Arrays.asList(entity.getSalesFeatureList().split(","));
         //加个兜底，理论上不会出现salesFeatureList为空的情况
         if (!StringUtils.isBlank(entity.getSalesFeatureList())){
@@ -167,6 +174,24 @@ public class QueryV36CodeLibraryQuery {
         dto.setCreateTime(String.valueOf(entity.getCreateTime()));
         dto.setUpdateUser(entity.getUpdateUser());
         dto.setUpdateTime(String.valueOf(entity.getUpdateTime()));
+        dto.setCreateTimeInDate(entity.getCreateTime());
         return dto;
+    }
+
+    private boolean matchDigitSalesFeature(BomsV36CodeLibraryEntity entity, Map<String, FeatureAggr> featureMap, String name){
+        AtomicBoolean isMatch = new AtomicBoolean(false);
+        if (!Objects.equals(entity.getType(),V36CodeLibraryTypeEnum.DIGIT.getType()) || (StringUtils.isBlank(entity.getSalesFeatureList()))){
+            return isMatch.get();
+        }
+        List<String> featureList = Arrays.asList(entity.getSalesFeatureList().split(","));
+        featureList.forEach(featureCode->{
+            if (isMatch.get()){
+                return;
+            }
+            if (matchSearch(featureMap.get(featureCode).getFeatureCode(),name) || matchSearch(featureMap.get(featureCode).getDisplayName(),name) || matchSearch(featureMap.get(featureCode).getChineseName(),name)){
+                isMatch.set(true);
+            }
+        });
+        return isMatch.get();
     }
 }

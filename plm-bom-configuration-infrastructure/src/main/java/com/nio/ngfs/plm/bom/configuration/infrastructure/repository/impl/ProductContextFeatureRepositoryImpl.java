@@ -40,4 +40,14 @@ public class ProductContextFeatureRepositoryImpl implements ProductContextFeatur
     public List<ProductContextFeatureAggr> queryByModelCode(String modelCode) {
         return productContextFeatureConverter.convertEntityListToDoList(productContextFeatureDao.queryByModelCode(modelCode));
     }
+
+    @Override
+    public List<ProductContextFeatureAggr> queryByModelCodeAndFeatureCode(String modelCode, List<String> featureCodeList) {
+        return productContextFeatureConverter.convertEntityListToDoList(productContextFeatureDao.queryByModelCodeAndFeatureCode(modelCode, featureCodeList));
+    }
+
+    @Override
+    public List<ProductContextFeatureAggr> queryAll() {
+        return productContextFeatureConverter.convertEntityListToDoList(productContextFeatureDao.queryAll());
+    }
 }

@@ -51,13 +51,27 @@ public interface PlmV36CodeLibraryClient {
     @PostMapping("/v36code/editOption")
     ResultInfo<EditOptionRespDto> editOption(EditOptionCmd cmd);
 
-
+    /**
+     *
+     * @param qry
+     * @return
+     */
     @PostMapping("/v36code/queryV36CodeLibrary")
     ResultInfo<QueryV36CodeLibraryRespDto> queryV36CodeLibrary(QueryV36CodeLibraryQry qry);
 
+    /**
+     * 查询所有digit code码
+     * @param qry
+     * @return
+     */
     @PostMapping("/v36Code/queryV36DigitCode")
     ResultInfo<List<String>> queryV36DigitCode(QueryV36DigitCodeQry qry);
 
+    /**
+     * 查询修改历史
+     * @param qry
+     * @return
+     */
     @PostMapping("/v36Code/queryV36CodeLibraryChangeLog")
     ResultInfo<List<QueryV36CodeLibraryChangeLogRespDto>> queryV36CodeLibraryChangeLog(QueryV36CodeLibraryChangeLogQry qry);
 }

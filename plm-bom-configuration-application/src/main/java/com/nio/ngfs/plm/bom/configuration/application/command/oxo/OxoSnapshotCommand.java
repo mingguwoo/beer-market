@@ -104,6 +104,7 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, List
             bomsOxoVersionSnapshotDao.insertBomsOxoVersionSnapshot(BeanConvertUtils.convertTo(
                     oxoVersionSnapshot, BomsOxoVersionSnapshotEntity::new));
 
+
             //同步product context
             try {
                 productContextApplicationService.addProductContext(oxoLists, editGroupCmd.getUserName());

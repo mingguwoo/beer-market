@@ -30,7 +30,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class V36CodeLibraryAggr extends AbstractDo implements AggrRoot<Long> {
 
-    private static final int MAX_DIGIT_NUMBER = 32;
+    private static final int MAX_DIGIT_NUMBER = 36;
 
     /**
      * Code
@@ -177,7 +177,7 @@ public class V36CodeLibraryAggr extends AbstractDo implements AggrRoot<Long> {
         }
         int lowNumber = Integer.parseInt(low);
         int highNumber = Integer.parseInt(high);
-        // 校验Digit数字最小为1，最大为32，低位数字不大于高位数字
+        // 校验Digit数字最小为1，最大为36，低位数字不大于高位数字
         if (lowNumber > highNumber || lowNumber < CommonConstants.INT_ONE || highNumber > MAX_DIGIT_NUMBER) {
             throw new BusinessException(ConfigErrorCode.V36_CODE_DIGIT_CODE_FORMAT_INVALID);
         }

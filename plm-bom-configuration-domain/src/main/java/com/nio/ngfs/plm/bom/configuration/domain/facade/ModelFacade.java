@@ -21,13 +21,15 @@ public interface ModelFacade {
 
     /**
      * 根据车型获取年款
+     *
      * @param model
      * @return
      */
     List<String> getModelYearByModel(String model);
 
     /**
-     *  根据品牌获取车型列表
+     * 根据品牌获取车型列表
+     *
      * @param brand
      * @return
      */
@@ -39,5 +41,13 @@ public interface ModelFacade {
      * @return 车型列表
      */
     List<ModelRespDto> getAllModelList();
+
+    /**
+     * 查询车型
+     *
+     * @param model 车型
+     * @return 车型结果
+     */
+    ModelRespDto getModel(String model);
 
 }

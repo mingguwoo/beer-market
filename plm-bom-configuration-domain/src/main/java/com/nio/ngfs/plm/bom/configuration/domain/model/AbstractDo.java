@@ -60,4 +60,13 @@ public abstract class AbstractDo {
         return Objects.equals(delFlag, CommonConstants.DEL_FLAG);
     }
 
+    /**
+     * 是否未删除
+     *
+     * @return true|false
+     */
+    public boolean isNotDeleted() {
+        return !isDeleted();
+    }
+
 }

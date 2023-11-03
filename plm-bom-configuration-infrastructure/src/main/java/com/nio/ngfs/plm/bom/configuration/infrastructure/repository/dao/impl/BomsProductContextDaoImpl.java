@@ -53,4 +53,9 @@ public class BomsProductContextDaoImpl extends AbstractDao<BomsProductContextMap
         return getBaseMapper().queryAllIncludeDelete();
     }
 
+    @Override
+    public List<BomsProductContextEntity> queryAll() {
+        return getBaseMapper().selectList(new LambdaQueryWrapper<>());
+    }
+
 }

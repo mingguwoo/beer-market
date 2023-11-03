@@ -103,8 +103,46 @@ public enum ConfigErrorCode implements ErrorCode {
     V36_CODE_OPTION_CODE_FORMAT_INVALID(84005, "The Option Code Format Is Invalid!"),
     V36_CODE_OPTION_LENGTH_NOT_MATCH(84006, "The Option Code Length Is Not Match!"),
     V36_CODE_SALES_FEATURE_NOT_MATCH(84007, "The Sales Feature Not Match!"),
-    V36_CODE_TYPE_NOT_MATCH(80008, "V36 Code Type Not Match!"),
-    V36_CODE_PARENT_NOT_DIGIT(80009, "Parent Not Digit!"),
+    V36_CODE_TYPE_NOT_MATCH(84008, "V36 Code Type Not Match!"),
+    V36_CODE_PARENT_NOT_DIGIT(84009, "Parent Not Digit!"),
+
+    /**
+     * Configuration Rule
+     */
+    CONFIGURATION_RULE_PURPOSE_ERROR(85000, "Purpose Is Error!"),
+    CONFIGURATION_RULE_DEFINED_BY_ERROR(85001, "Defined By Is Error!"),
+    CONFIGURATION_RULE_DEFINED_BY_MODEL_NOT_EXIST(85002, "Defined By Model Not Exist!"),
+    CONFIGURATION_RULE_DEFINED_BY_MODEL_YEAR_NOT_EXIST(85003, "Defined By Model Year Not Exist!"),
+    CONFIGURATION_RULE_CONSTRAINED_FEATURE_ONLY_SELECT_ONE(85004, "Constrained Feature Can Only Select One!"),
+    CONFIGURATION_RULE_FEATURE_CATALOG_NOT_MATCH(85005, "Feature Catalog Not Match!"),
+    CONFIGURATION_RULE_OPTION_MATRIX_VALUE_ERROR(85006, "Option Matrix Value Is Error!"),
+    CONFIGURATION_RULE_RULE_NUMBER_GENERATE_ERROR(85007, "Rule Number Generate Error!"),
+    CONFIGURATION_RULE_BOTH_WAY_RULE_SELECT_ONE_CONSTRAINED(85008, "Both Way Rule Can Only Select One Constrained Option!"),
+    CONFIGURATION_RULE_MAX_RULE_NUMBER_FORMAT_ERROR(85009, "Max Rule Number Format Error!"),
+    CONFIGURATION_RULE_RULE_GROUP_NOT_EXIST(85010, "Rule Group Not Exist!"),
+    CONFIGURATION_RULE_RULE_GROUP_CAN_NOT_DELETE(85011, "Rule Group Can Not Delete!"),
+    CONFIGURATION_RULE_RULE_CAN_NOT_DELETE(85012, "Rule Can Not Delete!"),
+    CONFIGURATION_RULE_RULE_NOT_EXIST(85013, "Rule Not Exist!"),
+    CONFIGURATION_RULE_BOTH_WAY_RULE_NOT_FOUND(85014, "Both Way Rule Not Found!"),
+    CONFIGURATION_RULE_BOTH_WAY_RULE_ALREADY_RELEASED(85015, "Both Way Rule Already Released!"),
+    CONFIGURATION_RULE_BOTH_WAY_RULE_IS_MORE_THAN_TWO(85016, "Both Way Rule Is More Than Two!"),
+    CONFIGURATION_RULE_VERSION_OVERFLOW(85017, "Rule Version Is Limited!"),
+    CONFIGURATION_RULE_BOTH_WAY_DRIVING_FEATURE_ONLY_SELECT_ONE(85018, "Driving Criteria Feature Can Only Select One!"),
+    CONFIGURATION_RULE_RULE_GROUP_CAN_NOT_EDIT(85019, "Rule Group Can Not Edit!"),
+    CONFIGURATION_RULE_RULE_OPTION_LIST_IS_EMPTY(85020, "Rule Option List Is Empty!"),
+    CONFIGURATION_RULE_RULE_IN_WORK_RULE_AT_MOST_ONE(85021, "It Can Only Has At Most One In Work Status Rule With Same Driving Criteria!"),
+    CONFIGURATION_RULE_DRIVING_FEATURE_NOT_THE_SAME(85022, "Driving Criteria Feature Not The Same!"),
+    CONFIGURATION_RULE_CONSTRAINED_FEATURE_NOT_THE_SAME(85023, "Constrained Criteria Feature Not The Same!"),
+    CONFIGURATION_RULE_DRIVING_AND_CONSTRAINED_FEATURE_IS_REPEAT(85024, "Driving Criteria Feature And Constrained Criteria Feature Is Repeat!"),
+    CONFIGURATION_RULE_BOTH_WAY_RULE_UPDATE_ERROR(85025, "Both Way Rule Update Error!"),
+    CONFIGURATION_RULE_ONLY_ONE_OPTION_PER_CONSTRAINED_BY_DRIVING(85026, ""),
+
+    /**
+     * Product Context
+     */
+    PRODUCT_CONTEXT_SYNC_FULL_LOCK_ERROR(87000, "Sync In Progress... Please Do Not Click The Button Again"),
+    PRODUCT_CONTEXT_FEATURE_NOT_EXIST(87001, "Product Context Feature Not Exist!"),
+
 
     /**
      * Other
@@ -132,6 +170,21 @@ public enum ConfigErrorCode implements ErrorCode {
 
     EDIT_FEATURE_ERROR(89008,"Edit Fail! Feature Code {0} Has More Than One Standard Configuration!"),
 
+
+    RULE_ID_ERROR(89009,"ruleIds is error!"),
+
+    RULE_CHANGE_TYPE_ERROR(89010,"ruleNumber:{0},rev:{1} has bean removed "),
+
+    PURPOSE_ERROR(89011,"ruleNumber:{0},rev:{1} purpose is error"),
+
+
+    ID_ERROR(89012,"Id is error"),
+
+    EFF_OUT_TIME_ERROR(89013,"Eff-out Of Rule (ID:{0}，Version:{1})  Is Earlier Than The Input Date!"),
+
+    EFF_IN_TIME_ERROR(89014,"Eff-in Of Rule (ID:{0}，Version:{1})  Is Later Than The Input Date!"),
+
+    EFF_OUT_ERROR(89015,"Rule (ID:{0}，Version:{1})  Can Not Set Eff-out!"),
     ;
 
     /**

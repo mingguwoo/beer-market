@@ -42,4 +42,9 @@ public interface ProductContextRepository extends Repository<ProductContextAggr,
      */
     List<ProductContextAggr> queryByModelAndModelYearList(String modelCode, List<String> modelYearList);
 
+    /**
+     * 获取下发用全量数据
+     * @return
+     */
+    List<ProductContextAggr> queryAll();
 }

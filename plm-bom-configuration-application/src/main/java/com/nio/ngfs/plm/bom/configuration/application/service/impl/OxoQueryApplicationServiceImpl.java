@@ -95,7 +95,7 @@ public class OxoQueryApplicationServiceImpl implements OxoQueryApplicationServic
     public OxoListRespDto findQryByVersion(String modelCode, String version, List<String> permissionPoints) {
         OxoListRespDto compareVersionQry = queryOxoInfoByModelCode(modelCode, version, false, permissionPoints);
 
-        if (CollectionUtils.isEmpty(compareVersionQry.getOxoHeadResps()) || CollectionUtils.isEmpty(compareVersionQry.getOxoHeadResps())) {
+        if (CollectionUtils.isEmpty(compareVersionQry.getOxoHeadResps())) {
             throw new BusinessException(MessageFormat.format(ConfigErrorCode.VERSION_ERROR.getMessage(), version));
         }
 

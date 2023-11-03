@@ -9,6 +9,8 @@ import lombok.Getter;
 import java.util.List;
 
 /**
+ * 创建Rule的目的
+ *
  * @author xiaozhou.tu
  * @date 2023/10/17
  */

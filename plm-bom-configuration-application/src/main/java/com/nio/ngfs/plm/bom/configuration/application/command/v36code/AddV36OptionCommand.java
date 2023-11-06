@@ -37,12 +37,18 @@ public class AddV36OptionCommand extends AbstractV36CodeCommand<AddOptionCmd, Ad
         V36CodeLibraryAggr aggr = V36CodeLibraryFactory.createOption(cmd, parentAggr);
         // 新增Option
         aggr.addOption();
-        // 第一次提交校验Digit + Option是否存在
-        if (!cmd.isConfirm() && v36CodeLibraryDomainService.isDigitHasSameOption(aggr)) {
-            return new AddOptionRespDto("This Option Code Is Already Existed In The Digit, Confirm To Add It?");
+        // 校验Digit + Option是否存在
+        if (v36CodeLibraryDomainService.isDigitHasSameOption(aggr)) {
+            // 第一次提交
+            if (!cmd.isConfirm()) {
+                return new AddOptionRespDto("This Option Code Is Already Existed In The Digit, Confirm To Add It?");
+            }
+            // 校验Digit Code + Option Code + Chinese Name是否唯一
+            v36CodeLibraryDomainService.checkParentCodeCodeChineseNameUnique(aggr);
+        } else {
+            // 校验Digit下Option的ChineseName和DisplayName是否重复
+            v36CodeLibraryDomainService.checkChineseNameAndDisplayNameRepeatByDigit(aggr);
         }
-        // 校验Digit Code + Option Code + Chinese Name是否唯一
-        v36CodeLibraryDomainService.checkParentCodeCodeChineseNameUnique(aggr);
         // 保持到数据库
         v36CodeLibraryRepository.save(aggr);
         return new AddOptionRespDto(aggr.getId());

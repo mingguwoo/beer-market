@@ -331,9 +331,11 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
      * 是否双向Rule
      */
     public boolean isBothWayRule(ConfigurationRuleAggr another) {
-        return !Objects.equals(this.getId(), another.getId()) &&
+        return isBothWayRule() &&
+                !Objects.equals(this.getId(), another.getId()) &&
                 Objects.equals(this.getGroupId(), another.getGroupId()) &&
-                Objects.equals(this.getRulePairId(), another.getRulePairId());
+                Objects.equals(this.getRulePairId(), another.getRulePairId()) &&
+                this.getRulePairId() > 0;
     }
 
     /**

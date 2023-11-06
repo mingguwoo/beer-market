@@ -44,6 +44,23 @@ public class V36CodeLibraryDomainServiceImpl implements V36CodeLibraryDomainServ
     }
 
     @Override
+    public void checkChineseNameAndDisplayNameRepeatByDigit(V36CodeLibraryAggr aggr) {
+        List<V36CodeLibraryAggr> optionAggrList = v36CodeLibraryRepository.queryByParentId(aggr.getParentId());
+        boolean chineseNameRepeat = optionAggrList.stream().anyMatch(i -> Objects.equals(aggr.getChineseName(), i.getChineseName()));
+        boolean displayNameRepeat = optionAggrList.stream().anyMatch(i -> Objects.equals(aggr.getDisplayName(), i.getDisplayName()));
+        if (chineseNameRepeat && displayNameRepeat) {
+            // Chinese Name和Display Name都重复
+            throw new BusinessException(ConfigErrorCode.V36_CODE_OPTION_CHINESE_NAME_AND_DISPLAY_NAME_REPEAT);
+        } else if (chineseNameRepeat) {
+            // Chinese Name重复
+            throw new BusinessException(ConfigErrorCode.V36_CODE_OPTION_CHINESE_NAME_REPEAT);
+        } else if (displayNameRepeat) {
+            // Display Name重复
+            throw new BusinessException(ConfigErrorCode.V36_CODE_OPTION_DISPLAY_NAME_REPEAT);
+        }
+    }
+
+    @Override
     public void checkDigitCodeOverlap(V36CodeLibraryAggr aggr) {
         List<V36CodeLibraryAggr> digitAggrList = v36CodeLibraryRepository.queryByParentId(ConfigConstants.V36_CODE_DIGIT_PARENT_CODE_ID);
         digitAggrList.forEach(digitAggr -> digitAggr.checkDigitCodeOverlap(aggr));

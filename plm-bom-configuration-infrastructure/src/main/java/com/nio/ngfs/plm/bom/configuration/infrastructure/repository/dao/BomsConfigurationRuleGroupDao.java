@@ -11,5 +11,5 @@ import java.util.List;
  */
 public interface BomsConfigurationRuleGroupDao extends IService<BomsConfigurationRuleGroupEntity> {
 
-    List<BomsConfigurationRuleGroupEntity> queryByDefinedBy(String definedBy);
+    List<BomsConfigurationRuleGroupEntity> queryByDefinedBy(List<String> definedBy);
 }

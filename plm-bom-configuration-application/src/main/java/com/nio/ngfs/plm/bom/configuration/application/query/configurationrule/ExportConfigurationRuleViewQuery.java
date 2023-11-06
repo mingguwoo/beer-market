@@ -213,7 +213,7 @@ public class ExportConfigurationRuleViewQuery extends AbstractExportQuery {
         XSSFCell cell1 = rowTitle.createCell(index);
         cell1.setCellValue(value);
         cell1.setCellStyle(titleCellStyle);
-        sheet.addMergedRegion(new CellRangeAddress(index, index, 4, 4 + size));
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, 4, 4 + size));
     }
 }
 

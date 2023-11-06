@@ -80,8 +80,7 @@ public class ConfigurationRuleQueryServiceImpl implements ConfigurationRuleQuery
                     ruleAggrs.stream().sorted(Comparator.comparing(ConfigurationRuleAggr::getRuleVersion).reversed()).toList();
             configurationRuleSorts.forEach(ruleSort -> {
                 // 横轴排序
-                List<String> drivingOptionCodes = ruleSort.getOptionList().stream().map(ConfigurationRuleOptionDo::getDrivingOptionCode).distinct()
-                        .sorted(Comparator.reverseOrder()).toList();
+                List<String> drivingOptionCodes = ruleSort.getOptionList().stream().map(ConfigurationRuleOptionDo::getDrivingOptionCode).distinct().sorted(Comparator.reverseOrder()).toList();
                 drivingOptionCodes.forEach(drivingOptionCode -> {
                     RuleViewHeadInfoRespDto.DriveOptionInfo driveOptionInfo = new RuleViewHeadInfoRespDto.DriveOptionInfo();
                     driveOptionInfo.setDriveOptionCode(drivingOptionCode);
@@ -138,10 +137,11 @@ public class ConfigurationRuleQueryServiceImpl implements ConfigurationRuleQuery
                                                     && Objects.equals(x.getRuleId(), driveOptionInfo.getRuleId()))
                                     .findFirst().orElse(null);
                             RuleViewConstrainedRespDto.RulePackageInfo rulePackageInfo= new RuleViewConstrainedRespDto.RulePackageInfo();
+                            rulePackageInfo.setConstrainedOptionCode(constrainOptionCode);
+                            rulePackageInfo.setDriveOptionCode(driveOptionInfo.getDriveOptionCode());
                             if (Objects.isNull(ruleOptionDo)) {
                                 rulePackageInfo.setId(0L);
                                 rulePackageInfo.setPackageCode("-");
-                                rulePackageInfos.add(rulePackageInfo);
                             }else{
                                 rulePackageInfo.setId(ruleOptionDo.getRuleId());
                                 rulePackageInfo.setPackageCode(RuleOptionMatrixValueEnum.getByCode(ruleOptionDo.getMatrixValue()).getMatrixValue());

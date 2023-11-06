@@ -46,6 +46,10 @@ public class RuleViewConstrainedRespDto implements Serializable {
 
         private String packageCode;
 
+        private String constrainedOptionCode;
+
+        private String driveOptionCode;
+
     }
 
 }

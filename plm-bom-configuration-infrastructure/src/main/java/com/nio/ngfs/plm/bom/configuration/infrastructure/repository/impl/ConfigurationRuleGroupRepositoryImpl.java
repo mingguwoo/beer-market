@@ -8,6 +8,8 @@ import com.nio.ngfs.plm.bom.configuration.infrastructure.repository.dao.common.D
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author xiaozhou.tu
  * @date 2023/10/17
@@ -38,4 +40,8 @@ public class ConfigurationRuleGroupRepositoryImpl implements ConfigurationRuleGr
         bomsConfigurationRuleGroupDao.removeById(aggr.getId());
     }
 
+    @Override
+    public List<ConfigurationRuleGroupAggr> queryConfigurationRuleGroupsByDefinedBy(List<String> definedBy) {
+      return  configurationRuleGroupConverter.convertEntityListToDoList(bomsConfigurationRuleGroupDao.queryByDefinedBy(definedBy));
+    }
 }

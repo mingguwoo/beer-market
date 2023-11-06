@@ -6,8 +6,10 @@ import com.nio.ngfs.plm.bom.configuration.application.command.AbstractCommand;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.ConfigurationRuleStatusEnum;
+import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrulegroup.ConfigurationRuleGroupAggr;
+import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrulegroup.ConfigurationRuleGroupRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.service.configurationrule.ConfigurationRuleDomainService;
-import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.SetBreakPointCmd;
+import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.BreakPointCheckCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.response.RuleViewCheckRespDto;
 import lombok.RequiredArgsConstructor;
 
@@ -21,21 +23,33 @@ import java.util.List;
  */
 @Component
 @RequiredArgsConstructor
-public class BreakPointCheckCommand extends AbstractCommand<SetBreakPointCmd, RuleViewCheckRespDto> {
+public class BreakPointCheckCommand extends AbstractCommand<BreakPointCheckCmd, RuleViewCheckRespDto> {
 
 
     private final ConfigurationRuleRepository configurationRuleRepository;
+
+    private final ConfigurationRuleGroupRepository configurationRuleGroupRepository;
 
     private final ConfigurationRuleDomainService configurationRuleDomainService;
 
 
     @Override
-    protected RuleViewCheckRespDto executeCommand(SetBreakPointCmd setBreakPointCmd) {
-        RuleViewCheckRespDto ruleViewCheckRespDto=new RuleViewCheckRespDto();
+    protected RuleViewCheckRespDto executeCommand(BreakPointCheckCmd breakPointCheckCmd) {
+        RuleViewCheckRespDto ruleViewCheckRespDto = new RuleViewCheckRespDto();
+        String model = breakPointCheckCmd.getModel();
+        String modelCode = breakPointCheckCmd.getModel() + " " + breakPointCheckCmd.getModelYear();
+
+        List<ConfigurationRuleGroupAggr> configurationRuleGroupAggrs =
+                configurationRuleGroupRepository.queryConfigurationRuleGroupsByDefinedBy(Lists.newArrayList(model, modelCode));
+        if (CollectionUtils.isEmpty(configurationRuleGroupAggrs)) {
+            return ruleViewCheckRespDto;
+        }
+        List<Long> groupIds = configurationRuleGroupAggrs.stream().map(ConfigurationRuleGroupAggr::getId).distinct().toList();
         //对Status为Released的Rule条目进行Eff-in和Eff-out设置合理性检查
         List<ConfigurationRuleAggr> configurationRuleAggrs =
-                configurationRuleRepository.queryByStatus(ConfigurationRuleStatusEnum.RELEASED.getStatus(),true);
-        if(CollectionUtils.isEmpty(configurationRuleAggrs)){
+                configurationRuleRepository.queryByIdsAndStatus(groupIds, ConfigurationRuleStatusEnum.RELEASED.getStatus(), true);
+
+        if (CollectionUtils.isEmpty(configurationRuleAggrs)) {
             return ruleViewCheckRespDto;
         }
         //硬校验

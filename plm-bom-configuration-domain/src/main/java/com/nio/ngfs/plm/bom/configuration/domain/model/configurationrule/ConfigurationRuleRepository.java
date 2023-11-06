@@ -46,7 +46,7 @@ public interface ConfigurationRuleRepository extends Repository<ConfigurationRul
      * @param status
      * @return
      */
-    List<ConfigurationRuleAggr> queryByStatus(String status,boolean optionFlag);
+    List<ConfigurationRuleAggr> queryByIdsAndStatus(List<Long> groupIds,String status,boolean optionFlag);
 
     /**
      * 根据Group Id列表批量查询

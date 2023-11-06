@@ -24,6 +24,13 @@ public interface V36CodeLibraryDomainService {
     void checkParentCodeCodeChineseNameUnique(V36CodeLibraryAggr aggr);
 
     /**
+     * 校验Digit下Option的ChineseName和DisplayName是否重复
+     *
+     * @param aggr 聚合根
+     */
+    void checkChineseNameAndDisplayNameRepeatByDigit(V36CodeLibraryAggr aggr);
+
+    /**
      * 校验Digit Code是否重叠
      *
      * @param aggr 聚合根

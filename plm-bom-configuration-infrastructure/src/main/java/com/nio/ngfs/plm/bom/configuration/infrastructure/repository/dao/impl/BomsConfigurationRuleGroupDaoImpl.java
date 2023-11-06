@@ -21,9 +21,9 @@ public class BomsConfigurationRuleGroupDaoImpl extends AbstractDao<BomsConfigura
     }
 
     @Override
-    public List<BomsConfigurationRuleGroupEntity> queryByDefinedBy(String definedBy) {
+    public List<BomsConfigurationRuleGroupEntity> queryByDefinedBy(List<String> definedBy) {
         LambdaQueryWrapper<BomsConfigurationRuleGroupEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.like(BomsConfigurationRuleGroupEntity::getDefinedBy,definedBy);
+        lambdaQueryWrapper.in(BomsConfigurationRuleGroupEntity::getDefinedBy,definedBy);
         return getBaseMapper().selectList(lambdaQueryWrapper);
     }
 }

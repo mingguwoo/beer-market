@@ -121,12 +121,12 @@ public class ConfigurationRuleController implements PlmConfigurationRuleClient {
 
     @Override
     @NotLogResult
-    public ResultInfo<RuleViewCheckRespDto> breakPointCheck() {
-        return ResultInfo.success(breakPointCheckCommand.execute(new SetBreakPointCmd()));
+    public ResultInfo<RuleViewCheckRespDto> breakPointCheck(@RequestBody BreakPointCheckCmd breakPointCheckCmd) {
+        return ResultInfo.success(breakPointCheckCommand.execute(breakPointCheckCmd));
     }
 
 
-    @PostMapping("/exportView")
+    @PostMapping("/configurationRule/exportView")
     @NotLogResult
     public void exportView(@Valid @RequestBody QueryViewQry qry, HttpServletResponse response, HttpServletRequest request) {
         exportConfigurationRuleViewQuery.execute(qry, response, request);

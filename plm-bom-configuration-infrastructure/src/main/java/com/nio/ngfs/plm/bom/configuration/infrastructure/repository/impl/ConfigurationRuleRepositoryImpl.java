@@ -103,8 +103,8 @@ public class ConfigurationRuleRepositoryImpl implements ConfigurationRuleReposit
     }
 
     @Override
-    public List<ConfigurationRuleAggr> queryByStatus(String status,boolean optionFlag){
-        List<ConfigurationRuleAggr> ruleAggrList =  configurationRuleConverter.convertEntityListToDoList(bomsConfigurationRuleDao.queryByStatus(status));
+    public List<ConfigurationRuleAggr> queryByIdsAndStatus(List<Long> groupIds, String status, boolean optionFlag) {
+        List<ConfigurationRuleAggr> ruleAggrList = configurationRuleConverter.convertEntityListToDoList(bomsConfigurationRuleDao.queryByGroupIdsAndStatus(groupIds,status));
         if (optionFlag) {
             return queryAndBuildRuleOptionList(ruleAggrList);
         }

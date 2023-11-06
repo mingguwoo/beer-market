@@ -91,11 +91,10 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, List
                 StringUtils.equals(type, OxoSnapshotEnum.FORMAL.getCode()), Lists.newArrayList());
 
 
-
         OxoVersionSnapshotAggr oxoVersionSnapshot = OxoVersionSnapshotFactory.buildOxoFeatureOptions(oxoLists, version, editGroupCmd);
 
         // 检查快照数据
-        checkSnapshot(version,oxoLists,type);
+        checkSnapshot(version, oxoLists, type);
 
 
         //开启事务
@@ -104,10 +103,14 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, List
             bomsOxoVersionSnapshotDao.insertBomsOxoVersionSnapshot(BeanConvertUtils.convertTo(
                     oxoVersionSnapshot, BomsOxoVersionSnapshotEntity::new));
 
-
             //同步product context
             try {
-                productContextApplicationService.addProductContext(oxoLists, editGroupCmd.getUserName());
+                OxoListRespDto oxoHeadLists = oxoLists;
+                if (StringUtils.equals(type, OxoSnapshotEnum.INFORMAL.getCode())) {
+                    oxoHeadLists = oxoQueryApplicationService.queryOxoInfoByModelCode(modelCode, ConfigConstants.WORKING,
+                            true, Lists.newArrayList());
+                }
+                productContextApplicationService.addProductContext(oxoHeadLists, editGroupCmd.getUserName());
             } catch (Exception e) {
                 log.error("addProductContext error", e);
                 throw new BusinessException("Sync Product Context Fail!");
@@ -183,7 +186,7 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, List
         oxoRowsQries.forEach(oxoRowsQry -> {
             oxoRowsQry.getOptions().forEach(option -> {
                 List<Long> packageHeadIds = option.getPackInfos().stream().map(OxoEditCmd::getHeadId).distinct().toList();
-                if(!packageHeadIds.containsAll(headIds.stream().distinct().toList())){
+                if (!packageHeadIds.containsAll(headIds.stream().distinct().toList())) {
                     options.add(option.getFeatureCode());
                 }
             });
@@ -191,7 +194,7 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, List
 
 
         if (CollectionUtils.isNotEmpty(options)) {
-            String message = MessageFormat.format(ConfigErrorCode.EDIT_OPTION_ERROR.getMessage(), String.join(",",options.stream().distinct().toList()));
+            String message = MessageFormat.format(ConfigErrorCode.EDIT_OPTION_ERROR.getMessage(), String.join(",", options.stream().distinct().toList()));
             throw new BusinessException(message);
         }
 
@@ -213,7 +216,7 @@ public class OxoSnapshotCommand extends AbstractLockCommand<OxoSnapshotCmd, List
         });
 
         if (CollectionUtils.isNotEmpty(featureCodes)) {
-            throw new BusinessException(MessageFormat.format(ConfigErrorCode.EDIT_FEATURE_ERROR.getMessage(), String.join(",",featureCodes.stream().distinct().toList())));
+            throw new BusinessException(MessageFormat.format(ConfigErrorCode.EDIT_FEATURE_ERROR.getMessage(), String.join(",", featureCodes.stream().distinct().toList())));
         }
     }
 

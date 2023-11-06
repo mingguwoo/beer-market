@@ -32,7 +32,7 @@ public interface BomsConfigurationRuleDao extends IService<BomsConfigurationRule
      * @param status
      * @return
      */
-    List<BomsConfigurationRuleEntity> queryByStatus(String status);
+    List<BomsConfigurationRuleEntity> queryByGroupIdsAndStatus(List<Long> groupIds, String status);
 
     /**
      * 根据Group Id列表批量查询

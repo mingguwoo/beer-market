@@ -105,6 +105,9 @@ public enum ConfigErrorCode implements ErrorCode {
     V36_CODE_SALES_FEATURE_NOT_MATCH(84007, "The Sales Feature Not Match!"),
     V36_CODE_TYPE_NOT_MATCH(84008, "V36 Code Type Not Match!"),
     V36_CODE_PARENT_NOT_DIGIT(84009, "Parent Not Digit!"),
+    V36_CODE_OPTION_CHINESE_NAME_REPEAT(84010, "The Chinese Name Is Already Existed, Please Check!"),
+    V36_CODE_OPTION_DISPLAY_NAME_REPEAT(84011, "The Display Name Is Already Existed, Please Check!"),
+    V36_CODE_OPTION_CHINESE_NAME_AND_DISPLAY_NAME_REPEAT(84012, "The Chinese Name And Display Name Is Already Existed, Please Check!"),
 
     /**
      * Configuration Rule

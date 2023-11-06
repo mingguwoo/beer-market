@@ -42,7 +42,8 @@ public class QueryConfigurationRuleQuery extends AbstractQuery<QueryConfiguratio
 
     @Override
     protected QueryConfigurationRuleRespDto executeQuery(QueryConfigurationRuleQry qry) {
-        String definedBy;
+        List<String> definedBy = new ArrayList<>();
+        definedBy.add(qry.getModel());
         QueryConfigurationRuleRespDto respDto = new QueryConfigurationRuleRespDto();
         Set<Long> groupMatchSet = new HashSet<>();
         Set<Long> ruleMatchSet = new HashSet<>();
@@ -53,11 +54,8 @@ public class QueryConfigurationRuleQuery extends AbstractQuery<QueryConfiguratio
         Map<Long,List<BomsConfigurationRuleOptionEntity>> ruleOptionMap = new HashMap<>();
         Map<String,String> ruleRevisionMap = new HashMap<>();
         Map<String, BomsFeatureLibraryEntity> featureOptionMap = configurationRuleQueryService.queryFeatureOptionMap();
-        if (Objects.isNull(qry.getModelYear())){
-            definedBy = qry.getModel();
-        }
-        else {
-            definedBy = qry.getModel() + " " + qry.getModelYear();
+        if (Objects.nonNull(qry.getModelYear())){
+            definedBy.add(qry.getModel() + " " + qry.getModelYear());
         }
         //先获取model modelYear的全部group
         List<BomsConfigurationRuleGroupEntity> groupEntityList = bomsConfigurationRuleGroupDao.queryByDefinedBy(definedBy);

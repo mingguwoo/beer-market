@@ -121,5 +121,5 @@ public interface PlmConfigurationRuleClient {
 
 
     @PostMapping("/configurationRule/breakPointCheck")
-    ResultInfo<RuleViewCheckRespDto> breakPointCheck();
+    ResultInfo<RuleViewCheckRespDto> breakPointCheck(BreakPointCheckCmd breakPointCheckCmd);
 }

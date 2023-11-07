@@ -178,13 +178,15 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
             return;
         }
         if (context.getRuleGroup().getRulePurposeEnum().isBothWay()) {
+            List<ConfigurationRuleAggr> deleteBothWayRuleList = Lists.newArrayList();
             // 处理双向Rule删除
             List<ConfigurationRuleAggr> ruleAggrList = configurationRuleRepository.queryByGroupId(context.getRuleGroup().getId());
             deleteRuleList.forEach(deleteRule -> {
                 ConfigurationRuleAggr anotherDeleteRuleAggr = configurationRuleDomainService.findAnotherBothWayRule(deleteRule, ruleAggrList);
                 anotherDeleteRuleAggr.delete();
-                context.getDeleteRuleList().add(anotherDeleteRuleAggr);
+                deleteBothWayRuleList.add(anotherDeleteRuleAggr);
             });
+            context.getDeleteRuleList().addAll(deleteBothWayRuleList);
         }
     }
 

@@ -86,8 +86,8 @@ public class ConfigurationRuleQueryServiceImpl implements ConfigurationRuleQuery
                     driveOptionInfo.setDriveOptionCode(drivingOptionCode);
                     driveOptionInfo.setDriveOptionName(optionNameMaps.get(drivingOptionCode));
                     driveOptionInfo.setRevision(ruleSort.getRuleVersion());
-                    driveOptionInfo.setEffOut(DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD, ruleSort.getEffOut()));
-                    driveOptionInfo.setEffIn(DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD, ruleSort.getEffIn()));
+                    driveOptionInfo.setEffOut(DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_SLASH, ruleSort.getEffOut()));
+                    driveOptionInfo.setEffIn(DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_SLASH, ruleSort.getEffIn()));
                     driveOptionInfo.setChangeType(ruleSort.getChangeType());
                     driveOptionInfo.setRuleId(ruleSort.getId());
                     optionHeadList.add(driveOptionInfo);

@@ -139,6 +139,9 @@ public enum ConfigErrorCode implements ErrorCode {
     CONFIGURATION_RULE_DRIVING_AND_CONSTRAINED_FEATURE_IS_REPEAT(85024, "Driving Criteria Feature And Constrained Criteria Feature Is Repeat!"),
     CONFIGURATION_RULE_BOTH_WAY_RULE_UPDATE_ERROR(85025, "Both Way Rule Update Error!"),
     CONFIGURATION_RULE_ONLY_ONE_OPTION_PER_CONSTRAINED_BY_DRIVING(85026, ""),
+    CONFIGURATION_RULE_THE_SAME_RULE_EXISTED(85027, "The Same Rule Existed In Driving Criteria Option %s, Please Check!"),
+    CONFIGURATION_RULE_SAME_RULE_CAN_NOT_CREATE(85028, "The Rule Of Driving Criteria Option %s (Rev:%s) Is Already Released, Can Not Create The Same Rule In Driving Criteria " +
+            "Option %s, Please Check!"),
 
     /**
      * Product Context

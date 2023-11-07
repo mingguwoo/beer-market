@@ -72,9 +72,8 @@ public interface ConfigurationRuleDomainService {
      * 校验Rule Driving下的Constrained打点不重复
      *
      * @param ruleAggrList 聚合根列表
-     * @return 错误提示信息
      */
-    String checkRuleDrivingConstrainedRepeat(List<ConfigurationRuleAggr> ruleAggrList);
+    void checkRuleDrivingConstrainedRepeat(List<ConfigurationRuleAggr> ruleAggrList);
 
     /**
      * 针对每一个Driving列，校验Constrained Feature下只能有一个Option为实心圆或-

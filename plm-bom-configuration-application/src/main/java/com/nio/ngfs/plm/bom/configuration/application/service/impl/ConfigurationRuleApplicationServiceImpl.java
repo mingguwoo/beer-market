@@ -95,8 +95,8 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
         }
         // Driving Criteria Option下有已发布的Rule版本，不可新增Rule
         editRule.getReleasedRuleList().stream().filter(i -> !i.isChangeTypeRemove()).findFirst().ifPresent(releaseRule ->
-                context.addErrorMessage(String.format("The Rule Of Driving Criteria Option %s (Rev:%s) Is Already Released, Can Not Create The Same Rule In Driving Criteria Option" +
-                        " %s, Please Check!", editRule.getDrivingOptionCode(), releaseRule.getRuleVersion(), editRule.getDrivingOptionCode()))
+                context.addErrorMessage(String.format(ConfigErrorCode.CONFIGURATION_RULE_SAME_RULE_CAN_NOT_CREATE.getMessage(),
+                        editRule.getDrivingOptionCode(), releaseRule.getRuleVersion(), editRule.getDrivingOptionCode()))
         );
         // 新增Rule
         ConfigurationRuleAggr addRule = ConfigurationRuleFactory.createWithOptionList(context.getRuleGroup().getPurpose(), context.getRuleGroup().getUpdateUser(),
@@ -149,13 +149,7 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
         // 针对每一个Driving列，校验Constrained Feature下只能有一个Option为实心圆或-
         configurationRuleDomainService.checkOptionMatrixByConstrainedFeature(addOrUpdateRuleList);
         // 校验Rule Driving下的Constrained打点不重复
-        String message = configurationRuleDomainService.checkRuleDrivingConstrainedRepeat(addOrUpdateRuleList);
-        if (StringUtils.isNotBlank(message)) {
-            context.getErrorMessageList().add(0, message);
-        }
-        if (CollectionUtils.isNotEmpty(context.getErrorMessageList())) {
-            return;
-        }
+        configurationRuleDomainService.checkRuleDrivingConstrainedRepeat(addOrUpdateRuleList);
         // 校验并处理新增的Rule
         checkAndProcessAddRule(context);
     }

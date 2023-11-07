@@ -8,7 +8,6 @@ import com.nio.bom.share.utils.DateUtils;
 import com.nio.bom.share.utils.LambdaUtil;
 import com.nio.bom.share.utils.VersionUtils;
 import com.nio.ngfs.plm.bom.configuration.common.enums.ConfigErrorCode;
-import com.nio.ngfs.plm.bom.configuration.domain.model.basevehicle.BaseVehicleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleFactory;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleRepository;
@@ -20,7 +19,6 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.R
 import com.nio.ngfs.plm.bom.configuration.domain.service.configurationrule.ConfigurationRuleDomainService;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.AddRuleCmd;
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.RuleOptionDto;
-import io.netty.handler.codec.serialization.ObjectEncoder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -143,7 +141,7 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
     }
 
     @Override
-    public String checkRuleDrivingConstrainedRepeat(List<ConfigurationRuleAggr> ruleAggrList) {
+    public void checkRuleDrivingConstrainedRepeat(List<ConfigurationRuleAggr> ruleAggrList) {
         List<RuleConstrainedOptionCompare> optionCompareList = ruleAggrList.stream().filter(ConfigurationRuleAggr::isVisible).map(ruleAggr -> {
             Set<String> constrainedOptionCodeSet = ruleAggr.getOptionList().stream()
                     .filter(ConfigurationRuleOptionDo::isNotDeleted)
@@ -175,9 +173,10 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
         String message = optionCompareList.stream().filter(i -> CollectionUtils.isNotEmpty(i.getRepeatDrivingOptionCodeSet()))
                 .map(i -> String.join("/", i.getRepeatDrivingOptionCodeSet().stream().sorted(String::compareTo).toList())).collect(Collectors.joining(","));
         if (StringUtils.isBlank(message)) {
-            return message;
+            return;
         }
-        return "The Same Rule Existed In Driving Criteria Option " + message + ", Please Check!";
+        throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_THE_SAME_RULE_EXISTED.getCode(),
+                String.format(ConfigErrorCode.CONFIGURATION_RULE_THE_SAME_RULE_EXISTED.getMessage(), message));
     }
 
     @Override

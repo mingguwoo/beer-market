@@ -41,7 +41,7 @@ public class AddRuleCommand extends AbstractCommand<AddRuleCmd, AddRuleRespDto> 
         // 新增Group
         ruleGroupAggr.add();
         // 校验Defined By
-        // configurationRuleGroupDomainService.checkDefinedBy(ruleGroupAggr);
+        configurationRuleGroupDomainService.checkDefinedBy(ruleGroupAggr);
         // 创建Rule
         List<ConfigurationRuleAggr> ruleAggrList = configurationRuleDomainService.createNewRule(cmd);
         ruleAggrList.forEach(ConfigurationRuleAggr::add);

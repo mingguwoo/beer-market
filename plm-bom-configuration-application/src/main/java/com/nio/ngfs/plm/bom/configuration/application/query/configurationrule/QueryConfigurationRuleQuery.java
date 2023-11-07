@@ -97,7 +97,7 @@ public class QueryConfigurationRuleQuery extends AbstractQuery<QueryConfiguratio
         });
 
         //查询所有和rule相关的constrained criteria和driving criteria的code/chineseName/displayName信息
-        List<BomsConfigurationRuleOptionEntity> optionEntityList = bomsConfigurationRuleOptionDao.queryByRuleIdList(ruleEntityList.stream().map(entity->entity.getId()).toList());
+        List<BomsConfigurationRuleOptionEntity> optionEntityList = bomsConfigurationRuleOptionDao.queryByRuleIdList(ruleEntityList.stream().map(entity->entity.getId()).toList()).stream().filter(opinion->!Objects.equals(opinion.getMatrixValue(),3)).collect(Collectors.toList());
         optionEntityList.forEach(entity->{
             if (matchSearch(entity.getConstrainedFeatureCode(),qry.getSearchContent()) || matchSearch(entity.getConstrainedOptionCode(),qry.getSearchContent())
             || (matchSearch(entity.getDrivingFeatureCode(),qry.getSearchContent()) || matchSearch(entity.getDrivingOptionCode(),qry.getSearchContent()))
@@ -162,8 +162,6 @@ public class QueryConfigurationRuleQuery extends AbstractQuery<QueryConfiguratio
             });
         });
 
-        respDto.setGroup(respDto.getGroup().stream().filter(group->!group.getRule().isEmpty()).collect(Collectors.toList()));
-
         if (Objects.equals(qry.getViewMode(), CommonConstants.INT_ONE)){
             respDto.getGroup().forEach(group->{
                 group.setRule(group.getRule().stream().filter(rule->{
@@ -180,7 +178,7 @@ public class QueryConfigurationRuleQuery extends AbstractQuery<QueryConfiguratio
             });
         }
 
-        respDto.setGroup(respDto.getGroup().stream().filter(group->!group.getRule().isEmpty())
+        respDto.setGroup(respDto.getGroup().stream()
                 .sorted(Comparator.comparing(ConfigurationGroupDto::getPurpose)
                 .thenComparing(ConfigurationGroupDto::getCreateTimeForSorted)).map(group->{
                     group.setRule(group.getRule().stream().sorted(Comparator.comparing(ConfigurationRuleDto::getCreateTimeForSorted).reversed()

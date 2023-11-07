@@ -145,7 +145,7 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
         List<RuleConstrainedOptionCompare> optionCompareList = ruleAggrList.stream().filter(ConfigurationRuleAggr::isVisible).map(ruleAggr -> {
             Set<String> constrainedOptionCodeSet = ruleAggr.getOptionList().stream()
                     .filter(ConfigurationRuleOptionDo::isNotDeleted)
-                    .filter(i -> !i.isMatrixValueUnavailable())
+                    .filter(ConfigurationRuleOptionDo::isNotMatrixValueUnavailable)
                     .map(ConfigurationRuleOptionDo::getConstrainedOptionCode).collect(Collectors.toSet());
             if (CollectionUtils.isEmpty(constrainedOptionCodeSet)) {
                 return null;
@@ -182,7 +182,8 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
     @Override
     public void checkOptionMatrixByConstrainedFeature(List<ConfigurationRuleAggr> ruleAggrList) {
         ruleAggrList.stream().filter(ConfigurationRuleAggr::isVisible).forEach(ruleAggr -> {
-            ruleAggr.getOptionList().stream().filter(i -> !i.isMatrixValueUnavailable())
+            ruleAggr.getOptionList().stream().filter(ConfigurationRuleOptionDo::isNotMatrixValueUnavailable)
+                    .filter(ConfigurationRuleOptionDo::isNotDeleted)
                     .collect(Collectors.groupingBy(ConfigurationRuleOptionDo::getConstrainedFeatureCode))
                     .forEach((constrainedFeatureCode, optionList) -> {
                         if (optionList.size() > 1) {

@@ -120,7 +120,7 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
             if (updateRule.isBothWayRule()) {
                 ConfigurationRuleAggr anotherUpdateRule = configurationRuleDomainService.findAnotherBothWayRule(updateRule, context.getGroupRuleList());
                 anotherUpdateRule.updateBothWayRuleOption(updateRule.getOptionList().stream().filter(ConfigurationRuleOptionDo::isNotDeleted)
-                        .filter(i -> !i.isMatrixValueUnavailable())
+                        .filter(ConfigurationRuleOptionDo::isNotMatrixValueUnavailable)
                         .map(ConfigurationRuleOptionDo::copyBothWayRuleOption).toList());
                 context.getUpdateRuleList().add(anotherUpdateRule);
             }

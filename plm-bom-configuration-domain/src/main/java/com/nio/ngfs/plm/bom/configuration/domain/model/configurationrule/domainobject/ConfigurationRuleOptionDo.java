@@ -139,6 +139,13 @@ public class ConfigurationRuleOptionDo extends AbstractDo implements Entity<Long
         return isMatrixValue(RuleOptionMatrixValueEnum.UNAVAILABLE);
     }
 
+    /**
+     * 打点是否不为Unavailable
+     */
+    public boolean isNotMatrixValueUnavailable() {
+        return !isMatrixValueUnavailable();
+    }
+
     @Override
     public String toString() {
         return "ConfigurationRuleOptionDo{" +

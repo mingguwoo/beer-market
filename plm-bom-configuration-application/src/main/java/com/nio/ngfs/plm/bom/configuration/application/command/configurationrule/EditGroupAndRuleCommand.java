@@ -9,6 +9,7 @@ import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.Configu
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleRepository;
 import com.nio.ngfs.plm.bom.configuration.application.command.configurationrule.context.EditConfigurationRuleContext;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.domainobject.ConfigurationRuleOptionDo;
+import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.enums.RuleOptionMatrixValueEnum;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrulegroup.ConfigurationRuleGroupAggr;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrulegroup.ConfigurationRuleGroupRepository;
 import com.nio.ngfs.plm.bom.configuration.domain.service.configurationrule.ConfigurationRuleGroupDomainService;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 编辑Group和Rule
@@ -51,7 +53,8 @@ public class EditGroupAndRuleCommand extends AbstractLockCommand<EditGroupAndRul
         // 查找Rule聚合根列表
         List<ConfigurationRuleAggr> ruleAggrList = configurationRuleRepository.queryByGroupId(cmd.getGroupId());
         // 打点列表
-        List<ConfigurationRuleOptionDo> ruleOptionDoList = LambdaUtil.map(cmd.getRuleOptionList(), i -> ConfigurationRuleFactory.create(i, cmd.getUpdateUser()));
+        List<ConfigurationRuleOptionDo> ruleOptionDoList = LambdaUtil.map(cmd.getRuleOptionList(), i -> !Objects.equals(i.getMatrixValue(),
+                RuleOptionMatrixValueEnum.UNAVAILABLE.getCode()), i -> ConfigurationRuleFactory.create(i, cmd.getUpdateUser()));
         // 构建编辑Rule上下文
         EditConfigurationRuleContext context = configurationRuleApplicationService.buildEditConfigurationRuleContext(ruleGroupAggr, ruleAggrList, ruleOptionDoList);
         // 编辑Rule预处理

@@ -109,8 +109,8 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
         }
         // 编辑打点
         ConfigurationRuleAggr updateRule = editRule.getInWorkRule();
+        context.getUpdateRuleList().add(updateRule);
         if (updateRule.updateOption(editRule.getRuleOptionList())) {
-            context.getUpdateRuleList().add(updateRule);
             // 处理双向Rule编辑
             if (updateRule.isBothWayRule()) {
                 ConfigurationRuleAggr anotherUpdateRule = configurationRuleDomainService.findAnotherBothWayRule(updateRule, context.getGroupRuleList());

@@ -142,7 +142,7 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
 
     @Override
     public void checkRuleDrivingConstrainedRepeat(List<ConfigurationRuleAggr> ruleAggrList, List<String> messageList) {
-        List<RuleConstrainedOptionCompare> optionCompareList = ruleAggrList.stream().filter(ConfigurationRuleAggr::isVisible).map(ruleAggr -> {
+        List<RuleConstrainedOptionCompare> optionCompareList = ruleAggrList.stream().filter(ConfigurationRuleAggr::isRuleVisible).map(ruleAggr -> {
             Set<String> constrainedOptionCodeSet = ruleAggr.getOptionList().stream()
                     .filter(ConfigurationRuleOptionDo::isNotDeleted)
                     .filter(ConfigurationRuleOptionDo::isNotMatrixValueUnavailable)
@@ -194,7 +194,7 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
 
     @Override
     public void checkOptionMatrixByConstrainedFeature(List<ConfigurationRuleAggr> ruleAggrList) {
-        ruleAggrList.stream().filter(ConfigurationRuleAggr::isVisible).forEach(ruleAggr -> {
+        ruleAggrList.stream().filter(ConfigurationRuleAggr::isRuleVisible).forEach(ruleAggr -> {
             ruleAggr.getOptionList().stream().filter(ConfigurationRuleOptionDo::isNotMatrixValueUnavailable)
                     .filter(ConfigurationRuleOptionDo::isNotDeleted)
                     .collect(Collectors.groupingBy(ConfigurationRuleOptionDo::getConstrainedFeatureCode))

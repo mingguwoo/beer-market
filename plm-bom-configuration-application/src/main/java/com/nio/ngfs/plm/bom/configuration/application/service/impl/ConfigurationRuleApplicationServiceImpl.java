@@ -60,7 +60,7 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
             List<ConfigurationRuleAggr> ruleList = ruleAggrListMap.getOrDefault(drivingOptionCode, Lists.newArrayList())
                     .stream().sorted(Comparator.comparing(ConfigurationRuleAggr::getRuleVersion).reversed()).toList();
             // 排除存在不可见Rule的场景，不可见Rule不参与编辑
-            if (ruleList.stream().anyMatch(ConfigurationRuleAggr::isInvisible)) {
+            if (ruleList.stream().anyMatch(ConfigurationRuleAggr::isRuleInvisible)) {
                 return null;
             }
             editConfigurationRule.setReleasedRuleList(ruleList.stream().filter(ConfigurationRuleAggr::isStatusReleased).toList());
@@ -195,7 +195,7 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
         String groupDrivingFeature = ruleGroupAggr.getDrivingFeature();
         List<String> groupConstrainedFeatureList = ruleGroupAggr.getConstrainedFeatureList();
         // 矩阵打点的Driving Feature和Constrained Feature（只校验可见的Rule）
-        List<ConfigurationRuleOptionDo> optionList = ruleAggrList.stream().filter(ConfigurationRuleAggr::isVisible).flatMap(ruleAggr -> ruleAggr.getOptionList().stream())
+        List<ConfigurationRuleOptionDo> optionList = ruleAggrList.stream().filter(ConfigurationRuleAggr::isRuleVisible).flatMap(ruleAggr -> ruleAggr.getOptionList().stream())
                 .filter(ConfigurationRuleOptionDo::isNotDeleted).toList();
         List<String> drivingFeatureCodeList = LambdaUtil.map(optionList, ConfigurationRuleOptionDo::getDrivingFeatureCode, true);
         List<String> constrainedFeatureCodeList = LambdaUtil.map(optionList, ConfigurationRuleOptionDo::getConstrainedFeatureCode, true);

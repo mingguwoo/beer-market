@@ -323,14 +323,14 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
     /**
      * 是否可见的Rule
      */
-    public boolean isVisible() {
-        return !isInvisible();
+    public boolean isRuleVisible() {
+        return !isRuleInvisible();
     }
 
     /**
      * 是否不可见的Rule
      */
-    public boolean isInvisible() {
+    public boolean isRuleInvisible() {
         return Objects.equals(invisible, YesOrNoEnum.YES.getCode());
     }
 

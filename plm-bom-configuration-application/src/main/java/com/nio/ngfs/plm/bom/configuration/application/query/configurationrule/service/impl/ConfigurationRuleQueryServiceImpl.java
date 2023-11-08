@@ -98,15 +98,17 @@ public class ConfigurationRuleQueryServiceImpl implements ConfigurationRuleQuery
         ruleViewInfoRespDto.getRuleViewBasicInformationRespDto().setDrivingCriterias(driveOptionCodes.stream().distinct().toList());
         headInfoRespDto.setOptionHeadList(optionHeadList);
         ruleViewInfoRespDto.setHeadInfoRespDto(headInfoRespDto);
-        ruleViewInfoRespDto.setRuleViewConstrainedLists(buildRuleViewConstrained(ruleEntities,optionHeadList,optionNameMaps));
+        ruleViewInfoRespDto.setRuleViewConstrainedLists(buildRuleViewConstrained(ruleEntities,headInfoRespDto,optionNameMaps));
         return ruleViewInfoRespDto;
     }
 
 
     public List<RuleViewConstrainedRespDto> buildRuleViewConstrained
             (List<ConfigurationRuleAggr> ruleEntities,
-             List<RuleViewHeadInfoRespDto.DriveOptionInfo> optionHeadList,
+             RuleViewHeadInfoRespDto headInfoRespDto,
              Map<String, String> optionNameMaps) {
+
+        List<RuleViewHeadInfoRespDto.DriveOptionInfo>  optionHeadList = headInfoRespDto.getOptionHeadList();
 
         List<RuleViewConstrainedRespDto> ruleViewConstrained = Lists.newArrayList();
 
@@ -138,6 +140,7 @@ public class ConfigurationRuleQueryServiceImpl implements ConfigurationRuleQuery
                                     .findFirst().orElse(null);
                             RuleViewConstrainedRespDto.RulePackageInfo rulePackageInfo= new RuleViewConstrainedRespDto.RulePackageInfo();
                             rulePackageInfo.setConstrainedOptionCode(constrainOptionCode);
+                            rulePackageInfo.setDriveFeatureCode(headInfoRespDto.getDriveFeatureCode());
                             rulePackageInfo.setDriveOptionCode(driveOptionInfo.getDriveOptionCode());
                             if (Objects.isNull(ruleOptionDo)) {
                                 rulePackageInfo.setId(0L);

@@ -50,6 +50,8 @@ public class RuleViewConstrainedRespDto implements Serializable {
 
         private String driveOptionCode;
 
+        private String driveFeatureCode;
+
     }
 
 }

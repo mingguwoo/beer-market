@@ -93,11 +93,6 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
         if (!(Objects.isNull(editRule.getInWorkRule()) && !editRule.isOptionEmptyOrAllUnavailable())) {
             return;
         }
-        // Driving Criteria Option下有已发布的Rule版本，不可新增Rule
-        editRule.getReleasedRuleList().stream().filter(i -> !i.isChangeTypeRemove()).findFirst().ifPresent(releaseRule ->
-                context.addErrorMessage(String.format(ConfigErrorCode.CONFIGURATION_RULE_SAME_RULE_CAN_NOT_CREATE.getMessage(),
-                        editRule.getDrivingOptionCode(), releaseRule.getRuleVersion(), editRule.getDrivingOptionCode()))
-        );
         // 新增Rule
         ConfigurationRuleAggr addRule = ConfigurationRuleFactory.createWithOptionList(context.getRuleGroup().getPurpose(), context.getRuleGroup().getUpdateUser(),
                 editRule.getRuleOptionList());
@@ -149,7 +144,11 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
         // 针对每一个Driving列，校验Constrained Feature下只能有一个Option为实心圆或-
         configurationRuleDomainService.checkOptionMatrixByConstrainedFeature(addOrUpdateRuleList);
         // 校验Rule Driving下的Constrained打点不重复
-        configurationRuleDomainService.checkRuleDrivingConstrainedRepeat(addOrUpdateRuleList);
+        List<ConfigurationRuleAggr> checkRepeatRuleList = Lists.newArrayList();
+        checkRepeatRuleList.addAll(context.getGroupRuleList().stream().filter(ConfigurationRuleAggr::isStatusReleased)
+                .filter(ConfigurationRuleAggr::isNotChangeTypeRemove).toList());
+        checkRepeatRuleList.addAll(addOrUpdateRuleList);
+        configurationRuleDomainService.checkRuleDrivingConstrainedRepeat(checkRepeatRuleList, context.getErrorMessageList());
         // 校验并处理新增的Rule
         checkAndProcessAddRule(context);
     }

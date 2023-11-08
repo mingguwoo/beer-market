@@ -314,6 +314,13 @@ public class ConfigurationRuleAggr extends AbstractDo implements AggrRoot<Long> 
     }
 
     /**
+     * ChangeType是否不为Remove
+     */
+    public boolean isNotChangeTypeRemove() {
+        return !isChangeTypeRemove();
+    }
+
+    /**
      * 是否可见的Rule
      */
     public boolean isVisible() {

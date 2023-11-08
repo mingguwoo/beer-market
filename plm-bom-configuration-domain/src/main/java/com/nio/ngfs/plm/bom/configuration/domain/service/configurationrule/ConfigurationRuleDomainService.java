@@ -73,7 +73,7 @@ public interface ConfigurationRuleDomainService {
      *
      * @param ruleAggrList 聚合根列表
      */
-    void checkRuleDrivingConstrainedRepeat(List<ConfigurationRuleAggr> ruleAggrList);
+    void checkRuleDrivingConstrainedRepeat(List<ConfigurationRuleAggr> ruleAggrList, List<String> messageList);
 
     /**
      * 针对每一个Driving列，校验Constrained Feature下只能有一个Option为实心圆或-

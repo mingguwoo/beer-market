@@ -141,7 +141,7 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
     }
 
     @Override
-    public void checkRuleDrivingConstrainedRepeat(List<ConfigurationRuleAggr> ruleAggrList) {
+    public void checkRuleDrivingConstrainedRepeat(List<ConfigurationRuleAggr> ruleAggrList, List<String> messageList) {
         List<RuleConstrainedOptionCompare> optionCompareList = ruleAggrList.stream().filter(ConfigurationRuleAggr::isVisible).map(ruleAggr -> {
             Set<String> constrainedOptionCodeSet = ruleAggr.getOptionList().stream()
                     .filter(ConfigurationRuleOptionDo::isNotDeleted)
@@ -151,17 +151,20 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
                 return null;
             }
             RuleConstrainedOptionCompare optionCompare = new RuleConstrainedOptionCompare();
+            optionCompare.setReleased(ruleAggr.isStatusReleased());
+            optionCompare.setVersion(ruleAggr.getRuleVersion());
             optionCompare.setDrivingOptionCode(ruleAggr.getOptionList().get(0).getDrivingOptionCode());
             optionCompare.setConstrainedOptionCodeSet(constrainedOptionCodeSet);
             return optionCompare;
         }).filter(Objects::nonNull).sorted(Comparator.comparing(RuleConstrainedOptionCompare::getDrivingOptionCode)).toList();
-        for (int i = 0; i < optionCompareList.size(); i++) {
-            RuleConstrainedOptionCompare current = optionCompareList.get(i);
+        List<RuleConstrainedOptionCompare> notReleasedCompareList = optionCompareList.stream().filter(i -> !i.isReleased()).toList();
+        for (int i = 0; i < notReleasedCompareList.size(); i++) {
+            RuleConstrainedOptionCompare current = notReleasedCompareList.get(i);
             if (current.isCompared()) {
                 continue;
             }
-            for (int j = i + 1; j < optionCompareList.size(); j++) {
-                RuleConstrainedOptionCompare compare = optionCompareList.get(j);
+            for (int j = i + 1; j < notReleasedCompareList.size(); j++) {
+                RuleConstrainedOptionCompare compare = notReleasedCompareList.get(j);
                 // Constrained Criteria打点信息重复
                 if (!compare.isCompared() && Objects.equals(current.getConstrainedOptionCodeSet(), compare.getConstrainedOptionCodeSet())) {
                     current.getRepeatDrivingOptionCodeSet().add(current.getDrivingOptionCode());
@@ -170,13 +173,23 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
                 }
             }
         }
-        String message = optionCompareList.stream().filter(i -> CollectionUtils.isNotEmpty(i.getRepeatDrivingOptionCodeSet()))
+        String message = notReleasedCompareList.stream().filter(i -> CollectionUtils.isNotEmpty(i.getRepeatDrivingOptionCodeSet()))
                 .map(i -> String.join("/", i.getRepeatDrivingOptionCodeSet().stream().sorted(String::compareTo).toList())).collect(Collectors.joining(","));
-        if (StringUtils.isBlank(message)) {
-            return;
+        if (StringUtils.isNotBlank(message)) {
+            throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_THE_SAME_RULE_EXISTED.getCode(),
+                    String.format(ConfigErrorCode.CONFIGURATION_RULE_THE_SAME_RULE_EXISTED.getMessage(), message));
         }
-        throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_THE_SAME_RULE_EXISTED.getCode(),
-                String.format(ConfigErrorCode.CONFIGURATION_RULE_THE_SAME_RULE_EXISTED.getMessage(), message));
+        // 编辑的打点和Group下Status为Released且ChangeType不为Remove的Rule的打点不重复
+        List<RuleConstrainedOptionCompare> releasedCompareList = optionCompareList.stream().filter(RuleConstrainedOptionCompare::isReleased).toList();
+        for (RuleConstrainedOptionCompare notReleasedCompare : notReleasedCompareList) {
+            for (RuleConstrainedOptionCompare releasedCompare : releasedCompareList) {
+                // Constrained Criteria打点信息重复
+                if (Objects.equals(notReleasedCompare.getConstrainedOptionCodeSet(), releasedCompare.getConstrainedOptionCodeSet())) {
+                    messageList.add(String.format(ConfigErrorCode.CONFIGURATION_RULE_SAME_RULE_CAN_NOT_CREATE.getMessage(),
+                            releasedCompare.getDrivingOptionCode(), releasedCompare.getVersion(), notReleasedCompare.getDrivingOptionCode()));
+                }
+            }
+        }
     }
 
     @Override
@@ -441,6 +454,10 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
 
     @Data
     private static class RuleConstrainedOptionCompare {
+
+        private boolean released;
+
+        private String version;
 
         private String drivingOptionCode;
 

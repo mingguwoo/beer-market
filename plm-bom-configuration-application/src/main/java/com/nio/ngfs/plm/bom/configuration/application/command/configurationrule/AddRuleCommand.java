@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.application.command.configurationrule;
 
+import com.google.common.collect.Lists;
 import com.nio.ngfs.plm.bom.configuration.application.command.AbstractCommand;
 import com.nio.ngfs.plm.bom.configuration.application.service.ConfigurationRuleApplicationService;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleAggr;
@@ -50,7 +51,7 @@ public class AddRuleCommand extends AbstractCommand<AddRuleCmd, AddRuleRespDto> 
         // 针对每一个Driving列，校验Constrained Feature下只能有一个Option为实心圆或-
         configurationRuleDomainService.checkOptionMatrixByConstrainedFeature(ruleAggrList);
         // 校验Rule Driving下的Constrained打点不重复
-        configurationRuleDomainService.checkRuleDrivingConstrainedRepeat(ruleAggrList);
+        configurationRuleDomainService.checkRuleDrivingConstrainedRepeat(ruleAggrList, Lists.newArrayList());
         // 处理双向Rule
         ruleAggrList = configurationRuleDomainService.handleBothWayRule(ruleAggrList);
         // Rule分配Rule Number

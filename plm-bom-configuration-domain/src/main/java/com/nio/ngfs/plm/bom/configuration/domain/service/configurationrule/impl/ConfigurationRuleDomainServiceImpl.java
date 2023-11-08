@@ -174,7 +174,7 @@ public class ConfigurationRuleDomainServiceImpl implements ConfigurationRuleDoma
             }
         }
         String message = notReleasedCompareList.stream().filter(i -> CollectionUtils.isNotEmpty(i.getRepeatDrivingOptionCodeSet()))
-                .map(i -> String.join("/", i.getRepeatDrivingOptionCodeSet().stream().sorted(String::compareTo).toList())).collect(Collectors.joining(","));
+                .map(i -> String.join("/", i.getRepeatDrivingOptionCodeSet().stream().sorted(String::compareTo).toList())).collect(Collectors.joining(", "));
         if (StringUtils.isNotBlank(message)) {
             throw new BusinessException(ConfigErrorCode.CONFIGURATION_RULE_THE_SAME_RULE_EXISTED.getCode(),
                     String.format(ConfigErrorCode.CONFIGURATION_RULE_THE_SAME_RULE_EXISTED.getMessage(), message));

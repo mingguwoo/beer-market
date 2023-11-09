@@ -179,6 +179,7 @@ public class QueryConfigurationRuleQuery extends AbstractQuery<QueryConfiguratio
         }
 
         respDto.setGroup(respDto.getGroup().stream()
+                .filter(group->!group.getRule().isEmpty() || groupMatchSet.contains(group.getId()))
                 .sorted(Comparator.comparing(ConfigurationGroupDto::getPurpose)
                 .thenComparing(ConfigurationGroupDto::getCreateTimeForSorted)).map(group->{
                     group.setRule(group.getRule().stream().sorted(Comparator.comparing(ConfigurationRuleDto::getCreateTimeForSorted).reversed()

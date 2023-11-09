@@ -80,15 +80,14 @@ public class ConfigurationRuleQueryServiceImpl implements ConfigurationRuleQuery
                     ruleAggrs.stream().sorted(Comparator.comparing(ConfigurationRuleAggr::getRuleVersion).reversed()).toList();
             configurationRuleSorts.forEach(ruleSort -> {
                 // 横轴排序
-                List<String> drivingOptionCodes = ruleSort.getOptionList().stream().map(ConfigurationRuleOptionDo::getDrivingOptionCode).distinct()
-                        .sorted(Comparator.reverseOrder()).toList();
+                List<String> drivingOptionCodes = ruleSort.getOptionList().stream().map(ConfigurationRuleOptionDo::getDrivingOptionCode).distinct().sorted(Comparator.reverseOrder()).toList();
                 drivingOptionCodes.forEach(drivingOptionCode -> {
                     RuleViewHeadInfoRespDto.DriveOptionInfo driveOptionInfo = new RuleViewHeadInfoRespDto.DriveOptionInfo();
                     driveOptionInfo.setDriveOptionCode(drivingOptionCode);
                     driveOptionInfo.setDriveOptionName(optionNameMaps.get(drivingOptionCode));
                     driveOptionInfo.setRevision(ruleSort.getRuleVersion());
-                    driveOptionInfo.setEffOut(DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD, ruleSort.getEffOut()));
-                    driveOptionInfo.setEffIn(DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD, ruleSort.getEffIn()));
+                    driveOptionInfo.setEffOut(DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_SLASH, ruleSort.getEffOut()));
+                    driveOptionInfo.setEffIn(DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_SLASH, ruleSort.getEffIn()));
                     driveOptionInfo.setChangeType(ruleSort.getChangeType());
                     driveOptionInfo.setRuleId(ruleSort.getId());
                     optionHeadList.add(driveOptionInfo);
@@ -99,15 +98,17 @@ public class ConfigurationRuleQueryServiceImpl implements ConfigurationRuleQuery
         ruleViewInfoRespDto.getRuleViewBasicInformationRespDto().setDrivingCriterias(driveOptionCodes.stream().distinct().toList());
         headInfoRespDto.setOptionHeadList(optionHeadList);
         ruleViewInfoRespDto.setHeadInfoRespDto(headInfoRespDto);
-        ruleViewInfoRespDto.setRuleViewConstrainedLists(buildRuleViewConstrained(ruleEntities,optionHeadList,optionNameMaps));
+        ruleViewInfoRespDto.setRuleViewConstrainedLists(buildRuleViewConstrained(ruleEntities,headInfoRespDto,optionNameMaps));
         return ruleViewInfoRespDto;
     }
 
 
     public List<RuleViewConstrainedRespDto> buildRuleViewConstrained
             (List<ConfigurationRuleAggr> ruleEntities,
-             List<RuleViewHeadInfoRespDto.DriveOptionInfo> optionHeadList,
+             RuleViewHeadInfoRespDto headInfoRespDto,
              Map<String, String> optionNameMaps) {
+
+        List<RuleViewHeadInfoRespDto.DriveOptionInfo>  optionHeadList = headInfoRespDto.getOptionHeadList();
 
         List<RuleViewConstrainedRespDto> ruleViewConstrained = Lists.newArrayList();
 
@@ -138,10 +139,12 @@ public class ConfigurationRuleQueryServiceImpl implements ConfigurationRuleQuery
                                                     && Objects.equals(x.getRuleId(), driveOptionInfo.getRuleId()))
                                     .findFirst().orElse(null);
                             RuleViewConstrainedRespDto.RulePackageInfo rulePackageInfo= new RuleViewConstrainedRespDto.RulePackageInfo();
+                            rulePackageInfo.setConstrainedOptionCode(constrainOptionCode);
+                            rulePackageInfo.setDriveFeatureCode(headInfoRespDto.getDriveFeatureCode());
+                            rulePackageInfo.setDriveOptionCode(driveOptionInfo.getDriveOptionCode());
                             if (Objects.isNull(ruleOptionDo)) {
                                 rulePackageInfo.setId(0L);
                                 rulePackageInfo.setPackageCode("-");
-                                rulePackageInfos.add(rulePackageInfo);
                             }else{
                                 rulePackageInfo.setId(ruleOptionDo.getRuleId());
                                 rulePackageInfo.setPackageCode(RuleOptionMatrixValueEnum.getByCode(ruleOptionDo.getMatrixValue()).getMatrixValue());

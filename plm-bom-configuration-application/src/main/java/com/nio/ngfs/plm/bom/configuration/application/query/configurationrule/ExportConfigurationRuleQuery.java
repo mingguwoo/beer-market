@@ -22,10 +22,7 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author bill.wang
@@ -108,7 +105,6 @@ public class ExportConfigurationRuleQuery extends AbstractExportQuery {
                     Date ruleEffOut = cstFormat.parse(rule.getEffOut());
                     Date ruleCreateTime = cstFormat.parse(rule.getCreateTime());
                     Date ruleUpdateTime = cstFormat.parse(rule.getUpdateTime());
-                    Date ruleReleaseDate = cstFormat.parse(rule.getReleaseDate());
                     String drivingCriteria = produceCriteriaList(rule.getDrivingCriteria());
                     String constrainedCriteria = produceCriteriaList(rule.getConstrainedCriteria());
                     int ruleColumnIndex = -1;
@@ -126,7 +122,12 @@ public class ExportConfigurationRuleQuery extends AbstractExportQuery {
                     createCell(ruleRow, ++ruleColumnIndex, rule.getRuleRevision(),ruleCellStyle);
                     createCell(ruleRow, ++ruleColumnIndex, null, ruleCellStyle);
                     createCell(ruleRow, ++ruleColumnIndex, rule.getChangeType(),ruleCellStyle);
-                    createCell(ruleRow, ++ruleColumnIndex, dateFormat.format(ruleReleaseDate), ruleCellStyle);
+                    if (Objects.equals(rule.getReleaseDate(),"null")){
+                        ruleColumnIndex++;
+                    }
+                    else{
+                        createCell(ruleRow, ++ruleColumnIndex, dateFormat.format(cstFormat.parse(rule.getReleaseDate())),ruleCellStyle);
+                    }
                     createCell(ruleRow, ++ruleColumnIndex, "Rule",ruleCellStyle);
                     createCell(ruleRow, ++ruleColumnIndex, rule.getCreateUser(),ruleCellStyle);
                     createCell(ruleRow, ++ruleColumnIndex, dateFormat.format(ruleCreateTime),ruleCellStyle);

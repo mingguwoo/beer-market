@@ -56,6 +56,11 @@ public class GetGroupAndRuleRespDto implements Dto {
          */
         private boolean canDelete;
 
+        /**
+         * 是否新增
+         */
+        private boolean add;
+
         private List<RuleRowColumnConfig> configList;
 
     }

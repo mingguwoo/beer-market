@@ -54,10 +54,6 @@ public class EditConfigurationRuleContext {
      */
     private List<String> errorMessageList = Lists.newArrayList();
 
-    public void addErrorMessage(String errorMessage) {
-        errorMessageList.add(errorMessage);
-    }
-
     public List<ConfigurationRuleAggr> getAddOrUpdateRuleList() {
         List<ConfigurationRuleAggr> addOrUpdateRuleAggrList = Lists.newArrayList();
         addOrUpdateRuleAggrList.addAll(addRuleList);
@@ -92,10 +88,6 @@ public class EditConfigurationRuleContext {
          * 打点是否为空或全部-
          */
         private boolean isOptionEmptyOrAllUnavailable;
-
-        public ConfigurationRuleAggr getLatestReleasedRule() {
-            return releasedRuleList.get(releasedRuleList.size() - 1);
-        }
 
     }
 

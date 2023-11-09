@@ -1,5 +1,6 @@
 package com.nio.ngfs.plm.bom.configuration.application.command.configurationrule;
 
+import com.google.common.collect.Lists;
 import com.nio.ngfs.plm.bom.configuration.application.command.AbstractCommand;
 import com.nio.ngfs.plm.bom.configuration.application.service.ConfigurationRuleApplicationService;
 import com.nio.ngfs.plm.bom.configuration.domain.model.configurationrule.ConfigurationRuleAggr;
@@ -13,7 +14,6 @@ import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.request.AddR
 import com.nio.ngfs.plm.bom.configuration.sdk.dto.configurationrule.response.AddRuleRespDto;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,10 +51,7 @@ public class AddRuleCommand extends AbstractCommand<AddRuleCmd, AddRuleRespDto> 
         // 针对每一个Driving列，校验Constrained Feature下只能有一个Option为实心圆或-
         configurationRuleDomainService.checkOptionMatrixByConstrainedFeature(ruleAggrList);
         // 校验Rule Driving下的Constrained打点不重复
-        String message = configurationRuleDomainService.checkRuleDrivingConstrainedRepeat(ruleAggrList);
-        if (StringUtils.isNotBlank(message)) {
-            return new AddRuleRespDto(message);
-        }
+        configurationRuleDomainService.checkRuleDrivingConstrainedRepeat(ruleAggrList, Lists.newArrayList());
         // 处理双向Rule
         ruleAggrList = configurationRuleDomainService.handleBothWayRule(ruleAggrList);
         // Rule分配Rule Number

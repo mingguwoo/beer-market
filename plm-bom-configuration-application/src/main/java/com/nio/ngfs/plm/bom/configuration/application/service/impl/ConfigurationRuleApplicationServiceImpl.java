@@ -60,7 +60,7 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
             List<ConfigurationRuleAggr> ruleList = ruleAggrListMap.getOrDefault(drivingOptionCode, Lists.newArrayList())
                     .stream().sorted(Comparator.comparing(ConfigurationRuleAggr::getRuleVersion).reversed()).toList();
             // 排除存在不可见Rule的场景，不可见Rule不参与编辑
-            if (ruleList.stream().anyMatch(ConfigurationRuleAggr::isInvisible)) {
+            if (ruleList.stream().anyMatch(ConfigurationRuleAggr::isRuleInvisible)) {
                 return null;
             }
             editConfigurationRule.setReleasedRuleList(ruleList.stream().filter(ConfigurationRuleAggr::isStatusReleased).toList());
@@ -93,11 +93,6 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
         if (!(Objects.isNull(editRule.getInWorkRule()) && !editRule.isOptionEmptyOrAllUnavailable())) {
             return;
         }
-        // Driving Criteria Option下有已发布的Rule版本，不可新增Rule
-        editRule.getReleasedRuleList().stream().filter(i -> !i.isChangeTypeRemove()).findFirst().ifPresent(releaseRule ->
-                context.addErrorMessage(String.format("The Rule Of Driving Criteria Option %s (Rev:%s) Is Already Released, Can Not Create The Same Rule In Driving Criteria Option" +
-                        " %s, Please Check!", editRule.getDrivingOptionCode(), releaseRule.getRuleVersion(), editRule.getDrivingOptionCode()))
-        );
         // 新增Rule
         ConfigurationRuleAggr addRule = ConfigurationRuleFactory.createWithOptionList(context.getRuleGroup().getPurpose(), context.getRuleGroup().getUpdateUser(),
                 editRule.getRuleOptionList());
@@ -114,13 +109,13 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
         }
         // 编辑打点
         ConfigurationRuleAggr updateRule = editRule.getInWorkRule();
+        context.getUpdateRuleList().add(updateRule);
         if (updateRule.updateOption(editRule.getRuleOptionList())) {
-            context.getUpdateRuleList().add(updateRule);
             // 处理双向Rule编辑
             if (updateRule.isBothWayRule()) {
                 ConfigurationRuleAggr anotherUpdateRule = configurationRuleDomainService.findAnotherBothWayRule(updateRule, context.getGroupRuleList());
                 anotherUpdateRule.updateBothWayRuleOption(updateRule.getOptionList().stream().filter(ConfigurationRuleOptionDo::isNotDeleted)
-                        .filter(i -> !i.isMatrixValueUnavailable())
+                        .filter(ConfigurationRuleOptionDo::isNotMatrixValueUnavailable)
                         .map(ConfigurationRuleOptionDo::copyBothWayRuleOption).toList());
                 context.getUpdateRuleList().add(anotherUpdateRule);
             }
@@ -149,13 +144,11 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
         // 针对每一个Driving列，校验Constrained Feature下只能有一个Option为实心圆或-
         configurationRuleDomainService.checkOptionMatrixByConstrainedFeature(addOrUpdateRuleList);
         // 校验Rule Driving下的Constrained打点不重复
-        String message = configurationRuleDomainService.checkRuleDrivingConstrainedRepeat(addOrUpdateRuleList);
-        if (StringUtils.isNotBlank(message)) {
-            context.getErrorMessageList().add(0, message);
-        }
-        if (CollectionUtils.isNotEmpty(context.getErrorMessageList())) {
-            return;
-        }
+        List<ConfigurationRuleAggr> checkRepeatRuleList = Lists.newArrayList();
+        checkRepeatRuleList.addAll(context.getGroupRuleList().stream().filter(ConfigurationRuleAggr::isStatusReleased)
+                .filter(ConfigurationRuleAggr::isNotChangeTypeRemove).toList());
+        checkRepeatRuleList.addAll(addOrUpdateRuleList);
+        configurationRuleDomainService.checkRuleDrivingConstrainedRepeat(checkRepeatRuleList, context.getErrorMessageList());
         // 校验并处理新增的Rule
         checkAndProcessAddRule(context);
     }
@@ -184,13 +177,15 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
             return;
         }
         if (context.getRuleGroup().getRulePurposeEnum().isBothWay()) {
+            List<ConfigurationRuleAggr> deleteBothWayRuleList = Lists.newArrayList();
             // 处理双向Rule删除
             List<ConfigurationRuleAggr> ruleAggrList = configurationRuleRepository.queryByGroupId(context.getRuleGroup().getId());
             deleteRuleList.forEach(deleteRule -> {
                 ConfigurationRuleAggr anotherDeleteRuleAggr = configurationRuleDomainService.findAnotherBothWayRule(deleteRule, ruleAggrList);
                 anotherDeleteRuleAggr.delete();
-                context.getDeleteRuleList().add(anotherDeleteRuleAggr);
+                deleteBothWayRuleList.add(anotherDeleteRuleAggr);
             });
+            context.getDeleteRuleList().addAll(deleteBothWayRuleList);
         }
     }
 
@@ -200,7 +195,7 @@ public class ConfigurationRuleApplicationServiceImpl implements ConfigurationRul
         String groupDrivingFeature = ruleGroupAggr.getDrivingFeature();
         List<String> groupConstrainedFeatureList = ruleGroupAggr.getConstrainedFeatureList();
         // 矩阵打点的Driving Feature和Constrained Feature（只校验可见的Rule）
-        List<ConfigurationRuleOptionDo> optionList = ruleAggrList.stream().filter(ConfigurationRuleAggr::isVisible).flatMap(ruleAggr -> ruleAggr.getOptionList().stream())
+        List<ConfigurationRuleOptionDo> optionList = ruleAggrList.stream().filter(ConfigurationRuleAggr::isRuleVisible).flatMap(ruleAggr -> ruleAggr.getOptionList().stream())
                 .filter(ConfigurationRuleOptionDo::isNotDeleted).toList();
         List<String> drivingFeatureCodeList = LambdaUtil.map(optionList, ConfigurationRuleOptionDo::getDrivingFeatureCode, true);
         List<String> constrainedFeatureCodeList = LambdaUtil.map(optionList, ConfigurationRuleOptionDo::getConstrainedFeatureCode, true);

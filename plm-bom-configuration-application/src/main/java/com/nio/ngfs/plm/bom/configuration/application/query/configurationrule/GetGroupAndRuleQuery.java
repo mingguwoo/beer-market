@@ -138,6 +138,8 @@ public class GetGroupAndRuleQuery extends AbstractQuery<GetGroupAndRuleQry, GetG
                 RuleConstrainedOption ruleConstrainedOption = GetGroupAndRuleAssembler.assembleConstrainedOption(option);
                 ruleConstrainedOption.setCanDelete(!releasedConstrainedOptionCodeSet.contains(ruleConstrainedOption.getOptionCode()));
                 ruleConstrainedOption.setConfigList(buildRuleRowColumnConfig(drivingOptionList, ruleConstrainedOptionGroup.get(ruleConstrainedOption.getOptionCode())));
+                ruleConstrainedOption.setAdd(ruleConstrainedOption.isCanDelete() && ruleConstrainedOption.getConfigList().stream().allMatch(i -> Objects.equals(i.getMatrixValue(),
+                        RuleOptionMatrixValueEnum.UNAVAILABLE.getCode())));
                 return ruleConstrainedOption;
             }).toList());
             return ruleConstrainedFeature;

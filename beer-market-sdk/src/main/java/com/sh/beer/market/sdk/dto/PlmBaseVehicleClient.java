@@ -2,6 +2,7 @@ package com.sh.beer.market.sdk.dto;
 
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.PostMapping;
 
 /**
  * @author
@@ -10,13 +11,16 @@ import org.springframework.cloud.openfeign.FeignClient;
 @FeignClient(name = "plm-bom-configuration")
 public interface PlmBaseVehicleClient {
 
+    @PostMapping("/baseVehicle/test")
+    void test();
+
     /*@PostMapping("/baseVehicle/queryBaseVehicle")
     ResultInfo<List<BaseVehicleRespDto>>queryBaseVehicle(QueryBaseVehicleQry qry);
 
     @PostMapping("/baseVehicle/addBaseVehicle")
     ResultInfo<AddBaseVehicleRespDto> addBaseVehicle(AddBaseVehicleCmd cmd);
 
-    @PostMapping("/baseVehicle/editBaseVehicle")
+    /*@PostMapping("/baseVehicle/editBaseVehicle")
     ResultInfo<EditBaseVehicleRespDto> editBaseVehicle(EditBaseVehicleCmd cmd);
 
     @PostMapping("baseVehicle/deleteBaseVehicle")

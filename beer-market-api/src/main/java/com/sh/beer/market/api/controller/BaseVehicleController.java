@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RequiredArgsConstructor
 public class BaseVehicleController implements PlmBaseVehicleClient {
+    @Override
+    public void test() {
+        log.info("test");
+    }
 
     /*private final AddBaseVehicleCommand addBaseVehicleCommand;
     private final EditBaseVehicleCommand editBaseVehicleCommand;

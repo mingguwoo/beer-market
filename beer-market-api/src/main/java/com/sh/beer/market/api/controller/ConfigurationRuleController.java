@@ -1,7 +1,6 @@
 package com.sh.beer.market.api.controller;
 
 
-import com.sh.beer.market.sdk.dto.PlmBaseVehicleClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequiredArgsConstructor
-public class ConfigurationRuleController implements PlmBaseVehicleClient {
+public class ConfigurationRuleController {
 
     /*private final AddRuleCommand addRuleCommand;
     private final EditGroupAndRuleCommand editGroupAndRuleCommand;

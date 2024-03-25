@@ -2,9 +2,9 @@
 
 set -e
 
-JAR_FILE="plm-bom-configuration.jar"
-APP_NAME="plm-bom-configuration"
-APOLLO_ID="plm-bom-configuration"
+JAR_FILE="beer-market.jar"
+APP_NAME="beer-market"
+APOLLO_ID="beer-market"
 
 # 计算最大堆内存。MEM_REQUEST是k8s系统参数，表示容器的内存总量，单位为byte
 MAX_HEAP=$(expr $MEM_REQUEST / 1024 / 1024 - 4096)

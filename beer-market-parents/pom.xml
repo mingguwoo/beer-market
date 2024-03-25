@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.sh.beer.market</groupId>
+        <artifactId>beer-market</artifactId>
+        <version>${revision}</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>beer-market-parents</artifactId>
+    <packaging>pom</packaging>
+
+    <name>beer-market :: parents</name>
+
+    <dependencies>
+        <!--<dependency>
+            <groupId>com.sh.beer.market</groupId>
+            <artifactId>ngfs-starter-logging</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sh.beer.market</groupId>
+            <artifactId>ngfs-starter-metrics</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sh.beer.market</groupId>
+            <artifactId>plm-bom-share</artifactId>
+            <version>${plm-bom-share.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.dromara.dynamictp</groupId>
+            <artifactId>dynamic-tp-spring-boot-starter-apollo</artifactId>
+            <version>1.1.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.nio</groupId>
+            <artifactId>nio-dynamic-threadpool-starter</artifactId>
+            <version>${dynamicTp.starter.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>cn.dynamictp</groupId>
+                    <artifactId>dynamic-tp-spring-boot-starter-common</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>cn.hutool</groupId>
+                    <artifactId>hutool-all</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>-->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${org.mapstruct.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-jdk8</artifactId>
+            <version>${org.mapstruct.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>${org.mapstruct.version}</version>
+        </dependency>
+        <!--<dependency>
+            <groupId>com.nio.ps</groupId>
+            <artifactId>sugar-third-party</artifactId>
+            <version>${sugar-third-party.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-starter-openfeign</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.alibaba</groupId>
+                    <artifactId>fastjson</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>cn.hutool</groupId>
+                    <artifactId>hutool-all</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>-->
+    </dependencies>
+
+
+
+</project>

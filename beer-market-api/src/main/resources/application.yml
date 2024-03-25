@@ -1,0 +1,41 @@
+#spring:
+#    profiles:
+#        #切换apollo地址
+#        active: test
+#eureka:
+#    client:
+#        register-with-eureka: false
+#app:
+#    id: beer-market
+#
+#springdoc:
+#    paths-to-exclude: /status,/health
+#
+#common:
+#    pool:
+#        coreSize: 5
+#        maxCoreSize: 10
+#        keepAliveSeconds: 60
+#        namePrefix: common-pool-
+#        queueCapacity: 200
+#
+#---
+#env: dev
+#apollo:
+#    meta: https://apollo-config-cn-dev.nioint.com
+#    cluster: beer-market-tc-tke-dev
+#spring:
+#    config:
+#        activate:
+#            on-profile: dev
+#---
+#env: test
+#apollo:
+#    meta: https://apollo-config-cn-test.nioint.com
+#    cluster: beer-market-tc-tke-test
+#    accesskey:
+#      secret: 2a09c0767319481aa0a0d69166ea2802
+#spring:
+#    config:
+#        activate:
+#            on-profile: test

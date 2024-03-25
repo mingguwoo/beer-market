@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.sh.beer.market</groupId>
+        <artifactId>beer-market-parents</artifactId>
+        <version>${revision}</version>
+        <relativePath>../beer-market-parents/pom.xml</relativePath>
+    </parent>
+
+    <artifactId>beer-market-application</artifactId>
+    <packaging>jar</packaging>
+
+    <name>beer-market :: application</name>
+
+    <dependencies>
+        <!--<dependency>
+            <groupId>com.sh.beer.market</groupId>
+            <artifactId>beer-market-sdk</artifactId>
+            <version>${sdk.version}</version>
+        </dependency>-->
+        <dependency>
+            <groupId>com.sh.beer.market</groupId>
+            <artifactId>beer-market-infrastructure</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <!--<dependency>
+            <groupId>avalon-framework</groupId>
+            <artifactId>avalon-framework</artifactId>
+            <version>4.1.3</version>
+        </dependency>-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.32</version>
+        </dependency>
+        <!--<dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>3.1.0</version>
+        </dependency>-->
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>1.3.2</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
+    <!--<build>
+        <finalName>${project.artifactId}</finalName>
+    </build>-->
+
+</project>

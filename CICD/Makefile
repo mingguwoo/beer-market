@@ -22,5 +22,5 @@ test: clean
 release:
 	@rm -rf release
 	@mkdir -p $(release_path)
-	cp -f ./plm-bom-configuration-api/target/plm-bom-configuration-api.jar ${release_path}/plm-bom-configuration.jar
+	cp -f ./beer-market-api/target/beer-market-api.jar ${release_path}/beer-market.jar
 	cp -f CICD/start.sh $(release_path)

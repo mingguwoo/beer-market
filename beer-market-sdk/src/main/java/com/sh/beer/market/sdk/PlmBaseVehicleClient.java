@@ -1,13 +1,13 @@
 package com.sh.beer.market.sdk;
 
 
-import org.springframework.cloud.netflix.feign.FeignClient;
+import org.springframework.cloud.openfeign.FeignClient;
 
 /**
  * @author
  * @date 2023/7/18
  */
-//@FeignClient(name = "beer-market")
+@FeignClient(name = "beer-market")
 public interface PlmBaseVehicleClient {
 
     /*@PostMapping("/baseVehicle/queryBaseVehicle")

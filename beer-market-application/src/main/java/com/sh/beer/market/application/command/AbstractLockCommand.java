@@ -2,8 +2,7 @@ package com.sh.beer.market.application.command;
 
 import com.sh.beer.market.common.lock.RedissonLocker;
 import com.sh.beer.market.sdk.dto.common.Cmd;
-
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * 带redis分布式锁的Command，需要加锁控制并发的场景可使用

@@ -1,12 +1,12 @@
 package com.sh.beer.market.sdk;
 
-import org.springframework.cloud.netflix.feign.FeignClient;
+import org.springframework.cloud.openfeign.FeignClient;
 
 /**
  * @author
  * @date 2023/10/17
  */
-//@FeignClient(name = "beer-market")
+@FeignClient(name = "beer-market")
 public interface PlmConfigurationRuleClient {
 
     /**

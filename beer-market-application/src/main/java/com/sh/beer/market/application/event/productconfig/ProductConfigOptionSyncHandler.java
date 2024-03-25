@@ -5,10 +5,10 @@ import com.sh.beer.market.application.event.EventHandler;
 import com.sh.beer.market.domain.model.productcontext.event.SyncProductContextEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.NotNull;
 
 /**
  * ProductConfig打点同步到3DE

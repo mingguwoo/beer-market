@@ -19,6 +19,12 @@
         <dependency>
             <groupId>com.sh.beer.market</groupId>
             <artifactId>beer-market-domain</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <!--<dependency>
+            <groupId>com.sh.beer.market</groupId>
+            <artifactId>beer-market-domain</artifactId>
             <version>${revision}</version>
         </dependency>
         <dependency>
@@ -51,11 +57,7 @@
             <artifactId>spring-tx</artifactId>
             <version>5.2.1.RELEASE</version>
         </dependency>
-        <dependency>
-            <groupId>com.ctrip.framework.apollo</groupId>
-            <artifactId>apollo-client</artifactId>
-            <version>1.6.0</version>
-        </dependency>
+
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-context</artifactId>
@@ -76,7 +78,7 @@
             <artifactId>aspectjweaver</artifactId>
             <version>1.9.5</version>
             <scope>compile</scope>
-        </dependency>
+        </dependency>-->
         <!--<dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -90,6 +92,7 @@
             <artifactId>beer-market-spi</artifactId>
             <version>${revision}</version>
         </dependency>-->
+
     </dependencies>
 
     <!--<build>

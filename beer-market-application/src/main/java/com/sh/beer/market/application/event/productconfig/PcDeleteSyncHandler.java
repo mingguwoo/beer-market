@@ -4,10 +4,9 @@ package com.sh.beer.market.application.event.productconfig;
 import com.sh.beer.market.application.event.EventHandler;
 import com.sh.beer.market.domain.model.productcontext.event.SyncProductContextEvent;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-
-import javax.validation.constraints.NotNull;
 
 /**
  * @author

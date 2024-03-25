@@ -1,8 +1,8 @@
 package com.sh.beer.market.remote;
 
-import org.springframework.cloud.netflix.feign.FeignClient;
+import org.springframework.cloud.openfeign.FeignClient;
 
-//@FeignClient(url = "${sugar.third-party.sso.server}", name = "sso")
+@FeignClient(url = "${sugar.third-party.sso.server}", name = "sso")
 public interface SsoClient {
 
    /* @RequestMapping(method = RequestMethod.GET, value = "oauth2/profile")

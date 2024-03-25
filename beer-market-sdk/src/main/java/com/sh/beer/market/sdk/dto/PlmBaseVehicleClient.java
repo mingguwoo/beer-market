@@ -1,13 +1,13 @@
 package com.sh.beer.market.sdk.dto;
 
 
-import org.springframework.cloud.netflix.feign.FeignClient;
+import org.springframework.cloud.openfeign.FeignClient;
 
 /**
  * @author
  * @date 2023/7/18
  */
-//@FeignClient(name = "plm-bom-configuration")
+@FeignClient(name = "plm-bom-configuration")
 public interface PlmBaseVehicleClient {
 
     /*@PostMapping("/baseVehicle/queryBaseVehicle")

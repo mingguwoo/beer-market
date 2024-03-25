@@ -16,18 +16,18 @@
     <name>beer-market :: api</name>
 
     <dependencies>
-        <!--<dependency>
-            <groupId>com.sh.beer.market</groupId>
-            <artifactId>ngfs-starter-test</artifactId>
-            <version>${ngfs-starter-test.version}</version>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>com.sh.beer.market</groupId>
             <artifactId>beer-market-sdk</artifactId>
             <version>${revision}</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
+            <groupId>com.sh.beer.market</groupId>
+            <artifactId>ngfs-starter-test</artifactId>
+            <version>${ngfs-starter-test.version}</version>
+            <scope>test</scope>
+        </dependency> -->
+        <!-- <dependency>
             <groupId>com.sh.beer.market</groupId>
             <artifactId>beer-market-application</artifactId>
             <version>${revision}</version>
@@ -100,7 +100,7 @@
             <artifactId>bom-cat-client</artifactId>
             <version>3.1.0</version>
         </dependency>-->
-        <dependency>
+        <!--<dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
             <version>2.2.1.RELEASE</version>
@@ -137,7 +137,8 @@
             <artifactId>beer-market-sdk</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <scope>compile</scope>
-        </dependency>
+        </dependency>-->
+
     </dependencies>
 
     <!--<build>

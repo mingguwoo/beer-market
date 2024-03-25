@@ -8,7 +8,6 @@ import com.sh.beer.market.sdk.dto.configurationrule.request.AddRuleCmd;
 import com.sh.beer.market.sdk.dto.configurationrule.response.AddRuleRespDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -54,7 +53,7 @@ public class AddRuleCommand extends AbstractCommand<AddRuleCmd, AddRuleRespDto> 
         return null;
     }
 
-    @Transactional(rollbackFor = Exception.class)
+//    @Transactional(rollbackFor = Exception.class)
     public void saveRuleAndGroup(ConfigurationRuleGroupAggr ruleGroupAggr, List<ConfigurationRuleAggr> ruleAggrList) {
         /*configurationRuleGroupRepository.save(ruleGroupAggr);
         if (CollectionUtils.isNotEmpty(ruleAggrList)) {

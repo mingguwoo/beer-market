@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class BaseVehicleController implements PlmBaseVehicleClient {
     @Override
     public void test() {
-        log.info("test");
+        log.info("test12333");
     }
 
     /*private final AddBaseVehicleCommand addBaseVehicleCommand;

@@ -20,7 +20,6 @@ public class BrandInterceptor implements HandlerInterceptor {
         String brand = request.getHeader("lesseecode");
 
         if(StringUtils.isBlank(brand)){
-            brand = CommonConstants.NIO;
         }
         ConfigConstants.brandName.set(brand);
         return true;

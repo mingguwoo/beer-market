@@ -32,19 +32,19 @@ if [[ "$K8S_ENV" == "stg" ]]; then
   if [[ "$K8S_CLUSTER" == "aws-eu" ]]; then
     APM_COLLECTOR_IP=""
   else
-    APM_COLLECTOR_IP="oap-skywalking-stg.nioint.com:11800"
+    APM_COLLECTOR_IP=""
   fi
 elif [[ "$K8S_ENV" == "prod" ]]; then
   if [[ "$K8S_CLUSTER" == "aws-eu" ]]; then
     APM_COLLECTOR_IP=""
   else
-    APM_COLLECTOR_IP="oap-skywalking.nioint.com:11800"
+    APM_COLLECTOR_IP=""
   fi
 fi
 
 # jacoco
 if [[ "$K8S_ENV" == "dev" ]] || [[ "$K8S_ENV" == "test" ]] || [[ "$K8S_ENV" == "stg" ]]; then
- wget "https://cdn-app.nio.com/user/2022/3/16/ec91a837-8ac2-4d1a-9ab9-12ce8f4e184d.jar" -O "jacocoagent.jar"
+ wget "" -O "jacocoagent.jar"
 fi
 
 #把jacoco agent启动命令加入java opts
@@ -73,7 +73,7 @@ JAVA_OPTS="${JAVA_OPTS} -Dapollo.cluster=$IDC"
 
 #流量回放
 if [ "$K8S_ENV" == "test"  ] ; then
-  curl -o simulator-agent.zip https://nrc-api.nioint.com/api/agent17/download
+  curl -o simulator-agent.zip
   mkdir takin/
   unzip simulator-agent.zip -d takin/
   JAVA_OPTS="${JAVA_OPTS} -javaagent:takin/simulator-agent/simulator-launcher-instrument.jar"

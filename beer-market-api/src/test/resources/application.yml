@@ -15,10 +15,10 @@
 #  profiles: local-dev
 #env: local-dev
 #apollo:
-#  meta: https://apollo-config-cn-dev.nioint.com
+
 #---
 #spring:
 #  profiles: local-test
 #env: local-test
 #apollo:
-#  meta: https://apollo-config-cn-test.nioint.com
+

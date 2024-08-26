@@ -1,1 +1,0 @@
-base_image=artifactory.nioint.com/dd-venus-docker-virtual/base/centos7.9java17run:1.5

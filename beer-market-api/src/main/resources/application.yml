@@ -22,7 +22,6 @@
 #---
 #env: dev
 #apollo:
-#    meta: https://apollo-config-cn-dev.nioint.com
 #    cluster: beer-market-tc-tke-dev
 #spring:
 #    config:
@@ -31,7 +30,6 @@
 #---
 #env: test
 #apollo:
-#    meta: https://apollo-config-cn-test.nioint.com
 #    cluster: beer-market-tc-tke-test
 #    accesskey:
 #      secret: 2a09c0767319481aa0a0d69166ea2802
